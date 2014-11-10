@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <import resource="equalityTest.xml"/>
+    <import resource="form_analyzez_config.xml"/>
+
+    <bean id="SignatureDecomposer" class="decomposer.SignatureDecomposer">
+        <property name="minSignatureLength" value="7"/>
+        <property name="maxSignatureLength" value="12"/>
+        <property name="signatureEqualityAnalyzer" ref="SignatureEqualityAnalyzer"/>
+        <!--<property name="signatureEqualityAnalyzer" ref="SignatureEqualityAnalyzerNotator"/>-->
+    </bean>
+
+    <bean id="SignatureEqualityAnalyzerNotator" class="decomposer.analyzer.signature.SignatureEqualityAnalyzerNotator">
+        <property name="notateSuccessful" value="true"/>
+        <property name="analyzer" ref="SignatureEqualityAnalyzer"/>
+    </bean>
+
+    <bean id="SignatureEqualityAnalyzer" class="decomposer.analyzer.signature.SignatureEqualityAnalyzerImpl" >
+        <!--<property name="interpolationEqualityTest" ref="InterpolationEqualityTestWrapper"/>-->
+        <!--<property name="fragmentationEqualityTest" ref="FragmentationEqualityTestWrapper"/>-->
+
+        <property name="equalityTestPassThreshold" value="0.75"/>
+        <property name="countourEqualityTest" ref="CountourEqualityTestWrapper"/>
+        <property name="intervalsEqualityTest" ref="IntervalsEqualityTestWrapper"/>
+        <property name="inversionEqualityTest" ref="InversionEqualityTestWrapper"/>
+        <property name="orderEqualityTest" ref="OrderEqualityTestWrapper"/>
+        <property name="rhythmEqualityTest" ref="RhythmEqualityTestWrapper"/>
+    </bean>
+
+    <bean id="StoreManager" class="database.StoreManager">
+        <property name="signatureStoreDir" value="D:\JAVA\dataBase"/>
+    </bean>
+
+    <context:component-scan base-package="model,decomposer.analyzer.form"/>
+</beans>

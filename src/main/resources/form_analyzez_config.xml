@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="formKeyEqualityTest" class="decomposer.analyzer.form.KeyEqualityTest"/>
+    <bean id="formIntervalsEqualityTest" class="decomposer.analyzer.melody.equality.IntervalsMelodyMovementEqualityTest">
+        <property name="maxNumberOfShiftedIntervals" value="0"/>
+    </bean>
+    <bean id="formRhythmEqualityTest" class="decomposer.analyzer.melody.equality.RhytmEqualityTest">
+        <property name="maxNumberOfRhythmicallyDifferentNotes" value="0"/>
+        <property name="maxRhythmDeviationSteps" value="0"/>
+    </bean>
+
+</beans>
