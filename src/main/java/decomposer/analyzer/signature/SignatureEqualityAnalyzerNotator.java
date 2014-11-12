@@ -35,7 +35,7 @@ public class SignatureEqualityAnalyzerNotator implements SignatureEqualityAnalyz
         if ( notateSuccessful && isEqual ) {
             View.notate( firstSignature );
             View.notate( secondSignature );
-            Utils.pauseToAnalyzeView();
+            Utils.suspend();
         }
         return isEqual;
     }

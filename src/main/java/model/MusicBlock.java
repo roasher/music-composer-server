@@ -3,9 +3,11 @@ package model;
 import jm.music.data.Note;
 import model.composition.CompositionInfo;
 import model.tension.Tension;
-
+import utils.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static model.utils.ModelUtils.*;
@@ -28,6 +30,7 @@ public class MusicBlock implements Serializable {
     // Origin surrounding information
     private MusicBlock previous;
     private MusicBlock next;
+	private Form form;
 
     // Derivative information
     private BlockMovement blockMovementFromPreviousMusicBlockToThisMusicBlock;
@@ -71,7 +74,40 @@ public class MusicBlock implements Serializable {
         }
     }
 
-    // Getters & Setters
+	@Override
+	public boolean equals( Object o ) {
+		if ( this == o ) {
+			return true;
+		}
+		if ( !( o instanceof MusicBlock ) ) {
+			return false;
+		}
+
+		MusicBlock that = ( MusicBlock ) o;
+
+		if ( compositionInfo != null ? !compositionInfo.equals( that.compositionInfo ) : that.compositionInfo != null ) {
+			return false;
+		}
+
+		if ( this.notes.size() != that.notes.size() ) {
+			return false;
+		}
+
+		if ( !Utils.ListOfListsIsEquals( this.notes, that.notes ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = notes.hashCode();
+		result = 31 * result + ( compositionInfo != null ? compositionInfo.hashCode() : 0 );
+		return result;
+	}
+
+	// Getters & Setters
     public List<List<Note>> getNotes() {
         return notes;
     }
@@ -108,7 +144,15 @@ public class MusicBlock implements Serializable {
         return rhythmValue;
     }
 
-    public MusicBlock getPrevious() {
+	public Form getForm() {
+		return form;
+	}
+
+	public void setForm( Form form ) {
+		this.form = form;
+	}
+
+	public MusicBlock getPrevious() {
         return previous;
     }
 

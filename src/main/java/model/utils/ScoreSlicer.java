@@ -5,6 +5,7 @@ import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Score;
 import model.MusicBlock;
+import org.springframework.stereotype.Component;
 import utils.Utils;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
  * Slices score into pieces
  * Created by night wish on 08.11.14.
  */
+@Component
 public class ScoreSlicer {
 
 	/**
@@ -24,7 +26,7 @@ public class ScoreSlicer {
 	 */
 	public List< MusicBlock > slice( Score score, double timePeriod ) {
 
-		List< List< List < Note > > > composition = new ArrayList<>(  );
+		List< List< List< Note > > > composition = new ArrayList<>(  );
 
 		for ( Part part : score.getPartArray() ) {
 			Phrase phrase = part.getPhraseArray()[0];

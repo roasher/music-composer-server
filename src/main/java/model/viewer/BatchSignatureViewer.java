@@ -27,7 +27,7 @@ public class BatchSignatureViewer {
             for ( Signature currentSignature : signatureSet ) {
                 notate(currentSignature);
             }
-            Utils.pauseToAnalyzeView();
+            Utils.suspend();
         }
     }
 

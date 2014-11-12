@@ -1,9 +1,15 @@
 package decomposer;
 
 import decomposer.analyzer.form.FormAnalyzer;
-import jm.music.data.Note;
+import jm.JMC;
 import jm.music.data.Score;
+import model.Form;
 import model.MusicBlock;
+import model.utils.ScoreSlicer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,30 +18,37 @@ import java.util.List;
  * Provides form analyses
  * Created by night wish on 08.11.14.
  */
+@Component
 public class FormDecomposer {
-
+	@Autowired
+	private ScoreSlicer scoreSlicer;
+	@Autowired
 	private FormAnalyzer formAnalyzer;
 
-//	public List< Integer > decompose( Score score ) {
-//		List< Integer > form = new ArrayList<>();
-//		List<MusicBlock> musicBlocks = getBlocks( score );
-//		for ( MusicBlock musicBlock : musicBlocks ) {
-//			form.add( musicBlocks.analyzeBlock( musicBlock ) );
-//		}
-//		return form;
-//	}
-//
-//	public List< MusicBlock > getBlocks( Score score ) {
-//		List< List<Note> > listOfInstrumentPart = new ArrayList<>();
-//		List< Note > instrumentPart = new ArrayList<>();
-//		MusicBlock musicBlock = new MusicBlock( );
-//	}
-//
-//	public FormAnalyzer getFormAnalyzer() {
-//		return formAnalyzer;
-//	}
-//
-//	public void setFormAnalyzer( FormAnalyzer formAnalyzer ) {
-//		this.formAnalyzer = formAnalyzer;
-//	}
+	private Logger logger = LoggerFactory.getLogger( getClass() );
+
+	public List<MusicBlock> decompose( Score score ) {
+		List<MusicBlock> musicBlocks = scoreSlicer.slice( score, JMC.WHOLE_NOTE );
+		for ( int musicBlockNumber = 0; musicBlockNumber < musicBlocks.size(); musicBlockNumber++ ) {
+			MusicBlock musicBlock = musicBlocks.get( musicBlockNumber );
+			for ( int musicBlockToCompareWithNumber = 0; musicBlockToCompareWithNumber < musicBlockNumber; musicBlockNumber++ ) {
+				MusicBlock musicBlockToCompareWith = musicBlocks.get( musicBlockToCompareWithNumber );
+				if ( formAnalyzer.equal( musicBlock, musicBlockToCompareWith ) ) {
+					musicBlock.setForm( musicBlockToCompareWith.getForm() );
+				}
+			}
+			if ( musicBlock.getForm() == null ) {
+				musicBlock.setForm( new Form() );
+			}
+		}
+		return musicBlocks;
+	}
+
+	public List<Form> getForm( Score score ) {
+		List<Form> formList = new ArrayList<>();
+		List<MusicBlock> musicBlockList = decompose( score );
+		for ( MusicBlock musicBlock : musicBlockList ) {
+			formList.add( musicBlock.getForm() );
+		}
+	}
 }

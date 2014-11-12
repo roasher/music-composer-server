@@ -72,7 +72,7 @@ public class SignatureDecomposer {
     }
 
     /**
-     * Analyzes list of scores and come out with list of signatures
+     * Analyzes list of compositions and come out with list of signatures
      * @param compositionList
      * @return
      */

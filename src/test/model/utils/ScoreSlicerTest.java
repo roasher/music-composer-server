@@ -1,7 +1,11 @@
 package model.utils;
 
 import jm.music.data.Note;
+import jm.music.data.Part;
 import jm.music.data.Phrase;
+import jm.music.data.Score;
+import jm.util.View;
+import model.MusicBlock;
 import org.junit.Test;
 import utils.Utils;
 
@@ -245,5 +249,87 @@ public class ScoreSlicerTest {
 		phraseW.getNoteArray()[0].setRhythmValue( HALF_NOTE );
 		List< List< Note> > sliceToTestW1 = scoreSlicer.slice( phraseW, WHOLE_NOTE );
 		assertFalse( Utils.ListOfListsIsEquals( sliceToTestW1, sliceWholefNote ) );
+	}
+
+	@Test
+	public void testCase2() {
+		Score score = new Score();
+
+		Phrase firstInstr = new Phrase();
+		firstInstr.add( new Note( C5, WHOLE_NOTE ) );
+		firstInstr.add( new Note( D5, DOTTED_HALF_NOTE ) );
+		firstInstr.add( new Note( E5, HALF_NOTE ) );
+		Part firstPart = new Part( firstInstr );
+		score.add( firstPart );
+
+		Phrase secondInstr = new Phrase();
+		secondInstr.add( new Note( C4, WHOLE_NOTE ) );
+		secondInstr.add( new Note( B3, HALF_NOTE ) );
+		secondInstr.add( new Note( A3, DOTTED_HALF_NOTE ) );
+		Part secondPart = new Part( secondInstr );
+		score.add( secondPart );
+
+		Phrase thirdInstr = new Phrase();
+		thirdInstr.add( new Note( C3, HALF_NOTE ) );
+		thirdInstr.add( new Note( C3, DOTTED_HALF_NOTE ) );
+		thirdInstr.add( new Note( C3, WHOLE_NOTE ) );
+		Part thirdPart = new Part( thirdInstr );
+		score.add( thirdPart );
+
+		List<MusicBlock> testList = scoreSlicer.slice( score, DOTTED_HALF_NOTE );
+
+		// first
+		List< Note > firstBlockfirstList = new ArrayList<>(  );
+		firstBlockfirstList.add( new Note( C5, DOTTED_HALF_NOTE ) );
+		List< Note > firstBlocksecondList = new ArrayList<>(  );
+		firstBlocksecondList.add( new Note( C4, DOTTED_HALF_NOTE ) );
+		List< Note > firstBlockthirdList = new ArrayList<>(  );
+		firstBlockthirdList.add( new Note( C3, HALF_NOTE ) );
+		firstBlockthirdList.add( new Note( C3, QUARTER_NOTE ) );
+
+		List<List<Note>> firstBlock = new ArrayList<>();
+		firstBlock.add( firstBlockfirstList );
+		firstBlock.add( firstBlocksecondList );
+		firstBlock.add( firstBlockthirdList );
+		MusicBlock firstMusicBlock = new MusicBlock( firstBlock, null );
+
+		// second
+		List< Note > secondBlockfirstList = new ArrayList<>(  );
+		secondBlockfirstList.add( new Note( C5, QUARTER_NOTE ) );
+		secondBlockfirstList.add( new Note( D5, HALF_NOTE ) );
+		List< Note > secondBlocksecondList = new ArrayList<>(  );
+		secondBlocksecondList.add( new Note( C4, QUARTER_NOTE ) );
+		secondBlocksecondList.add( new Note( B3, HALF_NOTE ) );
+		List< Note > secondBlockthirdList = new ArrayList<>(  );
+		secondBlockthirdList.add( new Note( C3, HALF_NOTE ) );
+		secondBlockthirdList.add( new Note( C3, QUARTER_NOTE ) );
+
+		List<List<Note>> secondBlock = new ArrayList<>();
+		secondBlock.add( secondBlockfirstList );
+		secondBlock.add( secondBlocksecondList );
+		secondBlock.add( secondBlockthirdList );
+		MusicBlock secondMusicBlock = new MusicBlock( secondBlock, null );
+
+		// third
+		List< Note > thirdBlockfirstList = new ArrayList<>(  );
+		thirdBlockfirstList.add( new Note( D5, QUARTER_NOTE ) );
+		thirdBlockfirstList.add( new Note( E5, HALF_NOTE ) );
+		List< Note > thirdBlocksecondList = new ArrayList<>(  );
+		thirdBlocksecondList.add( new Note( A3, DOTTED_HALF_NOTE ) );
+		List< Note > thirdBlockthirdList = new ArrayList<>(  );
+		thirdBlockthirdList.add( new Note( C3, DOTTED_HALF_NOTE ) );
+
+		List<List<Note>> thirdBlock = new ArrayList<>();
+		thirdBlock.add( thirdBlockfirstList );
+		thirdBlock.add( thirdBlocksecondList );
+		thirdBlock.add( thirdBlockthirdList );
+		MusicBlock thirdMusicBlock = new MusicBlock( thirdBlock, null );
+
+		List< MusicBlock > etalonList = new ArrayList<>(  );
+		etalonList.add( firstMusicBlock );
+		etalonList.add( secondMusicBlock );
+		etalonList.add( thirdMusicBlock );
+
+		assertEquals( etalonList, testList );
 	}
 }

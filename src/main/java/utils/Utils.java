@@ -14,7 +14,7 @@ public class Utils {
     /**
      * Waits for input, so one can see and analyze nonated smth
      */
-    public static void pauseToAnalyzeView() {
+    public static void suspend() {
         // Pausing to analyze
         InputStreamReader inputStreamReader = new InputStreamReader( System.in );
         try {
