@@ -1,7 +1,8 @@
 package decomposer.analyzer.melody.equality;
 
+import decomposer.analyzer.melody.equality.melodymovement.OrderMelodyMovementEqualityTest;
 import jm.music.data.Note;
-import model.Signature;
+import model.Melody;
 import org.junit.Test;
 
 import static jm.constants.Durations.DOTTED_EIGHTH_NOTE;
@@ -19,7 +20,7 @@ public class TestOrderEqualityTest {
 
 	@Test
 	public void testCase1() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -28,7 +29,7 @@ public class TestOrderEqualityTest {
 			new Note( E4, EIGHTH_NOTE ),
 			new Note( F4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -39,12 +40,12 @@ public class TestOrderEqualityTest {
 		);
 
 		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 0 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase2() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -53,7 +54,7 @@ public class TestOrderEqualityTest {
 			new Note( E4, EIGHTH_NOTE ),
 			new Note( F4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -65,15 +66,15 @@ public class TestOrderEqualityTest {
 		);
 
 		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 1 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 
 		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 0 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase3() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -82,7 +83,7 @@ public class TestOrderEqualityTest {
 			new Note( E4, EIGHTH_NOTE ),
 			new Note( F4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
 			new Note( D4, EIGHTH_NOTE ),
@@ -93,12 +94,12 @@ public class TestOrderEqualityTest {
 		);
 
 		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 2 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase4() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -107,7 +108,7 @@ public class TestOrderEqualityTest {
 			new Note( E4, EIGHTH_NOTE ),
 			new Note( F4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
 			new Note( D4, EIGHTH_NOTE ),
@@ -119,15 +120,15 @@ public class TestOrderEqualityTest {
 		);
 
 		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 2 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 
 		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 1 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase5() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -139,7 +140,7 @@ public class TestOrderEqualityTest {
 			new Note( A4, EIGHTH_NOTE ),
 		  }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
 			new Note( D4, EIGHTH_NOTE ),
@@ -153,10 +154,10 @@ public class TestOrderEqualityTest {
 		);
 
 		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 3 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 
 		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 2 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 }

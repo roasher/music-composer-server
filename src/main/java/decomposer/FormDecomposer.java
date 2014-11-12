@@ -50,5 +50,6 @@ public class FormDecomposer {
 		for ( MusicBlock musicBlock : musicBlockList ) {
 			formList.add( musicBlock.getForm() );
 		}
+		return formList;
 	}
 }

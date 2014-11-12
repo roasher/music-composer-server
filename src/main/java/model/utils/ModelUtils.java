@@ -2,6 +2,9 @@ package model.utils;
 
 import jm.music.data.Note;
 import jm.music.data.Score;
+import model.Melody;
+import model.MusicBlock;
+import model.PlaceInTheComposition;
 import model.composition.CompositionInfo;
 import model.composition.Meter;
 
@@ -56,4 +59,15 @@ public class ModelUtils {
         return compositionInfo;
     }
 
+	public static List<Melody> getMelodies( MusicBlock musicBlock ) {
+		List<Melody> melodyList = new ArrayList<>(  );
+		for ( List<Note> melodyNotes : musicBlock.getNotes() ) {
+			Melody melody = new Melody( (Note[]) melodyNotes.toArray() );
+			melody.setPlaceInTheComposition( new PlaceInTheComposition( musicBlock.getCompositionInfo(), 0, 0 ) );
+			melodyList.add( melody );
+//			Note[] notes = null;
+//			melodyNotes.toArray( notes );
+		}
+		return melodyList;
+	}
 }

@@ -3,8 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="formKeyEqualityTest" class="decomposer.analyzer.form.KeyEqualityTest"/>
-    <bean id="formIntervalsEqualityTest" class="decomposer.analyzer.melody.equality.IntervalsMelodyMovementEqualityTest">
+    <bean id="formKeyEqualityTest" class="decomposer.analyzer.melody.equality.KeyEqualityTest"/>
+    <bean id="formIntervalsEqualityTest" class="decomposer.analyzer.melody.equality.melodymovement.IntervalsMelodyMovementEqualityTest">
         <property name="maxNumberOfShiftedIntervals" value="0"/>
     </bean>
     <bean id="formRhythmEqualityTest" class="decomposer.analyzer.melody.equality.RhytmEqualityTest">

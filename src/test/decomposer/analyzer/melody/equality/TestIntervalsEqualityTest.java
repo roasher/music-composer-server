@@ -1,7 +1,8 @@
 package decomposer.analyzer.melody.equality;
 
+import decomposer.analyzer.melody.equality.melodymovement.IntervalsMelodyMovementEqualityTest;
 import jm.music.data.Note;
-import model.Signature;
+import model.Melody;
 import org.junit.Test;
 
 import static jm.constants.Durations.DOTTED_EIGHTH_NOTE;
@@ -19,14 +20,14 @@ public class TestIntervalsEqualityTest {
 
 	@Test
 	public void testCase1() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
 			new Note( CS4, EIGHTH_NOTE ),
 			new Note( D4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( F4, EIGHTH_NOTE ),
@@ -37,12 +38,12 @@ public class TestIntervalsEqualityTest {
 		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 1 );
 		intervalsMelodyMovementEqualityTest.setMaxShift( 2 );
 
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase2() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -50,7 +51,7 @@ public class TestIntervalsEqualityTest {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( D4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( FS4, EIGHTH_NOTE ),
@@ -61,23 +62,23 @@ public class TestIntervalsEqualityTest {
 
 		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 2 );
 		intervalsMelodyMovementEqualityTest.setMaxShift( 11 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 2 );
 		intervalsMelodyMovementEqualityTest.setMaxShift( 12 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase3() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
 			new Note( CS4, EIGHTH_NOTE ),
 			new Note( D4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( FF4, EIGHTH_NOTE ),
@@ -87,16 +88,16 @@ public class TestIntervalsEqualityTest {
 
 		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 1 );
 		intervalsMelodyMovementEqualityTest.setMaxShift( 10 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 2 );
 		intervalsMelodyMovementEqualityTest.setMaxShift( 3 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase4() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( DF4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -104,7 +105,7 @@ public class TestIntervalsEqualityTest {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( D5, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( E4, EIGHTH_NOTE ),
@@ -115,11 +116,11 @@ public class TestIntervalsEqualityTest {
 
 		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 1 );
 		intervalsMelodyMovementEqualityTest.setMaxShift( 11 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 2 );
 		intervalsMelodyMovementEqualityTest.setMaxShift( 11 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 }

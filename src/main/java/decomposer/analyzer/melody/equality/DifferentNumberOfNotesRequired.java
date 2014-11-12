@@ -1,11 +1,11 @@
 package decomposer.analyzer.melody.equality;
 
-import model.Signature;
+import model.Melody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Equality test wrapper adding conditions that both comparing signatures must have different number of notes
+ * Equality test wrapper adding conditions that both comparing melodies must have different number of notes
  * Pattern: chain of responsibility
  * Created by Pavel Yurkin on 18.08.14.
  */
@@ -21,12 +21,12 @@ public class DifferentNumberOfNotesRequired implements EqualityTest {
     }
 
     @Override
-    public boolean test( Signature firstSignature, Signature secondSignature ) {
-        if ( firstSignature.getNoteArray().length == secondSignature.getNoteArray().length ) {
+    public boolean test( Melody firstMelody, Melody secondMelody ) {
+        if ( firstMelody.getNoteArray().length == secondMelody.getNoteArray().length ) {
             return false;
         } else {
             if ( this.equalityTest != null ) {
-                return this.equalityTest.test( firstSignature, secondSignature );
+                return this.equalityTest.test( firstMelody, secondMelody );
             } else {
                 logger.warn( "DifferentNumberOfNotesRequired instance has null EqualityTest member. Test will be considered UNsuccessful" );
                 return false;

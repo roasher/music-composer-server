@@ -10,16 +10,16 @@
     <bean id="SignatureDecomposer" class="decomposer.SignatureDecomposer">
         <property name="minSignatureLength" value="7"/>
         <property name="maxSignatureLength" value="12"/>
-        <property name="signatureEqualityAnalyzer" ref="SignatureEqualityAnalyzer"/>
-        <!--<property name="signatureEqualityAnalyzer" ref="SignatureEqualityAnalyzerNotator"/>-->
+        <property name="melodyEqualityAnalyzer" ref="MelodyEqualityAnalyzer"/>
+        <!--<property name="melodyEqualityAnalyzer" ref="MelodyEqualityAnalyzerNotator"/>-->
     </bean>
 
-    <bean id="SignatureEqualityAnalyzerNotator" class="decomposer.analyzer.signature.SignatureEqualityAnalyzerNotator">
+    <bean id="MelodyEqualityAnalyzerNotator" class="decomposer.analyzer.melody.MelodyEqualityAnalyzerNotator">
         <property name="notateSuccessful" value="true"/>
-        <property name="analyzer" ref="SignatureEqualityAnalyzer"/>
+        <property name="analyzer" ref="MelodyEqualityAnalyzer"/>
     </bean>
 
-    <bean id="SignatureEqualityAnalyzer" class="decomposer.analyzer.signature.SignatureEqualityAnalyzerImpl" >
+    <bean id="MelodyEqualityAnalyzer" class="decomposer.analyzer.melody.MelodyEqualityAnalyzerImpl" >
         <!--<property name="interpolationEqualityTest" ref="InterpolationEqualityTestWrapper"/>-->
         <!--<property name="fragmentationEqualityTest" ref="FragmentationEqualityTestWrapper"/>-->
 

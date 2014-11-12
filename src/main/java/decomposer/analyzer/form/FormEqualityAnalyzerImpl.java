@@ -1,8 +1,8 @@
 package decomposer.analyzer.form;
 
 import decomposer.analyzer.melody.equality.EqualityTest;
-import decomposer.analyzer.signature.SignatureEqualityAnalyzer;
-import model.Signature;
+import decomposer.analyzer.melody.MelodyEqualityAnalyzer;
+import model.Melody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +10,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
- * Class analyzes if two signatures can be considered equal
+ * Class analyzes if two melodies can belong to one form element
  * Created by night wish on 26.07.14.
  */
 @Component
-public class FormEqualityAnalyzerImpl implements SignatureEqualityAnalyzer {
+public class FormEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 
     /**
-     * Min percentage of passed sub tests necessary to consider equality of two signatures
+     * Min percentage of passed sub tests necessary to consider equality of two melodies
      */
     private double equalityTestPassThreshold;
 
@@ -30,7 +30,7 @@ public class FormEqualityAnalyzerImpl implements SignatureEqualityAnalyzer {
 
     private Logger logger = LoggerFactory.getLogger( getClass() );
 
-    public boolean isEqual( Signature firstSignature, Signature secondSignature ) {
+    public boolean isEqual( Melody firstMelody, Melody secondMelody ) {
 
 		EqualityTest[] testArray = new EqualityTest[] {
 		  intervalsEqualityTest,
@@ -41,7 +41,7 @@ public class FormEqualityAnalyzerImpl implements SignatureEqualityAnalyzer {
 		int numberOfTestsFailed = 0;
 
 		for ( int currentTestNumber = 0; currentTestNumber < testArray.length;  currentTestNumber ++ ) {
-			boolean testPassed = testArray[ currentTestNumber ].test( firstSignature, secondSignature );
+			boolean testPassed = testArray[ currentTestNumber ].test( firstMelody, secondMelody );
 			if ( testPassed ) {
 				numberOfTestsPassed++;
 				logger.debug( "{} test succeed", testArray[ currentTestNumber ].getClass().getSimpleName() );
@@ -58,10 +58,10 @@ public class FormEqualityAnalyzerImpl implements SignatureEqualityAnalyzer {
         logger.debug( "Percent of positive tests = {}, pass threshold = {}", positivePersentage, this.equalityTestPassThreshold );
 
         if ( equalityTestPassThreshold <= positivePersentage ) {
-            logger.debug( "Signatures considered equal" );
+            logger.debug( "Melodies considered to belong to same form element" );
             return true;
         } else {
-            logger.debug( "Signatures considered different" );
+            logger.debug( "Melodies considered different in term of form" );
             return false;
         }
     }

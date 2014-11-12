@@ -1,7 +1,8 @@
 package decomposer.analyzer.melody.equality;
 
+import decomposer.analyzer.melody.equality.melodymovement.InversionMelodyMovementEqualityTest;
 import jm.music.data.Note;
-import model.Signature;
+import model.Melody;
 import org.junit.Test;
 
 import static jm.constants.Durations.DOTTED_EIGHTH_NOTE;
@@ -19,14 +20,14 @@ public class TestInversionEqualityTest {
 
 	@Test
 	public void testCase1() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
 			new Note( CS4, EIGHTH_NOTE ),
 			new Note( D4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( E4, SIXTEENTH_NOTE ),
 			new Note( DS4, SIXTEENTH_NOTE ),
@@ -36,12 +37,12 @@ public class TestInversionEqualityTest {
 
 		inversionMelodyMovementEqualityTest.setMaxNumberOfInvertedIntervals( 3 );
 
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase2() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -49,7 +50,7 @@ public class TestInversionEqualityTest {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( D5, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( E4, SIXTEENTH_NOTE ),
 			new Note( DS4, SIXTEENTH_NOTE ),
@@ -59,21 +60,21 @@ public class TestInversionEqualityTest {
 		);
 
 		inversionMelodyMovementEqualityTest.setMaxNumberOfInvertedIntervals( 3 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		inversionMelodyMovementEqualityTest.setMaxNumberOfInvertedIntervals( 4 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase3() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
 			new Note( CS4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( E4, SIXTEENTH_NOTE ),
 			new Note( DS4, SIXTEENTH_NOTE ),
@@ -82,7 +83,7 @@ public class TestInversionEqualityTest {
 
 		inversionMelodyMovementEqualityTest.setMaxNumberOfInvertedIntervals( 3 );
 
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 }

@@ -3,10 +3,10 @@ package controller;
 import decomposer.SignatureDecomposer;
 import jm.JMC;
 import jm.util.Read;
-import model.Signature;
+import model.Melody;
 import model.composition.Composition;
 import model.composition.CompositionInfo;
-import model.viewer.BatchSignatureViewer;
+import model.viewer.BatchMelodyViewer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -46,9 +46,9 @@ public class Controller implements JMC {
         ApplicationContext context = new ClassPathXmlApplicationContext( "spring.configuration.xml" );
 
         SignatureDecomposer decomposer = context.getBean( SignatureDecomposer.class );
-        Map< Signature, Set< Signature > > signatures = decomposer.analyzeSignatures( compositions );
+        Map<Melody, Set<Melody> > signatures = decomposer.analyzeSignatures( compositions );
 
-        BatchSignatureViewer batchSignatureViewer = context.getBean( BatchSignatureViewer.class );
+        BatchMelodyViewer batchSignatureViewer = context.getBean( BatchMelodyViewer.class );
         batchSignatureViewer.view( signatures );
 
 //        StoreManager storeManager = context.getBean( StoreManager.class );

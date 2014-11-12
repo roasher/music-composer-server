@@ -1,8 +1,7 @@
 package decomposer.analyzer.melody.equality;
 
-import decomposer.analyzer.form.KeyEqualityTest;
 import jm.music.data.Note;
-import model.Signature;
+import model.Melody;
 import org.junit.Test;
 
 import static jm.constants.Durations.*;
@@ -19,7 +18,7 @@ public class TestKeyEqualityTest {
 
 	@Test
 	public void testCase1() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( C4, SIXTEENTH_NOTE ),
 			new Note( B4, SIXTEENTH_NOTE ),
@@ -34,19 +33,19 @@ public class TestKeyEqualityTest {
 			new Note( A4, EIGHTH_NOTE ),
 		  }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( C4, SIXTEENTH_NOTE ),
 			new Note( GS4, SIXTEENTH_NOTE ),
 		  }
 		);
 
-		assertFalse( test.test( testSignature1, testSignature2 ) );
+		assertFalse( test.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase2() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( C4, SIXTEENTH_NOTE ),
 			new Note( B4, SIXTEENTH_NOTE ),
@@ -61,7 +60,7 @@ public class TestKeyEqualityTest {
 			new Note( A4, EIGHTH_NOTE ),
 		  }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( C4, SIXTEENTH_NOTE ),
 			new Note( D4, SIXTEENTH_NOTE ),
@@ -70,29 +69,29 @@ public class TestKeyEqualityTest {
 		  }
 		);
 
-		assertTrue( test.test( testSignature1, testSignature2 ) );
+		assertTrue( test.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase3() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( C4, SIXTEENTH_NOTE ),
 			new Note( CS4, SIXTEENTH_NOTE ),
 		  }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( D4, SIXTEENTH_NOTE ),
 		  }
 		);
 
-		assertFalse( test.test( testSignature1, testSignature2 ) );
+		assertFalse( test.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase4() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( C4, SIXTEENTH_NOTE ),
 			new Note( BF0, SIXTEENTH_NOTE ),
@@ -101,12 +100,12 @@ public class TestKeyEqualityTest {
 			new Note( E4, SIXTEENTH_NOTE ),
 		  }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( EF4, SIXTEENTH_NOTE ),
 		  }
 		);
 
-		assertFalse( test.test( testSignature1, testSignature2 ) );
+		assertFalse( test.test( testMelody1, testMelody2 ) );
 	}
 }

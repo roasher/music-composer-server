@@ -1,11 +1,11 @@
-package decomposer.analyzer.melody.equality;
+package decomposer.analyzer.melody.equality.melodymovement;
 
 import model.MelodyMovement;
 
 import static java.lang.Math.signum;
 
 /**
- * Class represents Contour test for signatures
+ * Class represents Contour test for melodies
  * @author Pavel Yurkin
  * @date 27.06.2014.
  */

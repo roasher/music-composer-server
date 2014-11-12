@@ -1,7 +1,8 @@
 package decomposer.analyzer.melody.equality;
 
+import decomposer.analyzer.melody.equality.melodymovement.InterpolationMelodyMovementEqualityTest;
 import jm.music.data.Note;
-import model.Signature;
+import model.Melody;
 import org.junit.Test;
 
 import static jm.constants.Durations.DOTTED_EIGHTH_NOTE;
@@ -18,14 +19,14 @@ public class TestInterpolationEqualityTest {
 
 	@Test
 	public void testCase1() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
 			new Note( CS4, EIGHTH_NOTE ),
 			new Note( D4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( A4, SIXTEENTH_NOTE_TRIPLET ),
 			new Note( BF4, SIXTEENTH_NOTE_TRIPLET ),
@@ -36,15 +37,15 @@ public class TestInterpolationEqualityTest {
 		);
 
 		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 2 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 
 		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 1 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase2() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -52,7 +53,7 @@ public class TestInterpolationEqualityTest {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( D4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( A4, SIXTEENTH_NOTE_TRIPLET ),
 			new Note( BF4, SIXTEENTH_NOTE_TRIPLET ),
@@ -63,22 +64,22 @@ public class TestInterpolationEqualityTest {
 		);
 
 		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 20 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 20 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase3() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
 			new Note( CS4, EIGHTH_NOTE ),
 			new Note( D4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( G4, EIGHTH_NOTE ),
 			new Note( EF5, DOTTED_EIGHTH_NOTE ),
@@ -87,15 +88,15 @@ public class TestInterpolationEqualityTest {
 		);
 
 		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 20 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 20 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
     @Test
     public void testCase4() {
-        Signature testSignature1 = new Signature(
+        Melody testMelody1 = new Melody(
                 new Note[] {
                         new Note( 69, 1 ),
                         new Note( 68, 0.5 ),
@@ -111,7 +112,7 @@ public class TestInterpolationEqualityTest {
                         new Note( 69, 0.5 ),
                 }
         );
-        Signature testSignature2 = new Signature(
+        Melody testMelody2 = new Melody(
                 new Note[] {
                         new Note( 72, 0.5 ),
                         new Note( 67, 0.25000000000000083 ),
@@ -127,7 +128,7 @@ public class TestInterpolationEqualityTest {
         );
 
         interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 2 );
-        assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+        assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 
     }
 }

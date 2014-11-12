@@ -1,20 +1,20 @@
-package decomposer.analyzer.signature;
+package decomposer.analyzer.melody;
 
 import decomposer.analyzer.melody.equality.*;
-import model.Signature;
+import model.Melody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * Class analyzes if two signatures can be considered equal
+ * Class analyzes if two melodies can be considered equal
  * Created by night wish on 26.07.14.
  */
 @Component
-public class SignatureEqualityAnalyzerImpl implements SignatureEqualityAnalyzer {
+public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 
     /**
-     * Min percentage of passed sub tests necessary to consider equality of two signatures
+     * Min percentage of passed sub tests necessary to consider equality of two melodies
      */
     private double equalityTestPassThreshold;
 
@@ -29,29 +29,29 @@ public class SignatureEqualityAnalyzerImpl implements SignatureEqualityAnalyzer 
 
     private Logger logger = LoggerFactory.getLogger( getClass() );
 
-    public boolean isEqual( Signature firstSignature, Signature secondSignature ) {
-        // If signatures size abs difference more than fragmentationEqualityTest.
-//        int absSizeDifference = Math.abs( firstSignature.getSize() - secondSignature.getSize() );
+    public boolean isEqual( Melody firstMelody, Melody secondMelody ) {
+        // If melodies size abs difference more than fragmentationEqualityTest.
+//        int absSizeDifference = Math.abs( firstMelody.getSize() - secondMelody.getSize() );
 //        if ( absSizeDifference > interpolationEqualityTest.getMaxNumberOfDiversedNotes() || absSizeDifference > fragmentationEqualityTest.getMaxNumberOfDiversedNotes() ) {
 //            return false;
 //        }
 //
-//        logger.debug( "Starting signature comparison {} {}", firstSignature.toString(), secondSignature.toString() );
-//        boolean fragmentationTest = fragmentationEqualityTest.test( firstSignature, secondSignature );
+//        logger.debug( "Starting melody comparison {} {}", firstMelody.toString(), secondMelody.toString() );
+//        boolean fragmentationTest = fragmentationEqualityTest.test( firstMelody, secondMelody );
 //        if ( fragmentationTest ) {
-//            logger.debug( "Fragmentation test succeed. No more tests required, signatures considered equal." );
+//            logger.debug( "Fragmentation test succeed. No more tests required, melodies considered equal." );
 //            return true;
 //        }
 //
-//        boolean interpolationTest = interpolationEqualityTest.test( firstSignature, secondSignature );
+//        boolean interpolationTest = interpolationEqualityTest.test( firstMelody, secondMelody );
 //        if ( interpolationTest ) {
-//            logger.debug( "Interpolation test succeed. No more tests required, signatures considered equal." );
+//            logger.debug( "Interpolation test succeed. No more tests required, melodies considered equal." );
 //            return true;
 //        }
 
-        boolean rhythmTest = rhythmEqualityTest.test( firstSignature, secondSignature );
+        boolean rhythmTest = rhythmEqualityTest.test( firstMelody, secondMelody );
         if ( !rhythmTest ) {
-            logger.debug( "rhythm_old test failed. No more tests required, signatures considered not equal." );
+            logger.debug( "rhythm_old test failed. No more tests required, melodies considered not equal." );
             return false;
         }
 
@@ -65,7 +65,7 @@ public class SignatureEqualityAnalyzerImpl implements SignatureEqualityAnalyzer 
 		int numberOfTestsFailed = 0;
 
 		for ( int currentTestNumber = 0; currentTestNumber < testArray.length;  currentTestNumber ++ ) {
-			boolean testPassed = testArray[ currentTestNumber ].test( firstSignature, secondSignature );
+			boolean testPassed = testArray[ currentTestNumber ].test( firstMelody, secondMelody );
 			if ( testPassed ) {
 				numberOfTestsPassed++;
 				logger.debug( "{} test succeed", testArray[ currentTestNumber ].getClass().getSimpleName() );
@@ -82,10 +82,10 @@ public class SignatureEqualityAnalyzerImpl implements SignatureEqualityAnalyzer 
         logger.debug( "Percent of positive tests = {}, pass threshold = {}", positivePersentage, this.equalityTestPassThreshold );
 
         if ( equalityTestPassThreshold <= positivePersentage ) {
-            logger.debug( "Signatures considered equal" );
+            logger.debug( "Melodies considered equal" );
             return true;
         } else {
-            logger.debug( "Signatures considered different" );
+            logger.debug( "Melodies considered different" );
             return false;
         }
     }

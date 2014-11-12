@@ -1,8 +1,9 @@
 package decomposer.analyzer.melody.equality;
 
+import decomposer.analyzer.melody.equality.melodymovement.ContourMelodyMovementEqualityTest;
 import jm.music.data.Note;
 import jm.util.View;
-import model.Signature;
+import model.Melody;
 import org.junit.Test;
 
 import static jm.constants.Durations.*;
@@ -17,7 +18,7 @@ public class TestContourEqualityTest {
 
 	@Test
 	public void testCase1() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( G4, SIXTEENTH_NOTE ),
 			new Note( B4, SIXTEENTH_NOTE ),
@@ -32,7 +33,7 @@ public class TestContourEqualityTest {
 			new Note( AS4, EIGHTH_NOTE ),
 		  }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( G4, SIXTEENTH_NOTE ),
 			new Note( DS5, SIXTEENTH_NOTE ),
@@ -48,19 +49,19 @@ public class TestContourEqualityTest {
 		  }
 		);
 
-		View.notate( testSignature1 );
-		View.notate( testSignature2 );
+		View.notate( testMelody1 );
+		View.notate( testMelody2 );
 
 		contourMelodyMovementEqualityTest.setMaxNumberOfDiffDirectionIntervals(4);
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 
 		contourMelodyMovementEqualityTest.setMaxNumberOfDiffDirectionIntervals(0);
-		assertTrue(equalityTest.test(testSignature1, testSignature2));
+		assertTrue(equalityTest.test( testMelody1, testMelody2 ));
 	}
 
 	@Test
 	public void testCase2() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( G4, SIXTEENTH_NOTE ),
 			new Note( B4, SIXTEENTH_NOTE ),
@@ -75,7 +76,7 @@ public class TestContourEqualityTest {
 			new Note( AS4, EIGHTH_NOTE ),
 		  }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( G3, SIXTEENTH_NOTE ),
 			new Note( G4, SIXTEENTH_NOTE ),
@@ -91,16 +92,16 @@ public class TestContourEqualityTest {
 		  }
 		);
 
-		View.notate( testSignature1 );
-		View.notate( testSignature2 );
+		View.notate( testMelody1 );
+		View.notate( testMelody2 );
 
 		contourMelodyMovementEqualityTest.setMaxNumberOfDiffDirectionIntervals(2);
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
     @Test
     public void testCase5() {
-        Signature testSignature1 = new Signature(
+        Melody testMelody1 = new Melody(
                 new Note[] {
                         new Note( G4, SIXTEENTH_NOTE ),
                         new Note( B4, SIXTEENTH_NOTE ),
@@ -115,7 +116,7 @@ public class TestContourEqualityTest {
                         new Note( AS4, EIGHTH_NOTE ),
                 }
         );
-        Signature testSignature2 = new Signature(
+        Melody testMelody2 = new Melody(
                 new Note[] {
                         new Note( G3, SIXTEENTH_NOTE ),
                         new Note( G4, SIXTEENTH_NOTE ),
@@ -131,14 +132,14 @@ public class TestContourEqualityTest {
                 }
         );
 
-        View.notate( testSignature1 );
-        View.notate( testSignature2 );
+        View.notate( testMelody1 );
+        View.notate( testMelody2 );
 
         contourMelodyMovementEqualityTest.setMaxNumberOfDiffDirectionIntervals(0);
-        assertFalse(equalityTest.test(testSignature1, testSignature2));
+        assertFalse(equalityTest.test( testMelody1, testMelody2 ));
 
         contourMelodyMovementEqualityTest.setMaxNumberOfDiffDirectionIntervals(1);
-        assertTrue(equalityTest.test(testSignature1, testSignature2));
+        assertTrue(equalityTest.test( testMelody1, testMelody2 ));
     }
     
 //	ic static void main( String... args ) {

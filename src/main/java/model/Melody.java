@@ -4,27 +4,26 @@ import jm.music.data.Note;
 import jm.music.data.Phrase;
 import utils.Utils;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
- * Class represents signature entity
- * Signatures is the simple moves witch repeats from composition to composition
+ * Class represents Melody entity
+ * Melodies considered as simple single-voice note moves
  * Created by Pavel Yurkin on 26.07.14.
  */
-public class Signature extends Phrase {
+public class Melody extends Phrase {
 
     private PlaceInTheComposition placeInTheComposition;
 
-    public Signature( List<Note> notes ) {
+    public Melody( List<Note> notes ) {
         this((Note[]) notes.toArray());
     }
 
-    public Signature( Note[] notes ) {
+    public Melody( Note[] notes ) {
         super(notes);
     }
 
-    public Signature() {
+    public Melody() {
         super();
     }
 
@@ -50,21 +49,21 @@ public class Signature extends Phrase {
         if ( this == o ) return true;
         if ( o == null || getClass() != o.getClass() ) return false;
 
-        Signature signature = ( Signature ) o;
+        Melody melody = ( Melody ) o;
 
         Note[] thisNoteArray = this.getNoteArray();
-        Note[] signatureNoteArray = signature.getNoteArray();
+        Note[] melodyNoteArray = melody.getNoteArray();
 
-        if ( thisNoteArray.length != signatureNoteArray.length ) return false;
+        if ( thisNoteArray.length != melodyNoteArray.length ) return false;
 
-//        int difference = thisNoteArray[ 0 ].getPitch() - signatureNoteArray[ 0 ].getPitch();
+//        int difference = thisNoteArray[ 0 ].getPitch() - melodyNoteArray[ 0 ].getPitch();
         for ( int currentNoteNumber = 0; currentNoteNumber < thisNoteArray.length ; currentNoteNumber ++ ) {
             Note currentNoteFromThis = thisNoteArray[ currentNoteNumber ];
-            Note currentNoteFromSignature = signatureNoteArray[ currentNoteNumber ];
-//            int currentDifference = currentNoteFromThis.getPitch() - currentNoteFromSignature.getPitch();
-            double rhythm1 = Utils.round( currentNoteFromSignature.getRhythmValue() );
+            Note currentNoteFromMelody = melodyNoteArray[ currentNoteNumber ];
+//            int currentDifference = currentNoteFromThis.getPitch() - currentNoteFromMelody.getPitch();
+            double rhythm1 = Utils.round( currentNoteFromMelody.getRhythmValue() );
             double rhythm2 = Utils.round( currentNoteFromThis.getRhythmValue() );
-            if ( currentNoteFromSignature.getPitch() != currentNoteFromThis.getPitch() || rhythm1 != rhythm2 ) {
+            if ( currentNoteFromMelody.getPitch() != currentNoteFromThis.getPitch() || rhythm1 != rhythm2 ) {
                 return false;
             }
         }

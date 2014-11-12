@@ -1,12 +1,12 @@
 package decomposer.analyzer.form;
 
-import decomposer.analyzer.signature.SignatureEqualityAnalyzer;
+import decomposer.analyzer.melody.MelodyEqualityAnalyzer;
 
 /**
  * Created by night wish on 02.11.14.
  */
 public class TestFormEqualityAnalyzerImpl {
-	private SignatureEqualityAnalyzer signatureEqualityAnalyzer = new FormEqualityAnalyzerImpl();
+	private MelodyEqualityAnalyzer melodyEqualityAnalyzer = new FormEqualityAnalyzerImpl();
 
 	public void testCase_restless_mind() {
 

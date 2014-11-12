@@ -1,7 +1,7 @@
 package decomposer.analyzer.melody.equality;
 
 import jm.music.data.Note;
-import model.Signature;
+import model.Melody;
 import org.junit.Test;
 
 import static jm.constants.Durations.*;
@@ -16,7 +16,7 @@ public class TestRhythmEqualityTest {
 
 	@Test
 	public void testCase1() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -25,7 +25,7 @@ public class TestRhythmEqualityTest {
 			new Note( E4, EIGHTH_NOTE ),
 			new Note( F4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -37,12 +37,12 @@ public class TestRhythmEqualityTest {
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 0 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase2() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, DOTTED_EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -51,7 +51,7 @@ public class TestRhythmEqualityTest {
 			new Note( E4, EIGHTH_NOTE ),
 			new Note( F4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -64,24 +64,24 @@ public class TestRhythmEqualityTest {
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.5 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.5 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.5 );
-		assertTrue( equalityTest.test( testSignature2, testSignature1 ) );
+		assertTrue( equalityTest.test( testMelody2, testMelody1 ) );
 	}
 
 	@Test
 	public void testCase3() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, DOTTED_EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -90,7 +90,7 @@ public class TestRhythmEqualityTest {
 			new Note( E4, EIGHTH_NOTE ),
 			new Note( F4, EIGHTH_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -103,24 +103,24 @@ public class TestRhythmEqualityTest {
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0 );
-		assertFalse( equalityTest.test( testSignature2, testSignature1 ) );
+		assertFalse( equalityTest.test( testMelody2, testMelody1 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.5 );
-		assertFalse( equalityTest.test( testSignature2, testSignature1 ) );
+		assertFalse( equalityTest.test( testMelody2, testMelody1 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.5 );
-		assertTrue( equalityTest.test( testSignature2, testSignature1 ) );
+		assertTrue( equalityTest.test( testMelody2, testMelody1 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.5 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
 	public void testCase4() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, DOTTED_EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -129,7 +129,7 @@ public class TestRhythmEqualityTest {
 			new Note( E4, EIGHTH_NOTE ),
 			new Note( F4, QUARTER_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
@@ -142,36 +142,36 @@ public class TestRhythmEqualityTest {
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 1 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.5 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.75 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.75 );
-		assertTrue( equalityTest.test( testSignature2, testSignature1 ) );
+		assertTrue( equalityTest.test( testMelody2, testMelody1 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.74 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.74 );
-		assertFalse( equalityTest.test( testSignature2, testSignature1 ) );
+		assertFalse( equalityTest.test( testMelody2, testMelody1 ) );
 	}
 
 	@Test
 	public void testCase5() {
-		Signature testSignature1 = new Signature(
+		Melody testMelody1 = new Melody(
 		  new Note[] {
 			new Note( D4, WHOLE_NOTE ),
 			new Note( EF4, WHOLE_NOTE ),
@@ -180,7 +180,7 @@ public class TestRhythmEqualityTest {
 			new Note( E4, WHOLE_NOTE ),
 			new Note( F4, WHOLE_NOTE ) }
 		);
-		Signature testSignature2 = new Signature(
+		Melody testMelody2 = new Melody(
 		  new Note[] {
 			new Note( D4, DOTTED_QUARTER_NOTE ),
 			new Note( EF4, EIGHTH_NOTE ),
@@ -192,49 +192,49 @@ public class TestRhythmEqualityTest {
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 1 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 1 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 3 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.5 );
-		assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 3 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.49 );
-		assertFalse( equalityTest.test( testSignature1, testSignature2 ) );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
 
 		// inverse
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0 );
-		assertFalse( equalityTest.test( testSignature2, testSignature1 ) );
+		assertFalse( equalityTest.test( testMelody2, testMelody1 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 1 );
-		assertFalse( equalityTest.test( testSignature2, testSignature1 ) );
+		assertFalse( equalityTest.test( testMelody2, testMelody1 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 1 );
-		assertFalse( equalityTest.test( testSignature2, testSignature1 ) );
+		assertFalse( equalityTest.test( testMelody2, testMelody1 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 3 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.5 );
-		assertTrue( equalityTest.test( testSignature2, testSignature1 ) );
+		assertTrue( equalityTest.test( testMelody2, testMelody1 ) );
 
 		rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 3 );
 		rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.49 );
-		assertFalse( equalityTest.test( testSignature2, testSignature1 ) );
+		assertFalse( equalityTest.test( testMelody2, testMelody1 ) );
 	}
 
     @Test
     public void testCase6() {
-        Signature testSignature1 = new Signature(
+        Melody testMelody1 = new Melody(
                 new Note[] {
                         new Note( REST, 1 ),
                         new Note( 72, 0.25 ),
@@ -243,7 +243,7 @@ public class TestRhythmEqualityTest {
                         new Note( 77, 0.25 ),
                         new Note( REST, 1 ) }
         );
-        Signature testSignature2 = new Signature(
+        Melody testMelody2 = new Melody(
                 new Note[] {
                         new Note( REST, 1 ),
                         new Note( 72, 0.25 ),
@@ -255,7 +255,7 @@ public class TestRhythmEqualityTest {
 
         rhytmEqualityTest.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
         rhytmEqualityTest.setMaxRhythmDeviationSteps( 0.5 );
-        assertTrue( equalityTest.test( testSignature1, testSignature2 ) );
+        assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 
     }
 }

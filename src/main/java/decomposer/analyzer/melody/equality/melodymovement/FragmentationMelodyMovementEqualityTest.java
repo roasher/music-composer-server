@@ -1,5 +1,6 @@
-package decomposer.analyzer.melody.equality;
+package decomposer.analyzer.melody.equality.melodymovement;
 
+import decomposer.analyzer.melody.equality.melodymovement.AbstractMelodyMovementEqualityTest;
 import model.MelodyMovement;
 
 import static java.lang.Math.abs;
@@ -16,7 +17,7 @@ public class FragmentationMelodyMovementEqualityTest extends AbstractMelodyMovem
     @Override
     /**
      * @returns true if number of deleted notes <= maxNumberOfDeletedIntervals false otherwise
-     * Fragmentation may occurs only if some of the intervals was removed from right of left side of the Signature
+     * Fragmentation may occurs only if some of the intervals was removed from right of left side of the Melody
      */
     public boolean testEqualityByLogic( MelodyMovement firstMelodyMovement, MelodyMovement secondMelodyMovement ) {
         // Fragmentation occurs only if one list is part of another

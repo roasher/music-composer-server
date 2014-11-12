@@ -1,6 +1,6 @@
 package decomposer.analyzer.melody.equality;
 
-import model.Signature;
+import model.Melody;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,11 +15,11 @@ public class RhytmEqualityTest implements EqualityTest {
     private double maxRhythmDeviationSteps;
 
     @Override
-    public boolean test( Signature firstSignature, Signature secondSignature ) {
+    public boolean test( Melody firstMelody, Melody secondMelody ) {
 
-        double[] firstRhythmArray = firstSignature.getRhythmArray();
-        double[] secondRhythmArray = secondSignature.getRhythmArray();
-        double[] coefficient = new double[firstSignature.length()];
+        double[] firstRhythmArray = firstMelody.getRhythmArray();
+        double[] secondRhythmArray = secondMelody.getRhythmArray();
+        double[] coefficient = new double[firstMelody.length()];
 		Map<Double, Integer> countMap = new HashMap<>(  );
 
 		int currentMaxNumberOfRhythmicallyDifferentNotes = 0;

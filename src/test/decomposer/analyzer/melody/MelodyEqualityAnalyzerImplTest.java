@@ -1,19 +1,17 @@
 package decomposer.analyzer.melody;
 
-import decomposer.analyzer.signature.SignatureEqualityAnalyzerImpl;
 import static jm.constants.Pitches.*;
 import jm.music.data.Note;
 import junit.framework.Assert;
-import model.Signature;
+import model.Melody;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Class analyzes if two signatures can be considered equal
  * Created by night wish on 26.07.14.
  */
-public class SignatureEqualityAnalyzerImplTest {
+public class MelodyEqualityAnalyzerImplTest {
 
     ApplicationContext applicationContext = new ClassPathXmlApplicationContext( "spring.configuration.xml" );
 
@@ -28,7 +26,7 @@ public class SignatureEqualityAnalyzerImplTest {
                 new Note( 62, 0.25 ),
                 new Note( 64, 2 ),
         };
-        Signature signature1 = new Signature( notes1 );
+        Melody melody1 = new Melody( notes1 );
 
         Note[] notes2 = new Note[] {
                 new Note( 76, 0.49999999999999906 ),
@@ -39,9 +37,9 @@ public class SignatureEqualityAnalyzerImplTest {
                 new Note( 69, 1.05 ),
                 new Note( 71, 0.24999999999999906 ),
         };
-        Signature signature2 = new Signature( notes2 );
+        Melody melody2 = new Melody( notes2 );
 
-        Assert.assertFalse(applicationContext.getBean(SignatureEqualityAnalyzerImpl.class).isEqual(signature1, signature2));
+        Assert.assertFalse(applicationContext.getBean( MelodyEqualityAnalyzerImpl.class).isEqual( melody1, melody2 ));
     }
 
     @Test
@@ -58,7 +56,7 @@ public class SignatureEqualityAnalyzerImplTest {
                 new Note( REST, 1 ),
                 new Note( 69, 0.5 ),
         };
-        Signature signature1 = new Signature( notes1 );
+        Melody melody1 = new Melody( notes1 );
 
         Note[] notes2 = new Note[] {
                 new Note( 69, 0.5 ),
@@ -72,8 +70,8 @@ public class SignatureEqualityAnalyzerImplTest {
                 new Note( REST, 1 ),
                 new Note( 69, 0.5 ),
         };
-        Signature signature2 = new Signature( notes2 );
+        Melody melody2 = new Melody( notes2 );
 
-        Assert.assertTrue(applicationContext.getBean(SignatureEqualityAnalyzerImpl.class).isEqual(signature1, signature2));
+        Assert.assertTrue(applicationContext.getBean( MelodyEqualityAnalyzerImpl.class).isEqual( melody1, melody2 ));
     }
 }

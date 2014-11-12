@@ -1,5 +1,6 @@
-package decomposer.analyzer.melody.equality;
+package decomposer.analyzer.melody.equality.melodymovement;
 
+import decomposer.analyzer.melody.equality.melodymovement.AbstractMelodyMovementEqualityTest;
 import model.MelodyMovement;
 
 import static java.lang.Math.abs;

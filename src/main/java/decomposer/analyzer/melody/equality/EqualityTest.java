@@ -1,16 +1,16 @@
 package decomposer.analyzer.melody.equality;
 
-import model.Signature;
+import model.Melody;
 
 public interface EqualityTest {
 
     /**
-     * Tests if two signatures can be considered equal
-     * @param firstSignature
-     * @param secondSignature
+     * Tests if two melodies can be considered equal
+     * @param firstMelody
+     * @param secondMelody
      * @return
      */
-    public boolean test( Signature firstSignature, Signature secondSignature );
+    public boolean test( Melody firstMelody, Melody secondMelody );
 
     /**
      * Returns maximum number of not suitable notes that allows this Equality test

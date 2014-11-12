@@ -1,5 +1,6 @@
-package decomposer.analyzer.melody.equality;
+package decomposer.analyzer.melody.equality.melodymovement;
 
+import decomposer.analyzer.melody.equality.melodymovement.AbstractMelodyMovementEqualityTest;
 import model.MelodyMovement;
 
 /**
@@ -13,7 +14,7 @@ public class OrderMelodyMovementEqualityTest extends AbstractMelodyMovementEqual
 
     @Override
     /**
-     * @returns true if one signature can be received from another swapping notes, and number of that swaps <= maxNumberOfIntervalsHavingSwappedNotes
+     * @returns true if one melody can be received from another swapping notes, and number of that swaps <= maxNumberOfIntervalsHavingSwappedNotes
      * Swapping may move one note to the next ( +1 ) or previous ( -1 ) position but no further
      */
     public boolean testEqualityByLogic( MelodyMovement firstMelodyMovement, MelodyMovement secondMelodyMovement ) {

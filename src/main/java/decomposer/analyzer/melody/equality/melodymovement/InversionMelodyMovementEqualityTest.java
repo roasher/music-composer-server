@@ -1,9 +1,10 @@
-package decomposer.analyzer.melody.equality;
+package decomposer.analyzer.melody.equality.melodymovement;
 
+import decomposer.analyzer.melody.equality.melodymovement.AbstractMelodyMovementEqualityTest;
 import model.MelodyMovement;
 
 /**
- * Class represents inversion test for signatures
+ * Class represents inversion test for melodies
  * @author Pavel Yurkin
  * @date 27.06.2014.
  */

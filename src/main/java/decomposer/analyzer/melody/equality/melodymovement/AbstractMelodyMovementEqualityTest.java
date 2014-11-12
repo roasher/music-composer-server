@@ -1,7 +1,8 @@
-package decomposer.analyzer.melody.equality;
+package decomposer.analyzer.melody.equality.melodymovement;
 
+import decomposer.analyzer.melody.equality.EqualityTest;
+import model.Melody;
 import model.MelodyMovement;
-import model.Signature;
 
 /**
  * @author Pavel Yurkin
@@ -9,9 +10,9 @@ import model.Signature;
  */
 public abstract class AbstractMelodyMovementEqualityTest implements EqualityTest {
 
-    public boolean test( Signature firstSignature, Signature secondSignature ) {
-        MelodyMovement firstMelodyMovement = new MelodyMovement( firstSignature.getNoteArray() );
-        MelodyMovement secondMelodyMovement = new MelodyMovement( secondSignature.getNoteArray() );
+    public boolean test( Melody firstMelody, Melody secondMelody ) {
+        MelodyMovement firstMelodyMovement = new MelodyMovement( firstMelody.getNoteArray() );
+        MelodyMovement secondMelodyMovement = new MelodyMovement( secondMelody.getNoteArray() );
         // Test on equality to save some time
         if ( firstMelodyMovement.equals( secondMelodyMovement ) ) {
             return true;

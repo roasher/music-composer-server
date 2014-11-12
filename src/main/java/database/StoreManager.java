@@ -1,6 +1,6 @@
 package database;
 
-import model.Signature;
+import model.Melody;
 
 import java.io.*;
 import java.util.*;
@@ -14,36 +14,36 @@ public class StoreManager {
     private String signatureStoreDir;
 
     /**
-     * Stores signatures into the signature store directory
-     * @param signatures
+     * Stores melodies into the melody store directory
+     * @param melodies
      * @throws IOException
      */
-    public void storeSignatures( Set< Signature > signatures ) throws IOException {
+    public void storeSignatures( Set<Melody> melodies ) throws IOException {
         try ( FileOutputStream fileOutputStream = new FileOutputStream( signatureStoreDir );
               ObjectOutputStream objectOutputStream = new ObjectOutputStream( fileOutputStream ); ) {
-            for ( Signature signature : signatures ) {
-                objectOutputStream.writeObject( signature );
+            for ( Melody melody : melodies ) {
+                objectOutputStream.writeObject( melody );
             }
             objectOutputStream.flush();
         }
     }
 
     /**
-     * Retrieves signatures from signature store directory
+     * Retrieves melodies from melody store directory
      * @return
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public List<Signature> getStoredSignatures() throws IOException, ClassNotFoundException {
-        List< Signature > storedSignatures = new ArrayList<>();
+    public List<Melody> getStoredSignatures() throws IOException, ClassNotFoundException {
+        List<Melody> storedMelodies = new ArrayList<>();
         try ( FileInputStream fileOutputStream = new FileInputStream( signatureStoreDir );
               ObjectInputStream objectOutputStream = new ObjectInputStream( fileOutputStream ); ) {
-            Signature signature = null;
-            while ( ( signature = ( Signature ) objectOutputStream.readObject() ) != null ) {
-                storedSignatures.add( signature );
+            Melody melody = null;
+            while ( ( melody = ( Melody ) objectOutputStream.readObject() ) != null ) {
+                storedMelodies.add( melody );
             }
         }
-        return storedSignatures;
+        return storedMelodies;
     }
 
     public String getSignatureStoreDir() {
