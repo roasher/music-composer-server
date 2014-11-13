@@ -4,7 +4,6 @@ import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Score;
-import jm.util.View;
 import model.MusicBlock;
 import org.junit.Test;
 import utils.Utils;
@@ -201,7 +200,6 @@ public class ScoreSlicerTest {
 		}
 		List< List< Note> > sliceToTestQuarter = scoreSlicer.slice( phraseQuarter, QUARTER_NOTE );
 		assertTrue( Utils.ListOfListsIsEquals( sliceToTestQuarter, sliceQuarterNote ) );
-
 
 		// WHOLE NOTE
 		List< List< Note > > sliceWholefNote = new ArrayList<>();

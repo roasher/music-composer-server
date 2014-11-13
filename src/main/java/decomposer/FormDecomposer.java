@@ -33,7 +33,7 @@ public class FormDecomposer {
 			MusicBlock musicBlock = musicBlocks.get( musicBlockNumber );
 			for ( int musicBlockToCompareWithNumber = 0; musicBlockToCompareWithNumber < musicBlockNumber; musicBlockNumber++ ) {
 				MusicBlock musicBlockToCompareWith = musicBlocks.get( musicBlockToCompareWithNumber );
-				if ( formAnalyzer.equal( musicBlock, musicBlockToCompareWith ) ) {
+				if ( formAnalyzer.isEqual( musicBlock, musicBlockToCompareWith ) ) {
 					musicBlock.setForm( musicBlockToCompareWith.getForm() );
 				}
 			}
