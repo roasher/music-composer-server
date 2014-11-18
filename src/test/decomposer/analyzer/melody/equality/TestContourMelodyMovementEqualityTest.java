@@ -11,7 +11,7 @@ import static jm.constants.Pitches.*;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-public class TestContourEqualityTest {
+public class TestContourMelodyMovementEqualityTest {
 
 	private ContourMelodyMovementEqualityTest contourMelodyMovementEqualityTest = new ContourMelodyMovementEqualityTest();
 	private EqualityTest equalityTest = new EqualNumberOfNotesRequired( contourMelodyMovementEqualityTest );
@@ -143,7 +143,7 @@ public class TestContourEqualityTest {
     }
     
 //	ic static void main( String... args ) {
-//		TestContourEqualityTest testContourEqualityTest = new TestContourEqualityTest();
+//		TestContourMelodyMovementEqualityTest testContourEqualityTest = new TestContourMelodyMovementEqualityTest();
 //		testContourEqualityTest.testCase1();
 //		testContourEqualityTest.testCase2();
 //	}

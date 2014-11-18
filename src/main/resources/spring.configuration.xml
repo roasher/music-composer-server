@@ -7,33 +7,30 @@
     <import resource="equalityTest.xml"/>
     <import resource="form_analyzez_config.xml"/>
 
-    <bean id="SignatureDecomposer" class="decomposer.SignatureDecomposer">
+    <bean id="signatureDecomposer" class="decomposer.SignatureDecomposer">
         <property name="minSignatureLength" value="7"/>
         <property name="maxSignatureLength" value="12"/>
-        <property name="melodyEqualityAnalyzer" ref="MelodyEqualityAnalyzer"/>
+        <property name="melodyEqualityAnalyzer" ref="melodyEqualityAnalyzer"/>
         <!--<property name="melodyEqualityAnalyzer" ref="MelodyEqualityAnalyzerNotator"/>-->
     </bean>
 
-    <bean id="MelodyEqualityAnalyzerNotator" class="decomposer.analyzer.melody.MelodyEqualityAnalyzerNotator">
+    <bean id="melodyEqualityAnalyzerNotator" class="decomposer.analyzer.melody.MelodyEqualityAnalyzerNotator">
         <property name="notateSuccessful" value="true"/>
-        <property name="analyzer" ref="MelodyEqualityAnalyzer"/>
+        <property name="analyzer" ref="melodyEqualityAnalyzer"/>
     </bean>
 
-    <bean id="MelodyEqualityAnalyzer" class="decomposer.analyzer.melody.MelodyEqualityAnalyzerImpl" >
-        <!--<property name="interpolationEqualityTest" ref="InterpolationEqualityTestWrapper"/>-->
-        <!--<property name="fragmentationEqualityTest" ref="FragmentationEqualityTestWrapper"/>-->
-
+    <bean id="melodyEqualityAnalyzer" class="decomposer.analyzer.melody.MelodyEqualityAnalyzerImpl" >
         <property name="equalityTestPassThreshold" value="0.75"/>
-        <property name="countourEqualityTest" ref="CountourEqualityTestWrapper"/>
-        <property name="intervalsEqualityTest" ref="IntervalsEqualityTestWrapper"/>
-        <property name="inversionEqualityTest" ref="InversionEqualityTestWrapper"/>
-        <property name="orderEqualityTest" ref="OrderEqualityTestWrapper"/>
-        <property name="rhythmEqualityTest" ref="RhythmEqualityTestWrapper"/>
+        <property name="countourEqualityTest" ref="countourEqualityTestWrapper"/>
+        <property name="intervalsEqualityTest" ref="intervalsEqualityTestWrapper"/>
+        <property name="inversionEqualityTest" ref="inversionEqualityTestWrapper"/>
+        <property name="orderEqualityTest" ref="orderEqualityTestWrapper"/>
+        <property name="rhythmEqualityTest" ref="rhythmEqualityTestWrapper"/>
     </bean>
 
     <bean id="StoreManager" class="database.StoreManager">
         <property name="signatureStoreDir" value="D:\JAVA\dataBase"/>
     </bean>
 
-    <context:component-scan base-package="model,decomposer.analyzer.form"/>
+    <context:component-scan base-package="model,decomposer"/>
 </beans>

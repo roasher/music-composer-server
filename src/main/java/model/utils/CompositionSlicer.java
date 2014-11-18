@@ -1,10 +1,11 @@
 package model.utils;
 
+import jm.JMC;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
-import jm.music.data.Score;
 import model.MusicBlock;
+import model.composition.Composition;
 import org.springframework.stereotype.Component;
 import utils.Utils;
 
@@ -12,32 +13,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Slices score into pieces
+ * Slices composition into pieces
  * Created by night wish on 08.11.14.
  */
 @Component
-public class ScoreSlicer {
+public class CompositionSlicer {
 
 	/**
-	 * Slices music blocks with certain timePeriod from input score.
-	 * @param score
+	 * Slices music blocks with certain timePeriod from input composition.
+	 * @param composition
 	 * @param timePeriod
 	 * @return
 	 */
-	public List< MusicBlock > slice( Score score, double timePeriod ) {
+	public List< MusicBlock > slice( Composition composition, double timePeriod ) {
 
-		List< List< List< Note > > > composition = new ArrayList<>(  );
+		List< List< List< Note > > > compositionList = new ArrayList<>(  );
 
-		for ( Part part : score.getPartArray() ) {
+		for ( Part part : composition.getPartArray() ) {
 			Phrase phrase = part.getPhraseArray()[0];
 			List< List< Note > > noteList = slice( phrase, timePeriod );
-			composition.add( noteList );
+			compositionList.add( noteList );
 		}
 
 		List< MusicBlock > musicBlocks = new ArrayList<>();
-		for ( int musicBlockNumber = 0; musicBlockNumber < composition.get( 0 ).size(); musicBlockNumber ++ ) {
+		for ( int musicBlockNumber = 0; musicBlockNumber < compositionList.get( 0 ).size(); musicBlockNumber ++ ) {
 			List< List< Note > > musicBlockListOfNotes = new ArrayList<>();
-			for ( List< List< Note > > instrumentPart : composition ) {
+			for ( List< List< Note > > instrumentPart : compositionList ) {
 				musicBlockListOfNotes.add( instrumentPart.get( musicBlockNumber ) );
 			}
 			musicBlocks.add( new MusicBlock( musicBlockListOfNotes, null ) );
@@ -57,6 +58,12 @@ public class ScoreSlicer {
 		State state = new State( timePeriod );
 		for( Note note : phrase.getNoteArray() ) {
 			state.add( note );
+		}
+		// Filling last slice with rests if it shorter than time period
+		List<Note> lastSlice = state.slices.get( state.slices.size() - 1 );
+		double lastSliceRhythmValue = ModelUtils.sumAllRhytmValues( lastSlice );
+		if ( lastSliceRhythmValue < timePeriod ) {
+			lastSlice.add( new Note( JMC.REST, timePeriod - lastSliceRhythmValue ) );
 		}
 		return state.slices;
 	}

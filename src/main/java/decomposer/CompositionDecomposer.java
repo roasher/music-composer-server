@@ -2,6 +2,7 @@ package decomposer;
 
 import jm.music.data.Score;
 import model.MusicBlock;
+import model.composition.Composition;
 
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import java.util.Set;
  */
 public class CompositionDecomposer {
 
-    public Set<MusicBlock > decompose( Score score ) {
+    public Set<MusicBlock > decompose( Composition composition ) {
         // TODO implementation
         return null;
     }

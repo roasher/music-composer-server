@@ -73,8 +73,9 @@ public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 				numberOfTestsFailed++;
 				logger.debug( "{} test failed", testArray[ currentTestNumber ].getClass().getSimpleName() );
 			}
-			if ( ( testArray.length - numberOfTestsFailed )/testArray.length < equalityTestPassThreshold ) {
+			if ( 1 - numberOfTestsFailed*1./testArray.length < equalityTestPassThreshold ) {
 				logger.debug( "Number of failed test is too high - {}. Aborting others", numberOfTestsFailed );
+				return false;
 			}
 		}
 

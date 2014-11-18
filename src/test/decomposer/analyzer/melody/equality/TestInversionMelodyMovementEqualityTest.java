@@ -13,7 +13,7 @@ import static jm.constants.Pitches.F4;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-public class TestInversionEqualityTest {
+public class TestInversionMelodyMovementEqualityTest {
 
 	InversionMelodyMovementEqualityTest inversionMelodyMovementEqualityTest = new InversionMelodyMovementEqualityTest();
 	EqualityTest equalityTest = new EqualNumberOfNotesRequired( inversionMelodyMovementEqualityTest );

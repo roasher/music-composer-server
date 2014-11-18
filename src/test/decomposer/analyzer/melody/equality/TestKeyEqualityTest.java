@@ -3,6 +3,11 @@ package decomposer.analyzer.melody.equality;
 import jm.music.data.Note;
 import model.Melody;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static jm.constants.Durations.*;
 import static jm.constants.Pitches.*;
@@ -12,9 +17,12 @@ import static junit.framework.Assert.assertTrue;
 /**
  * Created by night wish on 02.11.14.
  */
+@RunWith( SpringJUnit4ClassRunner.class )
+@ContextConfiguration( locations = "classpath:spring.configuration.xml" )
 public class TestKeyEqualityTest {
 
-	private EqualityTest test = new KeyEqualityTest();
+	@Autowired @Qualifier("formKeyEqualityTest")
+	private EqualityTest test;
 
 	@Test
 	public void testCase1() {
@@ -107,5 +115,33 @@ public class TestKeyEqualityTest {
 		);
 
 		assertFalse( test.test( testMelody1, testMelody2 ) );
+	}
+
+	@Test
+	public void testCase5() {
+		Melody testMelody1 = new Melody(
+		  new Note[] {
+			new Note( 60, 0.5 ),
+			new Note( 62, 0.5 ),
+			new Note( 64, 0.5 ),
+			new Note( 65, 0.5 ),
+			new Note( 67, 0.5 ),
+			new Note( 69, 0.5 ),
+			new Note( -2147483648, 1 ),
+		  }
+		);
+		Melody testMelody2 = new Melody(
+		  new Note[] {
+			new Note( 57, 0.5 ),
+			new Note( 59, 0.5 ),
+			new Note( 60, 0.5 ),
+			new Note( 62, 0.5 ),
+			new Note( 64, 0.5 ),
+			new Note( 65, 0.5 ),
+			new Note( -2147483648, 1 ),
+		  }
+		);
+
+		assertTrue( test.test( testMelody1, testMelody2 ) );
 	}
 }

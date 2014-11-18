@@ -5,7 +5,12 @@ import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Score;
 import model.MusicBlock;
+import model.composition.Composition;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import utils.Utils;
 
 import java.util.ArrayList;
@@ -16,9 +21,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ScoreSlicerTest {
+@RunWith( SpringJUnit4ClassRunner.class )
+@ContextConfiguration( locations = "classpath:spring.configuration.xml" )
+public class CompositionSlicerTest {
 
-	private ScoreSlicer scoreSlicer = new ScoreSlicer();
+	@Autowired
+	private CompositionSlicer compositionSlicer;
 
 	@Test
 	public void testCase1() {
@@ -101,7 +109,7 @@ public class ScoreSlicerTest {
 		for ( Note note : noteListToSlice ) {
 			phrase.add( note );
 		}
-		List< List< Note> > sliceToTest = scoreSlicer.slice( phrase, HALF_NOTE );
+		List< List< Note> > sliceToTest = compositionSlicer.slice( phrase, HALF_NOTE );
 		assertTrue( Utils.ListOfListsIsEquals( sliceToTest, sliceHalfNote ) );
 
 		// QUARTER NOTE
@@ -198,7 +206,7 @@ public class ScoreSlicerTest {
 		for ( Note note : noteListToSlice ) {
 			phraseQuarter.add( note );
 		}
-		List< List< Note> > sliceToTestQuarter = scoreSlicer.slice( phraseQuarter, QUARTER_NOTE );
+		List< List< Note> > sliceToTestQuarter = compositionSlicer.slice( phraseQuarter, QUARTER_NOTE );
 		assertTrue( Utils.ListOfListsIsEquals( sliceToTestQuarter, sliceQuarterNote ) );
 
 		// WHOLE NOTE
@@ -241,11 +249,11 @@ public class ScoreSlicerTest {
 		for ( Note note : noteListToSlice ) {
 			phraseW.add( note );
 		}
-		List< List< Note> > sliceToTestW = scoreSlicer.slice( phraseW, WHOLE_NOTE );
+		List< List< Note> > sliceToTestW = compositionSlicer.slice( phraseW, WHOLE_NOTE );
 		assertTrue( Utils.ListOfListsIsEquals( sliceToTestW, sliceWholefNote ) );
 
 		phraseW.getNoteArray()[0].setRhythmValue( HALF_NOTE );
-		List< List< Note> > sliceToTestW1 = scoreSlicer.slice( phraseW, WHOLE_NOTE );
+		List< List< Note> > sliceToTestW1 = compositionSlicer.slice( phraseW, WHOLE_NOTE );
 		assertFalse( Utils.ListOfListsIsEquals( sliceToTestW1, sliceWholefNote ) );
 	}
 
@@ -274,7 +282,7 @@ public class ScoreSlicerTest {
 		Part thirdPart = new Part( thirdInstr );
 		score.add( thirdPart );
 
-		List<MusicBlock> testList = scoreSlicer.slice( score, DOTTED_HALF_NOTE );
+		List<MusicBlock> testList = compositionSlicer.slice( new Composition( score ), DOTTED_HALF_NOTE );
 
 		// first
 		List< Note > firstBlockfirstList = new ArrayList<>(  );
@@ -329,5 +337,43 @@ public class ScoreSlicerTest {
 		etalonList.add( thirdMusicBlock );
 
 		assertEquals( etalonList, testList );
+	}
+
+	@Test
+	public void testCase3() {
+		// notes to slice
+		List< Note > noteListToSlice = new ArrayList<>();
+
+		noteListToSlice.add( new Note( C0, HALF_NOTE ) );
+		noteListToSlice.add( new Note( C0, HALF_NOTE ) );
+
+		noteListToSlice.add( new Note( C0, QUARTER_NOTE ) );
+		noteListToSlice.add( new Note( C0, SIXTEENTH_NOTE ) );
+		noteListToSlice.add( new Note( C0, SIXTEENTH_NOTE ) );
+		noteListToSlice.add( new Note( C0, SIXTEENTH_NOTE ) );
+
+		// already sliced notes + rest in the end
+		List< List< Note > > sliceEtalon = new ArrayList<>();
+
+		List< Note > slice1 =  new ArrayList<>();
+		slice1.add( new Note( C0, HALF_NOTE ) );
+		slice1.add( new Note( C0, HALF_NOTE ) );
+		sliceEtalon.add( slice1 );
+
+		List< Note > slice2 =  new ArrayList<>();
+		slice2.add( new Note( C0, QUARTER_NOTE ) );
+		slice2.add( new Note( C0, SIXTEENTH_NOTE ) );
+		slice2.add( new Note( C0, SIXTEENTH_NOTE ) );
+		slice2.add( new Note( C0, SIXTEENTH_NOTE ) );
+		slice2.add( new Note( REST, WHOLE_NOTE - QUARTER_NOTE - 3*SIXTEENTH_NOTE ) );
+		sliceEtalon.add( slice2 );
+
+		Phrase phrase = new Phrase();
+		for ( Note note : noteListToSlice ) {
+			phrase.add( note );
+		}
+		List< List< Note> > sliceToTest = compositionSlicer.slice( phrase, WHOLE_NOTE );
+
+		assertTrue( Utils.ListOfListsIsEquals( sliceToTest, sliceEtalon ) );
 	}
 }

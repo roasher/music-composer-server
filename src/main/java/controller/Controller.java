@@ -69,17 +69,9 @@ public class Controller implements JMC {
         List< Composition > compositions = new ArrayList<Composition>(  );
         List<File> listFiles = listFilesForFolder( directory );
         for ( File currentFile : listFiles ) {
-            if ( !currentFile.getName().matches( ".*\\.mid" ) || currentFile.getName().matches( ".*drum.*" ) ) continue;
-            logger.info( " Reading composition {}", currentFile);
-            CompositionInfo compositionInfo = new CompositionInfo();
-            compositionInfo.setTitle(currentFile.getName());
-
-            Composition composition = new Composition();
-            composition.setCompositionInfo( compositionInfo );
-
-            Read.midi( composition, currentFile.getAbsolutePath() );
-            composition.roundAllRhythmValues();
-            compositions.add( composition );
+			if ( !currentFile.getName().matches( ".*\\.mid" ) || currentFile.getName().matches( ".*drum.*" ) ) continue;
+			Composition composition = getComposition( currentFile );
+			compositions.add( composition );
         }
         return compositions;
     }
@@ -92,4 +84,16 @@ public class Controller implements JMC {
         return compositions;
     }
 
+	public Composition getComposition( File file ) {
+		logger.info( " Reading composition {}", file );
+		CompositionInfo compositionInfo = new CompositionInfo();
+		compositionInfo.setTitle( file.getName());
+
+		Composition composition = new Composition();
+		composition.setCompositionInfo( compositionInfo );
+
+		Read.midi( composition, file.getAbsolutePath() );
+		composition.roundAllRhythmValues();
+		return composition;
+	}
 }

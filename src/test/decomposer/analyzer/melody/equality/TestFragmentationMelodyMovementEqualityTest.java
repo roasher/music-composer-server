@@ -10,7 +10,7 @@ import static jm.constants.Pitches.*;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-public class TestFragmentationEqualityTest {
+public class TestFragmentationMelodyMovementEqualityTest {
 	FragmentationMelodyMovementEqualityTest fragmentationMelodyMovementEqualityTest = new FragmentationMelodyMovementEqualityTest();
 	EqualityTest equalityTest = new DifferentNumberOfNotesRequired( fragmentationMelodyMovementEqualityTest );
 

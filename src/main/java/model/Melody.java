@@ -75,4 +75,13 @@ public class Melody extends Phrase {
         Note[] notes = this.getNoteArray();
         return notes[0].getPitch() - notes[ notes.length - 1 ].getPitch();
     }
+
+	@Override
+	public String toString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		for ( Note note : this.getNoteArray() ) {
+			stringBuilder.append( String.format( "{%d|%.1f}", note.getPitch(), note.getRhythmValue() ) );
+		}
+		return stringBuilder.toString();
+	}
 }

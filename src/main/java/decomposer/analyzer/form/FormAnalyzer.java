@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * Created by pyurkin on 12.11.14.
  */
-@Component
 public class FormAnalyzer {
 
 	private double instrumentEqualityPassThreshold;
@@ -52,5 +51,13 @@ public class FormAnalyzer {
 			logger.info( "Successfull tests persentage {} lower than the threshold {}. Music Blocks considered non equal", successTestPersentage, instrumentEqualityPassThreshold );
 			return false;
 		}
+	}
+
+	public double getInstrumentEqualityPassThreshold() {
+		return instrumentEqualityPassThreshold;
+	}
+
+	public void setInstrumentEqualityPassThreshold( double instrumentEqualityPassThreshold ) {
+		this.instrumentEqualityPassThreshold = instrumentEqualityPassThreshold;
 	}
 }

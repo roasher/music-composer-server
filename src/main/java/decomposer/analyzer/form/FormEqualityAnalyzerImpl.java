@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
  * Class analyzes if two melodies can belong to one form element
  * Created by night wish on 26.07.14.
  */
-@Component
 public class FormEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 
     /**
@@ -21,9 +20,9 @@ public class FormEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
      */
     private double equalityTestPassThreshold;
 
-	@Autowired @Qualifier( "formIntervalsEqualityTest" )
+	@Autowired @Qualifier( "formIntervalsEqualityTestWrapper" )
     private EqualityTest intervalsEqualityTest;
-	@Autowired @Qualifier( "formRhythmEqualityTest" )
+	@Autowired @Qualifier( "formRhythmEqualityTestWrapper" )
     private EqualityTest rhythmEqualityTest;
 	@Autowired @Qualifier( "formKeyEqualityTest" )
 	private EqualityTest keyEqualityTest;
@@ -40,6 +39,7 @@ public class FormEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 		int numberOfTestsPassed = 0;
 		int numberOfTestsFailed = 0;
 
+		logger.debug( "Comparing {} with {}", firstMelody, secondMelody );
 		for ( int currentTestNumber = 0; currentTestNumber < testArray.length;  currentTestNumber ++ ) {
 			boolean testPassed = testArray[ currentTestNumber ].test( firstMelody, secondMelody );
 			if ( testPassed ) {
@@ -49,8 +49,9 @@ public class FormEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 				numberOfTestsFailed++;
 				logger.debug( "{} test failed", testArray[ currentTestNumber ].getClass().getSimpleName() );
 			}
-			if ( ( testArray.length - numberOfTestsFailed )/testArray.length < equalityTestPassThreshold ) {
+			if ( 1 - numberOfTestsFailed*1./testArray.length < equalityTestPassThreshold ) {
 				logger.debug( "Number of failed test is too high - {}. Aborting others", numberOfTestsFailed );
+				return false;
 			}
 		}
 

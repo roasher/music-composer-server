@@ -13,7 +13,7 @@ import static jm.constants.Pitches.B4;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-public class TestIntervalsEqualityTest {
+public class TestIntervalsMelodyMovementEqualityTest {
 
 	IntervalsMelodyMovementEqualityTest intervalsMelodyMovementEqualityTest = new IntervalsMelodyMovementEqualityTest();
 	EqualityTest equalityTest = new EqualNumberOfNotesRequired( intervalsMelodyMovementEqualityTest );
@@ -123,4 +123,86 @@ public class TestIntervalsEqualityTest {
 		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
 	}
 
+	@Test
+	public void testCase7() {
+		Melody testMelody1 = new Melody(
+		  new Note[] {
+			new Note( 64, 4 )
+		  }
+		);
+		Melody testMelody2 = new Melody(
+		  new Note[] {
+			new Note( 52, 1.5 ),
+			new Note( 64, 1.5 ),
+			new Note( 65, 1 )
+		  }
+		);
+
+		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 0 );
+		intervalsMelodyMovementEqualityTest.setMaxShift( 0 );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+
+		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 777 );
+		intervalsMelodyMovementEqualityTest.setMaxShift( 89 );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+
+		}
+
+	@Test
+	public void testCase8() {
+		Melody testMelody1 = new Melody(
+		  new Note[] {
+			new Note( 64, 0.25 )
+		  }
+		);
+		Melody testMelody2 = new Melody(
+		  new Note[] {
+			new Note( 52, 0.25 )
+		  }
+		);
+
+		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 0 );
+		intervalsMelodyMovementEqualityTest.setMaxShift( 0 );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+
+		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 777 );
+		intervalsMelodyMovementEqualityTest.setMaxShift( 89 );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+
+	}
+
+	@Test
+	public void testCase9() {
+		Melody testMelody1 = new Melody(
+		  new Note[] {
+			new Note( 60, 0.5 ),
+			new Note( 62, 0.5 ),
+			new Note( 64, 0.5 ),
+			new Note( 65, 0.5 ),
+			new Note( 67, 0.5 ),
+			new Note( 69, 0.5 ),
+			new Note( -2147483648, 0.5 ),
+		  }
+		);
+		Melody testMelody2 = new Melody(
+		  new Note[] {
+			new Note( 57, 0.5 ),
+			new Note( 59, 0.5 ),
+			new Note( 60, 0.5 ),
+			new Note( 62, 0.5 ),
+			new Note( 64, 0.5 ),
+			new Note( 65, 0.5 ),
+			new Note( -2147483648, 0.5 ),
+		  }
+		);
+
+		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 0 );
+		intervalsMelodyMovementEqualityTest.setMaxShift( 0 );
+		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+
+		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 3 );
+		intervalsMelodyMovementEqualityTest.setMaxShift( 1 );
+		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+
+	}
 }

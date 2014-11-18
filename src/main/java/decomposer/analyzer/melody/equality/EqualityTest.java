@@ -1,6 +1,7 @@
 package decomposer.analyzer.melody.equality;
 
 import model.Melody;
+import org.springframework.beans.factory.BeanNameAware;
 
 public interface EqualityTest {
 

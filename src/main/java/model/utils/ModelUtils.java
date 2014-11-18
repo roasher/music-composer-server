@@ -42,8 +42,8 @@ public class ModelUtils {
      * @param notes
      * @return
      */
-    public static int sumAllRhytmValues( List< Note > notes ) {
-        int rhytmSum = 0;
+    public static double sumAllRhytmValues( List< Note > notes ) {
+        double rhytmSum = 0;
         for ( Note currentNote : notes ) {
             rhytmSum += currentNote.getRhythmValue();
         }
@@ -62,8 +62,8 @@ public class ModelUtils {
 	public static List<Melody> getMelodies( MusicBlock musicBlock ) {
 		List<Melody> melodyList = new ArrayList<>(  );
 		for ( List<Note> melodyNotes : musicBlock.getNotes() ) {
-			Melody melody = new Melody( (Note[]) melodyNotes.toArray() );
-			melody.setPlaceInTheComposition( new PlaceInTheComposition( musicBlock.getCompositionInfo(), 0, 0 ) );
+			Melody melody = new Melody( melodyNotes.toArray(new Note[melodyNotes.size()]) );
+//			melody.setPlaceInTheComposition( new PlaceInTheComposition( musicBlock.getCompositionInfo(), 0, 0 ) );
 			melodyList.add( melody );
 //			Note[] notes = null;
 //			melodyNotes.toArray( notes );

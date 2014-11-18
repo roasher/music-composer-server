@@ -17,10 +17,14 @@ public class MelodyMovement {
         for ( int noteNumber = 0; noteNumber < noteArray.length - 1; noteNumber ++ ) {
             Note currentNote = noteArray[noteNumber];
             Note nextNote = noteArray[noteNumber + 1];
-            // We are not counting rests
-//            if ( currentNote.getPitch() != Note.REST && nextNote.getPitch() != Note.REST ) {
-                pitchIntervals.add(nextNote.getPitch() - currentNote.getPitch());
-//            }
+			int interval = nextNote.getPitch() - currentNote.getPitch();
+			// if one of the notes is rest
+			if ( interval > 1000 ) {
+				interval = Integer.MAX_VALUE;
+			} else if ( interval < -1000 ) {
+				interval = Integer.MIN_VALUE;
+			}
+            pitchIntervals.add( interval );
         }
     }
 

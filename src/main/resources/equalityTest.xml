@@ -5,32 +5,24 @@
 
     <import resource="equalityTestPrime.xml"/>
 
-    <!--<bean id="FragmentationEqualityTestWrapper" class="decomposer.analyzer.melody.equality.DifferentNumberOfNotesRequired">-->
-        <!--<property name="equalityTest" ref="FragmentationEqualityTest"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="InterpolationEqualityTestWrapper" class="decomposer.analyzer.melody.equality.DifferentNumberOfNotesRequired">-->
-        <!--<property name="equalityTest" ref="InterpolationEqualityTest"/>-->
-    <!--</bean>-->
-
-    <bean id="CountourEqualityTestWrapper" class="decomposer.analyzer.melody.equality.EqualNumberOfNotesRequired">
-        <property name="equalityTest" ref="CountourEqualityTest"/>
+    <bean id="countourEqualityTestWrapper" class="decomposer.analyzer.melody.equality.EqualNumberOfNotesRequired">
+        <property name="equalityTest" ref="contourEqualityTest"/>
     </bean>
 
-    <bean id="InversionEqualityTestWrapper" class="decomposer.analyzer.melody.equality.EqualNumberOfNotesRequired">
-        <property name="equalityTest" ref="InversionEqualityTest"/>
+    <bean id="inversionEqualityTestWrapper" class="decomposer.analyzer.melody.equality.EqualNumberOfNotesRequired">
+        <property name="equalityTest" ref="inversionEqualityTest"/>
     </bean>
 
-    <bean id="IntervalsEqualityTestWrapper" class="decomposer.analyzer.melody.equality.EqualNumberOfNotesRequired">
-        <property name="equalityTest" ref="IntervalsEqualityTest"/>
+    <bean id="intervalsEqualityTestWrapper" class="decomposer.analyzer.melody.equality.EqualNumberOfNotesRequired">
+        <property name="equalityTest" ref="intervalsEqualityTest"/>
     </bean>
 
-    <bean id="OrderEqualityTestWrapper" class="decomposer.analyzer.melody.equality.EqualNumberOfNotesRequired">
-        <property name="equalityTest" ref="OrderEqualityTest"/>
+    <bean id="orderEqualityTestWrapper" class="decomposer.analyzer.melody.equality.EqualNumberOfNotesRequired">
+        <property name="equalityTest" ref="orderEqualityTest"/>
     </bean>
 
-    <bean id="RhythmEqualityTestWrapper" class="decomposer.analyzer.melody.equality.EqualNumberOfNotesRequired">
-        <property name="equalityTest" ref="RhythmEqualityTest"/>
+    <bean id="rhythmEqualityTestWrapper" class="decomposer.analyzer.melody.equality.EqualNumberOfNotesRequired">
+        <property name="equalityTest" ref="rhythmEqualityTest"/>
     </bean>
 
 </beans>

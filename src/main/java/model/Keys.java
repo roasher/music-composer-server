@@ -52,7 +52,7 @@ public class Keys {
 		for ( Key key : allKeys ) {
 			int numberOfNotesOutOfKey = 0;
 			for ( Note note : notes ) {
-				if ( !key.getNotes().contains( note.getPitch()%12 ) ) {
+				if ( note.getPitch() != Integer.MIN_VALUE && !key.getNotes().contains( note.getPitch()%12 ) ) {
 					numberOfNotesOutOfKey++;
 				}
 			}

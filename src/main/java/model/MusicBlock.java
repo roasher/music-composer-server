@@ -61,7 +61,7 @@ public class MusicBlock implements Serializable {
             }
             // rhytmValue
             {
-                int currentRhytmValue = sumAllRhytmValues( inputNotes.get( 0 ) );
+                double currentRhytmValue = sumAllRhytmValues( inputNotes.get( 0 ) );
                 for ( int currentInstrument = 1; currentInstrument < inputNotes.size() ; currentInstrument ++ ) {
                     if ( currentRhytmValue != sumAllRhytmValues( inputNotes.get( currentInstrument ) ) ) {
                         throw new IllegalArgumentException( String.format( "Several instruments has different rhytmValues, for example: 0 and %s " , currentInstrument ) );

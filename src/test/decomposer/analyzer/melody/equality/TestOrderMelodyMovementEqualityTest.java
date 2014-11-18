@@ -13,7 +13,7 @@ import static jm.constants.Pitches.G4;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-public class TestOrderEqualityTest {
+public class TestOrderMelodyMovementEqualityTest {
 
 	OrderMelodyMovementEqualityTest orderMelodyMovementEqualityTest = new OrderMelodyMovementEqualityTest();
 	EqualityTest equalityTest = new EqualNumberOfNotesRequired( orderMelodyMovementEqualityTest );

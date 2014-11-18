@@ -3,6 +3,7 @@ package model.composition;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
+import jm.music.data.Score;
 import utils.Utils;
 
 /**
@@ -21,6 +22,10 @@ public class Composition extends jm.music.data.Score {
             }
         }
     }
+
+	public Composition() {}
+
+	public Composition( Score score ) { super( score.getPartArray() ); }
 
     public CompositionInfo getCompositionInfo() {
         return compositionInfo;
