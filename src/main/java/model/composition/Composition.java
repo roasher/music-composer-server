@@ -17,7 +17,8 @@ public class Composition extends jm.music.data.Score {
         for ( Part part : this.getPartArray() ) {
             for ( Phrase phrase : part.getPhraseArray() ) {
                 for ( Note note : phrase.getNoteArray() ) {
-                    note.setRhythmValue( Utils.round( note.getRhythmValue() ) );
+					double newValue = Utils.roundRhythmValue( note.getRhythmValue() );
+                    note.setRhythmValue( newValue );
                 }
             }
         }

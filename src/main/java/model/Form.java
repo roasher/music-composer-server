@@ -22,4 +22,27 @@ public class Form {
 	public String toString() {
 		return Integer.toString( part );
 	}
+
+	@Override
+	public boolean equals( Object o ) {
+		if ( this == o ) {
+			return true;
+		}
+		if ( !( o instanceof Form ) ) {
+			return false;
+		}
+
+		Form form = ( Form ) o;
+
+		if ( part != form.part ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return part;
+	}
 }

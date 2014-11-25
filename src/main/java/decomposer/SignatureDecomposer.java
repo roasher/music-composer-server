@@ -1,6 +1,6 @@
 package decomposer;
 
-import decomposer.analyzer.melody.MelodyEqualityAnalyzer;
+import decomposer.melody.analyzer.MelodyEqualityAnalyzer;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;

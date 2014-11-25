@@ -9,7 +9,7 @@
     </appender>
 
     <logger name="decomposer.SignatureDecomposer" level="DEBUG"/>
-    <logger name="decomposer.analyzer.melody.MelodyEqualityAnalyzerImpl" level="INFO"/>
+    <logger name="decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl" level="DEBUG"/>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT" />

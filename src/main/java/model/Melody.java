@@ -61,8 +61,8 @@ public class Melody extends Phrase {
             Note currentNoteFromThis = thisNoteArray[ currentNoteNumber ];
             Note currentNoteFromMelody = melodyNoteArray[ currentNoteNumber ];
 //            int currentDifference = currentNoteFromThis.getPitch() - currentNoteFromMelody.getPitch();
-            double rhythm1 = Utils.round( currentNoteFromMelody.getRhythmValue() );
-            double rhythm2 = Utils.round( currentNoteFromThis.getRhythmValue() );
+            double rhythm1 = Utils.roundRhythmValue( currentNoteFromMelody.getRhythmValue() );
+            double rhythm2 = Utils.roundRhythmValue( currentNoteFromThis.getRhythmValue() );
             if ( currentNoteFromMelody.getPitch() != currentNoteFromThis.getPitch() || rhythm1 != rhythm2 ) {
                 return false;
             }

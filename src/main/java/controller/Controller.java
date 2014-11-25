@@ -6,7 +6,8 @@ import jm.util.Read;
 import model.Melody;
 import model.composition.Composition;
 import model.composition.CompositionInfo;
-import model.viewer.BatchMelodyViewer;
+import utils.CompositionLoader;
+import viewer.BatchMelodyViewer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -41,7 +42,7 @@ public class Controller implements JMC {
 
         };
 
-        List< Composition > compositions = new Controller().getCompositions( files );
+        List< Composition > compositions = new CompositionLoader().getCompositions( files );
 
         ApplicationContext context = new ClassPathXmlApplicationContext( "spring.configuration.xml" );
 
@@ -55,45 +56,5 @@ public class Controller implements JMC {
 //        storeManager.storeSignatures( signatures );
     }
 
-    private List<File> listFilesForFolder(final File folder) {
-        List<File> nameArray = new ArrayList<>();
-        for (final File fileEntry : folder.listFiles()) {
-            if (!fileEntry.isDirectory()) {
-                nameArray.add( fileEntry );
-            }
-        }
-        return nameArray;
-    }
 
-    public List< Composition > getCompositions( File directory ) {
-        List< Composition > compositions = new ArrayList<Composition>(  );
-        List<File> listFiles = listFilesForFolder( directory );
-        for ( File currentFile : listFiles ) {
-			if ( !currentFile.getName().matches( ".*\\.mid" ) || currentFile.getName().matches( ".*drum.*" ) ) continue;
-			Composition composition = getComposition( currentFile );
-			compositions.add( composition );
-        }
-        return compositions;
-    }
-
-    public List< Composition > getCompositions( File ... directories ) {
-        List< Composition > compositions = new ArrayList<Composition>(  );
-        for ( File currentDirectory : directories ) {
-            compositions.addAll( getCompositions( currentDirectory ) );
-        }
-        return compositions;
-    }
-
-	public Composition getComposition( File file ) {
-		logger.info( " Reading composition {}", file );
-		CompositionInfo compositionInfo = new CompositionInfo();
-		compositionInfo.setTitle( file.getName());
-
-		Composition composition = new Composition();
-		composition.setCompositionInfo( compositionInfo );
-
-		Read.midi( composition, file.getAbsolutePath() );
-		composition.roundAllRhythmValues();
-		return composition;
-	}
 }
