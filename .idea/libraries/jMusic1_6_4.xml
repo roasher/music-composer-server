@@ -10,6 +10,7 @@
     <SOURCES>
       <root url="file://$USER_HOME$/jMusic/source" />
       <root url="file://$USER_HOME$/jMusic/inst" />
+      <root url="file://$USER_HOME$/jMusic" />
     </SOURCES>
   </library>
 </component>

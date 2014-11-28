@@ -6,10 +6,14 @@ import jm.music.data.Part;
 import jm.music.data.Phrase;
 import model.MusicBlock;
 import model.composition.Composition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import utils.ModelUtils;
 import utils.Utils;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +24,7 @@ import java.util.List;
 @Component
 public class CompositionSlicer {
 
+	Logger logger = LoggerFactory.getLogger( getClass() );
 	/**
 	 * Slices music blocks with certain timePeriod from input composition.
 	 * @param composition
@@ -34,6 +39,12 @@ public class CompositionSlicer {
 			Phrase phrase = part.getPhraseArray()[0];
 			List< List< Note > > noteList = slice( phrase, timePeriod );
 			compositionList.add( noteList );
+		}
+
+		// Composition list should has equal number of slices in each instrument
+		int nubmerOfSlices = compositionList.get( 0 ).size();
+		for ( List<List<Note>> slices : compositionList ) {
+			if ( slices.size() != nubmerOfSlices ) throw new RuntimeException( "Sliced composition has differed number of slices for different instrument." );
 		}
 
 		List< MusicBlock > musicBlocks = new ArrayList<>();
@@ -57,6 +68,11 @@ public class CompositionSlicer {
 	public List< List< Note > > slice( Phrase phrase, double timePeriod ) {
 
 		State state = new State( timePeriod );
+		// Adding rests if phrase starts not from the beginning
+		if ( Double.compare( phrase.getStartTime(), 0 ) != 0. ) {
+			state.add( new Note( JMC.REST, phrase.getStartTime() ) );
+		}
+
 		for( Note note : phrase.getNoteArray() ) {
 			state.add( note );
 		}
@@ -66,6 +82,8 @@ public class CompositionSlicer {
 		if ( lastSliceRhythmValue < timePeriod ) {
 			lastSlice.add( new Note( JMC.REST, timePeriod - lastSliceRhythmValue ) );
 		}
+
+		checkSlicesOccupancy( state.slices, timePeriod );
 		return state.slices;
 	}
 
@@ -103,12 +121,30 @@ public class CompositionSlicer {
 				Note newNote = new Note( note.getPitch(), note.getRhythmValue() );
 				slice.add( newNote );
 			} else {
-				Note newNote = new Note( note.getPitch(), Utils.roundRhythmValue( timePeriod - lastNoteEndTime ) );
+				Note newNote = new Note( note.getPitch(), timePeriod - lastNoteEndTime );
 				slice.add( newNote );
 
-				Note newNoteToAdd = new Note( note.getPitch(), Utils.roundRhythmValue( note.getRhythmValue() - newNote.getRhythmValue() ) );
+				Note newNoteToAdd = new Note( note.getPitch(), note.getRhythmValue() - newNote.getRhythmValue() );
 				// Recursive call
+//				logger.info( "pitch {}, rhythm value {}", newNoteToAdd.getPitch(), newNoteToAdd.getRhythmValue() );
 				add( newNoteToAdd );
+			}
+		}
+	}
+
+	/**
+	 * Checks if all slices has length equal to timePeriod
+	 * @param slices
+	 * @param timePeriod
+	 */
+	public void checkSlicesOccupancy( List<List<Note>> slices, double timePeriod ) {
+		for ( List<Note> slice : slices ) {
+			BigDecimal rhythmValuesSum = BigDecimal.ZERO;
+			for ( Note sliceNote : slice ) {
+				rhythmValuesSum = rhythmValuesSum.add( BigDecimal.valueOf( sliceNote.getRhythmValue() ) );
+			}
+			if ( rhythmValuesSum.round( MathContext.DECIMAL32 ).compareTo( BigDecimal.valueOf( timePeriod ) ) != 0 ) {
+				throw new RuntimeException( "Slice occupancy check failed" );
 			}
 		}
 	}

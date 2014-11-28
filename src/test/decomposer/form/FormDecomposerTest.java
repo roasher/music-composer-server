@@ -3,8 +3,10 @@ package decomposer.form;
 import controller.Controller;
 import decomposer.form.FormDecomposer;
 import jm.JMC;
+import jm.util.Write;
 import model.Form;
 import model.composition.Composition;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +109,7 @@ public class FormDecomposerTest {
 		etalonList.add( new Form( 14 ) );
 
 		for ( int currentFormNumber = 0; currentFormNumber < etalonList.size(); currentFormNumber ++ ) {
+			System.out.println( etalonList.get( currentFormNumber ).getPart() + "\t" + formList.get( currentFormNumber ).getPart() );
 			assertEquals( etalonList.get( currentFormNumber ), formList.get( currentFormNumber ) );
 		}
 	}

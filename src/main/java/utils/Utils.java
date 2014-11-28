@@ -1,11 +1,14 @@
 package utils;
 
 import jm.music.data.Note;
+import jm.music.data.Phrase;
+import jm.music.data.Rest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,11 +19,16 @@ import static jm.JMC.*;
  */
 public class Utils {
 
+	private static Logger logger = LoggerFactory.getLogger( Utils.class );
+
+	private static final double maxRhythmValue;
 	public static final List<Double> rhythmValues = new ArrayList<>();
+
 	static {
 		rhythmValues.add( WHOLE_NOTE );
 		rhythmValues.add( DOTTED_HALF_NOTE );
 		rhythmValues.add( DOUBLE_DOTTED_HALF_NOTE );
+		rhythmValues.add( 2.5 );
 		rhythmValues.add( HALF_NOTE );
 		rhythmValues.add( HALF_NOTE_TRIPLET );
 		rhythmValues.add( QUARTER_NOTE );
@@ -31,14 +39,22 @@ public class Utils {
 		rhythmValues.add( DOTTED_EIGHTH_NOTE );
 		rhythmValues.add( EIGHTH_NOTE_TRIPLET );
 		rhythmValues.add( DOUBLE_DOTTED_EIGHTH_NOTE );
+
 		rhythmValues.add( SIXTEENTH_NOTE );
 		rhythmValues.add( DOTTED_SIXTEENTH_NOTE );
 		rhythmValues.add( SIXTEENTH_NOTE_TRIPLET );
+
 		rhythmValues.add( THIRTYSECOND_NOTE );
 		rhythmValues.add( THIRTYSECOND_NOTE_TRIPLET );
+
 		rhythmValues.add( 0. );
 
+		// FIXME костыль. Таких значений не должно быть
+		rhythmValues.add( 2.7 );
+		rhythmValues.add( 0.8 );
+
 		Collections.sort( rhythmValues );
+		maxRhythmValue = Collections.max( rhythmValues );
 	};
 
     /**
@@ -72,12 +88,14 @@ public class Utils {
 	 * @return
 	 */
 	public static double roundRhythmValue( double rhythmValue ) {
-		// How many max durations can fit in input rhythmValue
-		double maxRhythmValueOfTheList = rhythmValues.get( rhythmValues.size() - 1 );
-		int maxDurationNumber = ( int ) ( rhythmValue / maxRhythmValueOfTheList );
+		// TODO Будут траблы со сложными лигами, например половина ноты на восьмую триоль. Нужно подумать.
+		// How many max rhythm values can fit in input rhythmValue
+		int maxRhythmValueNumber = ( int ) ( rhythmValue / maxRhythmValue );
 
-		double valueWithinListRange = rhythmValue - maxDurationNumber * maxRhythmValueOfTheList;
-		return getClosestListElement( valueWithinListRange, rhythmValues ) + maxDurationNumber * maxRhythmValueOfTheList;
+		double valueWithinListRange = rhythmValue - maxRhythmValueNumber * maxRhythmValue;
+		double roundRhythmValue = getClosestListElement( valueWithinListRange, rhythmValues ) + maxRhythmValueNumber * maxRhythmValue;
+
+		return roundRhythmValue;
 	}
 
 	/**
@@ -88,6 +106,7 @@ public class Utils {
 	 * @return
 	 */
 	public static double getClosestListElement( double value, List<Double> list ) {
+//		logger.info( "input value = {}", value );
 		int place = Collections.binarySearch( list, value );
 		if ( place >= 0 ) {
 			return list.get( place );
