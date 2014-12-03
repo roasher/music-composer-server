@@ -1,7 +1,7 @@
 package decomposer.melody.analyzer;
 
 import jm.util.View;
-import model.Melody;
+import model.melody.Melody;
 import utils.Utils;
 
 /**

@@ -1,4 +1,4 @@
-package model;
+package model.melody;
 
 import jm.music.data.Note;
 

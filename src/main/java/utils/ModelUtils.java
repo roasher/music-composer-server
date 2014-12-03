@@ -2,14 +2,10 @@ package utils;
 
 import jm.music.data.Note;
 import jm.music.data.Score;
-import model.Melody;
-import model.MusicBlock;
-import model.PlaceInTheComposition;
+import model.melody.Melody;
 import model.composition.CompositionInfo;
 import model.composition.Meter;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,6 +46,19 @@ public class ModelUtils {
         return rhytmSum;
     }
 
+	/**
+	 * Summarises all rhythm_old values in the array
+	 * @param melody
+	 * @return
+	 */
+	public static double sumAllRhytmValues( Melody melody ) {
+		double rhytmSum = 0;
+		for ( Note currentNote : melody.getNoteArray() ) {
+			rhytmSum += currentNote.getRhythmValue();
+		}
+		return rhytmSum;
+	}
+
     public static CompositionInfo getCompositionInfo( Score score, String author, Meter meter ) {
         CompositionInfo compositionInfo = new CompositionInfo();
         compositionInfo.setTitle( score.getTitle() );
@@ -59,15 +68,15 @@ public class ModelUtils {
         return compositionInfo;
     }
 
-	public static List<Melody> getMelodies( MusicBlock musicBlock ) {
-		List<Melody> melodyList = new ArrayList<>(  );
-		for ( List<Note> melodyNotes : musicBlock.getNotes() ) {
-			Melody melody = new Melody( melodyNotes.toArray(new Note[melodyNotes.size()]) );
-//			melody.setPlaceInTheComposition( new PlaceInTheComposition( musicBlock.getCompositionInfo(), 0, 0 ) );
-			melodyList.add( melody );
-//			Note[] notes = null;
-//			melodyNotes.toArray( notes );
-		}
-		return melodyList;
-	}
+//	public static List<Melody> getMelodies( MusicBlock musicBlock ) {
+//		List<Melody> melodyList = new ArrayList<>(  );
+//		for ( Melody melodyNotes : musicBlock.getMelodyList() ) {
+//			Melody melody = new Melody( melodyNotes.toArray(new Note[melodyNotes.size()]) );
+////			melody.setPlaceInTheComposition( new PlaceInTheComposition( musicBlock.getCompositionInfo(), 0, 0 ) );
+//			melodyList.add( melody );
+////			Note[] notes = null;
+////			melodyNotes.toArray( notes );
+//		}
+//		return melodyList;
+//	}
 }

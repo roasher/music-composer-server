@@ -6,6 +6,7 @@ import jm.music.data.Part;
 import jm.music.data.Phrase;
 import model.*;
 import model.composition.Composition;
+import model.melody.Melody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

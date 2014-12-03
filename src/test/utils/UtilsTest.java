@@ -27,13 +27,9 @@ public class UtilsTest {
 
 		assertEquals( roundRhythmValue( 0.34 ), EIGHTH_NOTE_TRIPLET);
 		assertEquals( roundRhythmValue( 0.32 ), EIGHTH_NOTE_TRIPLET);
-//		assertEquals( roundRhythmValue( 0.3 ), EIGHTH_NOTE_TRIPLET);
-//		assertEquals( roundRhythmValue( 0.3 ), EIGHTH_NOTE_TRIPLET);
 
 		assertEquals( roundRhythmValue( 0.34 + WHOLE_NOTE*11 ), EIGHTH_NOTE_TRIPLET + WHOLE_NOTE*11 );
 		assertEquals( roundRhythmValue( 0.32 + WHOLE_NOTE*10 ), EIGHTH_NOTE_TRIPLET  + WHOLE_NOTE*10 );
-//		assertEquals( roundRhythmValue( 0.3 + WHOLE_NOTE*77 ), EIGHTH_NOTE_TRIPLET + WHOLE_NOTE*77 );
-//		assertEquals( roundRhythmValue( 0.3 + WHOLE_NOTE*6 ), EIGHTH_NOTE_TRIPLET + WHOLE_NOTE*6 );
 		assertEquals( roundRhythmValue( 0.333333333302 + WHOLE_NOTE*5 ), EIGHTH_NOTE_TRIPLET + WHOLE_NOTE*5);
 
 		assertEquals( roundRhythmValue( 0.9833333333333333 ), 1. );

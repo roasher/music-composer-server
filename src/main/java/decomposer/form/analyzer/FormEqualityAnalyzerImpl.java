@@ -2,7 +2,7 @@ package decomposer.form.analyzer;
 
 import decomposer.melody.equality.EqualityTest;
 import decomposer.melody.analyzer.MelodyEqualityAnalyzer;
-import model.Melody;
+import model.melody.Melody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

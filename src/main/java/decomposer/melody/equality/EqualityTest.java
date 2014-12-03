@@ -1,6 +1,6 @@
 package decomposer.melody.equality;
 
-import model.Melody;
+import model.melody.Melody;
 
 public interface EqualityTest {
 

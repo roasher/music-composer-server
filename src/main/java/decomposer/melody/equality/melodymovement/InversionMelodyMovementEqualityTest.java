@@ -1,6 +1,6 @@
 package decomposer.melody.equality.melodymovement;
 
-import model.MelodyMovement;
+import model.melody.MelodyMovement;
 
 /**
  * Class represents inversion test for melodies

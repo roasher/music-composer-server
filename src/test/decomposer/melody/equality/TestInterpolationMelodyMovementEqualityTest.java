@@ -2,7 +2,7 @@ package decomposer.melody.equality;
 
 import decomposer.melody.equality.melodymovement.InterpolationMelodyMovementEqualityTest;
 import jm.music.data.Note;
-import model.Melody;
+import model.melody.Melody;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -115,15 +115,15 @@ public class TestInterpolationMelodyMovementEqualityTest {
         Melody testMelody2 = new Melody(
                 new Note[] {
                         new Note( 72, 0.5 ),
-                        new Note( 67, 0.25000000000000083 ),
-                        new Note( 67, 0.25000000000000083 ),
-                        new Note( 76, 0.5000000000000009 ),
-                        new Note( 74, 0.5000000000000009 ),
-                        new Note( 71, 0.5000000000000009 ),
-                        new Note( 72, 1.4999999999999991 ),
-                        new Note( 74, 0.49999999999999906 ),
-                        new Note( 76, 0.49999999999999906 ),
-                        new Note( 72, 0.49999999999999906 ),
+                        new Note( 67, 0.25 ),
+                        new Note( 67, 0.25 ),
+                        new Note( 76, 0.5 ),
+                        new Note( 74, 0.5 ),
+                        new Note( 71, 0.5 ),
+                        new Note( 72, 1.5 ),
+                        new Note( 74, 0.5 ),
+                        new Note( 76, 0.5 ),
+                        new Note( 72, 0.5 ),
                 }
         );
 

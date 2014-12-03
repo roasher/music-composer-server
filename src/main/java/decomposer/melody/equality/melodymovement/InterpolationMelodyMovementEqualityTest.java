@@ -1,6 +1,6 @@
 package decomposer.melody.equality.melodymovement;
 
-import model.MelodyMovement;
+import model.melody.MelodyMovement;
 
 import static java.lang.Math.abs;
 

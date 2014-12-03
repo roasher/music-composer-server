@@ -1,7 +1,7 @@
 package decomposer.melody.equality;
 
 import model.Key;
-import model.Melody;
+import model.melody.Melody;
 
 import java.util.List;
 

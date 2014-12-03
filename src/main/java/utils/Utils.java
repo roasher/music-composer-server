@@ -1,8 +1,7 @@
 package utils;
 
 import jm.music.data.Note;
-import jm.music.data.Phrase;
-import jm.music.data.Rest;
+import model.melody.Melody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,6 +144,20 @@ public class Utils {
 		for ( int currentListeNumber = 0; currentListeNumber < listOfLists1.size(); currentListeNumber ++ ) {
 			List< Note > noteList1 = listOfLists1.get( currentListeNumber );
 			List< Note > noteList2 = listOfLists2.get( currentListeNumber );
+			if ( !isEquals( noteList1, noteList2 ) ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean ListOfMelodiesIsEquals( List< Melody > firstMelodyList, List< Melody > secondMelodyList ) {
+		if ( firstMelodyList == null || secondMelodyList == null || firstMelodyList.size() != secondMelodyList.size() ) {
+			return false;
+		}
+		for ( int currentListeNumber = 0; currentListeNumber < firstMelodyList.size(); currentListeNumber ++ ) {
+			List< Note > noteList1 = firstMelodyList.get( currentListeNumber ).getNoteList();
+			List< Note > noteList2 = secondMelodyList.get( currentListeNumber ).getNoteList();
 			if ( !isEquals( noteList1, noteList2 ) ) {
 				return false;
 			}

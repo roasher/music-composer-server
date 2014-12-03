@@ -1,7 +1,7 @@
 package model;
 
-import jm.music.data.Note;
 import model.composition.CompositionInfo;
+import model.melody.Melody;
 import model.tension.Tension;
 import utils.Utils;
 import java.io.Serializable;
@@ -17,7 +17,7 @@ import static utils.ModelUtils.*;
  */
 public class MusicBlock implements Serializable {
     // Origin Self Information
-    private List< List < Note > > notes;
+    private List<Melody> melodyList;
     private CompositionInfo compositionInfo;
     // Derivative Self Information
     private List< Integer > startIntervalPattern;
@@ -28,14 +28,14 @@ public class MusicBlock implements Serializable {
     // Origin surrounding information
     private MusicBlock previous;
     private MusicBlock next;
-	private Form form;
+//	private Form form;
 
     // Derivative information
     private BlockMovement blockMovementFromPreviousMusicBlockToThisMusicBlock;
     private BlockMovement blockMovementFromThisMusicBlockToNextMusicBlock;
 
-    public MusicBlock( List< List< Note > > inputNotes, CompositionInfo inputCompositionInfo ) {
-        this.notes = inputNotes;
+    public MusicBlock( List< Melody > inputMelodyList, CompositionInfo inputCompositionInfo ) {
+        this.melodyList = inputMelodyList;
         this.compositionInfo = inputCompositionInfo;
         // Computing derivative information
         {
@@ -43,25 +43,25 @@ public class MusicBlock implements Serializable {
             // first
             {
                 List< Integer > firstVertical = new ArrayList<Integer>();
-                for ( int currentInstrument = 0; currentInstrument < inputNotes.size() ; currentInstrument ++ ) {
-                    firstVertical.add( inputNotes.get( currentInstrument ).get( 0 ).getPitch() );
+                for ( int currentInstrument = 0; currentInstrument < inputMelodyList.size() ; currentInstrument ++ ) {
+                    firstVertical.add( inputMelodyList.get( currentInstrument ).getPitchArray()[0] );
                 }
                 this.startIntervalPattern = getIntervalPattern( firstVertical );
             }
             // last
             {
                 List< Integer > lastVertical = new ArrayList<Integer>();
-                for ( int currentInstrument = 0; currentInstrument < inputNotes.size() ; currentInstrument ++ ) {
-                    int lastNoteNumber = inputNotes.get( currentInstrument ).size() - 1;
-                    lastVertical.add( inputNotes.get( currentInstrument ).get( lastNoteNumber ).getPitch() );
+                for ( int currentInstrument = 0; currentInstrument < inputMelodyList.size() ; currentInstrument ++ ) {
+                    int lastNoteNumber = inputMelodyList.get( currentInstrument ).size() - 1;
+                    lastVertical.add( inputMelodyList.get( currentInstrument ).getPitchArray()[lastNoteNumber] );
                 }
                 this.endIntervalPattern = getIntervalPattern( lastVertical );
             }
             // rhytmValue
             {
-                double currentRhytmValue = sumAllRhytmValues( inputNotes.get( 0 ) );
-                for ( int currentInstrument = 1; currentInstrument < inputNotes.size() ; currentInstrument ++ ) {
-                    if ( currentRhytmValue != sumAllRhytmValues( inputNotes.get( currentInstrument ) ) ) {
+                double currentRhytmValue = sumAllRhytmValues( inputMelodyList.get( 0 ) );
+                for ( int currentInstrument = 1; currentInstrument < inputMelodyList.size() ; currentInstrument ++ ) {
+                    if ( currentRhytmValue != sumAllRhytmValues( inputMelodyList.get( currentInstrument ) ) ) {
                         throw new IllegalArgumentException( String.format( "Several instruments has different rhytmValues, for example: 0 and %s " , currentInstrument ) );
                     }
                 }
@@ -87,11 +87,11 @@ public class MusicBlock implements Serializable {
 			return false;
 		}
 
-		if ( this.notes.size() != that.notes.size() ) {
+		if ( this.melodyList.size() != that.melodyList.size() ) {
 			return false;
 		}
 
-		if ( !Utils.ListOfListsIsEquals( this.notes, that.notes ) ) {
+		if ( !Utils.ListOfMelodiesIsEquals( this.melodyList, that.melodyList ) ) {
 			return false;
 		}
 
@@ -100,21 +100,21 @@ public class MusicBlock implements Serializable {
 
 	@Override
 	public int hashCode() {
-		int result = notes.hashCode();
+		int result = this.melodyList.hashCode();
 		result = 31 * result + ( compositionInfo != null ? compositionInfo.hashCode() : 0 );
 		return result;
 	}
 
 	// Getters & Setters
-    public List<List<Note>> getNotes() {
-        return notes;
-    }
+	public List<Melody> getMelodyList() {
+		return melodyList;
+	}
 
-    public void setNotes(List<List<Note>> notes) {
-        this.notes = notes;
-    }
+	public void setMelodyList( List<Melody> melodyList ) {
+		this.melodyList = melodyList;
+	}
 
-    public Tension getTension() {
+	public Tension getTension() {
         return tension;
     }
 
@@ -142,13 +142,16 @@ public class MusicBlock implements Serializable {
         return rhythmValue;
     }
 
-	public Form getForm() {
-		return form;
-	}
-
-	public void setForm( Form form ) {
-		this.form = form;
-	}
+//	public Form getForm() {
+//		if ( this.form == null ) {
+//			this.form = Form.getStartForm( melodyList.size() );
+//		}
+//		return form;
+//	}
+//
+//	public void setForm( Form form ) {
+//		this.form = form;
+//	}
 
 	public MusicBlock getPrevious() {
         return previous;

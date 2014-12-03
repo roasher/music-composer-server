@@ -2,10 +2,8 @@ package controller;
 
 import decomposer.SignatureDecomposer;
 import jm.JMC;
-import jm.util.Read;
-import model.Melody;
+import model.melody.Melody;
 import model.composition.Composition;
-import model.composition.CompositionInfo;
 import utils.CompositionLoader;
 import viewer.BatchMelodyViewer;
 import org.slf4j.Logger;

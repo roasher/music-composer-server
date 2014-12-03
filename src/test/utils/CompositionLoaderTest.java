@@ -4,6 +4,7 @@ import jm.music.data.Note;
 import jm.util.Read;
 import jm.util.Write;
 import model.composition.Composition;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -39,6 +40,7 @@ public class CompositionLoaderTest {
 	}
 
 	@Test
+	@Ignore
 	public void loadScarecrow() {
 		File file = new File( "src\\test\\decomposer\\form\\testCases\\quartets\\2.Scarecrow's song (midi).mid" );
 

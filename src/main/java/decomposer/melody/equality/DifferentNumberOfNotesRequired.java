@@ -1,6 +1,6 @@
 package decomposer.melody.equality;
 
-import model.Melody;
+import model.melody.Melody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,8 +1,8 @@
 package decomposer.melody.equality.melodymovement;
 
 import decomposer.melody.equality.EqualityTest;
-import model.Melody;
-import model.MelodyMovement;
+import model.melody.Melody;
+import model.melody.MelodyMovement;
 
 /**
  * @author Pavel Yurkin

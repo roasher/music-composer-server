@@ -1,5 +1,7 @@
 package model;
 
+import model.melody.MelodyMovement;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;

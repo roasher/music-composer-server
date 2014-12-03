@@ -1,8 +1,7 @@
 package decomposer.form.analyzer;
 
-import model.Melody;
+import model.melody.Melody;
 import model.MusicBlock;
-import utils.ModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +27,13 @@ public class FormAnalyzer {
 	 * @return
 	 */
 	public boolean isEqual( MusicBlock firstMusicBlock, MusicBlock secondMusicBlock ) {
-		if ( firstMusicBlock.getNotes().size() != secondMusicBlock.getNotes().size() ) {
+		if ( firstMusicBlock.getMelodyList().size() != secondMusicBlock.getMelodyList().size() ) {
 			logger.info( "Music Blocks has different number of instruments so they can't be considered equal" );
 			return false;
 		}
 
-		List<Melody> firstMusicBlockInstrumentParts = ModelUtils.getMelodies( firstMusicBlock );
-		List<Melody> secondMusicBlockInstrumentParts = ModelUtils.getMelodies( secondMusicBlock );
+		List<Melody> firstMusicBlockInstrumentParts = firstMusicBlock.getMelodyList();
+		List<Melody> secondMusicBlockInstrumentParts = secondMusicBlock.getMelodyList();
 		int numberOfEqualInstrumentParts = 0;
 		for ( int instrumentPartNumber = 0; instrumentPartNumber < firstMusicBlockInstrumentParts.size(); instrumentPartNumber ++ ) {
 			if ( formEqualityAnalyzer.isEqual( firstMusicBlockInstrumentParts.get( instrumentPartNumber ), secondMusicBlockInstrumentParts.get( instrumentPartNumber ) ) ) {

@@ -1,6 +1,6 @@
 package decomposer.melody.analyzer;
 
-import model.Melody;
+import model.melody.Melody;
 
 /**
  * Created by Pavel Yurkin on 08.08.14.

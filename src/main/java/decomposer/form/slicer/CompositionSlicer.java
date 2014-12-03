@@ -4,13 +4,13 @@ import jm.JMC;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
+import model.melody.Melody;
 import model.MusicBlock;
 import model.composition.Composition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import utils.ModelUtils;
-import utils.Utils;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -33,24 +33,24 @@ public class CompositionSlicer {
 	 */
 	public List< MusicBlock > slice( Composition composition, double timePeriod ) {
 
-		List< List< List< Note > > > compositionList = new ArrayList<>(  );
+		List< List< Melody > > compositionList = new ArrayList<>(  );
 
 		for ( Part part : composition.getPartArray() ) {
 			Phrase phrase = part.getPhraseArray()[0];
-			List< List< Note > > noteList = slice( phrase, timePeriod );
+			List< Melody > noteList = slice( phrase, timePeriod );
 			compositionList.add( noteList );
 		}
 
 		// Composition list should has equal number of slices in each instrument
 		int nubmerOfSlices = compositionList.get( 0 ).size();
-		for ( List<List<Note>> slices : compositionList ) {
+		for ( List<Melody> slices : compositionList ) {
 			if ( slices.size() != nubmerOfSlices ) throw new RuntimeException( "Sliced composition has differed number of slices for different instrument." );
 		}
 
 		List< MusicBlock > musicBlocks = new ArrayList<>();
 		for ( int musicBlockNumber = 0; musicBlockNumber < compositionList.get( 0 ).size(); musicBlockNumber ++ ) {
-			List< List< Note > > musicBlockListOfNotes = new ArrayList<>();
-			for ( List< List< Note > > instrumentPart : compositionList ) {
+			List<Melody> musicBlockListOfNotes = new ArrayList<>();
+			for ( List< Melody > instrumentPart : compositionList ) {
 				musicBlockListOfNotes.add( instrumentPart.get( musicBlockNumber ) );
 			}
 			musicBlocks.add( new MusicBlock( musicBlockListOfNotes, null ) );
@@ -65,7 +65,7 @@ public class CompositionSlicer {
 	 * @param timePeriod
 	 * @return
 	 */
-	public List< List< Note > > slice( Phrase phrase, double timePeriod ) {
+	public List< Melody > slice( Phrase phrase, double timePeriod ) {
 
 		State state = new State( timePeriod );
 		// Adding rests if phrase starts not from the beginning
@@ -77,7 +77,7 @@ public class CompositionSlicer {
 			state.add( note );
 		}
 		// Filling last slice with rests if it shorter than time period
-		List<Note> lastSlice = state.slices.get( state.slices.size() - 1 );
+		Melody lastSlice = state.slices.get( state.slices.size() - 1 );
 		double lastSliceRhythmValue = ModelUtils.sumAllRhytmValues( lastSlice );
 		if ( lastSliceRhythmValue < timePeriod ) {
 			lastSlice.add( new Note( JMC.REST, timePeriod - lastSliceRhythmValue ) );
@@ -91,27 +91,27 @@ public class CompositionSlicer {
 	 * Class consumes notes and divide them into slices timePeriod length
 	 */
 	private class State {
-		private List< List< Note > > slices = new ArrayList<>();
+		private List< Melody > slices = new ArrayList<>();
 		private double timePeriod;
 		private State( double timePeriod ) { this.timePeriod = timePeriod; }
 
 		public void add( Note note ) {
 			// Finding current state: slice and it's last note time
-			List< Note > slice = null;
+			Melody slice = null;
 			double lastNoteEndTime = 0;
 			if ( slices.size() == 0 ) {
-				slice = new ArrayList<>();
+				slice = new Melody();
 				slices.add( slice );
 				lastNoteEndTime = 0;
 			} else {
 				slice = slices.get( slices.size() - 1 );
-				for ( Note currentSliceNote : slice ) {
+				for ( Note currentSliceNote : slice.getNoteArray() ) {
 					lastNoteEndTime += currentSliceNote.getRhythmValue();
 				}
 				// fulfill slice check
 				if ( lastNoteEndTime == timePeriod ) {
 					lastNoteEndTime = 0;
-					slice = new ArrayList<>();
+					slice = new Melody();
 					slices.add( slice );
 				}
 			}
@@ -137,10 +137,10 @@ public class CompositionSlicer {
 	 * @param slices
 	 * @param timePeriod
 	 */
-	public void checkSlicesOccupancy( List<List<Note>> slices, double timePeriod ) {
-		for ( List<Note> slice : slices ) {
+	public void checkSlicesOccupancy( List<Melody> slices, double timePeriod ) {
+		for ( Melody slice : slices ) {
 			BigDecimal rhythmValuesSum = BigDecimal.ZERO;
-			for ( Note sliceNote : slice ) {
+			for ( Note sliceNote : slice.getNoteArray() ) {
 				rhythmValuesSum = rhythmValuesSum.add( BigDecimal.valueOf( sliceNote.getRhythmValue() ) );
 			}
 			if ( rhythmValuesSum.round( MathContext.DECIMAL32 ).compareTo( BigDecimal.valueOf( timePeriod ) ) != 0 ) {

@@ -1,6 +1,6 @@
 package database;
 
-import model.Melody;
+import model.melody.Melody;
 
 import java.io.*;
 import java.util.*;

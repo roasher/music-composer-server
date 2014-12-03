@@ -1,8 +1,8 @@
-package model;
+package model.melody;
 
 import jm.music.data.Note;
 import jm.music.data.Phrase;
-import utils.Utils;
+import model.PlaceInTheComposition;
 
 import java.util.List;
 
@@ -14,6 +14,7 @@ import java.util.List;
 public class Melody extends Phrase {
 
     private PlaceInTheComposition placeInTheComposition;
+	private Form form = new Form();
 
     public Melody( List<Note> notes ) {
         this((Note[]) notes.toArray());
@@ -35,6 +36,14 @@ public class Melody extends Phrase {
         this.placeInTheComposition = placeInTheComposition;
 		this.setTitle( getTitle( placeInTheComposition ) );
     }
+
+	public Form getForm() {
+		return form;
+	}
+
+	public void setForm( Form form ) {
+		this.form = form;
+	}
 
 	private String getTitle( PlaceInTheComposition placeInTheComposition ) {
 		StringBuffer out = new StringBuffer();
@@ -61,8 +70,8 @@ public class Melody extends Phrase {
             Note currentNoteFromThis = thisNoteArray[ currentNoteNumber ];
             Note currentNoteFromMelody = melodyNoteArray[ currentNoteNumber ];
 //            int currentDifference = currentNoteFromThis.getPitch() - currentNoteFromMelody.getPitch();
-            double rhythm1 = Utils.roundRhythmValue( currentNoteFromMelody.getRhythmValue() );
-            double rhythm2 = Utils.roundRhythmValue( currentNoteFromThis.getRhythmValue() );
+            double rhythm1 = currentNoteFromMelody.getRhythmValue();
+            double rhythm2 = currentNoteFromThis.getRhythmValue();
             if ( currentNoteFromMelody.getPitch() != currentNoteFromThis.getPitch() || rhythm1 != rhythm2 ) {
                 return false;
             }
