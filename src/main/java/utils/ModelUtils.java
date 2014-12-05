@@ -2,6 +2,7 @@ package utils;
 
 import jm.music.data.Note;
 import jm.music.data.Score;
+import model.MusicBlock;
 import model.melody.Melody;
 import model.composition.CompositionInfo;
 import model.composition.Meter;
@@ -34,7 +35,7 @@ public class ModelUtils {
     }
 
     /**
-     * Summarises all rhythm_old values in the array
+     * Summarises all rhythm values in the array
      * @param notes
      * @return
      */
@@ -47,7 +48,7 @@ public class ModelUtils {
     }
 
 	/**
-	 * Summarises all rhythm_old values in the array
+	 * Summarises all rhythm values in the array
 	 * @param melody
 	 * @return
 	 */
@@ -68,15 +69,17 @@ public class ModelUtils {
         return compositionInfo;
     }
 
-//	public static List<Melody> getMelodies( MusicBlock musicBlock ) {
-//		List<Melody> melodyList = new ArrayList<>(  );
-//		for ( Melody melodyNotes : musicBlock.getMelodyList() ) {
-//			Melody melody = new Melody( melodyNotes.toArray(new Note[melodyNotes.size()]) );
-////			melody.setPlaceInTheComposition( new PlaceInTheComposition( musicBlock.getCompositionInfo(), 0, 0 ) );
-//			melodyList.add( melody );
-////			Note[] notes = null;
-////			melodyNotes.toArray( notes );
-//		}
-//		return melodyList;
-//	}
+	/**
+	 * Wraps melodies into music blocks setting null to all fields other than melody list
+	 * Function made for testing purpose
+	 * @param melodyBlockList
+	 * @return
+	 */
+	public static List<MusicBlock > simpleWrap( List< List< Melody > > melodyBlockList ) {
+		List< MusicBlock > musicBlockList = new ArrayList<>(  );
+		for ( List< Melody > melodies : melodyBlockList ) {
+			musicBlockList.add( new MusicBlock( melodies, null ) );
+		}
+		return musicBlockList;
+	}
 }

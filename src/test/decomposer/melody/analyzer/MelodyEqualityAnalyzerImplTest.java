@@ -2,6 +2,7 @@ package decomposer.melody.analyzer;
 
 import static jm.constants.Pitches.*;
 
+import helper.AbstractSpringTest;
 import jm.music.data.Note;
 import junit.framework.Assert;
 import model.melody.Melody;
@@ -14,9 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 /**
  * Created by night wish on 26.07.14.
  */
-@RunWith( SpringJUnit4ClassRunner.class )
-@ContextConfiguration( locations = "classpath:spring.configuration.xml" )
-public class MelodyEqualityAnalyzerImplTest {
+public class MelodyEqualityAnalyzerImplTest extends AbstractSpringTest {
 
 	@Autowired
 	MelodyEqualityAnalyzer melodyEqualityAnalyzer;

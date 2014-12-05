@@ -1,16 +1,11 @@
-package decomposer.form.slicer;
+package utils;
 
+import helper.AbstractSpringTest;
 import jm.music.data.*;
 import model.melody.Melody;
-import model.MusicBlock;
 import model.composition.Composition;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import utils.CompositionLoader;
-import utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,9 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@RunWith( SpringJUnit4ClassRunner.class )
-@ContextConfiguration( locations = "classpath:spring.configuration.xml" )
-public class CompositionSlicerTest {
+public class CompositionSlicerTest extends AbstractSpringTest {
 
 	@Autowired
 	private CompositionSlicer compositionSlicer;
@@ -284,7 +277,7 @@ public class CompositionSlicerTest {
 		Part thirdPart = new Part( thirdInstr );
 		score.add( thirdPart );
 
-		List<MusicBlock> testList = compositionSlicer.slice( new Composition( score ), DOTTED_HALF_NOTE );
+		List<List<Melody>> testList = compositionSlicer.slice( new Composition( score ), DOTTED_HALF_NOTE );
 
 		// first
 		Melody firstBlockfirstList = new Melody();
@@ -299,7 +292,6 @@ public class CompositionSlicerTest {
 		firstBlock.add( firstBlockfirstList );
 		firstBlock.add( firstBlocksecondList );
 		firstBlock.add( firstBlockthirdList );
-		MusicBlock firstMusicBlock = new MusicBlock( firstBlock, null );
 
 		// second
 		Melody secondBlockfirstList = new Melody();
@@ -316,7 +308,6 @@ public class CompositionSlicerTest {
 		secondBlock.add( secondBlockfirstList );
 		secondBlock.add( secondBlocksecondList );
 		secondBlock.add( secondBlockthirdList );
-		MusicBlock secondMusicBlock = new MusicBlock( secondBlock, null );
 
 		// third
 		Melody thirdBlockfirstList = new Melody();
@@ -331,12 +322,11 @@ public class CompositionSlicerTest {
 		thirdBlock.add( thirdBlockfirstList );
 		thirdBlock.add( thirdBlocksecondList );
 		thirdBlock.add( thirdBlockthirdList );
-		MusicBlock thirdMusicBlock = new MusicBlock( thirdBlock, null );
 
-		List<MusicBlock> etalonList = new ArrayList<>();
-		etalonList.add( firstMusicBlock );
-		etalonList.add( secondMusicBlock );
-		etalonList.add( thirdMusicBlock );
+		List<List<Melody>> etalonList = new ArrayList<>();
+		etalonList.add( firstBlock );
+		etalonList.add( secondBlock );
+		etalonList.add( thirdBlock );
 
 		assertEquals( etalonList, testList );
 	}
@@ -411,15 +401,15 @@ public class CompositionSlicerTest {
 
 	@Test
 	public void restInTheBeginningTestSlice() {
-		Composition composition = compositionLoader.getComposition( new File( "src\\test\\decomposer\\form\\testCases\\quartets\\2.Scarecrow's song (midi).mid" ) );
+		Composition composition = compositionLoader.getComposition( new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ) );
 
 //		View.notate( composition );
 //		suspend();
 
-		List<MusicBlock> musicBlockList = compositionSlicer.slice( composition, WHOLE_NOTE );
+		List<List<Melody>> musicBlockList = compositionSlicer.slice( composition, WHOLE_NOTE );
 
-			assertEquals( musicBlockList.get( 0 ).getMelodyList().get( 3 ).size(), 1 );
-			assertTrue( musicBlockList.get( 0 ).getMelodyList().get( 3 ).getNote( 0 ).equals( new Rest( WHOLE_NOTE ) ) );
+		assertEquals( musicBlockList.get( 0 ).get( 3 ).size(), 1 );
+		assertTrue( musicBlockList.get( 0 ).get( 3 ).getNote( 0 ).equals( new Rest( WHOLE_NOTE ) ) );
 	}
 
 	@Test

@@ -14,7 +14,7 @@ import java.util.List;
 import static jm.JMC.*;
 
 /**
- * Created by nigth wish on 25.08.14.
+ * Created by night wish on 25.08.14.
  */
 public class Utils {
 
@@ -164,4 +164,5 @@ public class Utils {
 		}
 		return true;
 	}
+
 }

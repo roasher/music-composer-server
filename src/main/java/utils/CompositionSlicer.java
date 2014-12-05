@@ -1,4 +1,4 @@
-package decomposer.form.slicer;
+package utils;
 
 import jm.JMC;
 import jm.music.data.Note;
@@ -25,13 +25,14 @@ import java.util.List;
 public class CompositionSlicer {
 
 	Logger logger = LoggerFactory.getLogger( getClass() );
+
 	/**
-	 * Slices music blocks with certain timePeriod from input composition.
+	 * Slices composition into melodies, having ecertain timePeriod each.
 	 * @param composition
 	 * @param timePeriod
 	 * @return
 	 */
-	public List< MusicBlock > slice( Composition composition, double timePeriod ) {
+	public List< List< Melody > > slice( Composition composition, double timePeriod ) {
 
 		List< List< Melody > > compositionList = new ArrayList<>(  );
 
@@ -47,16 +48,16 @@ public class CompositionSlicer {
 			if ( slices.size() != nubmerOfSlices ) throw new RuntimeException( "Sliced composition has differed number of slices for different instrument." );
 		}
 
-		List< MusicBlock > musicBlocks = new ArrayList<>();
-		for ( int musicBlockNumber = 0; musicBlockNumber < compositionList.get( 0 ).size(); musicBlockNumber ++ ) {
-			List<Melody> musicBlockListOfNotes = new ArrayList<>();
+		List< List< Melody > > compositionMelodies = new ArrayList<>();
+		for ( int melodyBlockNumber = 0; melodyBlockNumber < compositionList.get( 0 ).size(); melodyBlockNumber ++ ) {
+			List<Melody> melodyBlock = new ArrayList<>();
 			for ( List< Melody > instrumentPart : compositionList ) {
-				musicBlockListOfNotes.add( instrumentPart.get( musicBlockNumber ) );
+				melodyBlock.add( instrumentPart.get( melodyBlockNumber ) );
 			}
-			musicBlocks.add( new MusicBlock( musicBlockListOfNotes, null ) );
+			compositionMelodies.add( melodyBlock );
 		}
 
-		return musicBlocks;
+		return compositionMelodies;
 	}
 
 	/**

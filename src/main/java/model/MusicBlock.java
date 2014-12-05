@@ -72,6 +72,14 @@ public class MusicBlock implements Serializable {
         }
     }
 
+	public String getForm() {
+		StringBuilder stringBuilder = new StringBuilder(  );
+		for ( Melody melody : this.getMelodyList() ) {
+			stringBuilder.append( melody.getForm().getValue() );
+		}
+		return stringBuilder.toString();
+	}
+
 	@Override
 	public boolean equals( Object o ) {
 		if ( this == o ) {

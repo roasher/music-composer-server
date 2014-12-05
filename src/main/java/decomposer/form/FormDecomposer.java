@@ -3,9 +3,8 @@ package decomposer.form;
 import decomposer.form.analyzer.FormEqualityAnalyzerImpl;
 import model.melody.Form;
 import model.melody.Melody;
-import model.MusicBlock;
 import model.composition.Composition;
-import decomposer.form.slicer.CompositionSlicer;
+import utils.CompositionSlicer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,58 +29,67 @@ public class FormDecomposer {
 	private Logger logger = LoggerFactory.getLogger( getClass() );
 
 	/**
-	 * Decomposing composition into music blocks that has rhythmValue length, setting form into each music block
+	 * Decomposing composition into List of Melody Blocks that has rhythmValue length, setting form into each melody
 	 * @param composition
 	 * @param rhythmValue
 	 * @return
 	 */
-	public List<MusicBlock> decompose( Composition composition, double rhythmValue ) {
-		int formCounter = 0;
-		List<MusicBlock> musicBlocks = compositionSlicer.slice( composition, rhythmValue );
-		char[] highestFormValues = new char[ musicBlocks.get( 0 ).getMelodyList().size() ];
+	public List< List< Melody > > decompose( Composition composition, double rhythmValue ) {
+
+		List< List< Melody > > melodyBlockList = compositionSlicer.slice( composition, rhythmValue );
+		
+		char[] highestFormValues = new char[ melodyBlockList.get( 0 ).size() ];
 		for ( int currentHighestFormValue = 0; currentHighestFormValue < highestFormValues.length; currentHighestFormValue ++ ) {
 			highestFormValues[ currentHighestFormValue ] = 'A';
 		}
-		// Iterating through all music blocks
-		for ( int musicBlockNumber = 0; musicBlockNumber < musicBlocks.size(); musicBlockNumber++ ) {
-			MusicBlock musicBlock = musicBlocks.get( musicBlockNumber );
-			boolean[] hasFoundEqualFormValue = new boolean[ musicBlock.getMelodyList().size() ];
+		// Iterating through all melody blocks
+		for ( int melodyBlockNumber = 0; melodyBlockNumber < melodyBlockList.size(); melodyBlockNumber++ ) {
+			List< Melody > melodyBlock = melodyBlockList.get( melodyBlockNumber );
+			boolean[] hasFoundEqualFormValue = new boolean[ melodyBlock.size() ];
 			// Comparing current music block with all previous music blocks searching for equality - setting value if equality occrus and highest value + 1 if not
-			for ( int musicBlockToCompareWithNumber = 0; musicBlockToCompareWithNumber < musicBlockNumber; musicBlockToCompareWithNumber++ ) {
-				MusicBlock musicBlockToCompareWith = musicBlocks.get( musicBlockToCompareWithNumber );
+			for ( int melodyBlockToCompareWithNumber = 0; melodyBlockToCompareWithNumber < melodyBlockNumber; melodyBlockToCompareWithNumber++ ) {
+				List< Melody > musicBlockToCompareWith = melodyBlockList.get( melodyBlockToCompareWithNumber );
 				// We are checking equality for every melody
-				List<Melody> melodies = musicBlock.getMelodyList();
-				List<Melody> melodiesToCompareWith = musicBlockToCompareWith.getMelodyList();
-				for ( int currentMelodyNumber = 0; currentMelodyNumber < melodies.size(); currentMelodyNumber ++ ) {
-					if ( hasFoundEqualFormValue[ currentMelodyNumber ] ) {
+				for ( int instrumentNumber = 0; instrumentNumber < melodyBlock.size(); instrumentNumber ++ ) {
+					if ( hasFoundEqualFormValue[ instrumentNumber ] ) {
 						// once equality has been found there is no more search necessary
 					} else {
-						char formInstrumentValue = melodiesToCompareWith.get( currentMelodyNumber ).getForm().getValue();
-						if ( formEqualityAnalyzer.isEqual( melodies.get( currentMelodyNumber ), melodiesToCompareWith.get( currentMelodyNumber ) ) ) {
-							melodies.get( currentMelodyNumber ).getForm().setValue( formInstrumentValue );
-							hasFoundEqualFormValue[ currentMelodyNumber ] = true;
+						char formInstrumentValue = musicBlockToCompareWith.get( instrumentNumber ).getForm().getValue();
+						if ( formEqualityAnalyzer.isEqual( melodyBlock.get( instrumentNumber ), musicBlockToCompareWith.get( instrumentNumber ) ) ) {
+							melodyBlock.get( instrumentNumber ).getForm().setValue( formInstrumentValue );
+							hasFoundEqualFormValue[ instrumentNumber ] = true;
 						} else {
 							// if we found local maximum - it means that we have tested equality for all of the chars include max
 							// and we didn't find one equal - so setting the next char value and renewing the state
-							if ( formInstrumentValue == highestFormValues[ currentMelodyNumber ] ) {
-								highestFormValues[ currentMelodyNumber ]++;
-								melodies.get( currentMelodyNumber ).getForm().setValue( highestFormValues[currentMelodyNumber] );
-								hasFoundEqualFormValue[ currentMelodyNumber ] = true;
+							if ( formInstrumentValue == highestFormValues[ instrumentNumber ] ) {
+								highestFormValues[ instrumentNumber ]++;
+								melodyBlock.get( instrumentNumber ).getForm().setValue( highestFormValues[instrumentNumber] );
+								hasFoundEqualFormValue[ instrumentNumber ] = true;
 							}
 						}
 					}
 				}
 			}
 		}
-		return musicBlocks;
+		return melodyBlockList;
 	}
 
 	public List<Form> getInstrumentForm( int instrumentNumber, Composition composition, double rhythmValue ) {
 		List<Form> formList = new ArrayList<>();
-		List<MusicBlock> musicBlockList = decompose( composition, rhythmValue );
-		for ( MusicBlock musicBlock : musicBlockList ) {
-			formList.add( musicBlock.getMelodyList().get( instrumentNumber ).getForm() );
+		List< List< Melody > > melodyBlockList = decompose( composition, rhythmValue );
+		for ( List< Melody > melodyBlock : melodyBlockList ) {
+			formList.add( melodyBlock.get( instrumentNumber ).getForm() );
 		}
 		return formList;
 	}
+
+	/**
+	 * Divides music melody block into blocks that has at least one note without pitch change.
+	 * @param melodyList
+	 * @return
+	 */
+	public List<List<Melody>> divideMusicMelodyBlock ( List<Melody> melodyList ) {
+		return null;
+	}
+
 }
