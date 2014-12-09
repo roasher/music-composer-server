@@ -24,6 +24,8 @@ public class CompositionLoaderTest extends AbstractSpringTest {
 
 	@Autowired
 	private CompositionLoader compositionLoader;
+	@Autowired
+	private RhythmValueHandler rhythmValueHandler;
 
 	@Test
 	public void correctInstrumentNumberTest() {
@@ -40,7 +42,7 @@ public class CompositionLoaderTest extends AbstractSpringTest {
 		Read.midi( compositionAsIs, file.getAbsolutePath() );
 		Composition compositionWithRoundedRhythm = compositionLoader.getComposition( file );
 
-		assertEquals( Utils.roundRhythmValue( compositionAsIs.getEndTime() ), compositionWithRoundedRhythm.getEndTime() );
+		assertEquals( rhythmValueHandler.roundRhythmValue( compositionAsIs.getEndTime() ), compositionWithRoundedRhythm.getEndTime() );
 		assertEquals( compositionAsIs.getPartArray().length, compositionWithRoundedRhythm.getPartArray().length );
 		for ( int instrumentNumber = 0; instrumentNumber < compositionAsIs.getPartArray().length; instrumentNumber++ ) {
 //			assertEquals( Utils.roundRhythmValue( compositionAsIs.getPart( instrumentNumber ).getEndTime() ), compositionWithRoundedRhythm.getPart( instrumentNumber ).getEndTime() );

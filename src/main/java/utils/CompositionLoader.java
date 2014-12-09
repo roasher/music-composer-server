@@ -1,10 +1,14 @@
 package utils;
 
+import jm.music.data.Note;
+import jm.music.data.Part;
+import jm.music.data.Phrase;
 import jm.util.Read;
 import model.composition.Composition;
 import model.composition.CompositionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -17,6 +21,8 @@ import java.util.List;
  */
 @Component
 public class CompositionLoader {
+	@Autowired
+	private RhythmValueHandler rhythmValueHandler;
 
 	Logger logger = LoggerFactory.getLogger( getClass() );
 
@@ -62,7 +68,19 @@ public class CompositionLoader {
 		composition.setCompositionInfo( compositionInfo );
 
 		Read.midi( composition, file.getAbsolutePath() );
-		composition.roundAllRhythmValues();
+		roundAllRhythmValues( composition );
 		return composition;
 	}
+
+	public void roundAllRhythmValues( Composition composition ) {
+		for ( Part part : composition.getPartArray() ) {
+			for ( Phrase phrase : part.getPhraseArray() ) {
+				for ( Note note : phrase.getNoteArray() ) {
+					double newValue = rhythmValueHandler.roundRhythmValue( note.getRhythmValue() );
+					note.setRhythmValue( newValue );
+				}
+			}
+		}
+	}
+
 }

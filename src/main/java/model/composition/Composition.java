@@ -13,17 +13,6 @@ import utils.Utils;
 public class Composition extends jm.music.data.Score {
     private CompositionInfo compositionInfo;
 
-    public void roundAllRhythmValues() {
-        for ( Part part : this.getPartArray() ) {
-            for ( Phrase phrase : part.getPhraseArray() ) {
-                for ( Note note : phrase.getNoteArray() ) {
-					double newValue = Utils.roundRhythmValue( note.getRhythmValue() );
-                    note.setRhythmValue( newValue );
-                }
-            }
-        }
-    }
-
 	public Composition() {}
 
 	public Composition( Score score ) { super( score.getPartArray() ); }

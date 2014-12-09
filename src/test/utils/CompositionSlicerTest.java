@@ -105,7 +105,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 			phrase.add( note );
 		}
 		List<Melody> sliceToTest = compositionSlicer.slice( phrase, HALF_NOTE );
-		assertTrue( Utils.ListOfMelodiesIsEquals( sliceToTest, sliceHalfNote ) );
+		assertTrue( Utils.listOfMelodiesIsEquals( sliceToTest, sliceHalfNote ) );
 
 		// QUARTER NOTE
 		List<Melody> sliceQuarterNote = new ArrayList<>();
@@ -202,7 +202,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 			phraseQuarter.add( note );
 		}
 		List<Melody> sliceToTestQuarter = compositionSlicer.slice( phraseQuarter, QUARTER_NOTE );
-		assertTrue( Utils.ListOfMelodiesIsEquals( sliceToTestQuarter, sliceQuarterNote ) );
+		assertTrue( Utils.listOfMelodiesIsEquals( sliceToTestQuarter, sliceQuarterNote ) );
 
 		// WHOLE NOTE
 		List<Melody> sliceWholefNote = new ArrayList<>(  );
@@ -245,11 +245,11 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 			phraseW.add( note );
 		}
 		List<Melody> sliceToTestW = compositionSlicer.slice( phraseW, WHOLE_NOTE );
-		assertTrue( Utils.ListOfMelodiesIsEquals( sliceToTestW, sliceWholefNote ) );
+		assertTrue( Utils.listOfMelodiesIsEquals( sliceToTestW, sliceWholefNote ) );
 
 		phraseW.getNoteArray()[0].setRhythmValue( HALF_NOTE );
 		List<Melody> sliceToTestW1 = compositionSlicer.slice( phraseW, WHOLE_NOTE );
-		assertFalse( Utils.ListOfMelodiesIsEquals( sliceToTestW1, sliceWholefNote ) );
+		assertFalse( Utils.listOfMelodiesIsEquals( sliceToTestW1, sliceWholefNote ) );
 	}
 
 	@Test
@@ -366,7 +366,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		}
 		List<Melody> sliceToTest = compositionSlicer.slice( phrase, WHOLE_NOTE );
 
-		assertTrue( Utils.ListOfMelodiesIsEquals( sliceToTest, sliceEtalon ) );
+		assertTrue( Utils.listOfMelodiesIsEquals( sliceToTest, sliceEtalon ) );
 	}
 
 	@Test
@@ -440,6 +440,6 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		slice3.add( new Note( REST, HALF_NOTE ) );
 		etalonSlice.add( slice3 );
 
-		assertTrue( Utils.ListOfMelodiesIsEquals( sliceToTest, etalonSlice ) );
+		assertTrue( Utils.listOfMelodiesIsEquals( sliceToTest, etalonSlice ) );
 	}
 }

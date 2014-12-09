@@ -99,7 +99,7 @@ public class MusicBlock implements Serializable {
 			return false;
 		}
 
-		if ( !Utils.ListOfMelodiesIsEquals( this.melodyList, that.melodyList ) ) {
+		if ( !Utils.listOfMelodiesIsEquals( this.melodyList, that.melodyList ) ) {
 			return false;
 		}
 

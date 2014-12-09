@@ -82,4 +82,16 @@ public class ModelUtils {
 		}
 		return musicBlockList;
 	}
+
+	public static double getMinRhythmValue( List< Melody > melodyList ) {
+		double minRhythmValue = Double.MAX_VALUE;
+		for ( Melody melody : melodyList ) {
+			for ( Note note : melody.getNoteArray() ) {
+				if ( note.getRhythmValue() < minRhythmValue ) {
+					minRhythmValue = note.getRhythmValue();
+				}
+			}
+		}
+		return minRhythmValue;
+	}
 }

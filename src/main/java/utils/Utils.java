@@ -1,60 +1,17 @@
 package utils;
 
+import jm.JMC;
 import jm.music.data.Note;
 import model.melody.Melody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static jm.JMC.*;
+import java.util.*;
 
 /**
  * Created by night wish on 25.08.14.
  */
 public class Utils {
-
-	private static Logger logger = LoggerFactory.getLogger( Utils.class );
-
-	private static final double maxRhythmValue;
-	public static final List<Double> rhythmValues = new ArrayList<>();
-
-	static {
-		rhythmValues.add( WHOLE_NOTE );
-		rhythmValues.add( DOTTED_HALF_NOTE );
-		rhythmValues.add( DOUBLE_DOTTED_HALF_NOTE );
-		rhythmValues.add( 2.5 );
-		rhythmValues.add( HALF_NOTE );
-		rhythmValues.add( HALF_NOTE_TRIPLET );
-		rhythmValues.add( QUARTER_NOTE );
-		rhythmValues.add( QUARTER_NOTE_TRIPLET );
-		rhythmValues.add( DOTTED_QUARTER_NOTE );
-		rhythmValues.add( DOUBLE_DOTTED_QUARTER_NOTE );
-		rhythmValues.add( EIGHTH_NOTE );
-		rhythmValues.add( DOTTED_EIGHTH_NOTE );
-		rhythmValues.add( EIGHTH_NOTE_TRIPLET );
-		rhythmValues.add( DOUBLE_DOTTED_EIGHTH_NOTE );
-
-		rhythmValues.add( SIXTEENTH_NOTE );
-		rhythmValues.add( DOTTED_SIXTEENTH_NOTE );
-		rhythmValues.add( SIXTEENTH_NOTE_TRIPLET );
-
-		rhythmValues.add( THIRTYSECOND_NOTE );
-		rhythmValues.add( THIRTYSECOND_NOTE_TRIPLET );
-
-		rhythmValues.add( 0. );
-
-		// FIXME костыль. Таких значений не должно быть
-		rhythmValues.add( 2.7 );
-		rhythmValues.add( 0.8 );
-
-		Collections.sort( rhythmValues );
-		maxRhythmValue = Collections.max( rhythmValues );
-	};
 
     /**
      * Waits for input, so one can see and analyze nonated smth
@@ -80,48 +37,33 @@ public class Utils {
         return roundedValue;
     }
 
-	/**
-	 * Import of midi file can be not so precise as we want to
-	 * This function rounds import value to the JMC library has
-	 * @param rhythmValue
-	 * @return
-	 */
-	public static double roundRhythmValue( double rhythmValue ) {
-		// TODO Будут траблы со сложными лигами, например половина ноты на восьмую триоль. Нужно подумать.
-		// How many max rhythm values can fit in input rhythmValue
-		int maxRhythmValueNumber = ( int ) ( rhythmValue / maxRhythmValue );
-
-		double valueWithinListRange = rhythmValue - maxRhythmValueNumber * maxRhythmValue;
-		double roundRhythmValue = getClosestListElement( valueWithinListRange, rhythmValues ) + maxRhythmValueNumber * maxRhythmValue;
-
-		return roundRhythmValue;
-	}
-
-	/**
-	 * Returns list element that is closest to the value
-	 * List must be ascending sorted
-	 * @param value
-	 * @param list
-	 * @return
-	 */
-	public static double getClosestListElement( double value, List<Double> list ) {
-//		logger.info( "input value = {}", value );
-		int place = Collections.binarySearch( list, value );
-		if ( place >= 0 ) {
-			return list.get( place );
-		} else {
-			double top = rhythmValues.get( - place - 1 );
-			double bottom = rhythmValues.get( - place -2 );
-			if ( top - value < value - bottom ) {
-				return top;
-			}
-			if ( top - value > value - bottom ) {
-				return bottom;
-			}
-			throw new RuntimeException( "It is impossible to choose closest list element : there are 2 values having equal distance with " + value  );
+	public static boolean ListOfMelodyBlocksIsEquals( List< List< Melody > > firstMelodyBlockList, List< List< Melody > > secondMelodyBlockList ) {
+		if ( firstMelodyBlockList == null || secondMelodyBlockList == null || firstMelodyBlockList.size() != secondMelodyBlockList.size() ) {
+			return false;
 		}
+		for ( int currentMelodyBlockNumber = 0; currentMelodyBlockNumber < firstMelodyBlockList.size(); currentMelodyBlockNumber ++ ) {
+			List< Melody > firstMelodyBlock = firstMelodyBlockList.get( currentMelodyBlockNumber );
+			List< Melody > secondMelodyBlock = secondMelodyBlockList.get( currentMelodyBlockNumber );
+			if ( !listOfMelodiesIsEquals( firstMelodyBlock, secondMelodyBlock ) ) {
+				return false;
+			}
+		}
+		return true;
 	}
 
+	public static boolean listOfMelodiesIsEquals( List<Melody> firstMelodyList, List<Melody> secondMelodyList ) {
+		if ( firstMelodyList == null || secondMelodyList == null || firstMelodyList.size() != secondMelodyList.size() ) {
+			return false;
+		}
+		for ( int currentListeNumber = 0; currentListeNumber < firstMelodyList.size(); currentListeNumber ++ ) {
+			List< Note > noteList1 = firstMelodyList.get( currentListeNumber ).getNoteList();
+			List< Note > noteList2 = secondMelodyList.get( currentListeNumber ).getNoteList();
+			if ( !isEquals( noteList1, noteList2 ) ) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public static boolean isEquals( List< Note > noteList1, List< Note > noteList2 ) {
 		if ( noteList1 == null || noteList2 == null || noteList1.size() != noteList2.size() ) {
@@ -137,32 +79,79 @@ public class Utils {
 		return true;
 	}
 
-	public static boolean ListOfListsIsEquals( List< List< Note > > listOfLists1, List< List< Note > > listOfLists2 ) {
-		if ( listOfLists1 == null || listOfLists2 == null || listOfLists1.size() != listOfLists2.size() ) {
-			return false;
+	/**
+	 * Recombining melody block into smaller lists.
+	 * In result this ends with <b>list</b> of music blocks that has exact notes that input block has
+	 * but melodies will be divided note by note so there will be no pitch changing in any of result melody blocks
+	 *
+	 * @param inputMelodyBlockList
+	 * @return
+	 */
+	public static List< List< Melody > > recombineMelodyBlock( List<Melody> inputMelodyBlockList ) {
+
+		// The edge set
+		Set< Double > edgeSet = new HashSet<>(  );
+		for ( Melody melody : inputMelodyBlockList ) {
+			edgeSet.addAll( getEdgeList( melody ) );
 		}
-		for ( int currentListeNumber = 0; currentListeNumber < listOfLists1.size(); currentListeNumber ++ ) {
-			List< Note > noteList1 = listOfLists1.get( currentListeNumber );
-			List< Note > noteList2 = listOfLists2.get( currentListeNumber );
-			if ( !isEquals( noteList1, noteList2 ) ) {
-				return false;
+
+		Double[] edgeArray = edgeSet.toArray( new Double[0] );
+		Arrays.sort( edgeArray );
+
+		List< List< Melody > > melodyBlockList = new ArrayList<>(  );
+		double prevoiusEdge = 0;
+		for ( double edge : edgeArray ) {
+			List< Melody > melodyBlock = new ArrayList<>(  );
+			for ( Melody melody : inputMelodyBlockList ) {
+				int noteNumber = getNoteNumber( melody.getNoteArray(), edge );
+				Note notePlayingAtThisMoment = melody.getNote( noteNumber );
+
+				Melody newMelody = new Melody( new Note[]{ new Note( notePlayingAtThisMoment.getPitch(), edge - prevoiusEdge ) } );
+				newMelody.setForm( melody.getForm() );
+				newMelody.setStartTime( prevoiusEdge + melody.getStartTime() );
+				melodyBlock.add( newMelody );
 			}
+			prevoiusEdge = edge;
+			melodyBlockList.add( melodyBlock );
 		}
-		return true;
+
+		return melodyBlockList;
 	}
 
-	public static boolean ListOfMelodiesIsEquals( List< Melody > firstMelodyList, List< Melody > secondMelodyList ) {
-		if ( firstMelodyList == null || secondMelodyList == null || firstMelodyList.size() != secondMelodyList.size() ) {
-			return false;
+	/**
+	 * Returns the edge list of melody notes
+	 * Sets first edge to rhythm value of the first note, and incrementing this value by
+	 * rhythm value of all notes one by one
+	 * @param melody
+	 * @return
+	 */
+	public static List< Double > getEdgeList( Melody melody ) {
+		List< Double > edgeList = new ArrayList<>();
+		double lastEdge = 0;
+		for ( int noteNumber = 0; noteNumber < melody.size(); noteNumber ++ ) {
+			Note note = melody.getNote( noteNumber );
+			edgeList.add( lastEdge + note.getRhythmValue() );
+			lastEdge = edgeList.get( edgeList.size() - 1 );
 		}
-		for ( int currentListeNumber = 0; currentListeNumber < firstMelodyList.size(); currentListeNumber ++ ) {
-			List< Note > noteList1 = firstMelodyList.get( currentListeNumber ).getNoteList();
-			List< Note > noteList2 = secondMelodyList.get( currentListeNumber ).getNoteList();
-			if ( !isEquals( noteList1, noteList2 ) ) {
-				return false;
-			}
-		}
-		return true;
+		return edgeList;
 	}
 
+	/**
+	 * Returns number of the note in the Note Array that sounds in particular time
+	 * If input time is finish time to one and start time to another, the first one will be returned
+	 * @param notes - note array
+	 * @param time
+	 * @return
+	 */
+	public static int getNoteNumber( Note[] notes, double time ) {
+		double startTime = 0;
+		for ( int currentNoteNumber = 0; currentNoteNumber < notes.length; currentNoteNumber ++ ) {
+			double rhythm = notes[ currentNoteNumber ].getRhythmValue();
+			if ( startTime < time && time <= startTime + rhythm ) {
+				return currentNoteNumber;
+			}
+			startTime += rhythm;
+		}
+		return notes.length + 1;
+	}
 }
