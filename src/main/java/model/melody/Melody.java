@@ -60,16 +60,22 @@ public class Melody extends Phrase {
 
         Melody melody = ( Melody ) o;
 
+		if ( !this.form.equals( melody.form ) ) {
+			return false;
+		}
+
+		if ( Double.compare( this.getStartTime(), melody.getStartTime() ) != 0 ) {
+			return false;
+		}
+
         Note[] thisNoteArray = this.getNoteArray();
         Note[] melodyNoteArray = melody.getNoteArray();
 
         if ( thisNoteArray.length != melodyNoteArray.length ) return false;
 
-//        int difference = thisNoteArray[ 0 ].getPitch() - melodyNoteArray[ 0 ].getPitch();
         for ( int currentNoteNumber = 0; currentNoteNumber < thisNoteArray.length ; currentNoteNumber ++ ) {
             Note currentNoteFromThis = thisNoteArray[ currentNoteNumber ];
             Note currentNoteFromMelody = melodyNoteArray[ currentNoteNumber ];
-//            int currentDifference = currentNoteFromThis.getPitch() - currentNoteFromMelody.getPitch();
             double rhythm1 = currentNoteFromMelody.getRhythmValue();
             double rhythm2 = currentNoteFromThis.getRhythmValue();
             if ( currentNoteFromMelody.getPitch() != currentNoteFromThis.getPitch() || rhythm1 != rhythm2 ) {

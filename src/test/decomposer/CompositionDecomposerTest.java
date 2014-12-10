@@ -2,6 +2,7 @@ package decomposer;
 
 import helper.AbstractSpringTest;
 import jm.JMC;
+import model.MusicBlock;
 import model.composition.Composition;
 import model.melody.Melody;
 import org.junit.Test;
@@ -22,6 +23,6 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 //	@Test
 //	public void getLexiconTest() {
 //		Composition composition = compositionLoader.getComposition( new File( "" ) );
-//		compositionDecomposer.decompose(  )
+//		List< MusicBlock > lexicon = compositionDecomposer.decompose( composition, JMC.WHOLE_NOTE );
 //	}
 }

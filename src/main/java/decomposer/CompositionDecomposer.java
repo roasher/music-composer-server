@@ -7,6 +7,7 @@ import model.composition.Composition;
 import model.melody.Melody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import utils.Recombinator;
 
 import java.util.List;
 import java.util.Set;
@@ -21,9 +22,11 @@ public class CompositionDecomposer {
 	@Autowired
 	private FormDecomposer formDecomposer;
 
-    public Set<MusicBlock > decompose( Composition composition, double rhythmValue ) {
+	@Autowired
+	private Recombinator recombinator;
 
-        return null;
+    public List<MusicBlock > decompose( Composition composition, double rhythmValue ) {
+		return null;
     }
 
 }

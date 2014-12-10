@@ -7,6 +7,12 @@ public class Form {
 
 	private char value = 'A';
 
+	public Form( char value ) {
+		this.value = value;
+	}
+
+	public Form() {}
+
 	@Override
 	public boolean equals( Object o ) {
 		if ( this == o ) {
