@@ -1,6 +1,5 @@
 package utils;
 
-import jm.JMC;
 import jm.music.data.Note;
 import model.melody.Melody;
 
@@ -44,14 +43,14 @@ public class Utils {
 		for ( int currentMelodyBlockNumber = 0; currentMelodyBlockNumber < firstMelodyBlockList.size(); currentMelodyBlockNumber ++ ) {
 			List< Melody > firstMelodyBlock = firstMelodyBlockList.get( currentMelodyBlockNumber );
 			List< Melody > secondMelodyBlock = secondMelodyBlockList.get( currentMelodyBlockNumber );
-			if ( !listOfMelodiesIsEquals( firstMelodyBlock, secondMelodyBlock ) ) {
+			if ( !listOfMelodiesAreEquals( firstMelodyBlock, secondMelodyBlock ) ) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public static boolean listOfMelodiesIsEquals( List<Melody> firstMelodyList, List<Melody> secondMelodyList ) {
+	public static boolean listOfMelodiesAreEquals( List<Melody> firstMelodyList, List<Melody> secondMelodyList ) {
 		if ( firstMelodyList == null || secondMelodyList == null || firstMelodyList.size() != secondMelodyList.size() ) {
 			return false;
 		}

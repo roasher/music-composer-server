@@ -46,16 +46,16 @@ public class FormDecomposer {
 		for ( int melodyBlockNumber = 0; melodyBlockNumber < melodyBlockList.size(); melodyBlockNumber++ ) {
 			List< Melody > melodyBlock = melodyBlockList.get( melodyBlockNumber );
 			boolean[] hasFoundEqualFormValue = new boolean[ melodyBlock.size() ];
-			// Comparing current music block with all previous music blocks searching for equality - setting value if equality occrus and highest value + 1 if not
+			// Comparing current music block with all previous music blocks searching for equality - setting value if equality occurs and highest value + 1 if not
 			for ( int melodyBlockToCompareWithNumber = 0; melodyBlockToCompareWithNumber < melodyBlockNumber; melodyBlockToCompareWithNumber++ ) {
-				List< Melody > musicBlockToCompareWith = melodyBlockList.get( melodyBlockToCompareWithNumber );
+				List< Melody > melodyBlockToCompareWith = melodyBlockList.get( melodyBlockToCompareWithNumber );
 				// We are checking equality for every melody
 				for ( int instrumentNumber = 0; instrumentNumber < melodyBlock.size(); instrumentNumber ++ ) {
 					if ( hasFoundEqualFormValue[ instrumentNumber ] ) {
 						// once equality has been found there is no more search necessary
 					} else {
-						char formInstrumentValue = musicBlockToCompareWith.get( instrumentNumber ).getForm().getValue();
-						if ( formEqualityAnalyzer.isEqual( melodyBlock.get( instrumentNumber ), musicBlockToCompareWith.get( instrumentNumber ) ) ) {
+						char formInstrumentValue = melodyBlockToCompareWith.get( instrumentNumber ).getForm().getValue();
+						if ( formEqualityAnalyzer.isEqual( melodyBlock.get( instrumentNumber ), melodyBlockToCompareWith.get( instrumentNumber ) ) ) {
 							melodyBlock.get( instrumentNumber ).getForm().setValue( formInstrumentValue );
 							hasFoundEqualFormValue[ instrumentNumber ] = true;
 						} else {

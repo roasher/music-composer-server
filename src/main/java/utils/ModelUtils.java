@@ -69,19 +69,19 @@ public class ModelUtils {
         return compositionInfo;
     }
 
-	/**
-	 * Wraps melodies into music blocks setting null to all fields other than melody list
-	 * Function made for testing purpose
-	 * @param melodyBlockList
-	 * @return
-	 */
-	public static List<MusicBlock > simpleWrap( List< List< Melody > > melodyBlockList ) {
-		List< MusicBlock > musicBlockList = new ArrayList<>(  );
-		for ( List< Melody > melodies : melodyBlockList ) {
-			musicBlockList.add( new MusicBlock( melodies, null ) );
-		}
-		return musicBlockList;
-	}
+//	/**
+//	 * Wraps melodies into music blocks setting null to all fields other than melody list
+//	 * Function made for testing purpose
+//	 * @param melodyBlockList
+//	 * @return
+//	 */
+//	public static List<MusicBlock > simpleWrap( List< List< Melody > > melodyBlockList ) {
+//		List< MusicBlock > musicBlockList = new ArrayList<>(  );
+//		for ( List< Melody > melodies : melodyBlockList ) {
+//			musicBlockList.add( new MusicBlock( melodies, null ) );
+//		}
+//		return musicBlockList;
+//	}
 
 	public static double getMinRhythmValue( List< Melody > melodyList ) {
 		double minRhythmValue = Double.MAX_VALUE;

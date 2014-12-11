@@ -27,7 +27,7 @@ public class CompositionSlicer {
 	Logger logger = LoggerFactory.getLogger( getClass() );
 
 	/**
-	 * Slices composition into melodies, having ecertain timePeriod each.
+	 * Slices composition into melodies, having certain timePeriod each.
 	 * @param composition
 	 * @param timePeriod
 	 * @return
@@ -113,6 +113,7 @@ public class CompositionSlicer {
 				if ( lastNoteEndTime == timePeriod ) {
 					lastNoteEndTime = 0;
 					slice = new Melody();
+					slice.setStartTime( slices.get( slices.size() - 1 ).getEndTime() );
 					slices.add( slice );
 				}
 			}

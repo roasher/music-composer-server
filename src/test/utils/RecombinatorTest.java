@@ -224,12 +224,14 @@ public class RecombinatorTest extends AbstractSpringTest {
 		  new Note( 64, QUARTER_NOTE ),
 		} );
 		melodyInput10.setForm( new Form( 'C' ) );
+		melodyInput10.setStartTime( melodyInput00.getEndTime() );
 
 		Melody melodyInput11 = new Melody( new Note[]{
 		  new Note( 50, DOTTED_EIGHTH_NOTE ),
 		  new Note( 51, SIXTEENTH_NOTE ),
 		} );
 		melodyInput11.setForm( new Form( 'J' ) );
+		melodyInput11.setStartTime( melodyInput01.getEndTime() );
 
 		List< Melody > melodyList1 = new ArrayList<>(  );
 		melodyList1.add( melodyInput10 );
@@ -242,12 +244,14 @@ public class RecombinatorTest extends AbstractSpringTest {
 		  new Note( 65, SIXTEENTH_NOTE ),
 		} );
 		melodyInput20.setForm( new Form( 'D' ) );
+		melodyInput20.setStartTime( melodyInput10.getEndTime() );
 
 		Melody melodyInput21 = new Melody( new Note[]{
 		  new Note( 60, EIGHTH_NOTE ),
 		  new Note( 62, EIGHTH_NOTE ),
 		} );
 		melodyInput21.setForm( new Form( 'K' ) );
+		melodyInput21.setStartTime( melodyInput11.getEndTime() );
 
 		List< Melody > melodyList2 = new ArrayList<>(  );
 		melodyList2.add( melodyInput20 );
@@ -259,6 +263,7 @@ public class RecombinatorTest extends AbstractSpringTest {
 		  new Rest( QUARTER_NOTE )
 		} );
 		melodyInput30.setForm( new Form( 'E' ) );
+		melodyInput30.setStartTime( melodyInput20.getEndTime() );
 
 		Melody melodyInput31 = new Melody( new Note[]{
 		  new Note( 60, QUARTER_NOTE ),
@@ -266,6 +271,7 @@ public class RecombinatorTest extends AbstractSpringTest {
 		  new Rest( QUARTER_NOTE ),
 		} );
 		melodyInput31.setForm( new Form( 'L' ) );
+		melodyInput31.setStartTime( melodyInput21.getEndTime() );
 
 		List< Melody > melodyList3 = new ArrayList<>(  );
 		melodyList3.add( melodyInput30 );
@@ -280,5 +286,12 @@ public class RecombinatorTest extends AbstractSpringTest {
 		List< List < Melody > > recombineList = recombinator.recombine( melodyBlockList );
 
 		assertEquals( recombineList.size(), 15 );
+
+		// StartTime check
+		double startTime = 0;
+		for ( List<Melody> melodyBlock : recombineList ) {
+			assertEquals( melodyBlock.get( 0 ).getStartTime(), startTime );
+			startTime += melodyBlock.get( 0 ).getRhythmArray()[0];
+		}
 	}
 }

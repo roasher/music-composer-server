@@ -55,18 +55,22 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 
 		Melody slice2 = new Melody();
 		slice2.add( new Note( C0, HALF_NOTE ) );
+		slice2.setStartTime( slice1.getEndTime() );
 		sliceHalfNote.add( slice2 );
 
 		Melody slice3 = new Melody();
 		slice3.add( new Note( C0, HALF_NOTE ) );
+		slice3.setStartTime( slice2.getEndTime() );
 		sliceHalfNote.add( slice3 );
 
 		Melody slice4 = new Melody();
 		slice4.add( new Note( C0, HALF_NOTE ) );
+		slice4.setStartTime( slice3.getEndTime() );
 		sliceHalfNote.add( slice4 );
 
 		Melody slice5 = new Melody();
 		slice5.add( new Note( C0, HALF_NOTE ) );
+		slice5.setStartTime( slice4.getEndTime() );
 		sliceHalfNote.add( slice5 );
 
 		Melody slice6 = new Melody();
@@ -74,6 +78,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		slice6.add( new Note( C0, EIGHTH_NOTE ) );
 		slice6.add( new Note( C0, EIGHTH_NOTE ) );
 		slice6.add( new Note( C0, EIGHTH_NOTE ) );
+		slice6.setStartTime( slice5.getEndTime() );
 		sliceHalfNote.add( slice6 );
 
 		Melody slice7 = new Melody();
@@ -81,15 +86,18 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		slice7.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
 		slice7.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
 		slice7.add( new Note( C0, QUARTER_NOTE ) );
+		slice7.setStartTime( slice6.getEndTime() );
 		sliceHalfNote.add( slice7 );
 
 		Melody slice8 = new Melody();
 		slice8.add( new Note( C0, QUARTER_NOTE ) );
 		slice8.add( new Note( C0, QUARTER_NOTE ) );
+		slice8.setStartTime( slice7.getEndTime() );
 		sliceHalfNote.add( slice8 );
 
 		Melody slice9 = new Melody();
 		slice9.add( new Note( C0, HALF_NOTE ) );
+		slice9.setStartTime( slice8.getEndTime() );
 		sliceHalfNote.add( slice9 );
 
 		Melody slice10 = new Melody();
@@ -98,6 +106,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		slice10.add( new Note( C0, SIXTEENTH_NOTE ) );
 		slice10.add( new Note( C0, SIXTEENTH_NOTE ) );
 		slice10.add( new Note( C0, SIXTEENTH_NOTE ) );
+		slice10.setStartTime( slice9.getEndTime() );
 		sliceHalfNote.add( slice10 );
 
 		Phrase phrase = new Phrase();
@@ -105,7 +114,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 			phrase.add( note );
 		}
 		List<Melody> sliceToTest = compositionSlicer.slice( phrase, HALF_NOTE );
-		assertTrue( Utils.listOfMelodiesIsEquals( sliceToTest, sliceHalfNote ) );
+		assertTrue( Utils.listOfMelodiesAreEquals( sliceToTest, sliceHalfNote ) );
 
 		// QUARTER NOTE
 		List<Melody> sliceQuarterNote = new ArrayList<>();
@@ -116,78 +125,96 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 
 		Melody slice12 = new Melody();
 		slice12.add( new Note( C0, QUARTER_NOTE ) );
+		slice12.setStartTime( slice11.getEndTime() );
 		sliceQuarterNote.add( slice12 );
 
 		Melody slice13 = new Melody();
 		slice13.add( new Note( C0, QUARTER_NOTE ) );
+		slice13.setStartTime( slice12.getEndTime() );
 		sliceQuarterNote.add( slice13 );
 
 		Melody slice14 = new Melody();
 		slice14.add( new Note( C0, QUARTER_NOTE ) );
+		slice14.setStartTime( slice13.getEndTime() );
 		sliceQuarterNote.add( slice14 );
 
 		Melody slice21 = new Melody();
 		slice21.add( new Note( C0, QUARTER_NOTE ) );
+		slice21.setStartTime( slice14.getEndTime() );
 		sliceQuarterNote.add( slice21 );
 
 		Melody slice22 = new Melody();
 		slice22.add( new Note( C0, QUARTER_NOTE ) );
+		slice22.setStartTime( slice21.getEndTime() );
 		sliceQuarterNote.add( slice22 );
 
 		Melody slice31 = new Melody();
 		slice31.add( new Note( C0, QUARTER_NOTE ) );
+		slice31.setStartTime( slice22.getEndTime() );
 		sliceQuarterNote.add( slice31 );
 
 		Melody slice32 = new Melody();
 		slice32.add( new Note( C0, QUARTER_NOTE ) );
+		slice32.setStartTime( slice31.getEndTime() );
 		sliceQuarterNote.add( slice32 );
 
 		Melody slice41 = new Melody();
 		slice41.add( new Note( C0, QUARTER_NOTE ) );
+		slice41.setStartTime( slice32.getEndTime() );
 		sliceQuarterNote.add( slice41 );
 
 		Melody slice42 = new Melody();
 		slice42.add( new Note( C0, QUARTER_NOTE ) );
+		slice42.setStartTime( slice41.getEndTime() );
 		sliceQuarterNote.add( slice42 );
 
 		Melody slice61 = new Melody();
 		slice61.add( new Note( C0, EIGHTH_NOTE ) );
 		slice61.add( new Note( C0, EIGHTH_NOTE ) );
+		slice61.setStartTime( slice42.getEndTime() );
 		sliceQuarterNote.add( slice61 );
 
 		Melody slice62 = new Melody();
 		slice62.add( new Note( C0, EIGHTH_NOTE ) );
 		slice62.add( new Note( C0, EIGHTH_NOTE ) );
+		slice62.setStartTime( slice61.getEndTime() );
 		sliceQuarterNote.add( slice62 );
 
 		Melody slice71 = new Melody();
 		slice71.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
 		slice71.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
 		slice71.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
+		slice71.setStartTime( slice62.getEndTime() );
 		sliceQuarterNote.add( slice71 );
 
 		Melody slice72 = new Melody();
 		slice72.add( new Note( C0, QUARTER_NOTE ) );
+		slice72.setStartTime( slice71.getEndTime() );
 		sliceQuarterNote.add( slice72 );
 
 		Melody slice81 = new Melody();
 		slice81.add( new Note( C0, QUARTER_NOTE ) );
+		slice81.setStartTime( slice72.getEndTime() );
 		sliceQuarterNote.add( slice81 );
 
 		Melody slice82 = new Melody();
 		slice82.add( new Note( C0, QUARTER_NOTE ) );
+		slice82.setStartTime( slice81.getEndTime() );
 		sliceQuarterNote.add( slice82 );
 
 		Melody slice91 = new Melody();
 		slice91.add( new Note( C0, QUARTER_NOTE ) );
+		slice91.setStartTime( slice82.getEndTime() );
 		sliceQuarterNote.add( slice91 );
 
 		Melody slice92 = new Melody();
 		slice92.add( new Note( C0, QUARTER_NOTE ) );
+		slice92.setStartTime( slice91.getEndTime() );
 		sliceQuarterNote.add( slice92 );
 
 		Melody slice93 = new Melody();
 		slice93.add( new Note( C0, QUARTER_NOTE ) );
+		slice93.setStartTime( slice92.getEndTime() );
 		sliceQuarterNote.add( slice93 );
 
 		Melody slice101 = new Melody();
@@ -195,6 +222,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		slice101.add( new Note( C0, SIXTEENTH_NOTE ) );
 		slice101.add( new Note( C0, SIXTEENTH_NOTE ) );
 		slice101.add( new Note( C0, SIXTEENTH_NOTE ) );
+		slice101.setStartTime( slice93.getEndTime() );
 		sliceQuarterNote.add( slice101 );
 
 		Phrase phraseQuarter = new Phrase();
@@ -202,7 +230,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 			phraseQuarter.add( note );
 		}
 		List<Melody> sliceToTestQuarter = compositionSlicer.slice( phraseQuarter, QUARTER_NOTE );
-		assertTrue( Utils.listOfMelodiesIsEquals( sliceToTestQuarter, sliceQuarterNote ) );
+		assertTrue( Utils.listOfMelodiesAreEquals( sliceToTestQuarter, sliceQuarterNote ) );
 
 		// WHOLE NOTE
 		List<Melody> sliceWholefNote = new ArrayList<>(  );
@@ -214,6 +242,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		Melody sliceW3 = new Melody();
 		sliceW3.add( new Note( C0, HALF_NOTE ) );
 		sliceW3.add( new Note( C0, HALF_NOTE ) );
+		sliceW3.setStartTime( sliceW1.getEndTime() );
 		sliceWholefNote.add( sliceW3 );
 
 		Melody sliceW5 = new Melody();
@@ -222,6 +251,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		sliceW5.add( new Note( C0, EIGHTH_NOTE ) );
 		sliceW5.add( new Note( C0, EIGHTH_NOTE ) );
 		sliceW5.add( new Note( C0, EIGHTH_NOTE ) );
+		sliceW5.setStartTime( sliceW3.getEndTime() );
 		sliceWholefNote.add( sliceW5 );
 
 		Melody sliceW7 = new Melody();
@@ -230,6 +260,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		sliceW7.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
 		sliceW7.add( new Note( C0, HALF_NOTE ) );
 		sliceW7.add( new Note( C0, QUARTER_NOTE ) );
+		sliceW7.setStartTime( sliceW5.getEndTime() );
 		sliceWholefNote.add( sliceW7 );
 
 		Melody sliceW9 = new Melody();
@@ -238,6 +269,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		sliceW9.add( new Note( C0, SIXTEENTH_NOTE ) );
 		sliceW9.add( new Note( C0, SIXTEENTH_NOTE ) );
 		sliceW9.add( new Note( C0, SIXTEENTH_NOTE ) );
+		sliceW9.setStartTime( sliceW7.getEndTime() );
 		sliceWholefNote.add( sliceW9 );
 
 		Phrase phraseW = new Phrase();
@@ -245,11 +277,11 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 			phraseW.add( note );
 		}
 		List<Melody> sliceToTestW = compositionSlicer.slice( phraseW, WHOLE_NOTE );
-		assertTrue( Utils.listOfMelodiesIsEquals( sliceToTestW, sliceWholefNote ) );
+		assertTrue( Utils.listOfMelodiesAreEquals( sliceToTestW, sliceWholefNote ) );
 
 		phraseW.getNoteArray()[0].setRhythmValue( HALF_NOTE );
 		List<Melody> sliceToTestW1 = compositionSlicer.slice( phraseW, WHOLE_NOTE );
-		assertFalse( Utils.listOfMelodiesIsEquals( sliceToTestW1, sliceWholefNote ) );
+		assertFalse( Utils.listOfMelodiesAreEquals( sliceToTestW1, sliceWholefNote ) );
 	}
 
 	@Test
@@ -297,12 +329,17 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		Melody secondBlockfirstList = new Melody();
 		secondBlockfirstList.add( new Note( C5, QUARTER_NOTE ) );
 		secondBlockfirstList.add( new Note( D5, HALF_NOTE ) );
+		secondBlockfirstList.setStartTime( firstBlockfirstList.getEndTime() );
+
 		Melody secondBlocksecondList = new Melody();
 		secondBlocksecondList.add( new Note( C4, QUARTER_NOTE ) );
 		secondBlocksecondList.add( new Note( B3, HALF_NOTE ) );
+		secondBlocksecondList.setStartTime( firstBlocksecondList.getEndTime() );
+
 		Melody secondBlockthirdList = new Melody();
 		secondBlockthirdList.add( new Note( C3, HALF_NOTE ) );
 		secondBlockthirdList.add( new Note( C3, QUARTER_NOTE ) );
+		secondBlockthirdList.setStartTime( firstBlockthirdList.getEndTime() );
 
 		List<Melody> secondBlock = new ArrayList<>();
 		secondBlock.add( secondBlockfirstList );
@@ -313,10 +350,15 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		Melody thirdBlockfirstList = new Melody();
 		thirdBlockfirstList.add( new Note( D5, QUARTER_NOTE ) );
 		thirdBlockfirstList.add( new Note( E5, HALF_NOTE ) );
+		thirdBlockfirstList.setStartTime( secondBlockfirstList.getEndTime() );
+
 		Melody thirdBlocksecondList = new Melody();
 		thirdBlocksecondList.add( new Note( A3, DOTTED_HALF_NOTE ) );
+		thirdBlocksecondList.setStartTime( secondBlocksecondList.getEndTime() );
+
 		Melody thirdBlockthirdList = new Melody();
 		thirdBlockthirdList.add( new Note( C3, DOTTED_HALF_NOTE ) );
+		thirdBlockthirdList.setStartTime( secondBlockthirdList.getEndTime() );
 
 		List<Melody> thirdBlock = new ArrayList<>();
 		thirdBlock.add( thirdBlockfirstList );
@@ -358,6 +400,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		slice2.add( new Note( C0, SIXTEENTH_NOTE ) );
 		slice2.add( new Note( C0, SIXTEENTH_NOTE ) );
 		slice2.add( new Note( REST, WHOLE_NOTE - QUARTER_NOTE - 3 * SIXTEENTH_NOTE ) );
+		slice2.setStartTime( slice1.getEndTime() );
 		sliceEtalon.add( slice2 );
 
 		Phrase phrase = new Phrase();
@@ -366,7 +409,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		}
 		List<Melody> sliceToTest = compositionSlicer.slice( phrase, WHOLE_NOTE );
 
-		assertTrue( Utils.listOfMelodiesIsEquals( sliceToTest, sliceEtalon ) );
+		assertTrue( Utils.listOfMelodiesAreEquals( sliceToTest, sliceEtalon ) );
 	}
 
 	@Test
@@ -432,14 +475,16 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		Melody slice2 = new Melody();
 		slice2.add( new Note( REST, QUARTER_NOTE ) );
 		slice2.add( new Note( C4, DOTTED_HALF_NOTE ) );
+		slice2.setStartTime( slice1.getEndTime() );
 		etalonSlice.add( slice2 );
 
 		Melody slice3 = new Melody();
 		slice3.add( new Note( C4, QUARTER_NOTE ) );
 		slice3.add( new Note( D4, QUARTER_NOTE ) );
 		slice3.add( new Note( REST, HALF_NOTE ) );
+		slice3.setStartTime( slice2.getEndTime() );
 		etalonSlice.add( slice3 );
 
-		assertTrue( Utils.listOfMelodiesIsEquals( sliceToTest, etalonSlice ) );
+		assertTrue( Utils.listOfMelodiesAreEquals( sliceToTest, etalonSlice ) );
 	}
 }

@@ -94,6 +94,7 @@ public class Melody extends Phrase {
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append( this.getStartTime() ).append( " " );
 		for ( Note note : this.getNoteArray() ) {
 			stringBuilder.append( String.format( "{%d|%.1f}", note.getPitch(), note.getRhythmValue() ) );
 		}

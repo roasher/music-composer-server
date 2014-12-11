@@ -5,6 +5,7 @@ import helper.AbstractSpringTest;
 import jm.JMC;
 import model.MusicBlock;
 import model.composition.Composition;
+import model.melody.Melody;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utils.CompositionLoader;
@@ -28,7 +29,8 @@ public class FormDecomposerTest extends AbstractSpringTest {
 	public void quartetScarecrowIntro() {
 		Composition composition = compositionLoader.getComposition( new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ) );
 
-		List<MusicBlock> musicBlockList = ModelUtils.simpleWrap( formDecomposer.decompose( composition, JMC.WHOLE_NOTE ) );
+		List< List< Melody > > melodyBlockList = formDecomposer.decompose( composition, JMC.WHOLE_NOTE );
+//		List<MusicBlock> musicBlockList = ModelUtils.simpleWrap( melodyList );
 
 		List<String> etalonList = new ArrayList<>(  );
 
@@ -43,9 +45,26 @@ public class FormDecomposerTest extends AbstractSpringTest {
 
 		// TODO need to be continued
 
-		for ( int currentFormNumber = 0; currentFormNumber < etalonList.size(); currentFormNumber ++ ) {
-			System.out.println( etalonList.get( currentFormNumber ) + "\t" + musicBlockList.get( currentFormNumber ).getForm() );
-			assertEquals( etalonList.get( currentFormNumber ), musicBlockList.get( currentFormNumber ).getForm() );
+		double startTime = 0;
+		for ( int currentMelodyBlockNumber = 0; currentMelodyBlockNumber < etalonList.size(); currentMelodyBlockNumber ++ ) {
+			List< Melody > melodyBlock = melodyBlockList.get( currentMelodyBlockNumber );
+			System.out.println( etalonList.get( currentMelodyBlockNumber ) + "\t" + getFormString( melodyBlock ) );
+			assertEquals( etalonList.get( currentMelodyBlockNumber ), getFormString( melodyBlock ) );
+
+			double rhythmValue = ModelUtils.sumAllRhytmValues( melodyBlock.get( 0 ) );
+			for ( Melody melody : melodyBlock ) {
+				assertEquals( melody.getStartTime(), startTime );
+				assertEquals( ModelUtils.sumAllRhytmValues( melody ), rhythmValue );
+			}
+			startTime += rhythmValue;
 		}
+	}
+
+	public String getFormString( List< Melody > melodyBlock ) {
+		StringBuilder stringBuilder = new StringBuilder(  );
+		for ( Melody melody : melodyBlock ) {
+			stringBuilder.append( melody.getForm().getValue() );
+		}
+		return stringBuilder.toString();
 	}
 }
