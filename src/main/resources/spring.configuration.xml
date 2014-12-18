@@ -32,5 +32,5 @@
         <property name="signatureStoreDir" value="D:\JAVA\dataBase"/>
     </bean>
 
-    <context:component-scan base-package="model,decomposer,utils"/>
+    <context:component-scan base-package="model,decomposer,utils,composer"/>
 </beans>

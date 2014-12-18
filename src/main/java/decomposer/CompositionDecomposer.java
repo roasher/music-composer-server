@@ -27,6 +27,12 @@ public class CompositionDecomposer {
 	@Autowired
 	private Recombinator recombinator;
 
+	/**
+	 * Decomposes compostition into music block list
+	 * @param composition
+	 * @param rhythmValue
+	 * @return
+	 */
     public List<MusicBlock > decompose( Composition composition, double rhythmValue ) {
 		// analyzing form
 		List< List< Melody > > melodyBlockList = formDecomposer.decompose( composition, rhythmValue );
@@ -46,5 +52,19 @@ public class CompositionDecomposer {
 		}
 		return lexicon;
     }
+
+	/**
+	 * Decomposes compositions into music block list
+	 * @param compositionList
+	 * @param rhythmValue
+	 * @return
+	 */
+	public List<MusicBlock> decompose ( List< Composition > compositionList, double rhythmValue ) {
+		List< MusicBlock > musicBlockList = new ArrayList<>();
+		for ( Composition composition : compositionList ) {
+			musicBlockList.addAll( decompose( composition, rhythmValue ) );
+		}
+		return musicBlockList;
+	}
 
 }
