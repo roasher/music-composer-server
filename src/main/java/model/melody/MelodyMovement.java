@@ -32,10 +32,7 @@ public class MelodyMovement {
         for ( int noteNumber = 0; noteNumber < noteArray.length - 1; noteNumber ++ ) {
             int currentNote = noteArray[noteNumber];
             int nextNote = noteArray[noteNumber + 1];
-            // We are not counting rests
-//            if ( currentNote.getPitch() != Note.REST && nextNote.getPitch() != Note.REST ) {
             pitchIntervals.add( nextNote - currentNote );
-//            }
         }
     }
 

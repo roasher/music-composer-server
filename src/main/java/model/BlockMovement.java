@@ -1,8 +1,10 @@
 package model;
 
+import model.melody.Melody;
 import model.melody.MelodyMovement;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,37 +16,71 @@ import java.util.List;
  * Always subtracting first from second ( deltaMovement = second - first )
  * Created by Pavel Yurkin on 20.07.14.
  */
-class BlockMovement implements Serializable {
+public class BlockMovement implements Serializable {
 
     private MelodyMovement topVoiceMelodyMovement;
     private MelodyMovement bottomVoiceMelodyMovement;
 
     public BlockMovement( MusicBlock firstMusicBlock, MusicBlock secondMusicBlock ) {
 
-        List< Integer > firstMusicBlockEndIntervalPattern = firstMusicBlock.getEndIntervalPattern();
-        int firstMusicBlockTopNotePitch = Collections.max( firstMusicBlockEndIntervalPattern );
-        int firstMusicBlockBottomNotePitch = Collections.min( firstMusicBlockEndIntervalPattern );
+		int firstMusicBlockTopNotePitch = Integer.MIN_VALUE;
+		int firstMusicBlockBottomNotePitch = Integer.MAX_VALUE;
 
-        List< Integer > secondMusicBlockStartIntervalPattern = secondMusicBlock.getStartIntervalPattern();
-        int secondMusicBlockTopNotePitch = Collections.max( secondMusicBlockStartIntervalPattern );
-        int secondMusicBlockBottomNotePitch = Collections.min( secondMusicBlockStartIntervalPattern );
+		for ( Melody melody : firstMusicBlock.getMelodyList() ) {
+			int noteNumber = melody.size();
+			if ( melody.getNote( noteNumber - 1 ).getPitch() > firstMusicBlockTopNotePitch ) {
+				firstMusicBlockTopNotePitch = melody.getNote( 0 ).getPitch();
+			}
+			if ( melody.getNote( noteNumber - 1 ).getPitch() < firstMusicBlockBottomNotePitch ) {
+				firstMusicBlockBottomNotePitch = melody.getNote( 0 ).getPitch();
+			}
+		}
+
+		int secondMusicBlockTopNotePitch = Integer.MIN_VALUE;
+		int secondMusicBlockBottomNotePitch = Integer.MAX_VALUE;
+
+		for ( Melody melody : secondMusicBlock.getMelodyList() ) {
+			if ( melody.getNote( 0 ).getPitch() > secondMusicBlockTopNotePitch ) {
+				secondMusicBlockTopNotePitch = melody.getNote( 0 ).getPitch();
+			}
+			if ( melody.getNote( 0 ).getPitch() < secondMusicBlockBottomNotePitch ) {
+				secondMusicBlockBottomNotePitch = melody.getNote( 0 ).getPitch();
+			}
+		}
 
         topVoiceMelodyMovement = new MelodyMovement( new int[] { firstMusicBlockTopNotePitch, secondMusicBlockTopNotePitch } ) ;
         bottomVoiceMelodyMovement = new MelodyMovement( new int[] { firstMusicBlockBottomNotePitch, secondMusicBlockBottomNotePitch } ) ;
     }
 
-    @Override
-    public boolean equals( Object obj ) {
-        if ( obj instanceof BlockMovement ) {
-            BlockMovement inputBlockMovement = ( BlockMovement ) obj;
-            if ( this.bottomVoiceMelodyMovement == inputBlockMovement.bottomVoiceMelodyMovement && this.topVoiceMelodyMovement == inputBlockMovement.topVoiceMelodyMovement ) {
-                return true;
-            }
-        }
-        return false;
-    }
+	@Override
+	public boolean equals( Object o ) {
+		if ( this == o ) {
+			return true;
+		}
+		if ( !( o instanceof BlockMovement ) ) {
+			return false;
+		}
 
-    // Getters & Setters
+		BlockMovement that = ( BlockMovement ) o;
+
+		if ( !bottomVoiceMelodyMovement.equals( that.bottomVoiceMelodyMovement ) ) {
+			return false;
+		}
+		if ( !topVoiceMelodyMovement.equals( that.topVoiceMelodyMovement ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = topVoiceMelodyMovement.hashCode();
+		result = 31 * result + bottomVoiceMelodyMovement.hashCode();
+		return result;
+	}
+
+	// Getters & Setters
     public MelodyMovement getTopVoiceMelodyMovement() {
         return topVoiceMelodyMovement;
     }

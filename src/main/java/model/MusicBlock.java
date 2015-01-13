@@ -32,8 +32,8 @@ public class MusicBlock implements Serializable {
 	//	private Form form;
 
 	// Derivative information
-	private BlockMovement blockMovementFromPreviousMusicBlockToThisMusicBlock;
-	private BlockMovement blockMovementFromThisMusicBlockToNextMusicBlock;
+	private BlockMovement blockMovementFromPreviousToThis;
+	private BlockMovement blockMovementFromThisToNext;
 
 	public MusicBlock( List<Melody> inputMelodyList, CompositionInfo inputCompositionInfo ) {
 		this.melodyList = inputMelodyList;
@@ -114,6 +114,15 @@ public class MusicBlock implements Serializable {
 		return result;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder stringBuilder = new StringBuilder(  );
+		for ( Melody melody : this.getMelodyList() ) {
+			stringBuilder.append('|').append( melody.toString() );
+		}
+		return stringBuilder.toString();
+	}
+
 	// Getters & Setters
 	public List<Melody> getMelodyList() {
 		return melodyList;
@@ -158,7 +167,7 @@ public class MusicBlock implements Serializable {
 	public void setPrevious( MusicBlock previous ) {
 		this.previous = previous;
 		// Setting movement from previous MusicBlock to this MusicBlock
-		this.blockMovementFromPreviousMusicBlockToThisMusicBlock = new BlockMovement( previous, this );
+		this.blockMovementFromPreviousToThis = new BlockMovement( previous, this );
 	}
 
 	public MusicBlock getNext() {
@@ -168,22 +177,22 @@ public class MusicBlock implements Serializable {
 	public void setNext( MusicBlock next ) {
 		this.next = next;
 		// Setting movement from this MusicBlock to the next MusicBlock
-		this.blockMovementFromThisMusicBlockToNextMusicBlock = new BlockMovement( this, next );
+		this.blockMovementFromThisToNext = new BlockMovement( this, next );
 	}
 
-	public BlockMovement getBlockMovementFromPreviousMusicBlockToThisMusicBlock() {
-		return blockMovementFromPreviousMusicBlockToThisMusicBlock;
+	public BlockMovement getBlockMovementFromPreviousToThis() {
+		return blockMovementFromPreviousToThis;
 	}
 
-	public void setBlockMovementFromPreviousMusicBlockToThisMusicBlock( BlockMovement blockMovementFromPreviousMusicBlockToThisMusicBlock ) {
-		this.blockMovementFromPreviousMusicBlockToThisMusicBlock = blockMovementFromPreviousMusicBlockToThisMusicBlock;
+	public void setBlockMovementFromPreviousToThis( BlockMovement blockMovementFromPreviousToThis ) {
+		this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
 	}
 
-	public BlockMovement getBlockMovementFromThisMusicBlockToNextMusicBlock() {
-		return blockMovementFromThisMusicBlockToNextMusicBlock;
+	public BlockMovement getBlockMovementFromThisToNext() {
+		return blockMovementFromThisToNext;
 	}
 
-	public void setBlockMovementFromThisMusicBlockToNextMusicBlock( BlockMovement blockMovementFromThisMusicBlockToNextMusicBlock ) {
-		this.blockMovementFromThisMusicBlockToNextMusicBlock = blockMovementFromThisMusicBlockToNextMusicBlock;
+	public void setBlockMovementFromThisToNext( BlockMovement blockMovementFromThisToNext ) {
+		this.blockMovementFromThisToNext = blockMovementFromThisToNext;
 	}
 }

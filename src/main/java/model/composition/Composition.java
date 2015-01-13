@@ -6,6 +6,8 @@ import jm.music.data.Phrase;
 import jm.music.data.Score;
 import utils.Utils;
 
+import java.util.List;
+
 /**
  * Class extends Score class from jMusic adding new information about the Composition
  * Created by night wish on 27.07.14.
@@ -16,6 +18,10 @@ public class Composition extends jm.music.data.Score {
 	public Composition() {}
 
 	public Composition( Score score ) { super( score.getPartArray() ); }
+
+	public Composition( Part[] parts ) { super( parts ); };
+
+	public Composition( List< Part > parts ) { super( parts.toArray( new Part[]{} ) ); }
 
     public CompositionInfo getCompositionInfo() {
         return compositionInfo;
