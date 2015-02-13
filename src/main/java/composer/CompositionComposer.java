@@ -1,12 +1,14 @@
 package composer;
 
-import jm.music.data.Part;
+import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
-import model.melody.Melody;
+import model.melody.Form;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,99 +20,69 @@ import java.util.List;
 @Component
 public class CompositionComposer {
 	private Logger logger = LoggerFactory.getLogger( getClass() );
-	/**
-	 * First try to implement compose logic:
-	 * @param musicBlockList
-	 * @return
-	 */
-	public Composition simpleCompose( List<MusicBlock > musicBlockList, double rhythmValue ) {
-		List< MusicBlock > musicBlocks = getFormElement( musicBlockList, rhythmValue );
-		return gatherComposition( musicBlocks );
-	}
+
+	@Autowired
+	private FormBlockProvider formBlockProvider;
 
 	/**
-	 * Composes form element
-	 * @param musicBlockList
+	 * Composing piece considering given lexicon, form pattern and composition compositionLength
+	 * @param lexicon
+	 * @param form
+	 * @param compositionLength
 	 * @return
 	 */
-	public List<MusicBlock> getFormElement( List<MusicBlock> musicBlockList, double rhythmValue ) {
-		// TODO need to think how to implement form
-		List<MusicBlock> formElement = new ArrayList<>();
-		double currentRhythmValue = 0;
-
-		while ( currentRhythmValue < rhythmValue && musicBlockList != null ) {
-			MusicBlock musicBlock;
-			if ( formElement.isEmpty() ) {
-				musicBlock = chooseNextMusicBlock( null, musicBlockList );
-			} else {
-				musicBlock = chooseNextMusicBlock( formElement.get( formElement.size() - 1 ), musicBlockList );
-			}
-			if ( musicBlock == null ) {
-				return formElement;
-			}
-			formElement.add( musicBlock );
-			currentRhythmValue += musicBlock.getRhythmValue();
-			if ( currentRhythmValue > rhythmValue ) {
-				return formElement;
-			}
+	public Composition compose( Lexicon lexicon, String form, double compositionLength ) {
+		List<CompositionStep> compositionSteps = composeSteps( lexicon, form, compositionLength );
+		List<MusicBlock> musicBlocks = new ArrayList<>(  );
+		for ( CompositionStep compositionStep : compositionSteps ) {
+			musicBlocks.add( compositionStep.getMusicBlock() );
 		}
-		return formElement;
+		return Utils.gatherComposition( musicBlocks );
 	}
 
 	/**
-	 * If input music block is null - choose and return first music block, otherwise
-	 * return music block that has same interval pattern with original next music block and same block movement
-	 * @param currentMusicBlock
-	 * @param musicBlockList
+	 * Main composing function.
+	 * Assuming we are on k-th step of composing.
+	 * Composing k+1 music block.
+	 * If it is impossible, than recomposing k-th music block.
+	 * If it is impossible, going back to k-1 and so on.
+	 * @param lexicon
+	 * @param form
+	 * @param compositionLength
 	 * @return
 	 */
-	public MusicBlock chooseNextMusicBlock( MusicBlock currentMusicBlock, List< MusicBlock > musicBlockList ) {
-		if ( currentMusicBlock == null ) {
-			MusicBlock firstMusicBlock =  musicBlockList.get( ( int ) Math.random() );
-			logger.debug( "First music block has been chosen: \n {}", firstMusicBlock );
-			return firstMusicBlock;
-		} else if ( currentMusicBlock.getNext() == null ) {
-			logger.debug( "There is no music block after this one in the original composition. Returning null" );
-			return null;
-		} else {
-			for ( MusicBlock musicBlock : musicBlockList ) {
-				if ( canFollow( currentMusicBlock, musicBlock ) ) {
-					logger.debug( "Next music block has been found: {}", musicBlock );
-					return musicBlock;
+	public List<CompositionStep> composeSteps( Lexicon lexicon, String form, double compositionLength ) {
+		List<CompositionStep> compositionSteps = new ArrayList<>(  );
+		for ( int formElementNumber = 0; formElementNumber < form.length(); formElementNumber++ ) {
+
+			CompositionStep lastCompositionStep = formElementNumber != 0 ? compositionSteps.get( compositionSteps.size() - 1 ) : null;
+			CompositionStep nextStep = composeNext( new Form( form.charAt( formElementNumber ) ), compositionLength/form.length(), compositionSteps,  lexicon );
+
+			if ( nextStep.getMusicBlock() == null ) {
+				if ( formElementNumber != 0 ) {
+					// there is no pre last step if we can't create second element
+					if ( formElementNumber != 1 ) {
+						CompositionStep preLastCompositionStep = compositionSteps.get( formElementNumber - 2 );
+						preLastCompositionStep.addNextExclusion( lastCompositionStep.getMusicBlock() );
+					}
+					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
+					compositionSteps.remove( formElementNumber -1 );
+					formElementNumber = formElementNumber - 2;
+					continue;
+				} else {
+					logger.warn( "There is no possible ways to composeSteps new piece considering such parameters" );
+					break;
 				}
-			}
-			MusicBlock musicBlock = currentMusicBlock.getNext();
-			logger.debug( "Can't find next music block other than form the original composition: {}", musicBlock );
-			return musicBlock;
-		}
-	}
-
-	/**
-	 * Answers if second music block can be placed after first.
-	 * @param current
-	 * @param next
-	 * @return
-	 */
-	public boolean canFollow( MusicBlock current, MusicBlock next ) {
-		boolean currentFollowedByNextInOrigin = current.getNext().equals( next );
-		boolean followedInOriginHasSameIntervalPattern = current.getNext().getStartIntervalPattern().equals( next.getStartIntervalPattern() );
-		boolean hasSameBlockMovement = current.getBlockMovementFromThisToNext().equals( next.getBlockMovementFromPreviousToThis() );
-		return !currentFollowedByNextInOrigin && followedInOriginHasSameIntervalPattern && hasSameBlockMovement;
-	}
-
-	private Composition gatherComposition( List<MusicBlock> musicBlockList ) {
-		List<Part> parts = new ArrayList<>();
-		for ( int partNumber = 0; partNumber < musicBlockList.get( 0 ).getMelodyList().size(); partNumber++ ) {
-			parts.add( new Part() );
-		}
-		for ( MusicBlock musicBlock : musicBlockList ) {
-			for ( int partNumber = 0; partNumber < parts.size(); partNumber++ ) {
-				// creating new object to zero start time saving original phrases
-				Melody melody = new Melody( musicBlock.getMelodyList().get( partNumber ).getNoteArray() );
-				parts.get( partNumber ).add( melody );
+			} else {
+				compositionSteps.add( nextStep );
 			}
 		}
-		Composition composition = new Composition( parts );
-		return composition;
+		return compositionSteps;
+	}
+
+	public CompositionStep composeNext( Form form, double length, List<CompositionStep> previousSteps, Lexicon lexicon ) {
+		MusicBlock musicBlock = formBlockProvider.getFormElement( form, length, previousSteps, lexicon );
+		// FIXME figure out legality of using "new" operator
+		return new CompositionStep( musicBlock );
 	}
 }

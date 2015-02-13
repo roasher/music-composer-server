@@ -24,6 +24,7 @@ public class MusicBlock implements Serializable {
 	private List<Integer> startIntervalPattern;
 	private List<Integer> endIntervalPattern;
 	private double rhythmValue;
+	private double startTime;
 	private Tension tension;
 
 	// Origin surrounding information
@@ -58,15 +59,20 @@ public class MusicBlock implements Serializable {
 				}
 				this.endIntervalPattern = getIntervalPattern( lastVertical );
 			}
-			// rhytmValue
+			// rhytmValue && start time
 			{
+				double currentStartTime = inputMelodyList.get( 0 ).getStartTime();
 				double currentRhytmValue = sumAllRhytmValues( inputMelodyList.get( 0 ) );
 				for ( int currentInstrument = 1; currentInstrument < inputMelodyList.size(); currentInstrument++ ) {
 					if ( currentRhytmValue != sumAllRhytmValues( inputMelodyList.get( currentInstrument ) ) ) {
 						throw new IllegalArgumentException( String.format( "Several instruments has different rhytmValues, for example: 0 and %s ", currentInstrument ) );
 					}
+					if ( currentStartTime != inputMelodyList.get( currentInstrument ).getStartTime() ) {
+						throw new IllegalArgumentException( String.format( "Several instrument parts has different start times, for example: 0 and %s ", currentInstrument ) );
+					}
 				}
 				this.rhythmValue = currentRhytmValue;
+				this.startTime = currentStartTime;
 			}
 			// Tension and form stuff
 			// TODO implementation
@@ -138,6 +144,14 @@ public class MusicBlock implements Serializable {
 
 	public void setTension( Tension tension ) {
 		this.tension = tension;
+	}
+
+	public double getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime( double startTime ) {
+		this.startTime = startTime;
 	}
 
 	public CompositionInfo getCompositionInfo() {

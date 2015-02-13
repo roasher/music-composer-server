@@ -12,6 +12,7 @@ import static jm.constants.Durations.QUARTER_NOTE;
 import static jm.constants.Durations.SIXTEENTH_NOTE;
 import static jm.constants.Pitches.C0;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by Pavel Yurkin on 20.07.14.

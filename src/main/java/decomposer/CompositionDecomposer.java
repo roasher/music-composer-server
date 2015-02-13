@@ -1,7 +1,9 @@
 package decomposer;
 
+import com.sun.javafx.charts.Legend;
 import decomposer.form.FormDecomposer;
 import jm.music.data.Score;
+import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
 import model.composition.CompositionInfo;
@@ -59,12 +61,12 @@ public class CompositionDecomposer {
 	 * @param rhythmValue
 	 * @return
 	 */
-	public List<MusicBlock> decompose ( List< Composition > compositionList, double rhythmValue ) {
+	public Lexicon decompose ( List< Composition > compositionList, double rhythmValue ) {
 		List< MusicBlock > musicBlockList = new ArrayList<>();
 		for ( Composition composition : compositionList ) {
 			musicBlockList.addAll( decompose( composition, rhythmValue ) );
 		}
-		return musicBlockList;
+		return new Lexicon( musicBlockList );
 	}
 
 }

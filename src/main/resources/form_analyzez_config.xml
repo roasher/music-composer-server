@@ -23,11 +23,11 @@
         <property name="equalityTest" ref="rhythmEqualityTest"/>
     </bean>
     
-    <bean id="formEqualityAnalyzerImpl" class="decomposer.form.analyzer.FormEqualityAnalyzerImpl">
+    <bean id="formEqualityAnalyzerImpl" class="decomposer.form.analyzer.MelodyFormEqualityAnalyzer">
         <property name="equalityTestPassThreshold" value="0.6"/>
     </bean>
     
-    <bean id="formAnalyzer" class="decomposer.form.analyzer.FormAnalyzer">
+    <bean id="formAnalyzer" class="decomposer.form.analyzer.MusicBlockFormEqualityAnalyser">
         <property name="instrumentEqualityPassThreshold" value="1.0"/>
     </bean>
 

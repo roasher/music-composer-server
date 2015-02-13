@@ -21,6 +21,8 @@ public class BlockMovement implements Serializable {
     private MelodyMovement topVoiceMelodyMovement;
     private MelodyMovement bottomVoiceMelodyMovement;
 
+	public BlockMovement() {}
+
     public BlockMovement( MusicBlock firstMusicBlock, MusicBlock secondMusicBlock ) {
 
 		int firstMusicBlockTopNotePitch = Integer.MIN_VALUE;

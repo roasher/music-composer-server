@@ -88,7 +88,7 @@ public class RhythmValueHandler {
 			return list.get( place );
 		} else {
 			double top = rhythmValues.get( - place - 1 );
-			double bottom = rhythmValues.get( - place -2 );
+			double bottom = rhythmValues.get( - place - 2 );
 			if ( top - value < value - bottom ) {
 				return top;
 			}

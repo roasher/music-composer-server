@@ -1,6 +1,6 @@
 package decomposer.form;
 
-import decomposer.form.analyzer.FormEqualityAnalyzerImpl;
+import decomposer.form.analyzer.MelodyFormEqualityAnalyzer;
 import model.melody.Form;
 import model.melody.Melody;
 import model.composition.Composition;
@@ -22,9 +22,9 @@ public class FormDecomposer {
 	@Autowired
 	private CompositionSlicer compositionSlicer;
 //	@Autowired
-//	private FormAnalyzer formAnalyzer;
+//	private MusicBlockFormEqualityAnalyser formAnalyzer;
 	@Autowired
-	private FormEqualityAnalyzerImpl formEqualityAnalyzer;
+	private MelodyFormEqualityAnalyzer formEqualityAnalyzer;
 
 	private Logger logger = LoggerFactory.getLogger( getClass() );
 

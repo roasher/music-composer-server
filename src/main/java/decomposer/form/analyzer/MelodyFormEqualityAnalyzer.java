@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * Class analyzes if two melodies can belong to one form element
  * Created by night wish on 26.07.14.
  */
-public class FormEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
+public class MelodyFormEqualityAnalyzer implements MelodyEqualityAnalyzer {
 
     /**
      * Min percentage of passed sub tests necessary to consider equality of two melodies

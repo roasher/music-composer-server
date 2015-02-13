@@ -1,5 +1,6 @@
 package decomposer.form.analyzer;
 
+import model.melody.Form;
 import model.melody.Melody;
 import model.MusicBlock;
 import org.slf4j.Logger;
@@ -7,15 +8,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by pyurkin on 12.11.14.
  */
-public class FormAnalyzer {
+public class MusicBlockFormEqualityAnalyser {
 
 	private double instrumentEqualityPassThreshold;
 	@Autowired
-	private FormEqualityAnalyzerImpl formEqualityAnalyzer;
+	private MelodyFormEqualityAnalyzer formEqualityAnalyzer;
 
 	Logger logger = LoggerFactory.getLogger( getClass() );
 
@@ -49,6 +51,15 @@ public class FormAnalyzer {
 			logger.info( "Successfull tests persentage {} lower than the threshold {}. Music Blocks considered non equal", successTestPersentage, instrumentEqualityPassThreshold );
 			return false;
 		}
+	}
+
+	public boolean isEqualToAnyMusicBlock( MusicBlock inputMusicBlock, List<MusicBlock> musicBlocks ) {
+		for ( MusicBlock musicBlock : musicBlocks ) {
+			if ( isEqual( inputMusicBlock, musicBlock ) == true ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public double getInstrumentEqualityPassThreshold() {
