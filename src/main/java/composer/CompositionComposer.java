@@ -66,11 +66,11 @@ public class CompositionComposer {
 						preLastCompositionStep.addNextExclusion( lastCompositionStep.getMusicBlock() );
 					}
 					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
-					compositionSteps.remove( formElementNumber -1 );
+					compositionSteps.remove( formElementNumber - 1 );
 					formElementNumber = formElementNumber - 2;
 					continue;
 				} else {
-					logger.warn( "There is no possible ways to composeSteps new piece considering such parameters" );
+					logger.warn( "There is no possible ways to compose new piece considering such parameters" );
 					break;
 				}
 			} else {
@@ -82,7 +82,6 @@ public class CompositionComposer {
 
 	public CompositionStep composeNext( Form form, double length, List<CompositionStep> previousSteps, Lexicon lexicon ) {
 		MusicBlock musicBlock = formBlockProvider.getFormElement( form, length, previousSteps, lexicon );
-		// FIXME figure out legality of using "new" operator
-		return new CompositionStep( musicBlock );
+		return new CompositionStep( musicBlock, form );
 	}
 }

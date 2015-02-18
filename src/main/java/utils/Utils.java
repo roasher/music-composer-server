@@ -37,26 +37,26 @@ public class Utils {
      * @return
      */
     private static double round( double value, int decimal ) {
-		double multiplyer = Math.pow( 10, decimal );
-        double roundedValue = Math.round( value*multiplyer )/multiplyer;
+		double multiplier = Math.pow( 10, decimal );
+        double roundedValue = Math.round( value*multiplier )/multiplier;
         return roundedValue;
     }
 
-	public static boolean ListOfMelodyBlocksIsEquals( List< List< Melody > > firstMelodyBlockList, List< List< Melody > > secondMelodyBlockList ) {
-		if ( firstMelodyBlockList == null || secondMelodyBlockList == null || firstMelodyBlockList.size() != secondMelodyBlockList.size() ) {
+	public static boolean ListOfListsOfMelodiesAreEqual( List<List<Melody>> firstListOfListsOfMelodies, List<List<Melody>> secondListOfListsOfMelodies ) {
+		if ( firstListOfListsOfMelodies == null || secondListOfListsOfMelodies == null || firstListOfListsOfMelodies.size() != secondListOfListsOfMelodies.size() ) {
 			return false;
 		}
-		for ( int currentMelodyBlockNumber = 0; currentMelodyBlockNumber < firstMelodyBlockList.size(); currentMelodyBlockNumber ++ ) {
-			List< Melody > firstMelodyBlock = firstMelodyBlockList.get( currentMelodyBlockNumber );
-			List< Melody > secondMelodyBlock = secondMelodyBlockList.get( currentMelodyBlockNumber );
-			if ( !listOfMelodiesAreEquals( firstMelodyBlock, secondMelodyBlock ) ) {
+		for ( int currentMelodyBlockNumber = 0; currentMelodyBlockNumber < firstListOfListsOfMelodies.size(); currentMelodyBlockNumber ++ ) {
+			List< Melody > firstMelodyBlock = firstListOfListsOfMelodies.get( currentMelodyBlockNumber );
+			List< Melody > secondMelodyBlock = secondListOfListsOfMelodies.get( currentMelodyBlockNumber );
+			if ( !listOfMelodiesAreEqual( firstMelodyBlock, secondMelodyBlock ) ) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public static boolean listOfMelodiesAreEquals( List<Melody> firstMelodyList, List<Melody> secondMelodyList ) {
+	public static boolean listOfMelodiesAreEqual( List<Melody> firstMelodyList, List<Melody> secondMelodyList ) {
 		if ( firstMelodyList == null || secondMelodyList == null || firstMelodyList.size() != secondMelodyList.size() ) {
 			return false;
 		}
@@ -68,6 +68,16 @@ public class Utils {
 			}
 		}
 		return true;
+	}
+
+
+	public static boolean containsMelody( MusicBlock firstMusicBlock, List<MusicBlock> musicBlockList ) {
+		for ( MusicBlock musicBlock : musicBlockList ) {
+			if ( listOfMelodiesAreEqual( musicBlock.getMelodyList(), firstMusicBlock.getMelodyList() ) ) {
+				return true;
+			};
+		}
+		return false;
 	}
 
 	/**
@@ -135,45 +145,69 @@ public class Utils {
 		return composition;
 	}
 
-	/**
-	 * Gathers all music blocks in one music block, setting composition info.
-	 * @param musicBlockList
-	 * @param info
-	 * @return
-	 */
-	public static MusicBlock gatherMusicBlocks( List<MusicBlock> musicBlockList, CompositionInfo info ) {
-		if ( musicBlockList != null && musicBlockList.size() > 0 ) {
-			List<Melody> melodyList = new ArrayList<>(  );
-			for ( int melodyNubmer = 0; melodyNubmer < musicBlockList.get( 0 ).getMelodyList().size(); melodyNubmer ++ ) {
-				melodyList.add( new Melody(  ) );
-			}
-			for ( MusicBlock currentMusicBlock : musicBlockList ) {
-				for ( int melodyNumber = 0; melodyNumber < currentMusicBlock.getMelodyList().size(); melodyNumber ++ ) {
-					melodyList.get( melodyNumber ).addNoteList( currentMusicBlock.getMelodyList().get( melodyNumber ).getNoteArray() );
-				}
-			}
-			return new MusicBlock( melodyList, info );
-		} else {
-			return null;
-		}
-	}
-
 	public static List<MusicBlock> getMusicBlocksList( List<CompositionStep> compositionSteps ) {
 		List<MusicBlock> musicBlockList = new ArrayList<>(  );
 		for ( CompositionStep compositionStep : compositionSteps ) {
-			musicBlockList.add( compositionStep.getMusicBlock() );
+			if ( compositionStep.getMusicBlock() != null ) {
+				musicBlockList.add( compositionStep.getMusicBlock() );
+			}
 		}
 		return musicBlockList;
 	}
-
 	/**
-	 * Returns possible variants of how lenght can be combines using input list elements
-	 * @param list
+	 * Returns possible variants of how length be combined with by input double - quantity map
+	 * @param doubleQuantityMap - map of values and it's quantities
 	 * @param length
 	 * @return
 	 */
-	public static List<List<Double>> getVariantsOfDistribution( List<Double> list, double length ) {
-		// TODO implementation
-		return null;
+	public static List<List<Double>> getVariantsOfDistribution( Map<Double,Integer> doubleQuantityMap, double length ) {
+		List<List<Double>> output = new ArrayList<>(  );
+		getVariantsOfDistributionWrapper( new ArrayList<Double>(  ), doubleQuantityMap, length, output );
+		Collections.sort( output, new Comparator<List<Double>>() {
+			@Override
+			public int compare( List<Double> o1, List<Double> o2 ) {
+				return o1.size() - o2.size();
+			}
+		} );
+		return output;
+	}
+
+	/**
+	 * Recursive help function.
+	 * @param analyzedList - constant left part of the toAnalyzeMap
+	 * @param toAnalyzeMap - right part of the toAnalyzeMap which we are going to iterate
+	 * @param value - decreasing value, that we want to reach by summing array elements
+	 * @param results - global variable, which contains successfull lists
+	 */
+	private static void getVariantsOfDistributionWrapper( ArrayList<Double> analyzedList, Map<Double,Integer> toAnalyzeMap, double value, List<List<Double>> results ) {
+		// Brute Force
+		if ( toAnalyzeMap.isEmpty() ) {
+			return;
+		}
+
+		for ( Map.Entry<Double,Integer> entry : toAnalyzeMap.entrySet() ) {
+
+			if ( entry.getValue() == null || entry.getValue() == 0 ) {
+				continue;
+			}
+
+			ArrayList<Double> analyzed = new ArrayList<>( analyzedList );
+			Map<Double,Integer> toAnalyze = new HashMap<>( toAnalyzeMap );
+
+			Double listValue = entry.getKey();
+			if ( listValue == value ) {
+				analyzed.add( listValue );
+				results.add( analyzed );
+				continue;
+			}
+			if ( listValue > value ) {
+				continue;
+			}
+
+
+			analyzed.add( listValue );
+			toAnalyze.put( entry.getKey(), entry.getValue() - 1 );
+			getVariantsOfDistributionWrapper( analyzed, toAnalyze, value - listValue, results );
+		}
 	}
 }

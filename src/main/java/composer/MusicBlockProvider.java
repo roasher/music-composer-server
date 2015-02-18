@@ -27,7 +27,8 @@ public class MusicBlockProvider {
 	public MusicBlock getFirstConvenientMusicBlock( MusicBlock currentMusicBlock, List<MusicBlock> lexicon, List<MusicBlock> exclusion ) {
 		List<MusicBlock> cloneLexicon = new ArrayList<>( lexicon );
 		cloneLexicon.removeAll( exclusion );
-		return getFirstConvenientMusicBlock( currentMusicBlock, cloneLexicon );
+		MusicBlock musicBlock = getFirstConvenientMusicBlock( currentMusicBlock, cloneLexicon );
+		return musicBlock;
 	}
 
 	/**
@@ -56,8 +57,14 @@ public class MusicBlockProvider {
 				}
 			}
 		}
-		logger.warn( "Can't find proper music block. Returning null." );
-		return null;
+		// If we didn't find the proper music block will return music block from the original composition if it is in input lexicon
+		if ( currentMusicBlock != null && lexicon.contains( currentMusicBlock.getNext() ) ) {
+			logger.warn( "Can't find proper music block. Returning next from the original composition." );
+			return currentMusicBlock.getNext();
+		} else {
+			logger.warn( "Can't find proper music block. Returning null." );
+			return null;
+		}
 	}
 
 	/**

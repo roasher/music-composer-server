@@ -22,7 +22,7 @@
 
     <bean id="rhythmEqualityTest" class="decomposer.melody.equality.RhytmEqualityTest">
         <property name="maxNumberOfRhythmicallyDifferentNotes" value="1"/>
-        <!--<property name="maxRhythmDeviationSteps" value="0.01"/>-->
+        <!--<property name="maxRhythmDeviationSteps" listValue="0.01"/>-->
         <property name="maxRhythmDeviationSteps" value="0.75"/>
     </bean>
 

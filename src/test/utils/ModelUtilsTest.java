@@ -1,7 +1,6 @@
 package utils;
 
 import jm.music.data.Note;
-import utils.ModelUtils;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import static jm.constants.Durations.QUARTER_NOTE;
 import static jm.constants.Durations.SIXTEENTH_NOTE;
 import static jm.constants.Pitches.C0;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static utils.ModelUtils.*;
 
 /**
  * Created by Pavel Yurkin on 20.07.14.
@@ -40,7 +39,7 @@ public class ModelUtilsTest {
         intervalPattern.add( 19 );
         intervalPattern.add( 11 );
 
-        assertEquals( intervalPattern, ModelUtils.getIntervalPattern( pitches ) );
+        assertEquals( intervalPattern, getIntervalPattern( pitches ) );
     }
 
 	@Test
@@ -53,5 +52,11 @@ public class ModelUtilsTest {
 		slice10.add( new Note( C0, SIXTEENTH_NOTE ) );
 
 		assertEquals( ModelUtils.sumAllRhytmValues( slice10 ), HALF_NOTE );
+	}
+
+	@Test
+	public void testGetNoteNameByPitch() {
+		assertEquals( getNoteNameByPitch( 60 ), "C4" );
+		assertEquals( getNoteNameByPitch( 62 ), "D4" );
 	}
 }

@@ -195,7 +195,7 @@ public class RecombinatorTest extends AbstractSpringTest {
 		etalonList.add( melodyList4 );
 		etalonList.add( melodyList5 );
 
-		assertTrue( Utils.ListOfMelodyBlocksIsEquals( testList, etalonList ) );
+		assertTrue( Utils.ListOfListsOfMelodiesAreEqual( testList, etalonList ) );
 	}
 
 	@Test

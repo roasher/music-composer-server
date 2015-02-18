@@ -52,15 +52,15 @@ public class CompositionLoader {
 	}
 
 	public List< Composition > getCompositions( File ... directories ) {
-		List< Composition > compositions = new ArrayList<Composition>(  );
+		List< Composition > compositions = new ArrayList<>(  );
 		for ( File currentDirectory : directories ) {
-			compositions.addAll( getCompositions( currentDirectory ) );
+			compositions.add( getComposition( currentDirectory ) );
 		}
 		return compositions;
 	}
 
 	public Composition getComposition( File file ) {
-		logger.info( " Reading composition {}", file );
+		logger.info( "Reading composition {}", file );
 		CompositionInfo compositionInfo = new CompositionInfo();
 		compositionInfo.setTitle( file.getName());
 

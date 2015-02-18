@@ -1,15 +1,19 @@
 package utils;
 
+import jm.constants.Pitches;
 import jm.music.data.Note;
+import jm.music.data.Phrase;
 import jm.music.data.Score;
 import model.MusicBlock;
 import model.melody.Melody;
 import model.composition.CompositionInfo;
 import model.composition.Meter;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Class aggregates useful utilities upon Model objects
@@ -23,13 +27,13 @@ public class ModelUtils {
      */
     public static List< Integer > getIntervalPattern( List< Integer > notePitches ) {
         // To prevent input List changing we will create a copy
-        List< Integer > copyInputNotePiches = new ArrayList< Integer >( notePitches );
+        List< Integer > copyInputNotePitches = new ArrayList< Integer >( notePitches );
 
-        Collections.sort( copyInputNotePiches );
+        Collections.sort( copyInputNotePitches );
 
-        List< Integer > intervalPattern = new ArrayList<Integer>( copyInputNotePiches.size() - 1 );
-        for ( int currentPitchNumber = 0; currentPitchNumber < copyInputNotePiches.size() - 1; currentPitchNumber++ ) {
-            intervalPattern.add( copyInputNotePiches.get( currentPitchNumber + 1 ) - copyInputNotePiches.get( currentPitchNumber ) );
+        List< Integer > intervalPattern = new ArrayList<Integer>( copyInputNotePitches.size() - 1 );
+        for ( int currentPitchNumber = 0; currentPitchNumber < copyInputNotePitches.size() - 1; currentPitchNumber++ ) {
+            intervalPattern.add( copyInputNotePitches.get( currentPitchNumber + 1 ) - copyInputNotePitches.get( currentPitchNumber ) );
         }
         return intervalPattern;
     }
@@ -69,20 +73,6 @@ public class ModelUtils {
         return compositionInfo;
     }
 
-//	/**
-//	 * Wraps melodies into music blocks setting null to all fields other than melody list
-//	 * Function made for testing purpose
-//	 * @param melodyBlockList
-//	 * @return
-//	 */
-//	public static List<MusicBlock > simpleWrap( List< List< Melody > > melodyBlockList ) {
-//		List< MusicBlock > musicBlockList = new ArrayList<>(  );
-//		for ( List< Melody > melodies : melodyBlockList ) {
-//			musicBlockList.add( new MusicBlock( melodies, null ) );
-//		}
-//		return musicBlockList;
-//	}
-
 	public static double getMinRhythmValue( List< Melody > melodyList ) {
 		double minRhythmValue = Double.MAX_VALUE;
 		for ( Melody melody : melodyList ) {
@@ -93,5 +83,19 @@ public class ModelUtils {
 			}
 		}
 		return minRhythmValue;
+	}
+
+	public static String getNoteNameByPitch( int pitch ) {
+		Class claz = Pitches.class;
+		for ( Field field : claz.getDeclaredFields() ) {
+			try {
+				if ( field.getInt( null ) == pitch ) {
+					return field.getName();
+				}
+			} catch ( IllegalAccessException e ) {
+				e.printStackTrace();
+			}
+		}
+		return "";
 	}
 }

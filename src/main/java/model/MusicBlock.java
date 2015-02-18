@@ -1,5 +1,6 @@
 package model;
 
+import model.composition.Composition;
 import model.composition.CompositionInfo;
 import model.melody.Melody;
 import model.tension.Tension;
@@ -79,6 +80,34 @@ public class MusicBlock implements Serializable {
 		}
 	}
 
+	public MusicBlock( CompositionInfo inputCompositionInfo, List<MusicBlock> musicBlockList ) {
+		if ( musicBlockList != null && musicBlockList.size() > 0 ) {
+			List<Melody> melodyList = new ArrayList<>(  );
+			for ( int melodyNubmer = 0; melodyNubmer < musicBlockList.get( 0 ).getMelodyList().size(); melodyNubmer ++ ) {
+				melodyList.add( new Melody(  ) );
+			}
+			double rhythmValue = 0;
+			for ( MusicBlock currentMusicBlock : musicBlockList ) {
+				for ( int melodyNumber = 0; melodyNumber < currentMusicBlock.getMelodyList().size(); melodyNumber ++ ) {
+					melodyList.get( melodyNumber ).addNoteList( currentMusicBlock.getMelodyList().get( melodyNumber ).getNoteArray() );
+				}
+				rhythmValue += currentMusicBlock.getRhythmValue();
+			}
+
+			this.melodyList = melodyList;
+			this.compositionInfo = inputCompositionInfo;
+			this.startIntervalPattern = musicBlockList.get( 0 ).getStartIntervalPattern();
+			this.endIntervalPattern = musicBlockList.get( musicBlockList.size() -1 ).getEndIntervalPattern();
+			this.rhythmValue = rhythmValue;
+			this.startTime = musicBlockList.get( 0 ).getStartTime();
+			setNext( musicBlockList.get( musicBlockList.size() - 1 ).getNext() );
+			setPrevious( musicBlockList.get( 0 ).getPrevious() );
+
+		} else {
+			throw new IllegalArgumentException( "Input music block in malformed ( null or zero-length )" );
+		}
+	}
+
 	public String getForm() {
 		StringBuilder stringBuilder = new StringBuilder();
 		for ( Melody melody : this.getMelodyList() ) {
@@ -106,7 +135,7 @@ public class MusicBlock implements Serializable {
 			return false;
 		}
 
-		if ( !Utils.listOfMelodiesAreEquals( this.melodyList, that.melodyList ) ) {
+		if ( !Utils.listOfMelodiesAreEqual( this.melodyList, that.melodyList ) ) {
 			return false;
 		}
 
@@ -180,8 +209,10 @@ public class MusicBlock implements Serializable {
 
 	public void setPrevious( MusicBlock previous ) {
 		this.previous = previous;
-		// Setting movement from previous MusicBlock to this MusicBlock
-		this.blockMovementFromPreviousToThis = new BlockMovement( previous, this );
+		if ( previous != null ) {
+			// Setting movement from previous MusicBlock to this MusicBlock
+			this.blockMovementFromPreviousToThis = new BlockMovement( previous, this );
+		}
 	}
 
 	public MusicBlock getNext() {
@@ -190,8 +221,10 @@ public class MusicBlock implements Serializable {
 
 	public void setNext( MusicBlock next ) {
 		this.next = next;
+		if ( next != null ) {
 		// Setting movement from this MusicBlock to the next MusicBlock
 		this.blockMovementFromThisToNext = new BlockMovement( this, next );
+		}
 	}
 
 	public BlockMovement getBlockMovementFromPreviousToThis() {

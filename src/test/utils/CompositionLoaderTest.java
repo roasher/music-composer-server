@@ -1,9 +1,11 @@
 package utils;
 
 import helper.AbstractSpringTest;
+import jm.JMC;
 import jm.music.data.Note;
 import jm.music.data.Phrase;
 import jm.util.Read;
+import model.Lexicon;
 import model.composition.Composition;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;

@@ -1,9 +1,6 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Class represents wrapper to Music Block collection
@@ -11,32 +8,48 @@ import java.util.TreeSet;
  */
 public class Lexicon {
 	private List<MusicBlock> musicBlockList;
-	private TreeSet<Double> sortedRhythmValuesSet = new TreeSet<>(  );
+	private Map<Double,List<MusicBlock>> rhythmValueMusicBlockMap = new HashMap<>(  );
+
+	private Map<Double,Integer> rhythmValueQuantityMap = new HashMap<>(  );
 
 	public Lexicon( List<MusicBlock> musicBlockList ) {
 		if ( musicBlockList == null ) { throw new IllegalArgumentException( "Input music block list is null" ); }
 		this.musicBlockList = musicBlockList;
 		for ( MusicBlock musicBlock : musicBlockList ) {
-			sortedRhythmValuesSet.add( musicBlock.getRhythmValue() );
+			Integer quantity = rhythmValueQuantityMap.get( musicBlock.getRhythmValue() ) != null ? rhythmValueQuantityMap.get( musicBlock.getRhythmValue() ) : 0;
+			rhythmValueQuantityMap.put( musicBlock.getRhythmValue(), quantity + 1 );
+
+			List<MusicBlock> musicBlocks = rhythmValueMusicBlockMap.get( musicBlock.getRhythmValue() );
+			if ( musicBlocks != null ) {
+				musicBlocks.add( musicBlock );
+			} else {
+				musicBlocks = new ArrayList<MusicBlock>(  );
+				musicBlocks.add( musicBlock );
+				this.rhythmValueMusicBlockMap.put( musicBlock.getRhythmValue(), musicBlocks );
+			}
 		}
 	}
 
 	public List<MusicBlock> getMusicBlockList( double rhythmValue ) {
-		List<MusicBlock> certainRhythmValueLexicon = new ArrayList<>(  );
-		for ( MusicBlock musicBlock : musicBlockList ) {
-			if ( musicBlock.getRhythmValue() == rhythmValue ) {
-				certainRhythmValueLexicon.add( musicBlock );
-			}
-		}
-		return certainRhythmValueLexicon;
+//		List<MusicBlock> certainRhythmValueLexicon = new ArrayList<>(  );
+//		for ( MusicBlock musicBlock : musicBlockList ) {
+//			if ( musicBlock.getRhythmValue() == rhythmValue ) {
+//				certainRhythmValueLexicon.add( musicBlock );
+//			}
+//		}
+//		return certainRhythmValueLexicon;
+		return rhythmValueMusicBlockMap.get( rhythmValue ) != null ? rhythmValueMusicBlockMap.get( rhythmValue ) : Collections.<MusicBlock>emptyList();
 	}
 
-	public List<Double> getSortedRhythmValues() {
-		return Arrays.asList( sortedRhythmValuesSet.toArray( new Double[]{} ) );
+	public MusicBlock get( int number ) {
+		return this.musicBlockList.get( number );
+	}
+
+	public Map<Double,Integer> getRhythmValueQuantityMap() {
+		return rhythmValueQuantityMap;
 	}
 
 	public List<MusicBlock> getMusicBlockList() {
 		return musicBlockList;
 	}
-
 }

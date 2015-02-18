@@ -52,6 +52,7 @@ public class RhythmValueHandler {
 		// FIXME костыль. Таких значений не должно быть
 		rhythmValues.add( 2.7 );
 		rhythmValues.add( 0.8 );
+		rhythmValues.add( 2.25 );
 
 		Collections.sort( rhythmValues );
 		maxRhythmValue = Collections.max( rhythmValues );

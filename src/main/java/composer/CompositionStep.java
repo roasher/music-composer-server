@@ -13,8 +13,6 @@ import java.util.*;
  *
  * Created by pyurkin on 15.01.15.
  */
-@Component
-@Scope( "prototype" )
 public class CompositionStep {
 
 	private MusicBlock musicBlock;
@@ -29,7 +27,7 @@ public class CompositionStep {
 		this.form = form;
 	}
 
-	public CompositionStep( MusicBlock musicBlock ) {}
+	public CompositionStep( MusicBlock musicBlock ) { this.musicBlock = musicBlock; }
 
 	public CompositionStep() {}
 
