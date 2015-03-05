@@ -10,8 +10,6 @@ import model.melody.Form;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utils.CompositionLoader;
-import utils.ModelUtils;
-import utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 
 	@Test
 	public void formBlockProviderTest() {
-		List< Composition > compositionList = compositionLoader.getCompositions( new File( "src\\test\\composer\\simpleMelodies" ), Collections.<String>emptyList() );
+		List< Composition > compositionList = compositionLoader.getCompositionsFromFolder(new File("src\\test\\composer\\simpleMelodies"), Collections.<String>emptyList());
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 
 		MusicBlock formElement = formBlockProvider.getFormElement( new Form( 'A' ), JMC.WHOLE_NOTE, Collections.<CompositionStep>emptyList(), lexiconFromFirst );
@@ -47,7 +45,7 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 
 	@Test
 	public void variantHandleTest() {
-		List< Composition > compositionList = compositionLoader.getCompositions( new File( "src\\test\\composer\\simpleMelodies" ), Collections.<String>emptyList() );
+		List< Composition > compositionList = compositionLoader.getCompositionsFromFolder(new File("src\\test\\composer\\simpleMelodies"), Collections.<String>emptyList());
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 
 		MusicBlock firstMusicBlock = formBlockProvider.handleVariant( Arrays.asList( new Double[] { 2., 2. } ), null, lexiconFromFirst );

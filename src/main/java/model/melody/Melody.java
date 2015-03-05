@@ -97,8 +97,9 @@ public class Melody extends Phrase {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append( this.getStartTime() ).append( " " );
 		for ( Note note : this.getNoteArray() ) {
-			stringBuilder.append( String.format( "{%d %s|%.1f}", note.getPitch(), ModelUtils.getNoteNameByPitch( note.getPitch() ), note.getRhythmValue() ) );
+			stringBuilder.append( String.format( "{%d %s|%.3f}", note.getPitch(), ModelUtils.getNoteNameByPitch( note.getPitch() ), note.getRhythmValue() ) );
 		}
+        stringBuilder.append(" ").append(this.getEndTime() );
 		return stringBuilder.toString();
 	}
 }

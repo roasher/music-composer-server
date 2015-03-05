@@ -7,6 +7,7 @@ import jm.music.data.Phrase;
 import jm.util.Read;
 import model.Lexicon;
 import model.composition.Composition;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class CompositionLoaderTest extends AbstractSpringTest {
 	}
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void loadScarecrow() {
 		File file = new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" );
 
@@ -58,6 +59,11 @@ public class CompositionLoaderTest extends AbstractSpringTest {
 		assertTrue( false );
 		// Testing only by ear
 	}
+
+    @Test
+    public void loadPhoenix() {
+        Composition composition = compositionLoader.getComposition( new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ) );
+    }
 
 	private void noteRounding( Phrase firstPhrase, Phrase secondPhrase, double tempo ) {
 		logger.info( "------------------------ Logging new note lists ------------------------");

@@ -30,7 +30,7 @@ public class FormBlockProvider {
 
 	/**
 	 * Generates new form block considering previously generated blocks and it's form.
-	 * @param form - form, form part of witch are going to be generated
+	 * @param form - form, from part of witch are going to be generated new Music Block
 	 * @param lexicon - Music Block's database
 	 * @return
 	 */

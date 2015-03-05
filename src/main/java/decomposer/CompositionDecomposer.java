@@ -30,7 +30,7 @@ public class CompositionDecomposer {
 	private Recombinator recombinator;
 
 	/**
-	 * Decomposes compostition into music block list
+	 * Decomposes composition into music block list
 	 * @param composition
 	 * @param rhythmValue
 	 * @return

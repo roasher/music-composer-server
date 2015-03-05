@@ -23,7 +23,7 @@ public class Lexicon {
 			if ( musicBlocks != null ) {
 				musicBlocks.add( musicBlock );
 			} else {
-				musicBlocks = new ArrayList<MusicBlock>(  );
+				musicBlocks = new ArrayList<>(  );
 				musicBlocks.add( musicBlock );
 				this.rhythmValueMusicBlockMap.put( musicBlock.getRhythmValue(), musicBlocks );
 			}
@@ -31,13 +31,6 @@ public class Lexicon {
 	}
 
 	public List<MusicBlock> getMusicBlockList( double rhythmValue ) {
-//		List<MusicBlock> certainRhythmValueLexicon = new ArrayList<>(  );
-//		for ( MusicBlock musicBlock : musicBlockList ) {
-//			if ( musicBlock.getRhythmValue() == rhythmValue ) {
-//				certainRhythmValueLexicon.add( musicBlock );
-//			}
-//		}
-//		return certainRhythmValueLexicon;
 		return rhythmValueMusicBlockMap.get( rhythmValue ) != null ? rhythmValueMusicBlockMap.get( rhythmValue ) : Collections.<MusicBlock>emptyList();
 	}
 

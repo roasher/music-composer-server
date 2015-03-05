@@ -60,11 +60,11 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 	}
 
 	@Test
-	@Ignore
+//	@Ignore
 	public void getSimplePieceTest() {
-		List< Composition > compositionList = compositionLoader.getCompositions( new File( "src\\test\\composer\\simpleMelodies" ), Collections.<String>emptyList() );
+		List< Composition > compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
-		Composition composition = compositionComposer.compose( lexicon, "AAAB", 4 * JMC.WHOLE_NOTE );
+		Composition composition = compositionComposer.compose( lexicon, "ABCD", 4 * JMC.WHOLE_NOTE );
 
 		assertNotNull( composition );
 		View.show( composition );

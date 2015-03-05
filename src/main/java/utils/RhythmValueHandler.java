@@ -13,7 +13,7 @@ import static jm.constants.Durations.THIRTYSECOND_NOTE;
 import static jm.constants.Durations.THIRTYSECOND_NOTE_TRIPLET;
 
 /**
- * Class aggregates logic of rounding rhythm values after loading the comosition
+ * Class aggregates logic of rounding rhythm values after loading the composition
  * Created by pyurkin on 08.12.14.
  */
 @Component
@@ -68,10 +68,7 @@ public class RhythmValueHandler {
 		// TODO Будут траблы со сложными лигами, например половина ноты на восьмую триоль. Нужно подумать.
 		// How many max rhythm values can fit in input rhythmValue
 		int maxRhythmValueNumber = ( int ) ( rhythmValue / maxRhythmValue );
-
-		double valueWithinListRange = rhythmValue - maxRhythmValueNumber * maxRhythmValue;
-		double roundRhythmValue = getClosestListElement( valueWithinListRange, rhythmValues ) + maxRhythmValueNumber * maxRhythmValue;
-
+        double roundRhythmValue = getApproximatedValue( rhythmValue - maxRhythmValueNumber * maxRhythmValue ) + maxRhythmValueNumber * maxRhythmValue ;
 		return roundRhythmValue;
 	}
 
@@ -82,8 +79,8 @@ public class RhythmValueHandler {
 	 * @param list
 	 * @return
 	 */
+    @Deprecated
 	public double getClosestListElement( double value, List<Double> list ) {
-		//		logger.info( "input value = {}", value );
 		int place = Collections.binarySearch( list, value );
 		if ( place >= 0 ) {
 			return list.get( place );
@@ -99,4 +96,14 @@ public class RhythmValueHandler {
 			throw new RuntimeException( "It is impossible to choose closest list element : there are 2 values having equal distance with " + value  );
 		}
 	}
+
+    public double getApproximatedValue(double value) {
+        int quarterNumber = (int) ( value / THIRTYSECOND_NOTE );
+        double closestQuarterNumber = value - quarterNumber * THIRTYSECOND_NOTE > (quarterNumber + 1)* THIRTYSECOND_NOTE - value ? quarterNumber + 1 : quarterNumber;
+
+        int tripletNumber = (int) ( value / THIRTYSECOND_NOTE_TRIPLET );
+        double closestTripletNumber = value - tripletNumber * THIRTYSECOND_NOTE_TRIPLET > ( tripletNumber + 1 )*THIRTYSECOND_NOTE_TRIPLET - value ? tripletNumber + 1 : tripletNumber;
+
+        return Math.abs( value - closestQuarterNumber * THIRTYSECOND_NOTE ) < Math.abs( value - closestTripletNumber * THIRTYSECOND_NOTE_TRIPLET ) ? closestQuarterNumber * THIRTYSECOND_NOTE : closestTripletNumber * THIRTYSECOND_NOTE_TRIPLET;
+    }
 }

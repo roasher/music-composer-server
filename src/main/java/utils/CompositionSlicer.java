@@ -4,6 +4,7 @@ import jm.JMC;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
+import jm.music.data.Rest;
 import model.melody.Melody;
 import model.MusicBlock;
 import model.composition.Composition;
@@ -36,6 +37,7 @@ public class CompositionSlicer {
 
 		List< List< Melody > > compositionList = new ArrayList<>(  );
 
+        adjustToUnifiedEndTime( composition );
 		for ( Part part : composition.getPartArray() ) {
 			Phrase phrase = part.getPhraseArray()[0];
 			List< Melody > noteList = slice( phrase, timePeriod );
@@ -43,9 +45,9 @@ public class CompositionSlicer {
 		}
 
 		// Composition list should has equal number of slices in each instrument
-		int nubmerOfSlices = compositionList.get( 0 ).size();
+		int numberOfSlices = compositionList.get( 0 ).size();
 		for ( List<Melody> slices : compositionList ) {
-			if ( slices.size() != nubmerOfSlices ) throw new RuntimeException( "Sliced composition has differed number of slices for different instrument." );
+			if ( slices.size() != numberOfSlices ) throw new RuntimeException( "Sliced composition has differed number of slices for different instrument." );
 		}
 
 		List< List< Melody > > compositionMelodies = new ArrayList<>();
@@ -74,9 +76,14 @@ public class CompositionSlicer {
 			state.add( new Note( JMC.REST, phrase.getStartTime() ) );
 		}
 
-		for( Note note : phrase.getNoteArray() ) {
-			state.add( note );
-		}
+        for ( int noteNumber = 0; noteNumber < phrase.getNoteArray().length; noteNumber ++ ) {
+            Note note = phrase.getNote( noteNumber );
+            state.add( phrase.getNote( noteNumber ) );
+        }
+
+//		for( Note note : phrase.getNoteArray() ) {
+//			state.add( note );
+//		}
 		// Filling last slice with rests if it shorter than time period
 		Melody lastSlice = state.slices.get( state.slices.size() - 1 );
 		double lastSliceRhythmValue = ModelUtils.sumAllRhytmValues( lastSlice );
@@ -113,7 +120,7 @@ public class CompositionSlicer {
 				if ( lastNoteEndTime == timePeriod ) {
 					lastNoteEndTime = 0;
 					slice = new Melody();
-					slice.setStartTime( slices.get( slices.size() - 1 ).getEndTime() );
+					slice.setStartTime( slices.get( slices.size() - 1 ).getStartTime() + timePeriod );
 					slices.add( slice );
 				}
 			}
@@ -150,4 +157,18 @@ public class CompositionSlicer {
 			}
 		}
 	}
+
+    /**
+     * Makes all phrases has equal end time by adding rests if needed
+     * @param composition
+     */
+    public void adjustToUnifiedEndTime( Composition composition ) {
+        double compositionEndTime = composition.getEndTime();
+        for ( Part part : composition.getPartArray() ) {
+            Phrase phrase = part.getPhrase( 0 );
+            if ( phrase.getEndTime() != compositionEndTime ) {
+                phrase.add( new Rest( compositionEndTime - phrase.getEndTime() ) );
+            }
+        }
+    }
 }

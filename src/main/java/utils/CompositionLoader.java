@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,9 +38,9 @@ public class CompositionLoader {
 		return nameArray;
 	}
 
-	public List<Composition> getCompositions( File directory, List<String> excludePatternList ) {
+	public List < Composition > getCompositionsFromFolder( File directory, List<String> excludePatternList ) {
 		List< Composition > compositions = new ArrayList<Composition>(  );
-		List<File> listFiles = listFilesForFolder( directory );
+		List< File > listFiles = listFilesForFolder( directory );
 		for ( File currentFile : listFiles ) {
 			if ( !currentFile.getName().matches( ".*\\.mid" ) ) continue;
 			for ( String excludePattern : excludePatternList ) {
@@ -51,10 +53,14 @@ public class CompositionLoader {
 		return compositions;
 	}
 
-	public List< Composition > getCompositions( File ... directories ) {
+    public List< Composition > getCompositionsFromFolder( File folder ) {
+        return getCompositionsFromFolder( folder, Collections.<String>emptyList() );
+    }
+
+	public List< Composition > getCompositions( File ... files) {
 		List< Composition > compositions = new ArrayList<>(  );
-		for ( File currentDirectory : directories ) {
-			compositions.add( getComposition( currentDirectory ) );
+		for ( File currentDirectory : files) {
+			compositions.add( getComposition(currentDirectory) );
 		}
 		return compositions;
 	}

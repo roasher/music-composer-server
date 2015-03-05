@@ -8,21 +8,18 @@
 
     <properties>
         <spring.version>4.0.6.RELEASE</spring.version>
+        <junit.version>3.8.1</junit.version>
+        <mockito.version>1.10.19</mockito.version>
+        <jmusic.version>1.6.4</jmusic.version>
+        <logback.version>1.1.2</logback.version>
     </properties>
 
     <dependencies>
 
         <dependency>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-          <version>3.8.1</version>
-          <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>1.10.19</version>
+            <version>${mockito.version}</version>
         </dependency>
 
         <dependency>
@@ -34,7 +31,7 @@
         <dependency>
             <groupId>com.explodingart</groupId>
             <artifactId>jmusic</artifactId>
-            <version>1.6.4</version>
+            <version>${jmusic.version}</version>
         </dependency>
 
         <dependency>
@@ -65,13 +62,13 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.1.2</version>
+            <version>${logback.version}</version>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.1.2</version>
+            <version>${logback.version}</version>
         </dependency>
 
     </dependencies>

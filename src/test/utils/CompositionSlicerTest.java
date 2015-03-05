@@ -92,7 +92,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		Melody slice8 = new Melody();
 		slice8.add( new Note( C0, QUARTER_NOTE ) );
 		slice8.add( new Note( C0, QUARTER_NOTE ) );
-		slice8.setStartTime( slice7.getEndTime() );
+		slice8.setStartTime( slice7.getStartTime() + EIGHTH_NOTE_TRIPLET * 3 + QUARTER_NOTE );
 		sliceHalfNote.add( slice8 );
 
 		Melody slice9 = new Melody();
@@ -189,7 +189,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 
 		Melody slice72 = new Melody();
 		slice72.add( new Note( C0, QUARTER_NOTE ) );
-		slice72.setStartTime( slice71.getEndTime() );
+		slice72.setStartTime( slice71.getStartTime() + EIGHTH_NOTE_TRIPLET * 3 );
 		sliceQuarterNote.add( slice72 );
 
 		Melody slice81 = new Melody();
@@ -487,4 +487,32 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 
 		assertTrue( Utils.listOfMelodiesAreEqual( sliceToTest, etalonSlice ) );
 	}
+
+    @Test
+    public void adjustToUnifiedEndTimeTest() {
+        Phrase phrase1 = new Phrase( new Note[] {
+                new Note( C0, WHOLE_NOTE ),
+        });
+
+        Phrase phrase2 = new Phrase( new Note[] {
+                new Note( C0, WHOLE_NOTE ),
+        });
+        phrase2.setStartTime( HALF_NOTE );
+
+        Phrase phrase3 = new Phrase( new Note[] {
+                new Note( C0, WHOLE_NOTE ),
+        });
+        phrase3.setStartTime( phrase2.getStartTime() + QUARTER_NOTE );
+
+        Composition composition = new Composition( new Part[] {
+                new Part( phrase1 ),
+                new Part( phrase2 ),
+                new Part( phrase3 ),
+        });
+
+        compositionSlicer.adjustToUnifiedEndTime( composition );
+        for ( Part part : composition.getPartArray() ) {
+            assertEquals( phrase3.getEndTime(), part.getPhrase( 0 ).getEndTime(), 0 );
+        }
+    }
 }
