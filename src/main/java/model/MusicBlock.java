@@ -163,10 +163,6 @@ public class MusicBlock implements Serializable {
 		return melodyList;
 	}
 
-	public void setMelodyList( List<Melody> melodyList ) {
-		this.melodyList = melodyList;
-	}
-
 	public Tension getTension() {
 		return tension;
 	}
@@ -179,16 +175,8 @@ public class MusicBlock implements Serializable {
 		return startTime;
 	}
 
-	public void setStartTime( double startTime ) {
-		this.startTime = startTime;
-	}
-
 	public CompositionInfo getCompositionInfo() {
 		return compositionInfo;
-	}
-
-	public void setCompositionInfo( CompositionInfo compositionInfo ) {
-		this.compositionInfo = compositionInfo;
 	}
 
 	public List<Integer> getStartIntervalPattern() {
@@ -231,15 +219,7 @@ public class MusicBlock implements Serializable {
 		return blockMovementFromPreviousToThis;
 	}
 
-	public void setBlockMovementFromPreviousToThis( BlockMovement blockMovementFromPreviousToThis ) {
-		this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
-	}
-
 	public BlockMovement getBlockMovementFromThisToNext() {
 		return blockMovementFromThisToNext;
-	}
-
-	public void setBlockMovementFromThisToNext( BlockMovement blockMovementFromThisToNext ) {
-		this.blockMovementFromThisToNext = blockMovementFromThisToNext;
 	}
 }

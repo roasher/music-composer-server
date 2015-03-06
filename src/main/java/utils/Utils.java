@@ -154,7 +154,8 @@ public class Utils {
 		}
 		return musicBlockList;
 	}
-	/**
+
+    /**
 	 * Returns possible variants of how length be combined with by input double - quantity map
 	 * @param doubleQuantityMap - map of values and it's quantities
 	 * @param length

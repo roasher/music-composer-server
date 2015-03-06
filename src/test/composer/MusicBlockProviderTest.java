@@ -4,6 +4,7 @@ import decomposer.CompositionDecomposer;
 import helper.AbstractSpringTest;
 import jm.JMC;
 import model.BlockMovement;
+import model.ComposeBlock;
 import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
@@ -27,41 +28,36 @@ import static org.mockito.Mockito.when;
  */
 public class MusicBlockProviderTest extends AbstractSpringTest {
 
-	@Autowired
-	private MusicBlockProvider musicBlockProvider;
+	@Autowired private MusicBlockProvider musicBlockProvider;
 
-	@Autowired
-	private CompositionLoader compositionLoader;
+	@Autowired private CompositionLoader compositionLoader;
 
-	@Autowired
-	private CompositionDecomposer compositionDecomposer;
+	@Autowired private CompositionDecomposer compositionDecomposer;
 
-	@Test
-	public void getFirstConvenientMusicBlock1() {
-		List< Composition > compositionList = compositionLoader.getCompositionsFromFolder(new File("src\\test\\composer\\simpleMelodies"), Collections.<String>emptyList());
+	@Test public void getFirstConvenientMusicBlock1() {
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ), Collections.<String>emptyList() );
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 		Lexicon lexiconFromSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
 
-		List<MusicBlock> sum = new ArrayList<>( lexiconFromFirst.getMusicBlockList() );
-		sum.addAll( lexiconFromSecond.getMusicBlockList() );
+		List<ComposeBlock> sum = new ArrayList<>( lexiconFromFirst.getComposeBlockList() );
+		sum.addAll( lexiconFromSecond.getComposeBlockList() );
 		Lexicon lexicon = new Lexicon( sum );
 
-		MusicBlock firstConvenientMusicBlock = musicBlockProvider.getFirstConvenientMusicBlock( lexiconFromFirst.get( 8 ), lexicon.getMusicBlockList(  ) );
-		assertEquals( lexiconFromSecond.get( 14 ), firstConvenientMusicBlock );
+		List<ComposeBlock> listOfPossibleMusicBlocks = lexiconFromFirst.get( 8 ).getPossibleNextComposeBlocks();
+		assertTrue( listOfPossibleMusicBlocks.contains( lexiconFromSecond.get( 14 ) ) );
 	}
 
-	@Test
-	public void followTestCase() {
-		List< Composition > compositionList = compositionLoader.getCompositionsFromFolder(new File("src\\test\\composer\\simpleMelodies"), Collections.<String>emptyList());
+	@Test public void followTestCase() {
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ),
+				Collections.<String>emptyList() );
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 		Lexicon lexiconFromSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
-		MusicBlock current = lexiconFromFirst.getMusicBlockList().get( 8 );
-		MusicBlock next = lexiconFromSecond.getMusicBlockList().get( 13 );
+		MusicBlock current = lexiconFromFirst.get( 8 ).getMusicBlock();
+		MusicBlock next = lexiconFromSecond.get( 13 ).getMusicBlock();
 		assertTrue( musicBlockProvider.canSubstitute( current, next ) );
 	}
 
-	@Test
-	public void timeCorrelationTest() {
+	@Test public void timeCorrelationTest() {
 
 		class MockFactory {
 			private List<Integer> startIntervalPattern = Collections.EMPTY_LIST;
@@ -69,7 +65,7 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 
 			private MusicBlock getOrigin( double preRhythmValue, double startTime ) {
 				MusicBlock preFirst = mock( MusicBlock.class );
-				when( preFirst.getRhythmValue()).thenReturn( preRhythmValue );
+				when( preFirst.getRhythmValue() ).thenReturn( preRhythmValue );
 				MusicBlock first = mock( MusicBlock.class );
 				when( first.getPrevious() ).thenReturn( preFirst );
 				when( first.getStartTime() ).thenReturn( startTime );

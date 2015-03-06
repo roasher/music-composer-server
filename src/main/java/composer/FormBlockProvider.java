@@ -37,6 +37,7 @@ public class FormBlockProvider {
 	public MusicBlock getFormElement( Form form, double length, List<CompositionStep> previousSteps, Lexicon lexicon ) {
 		logger.info( "Composing new form element : {}, length : {}", form.getValue(), length );
 		List<MusicBlock> exclusion = new ArrayList<>();
+        // TODO refactor
 		while ( true ) {
 			MusicBlock previousMusicBlock = previousSteps.size() != 0 ? previousSteps.get( previousSteps.size() - 1 ).getMusicBlock() : null;
 			MusicBlock musicBlock = getMusicBlock( previousMusicBlock, length, lexicon, exclusion );
@@ -60,67 +61,8 @@ public class FormBlockProvider {
 	}
 
 	public MusicBlock getMusicBlock( MusicBlock previousMusicBlock, double length, Lexicon lexicon, List<MusicBlock> exclusion ) {
-		/**
-		 * Calculating variants: how one can put up length with elements of rhythmValues array
-		 * Iterating through this variants choosing first convenient
-		 */
-		List<List<Double>> variants = Utils.getVariantsOfDistribution( lexicon.getRhythmValueQuantityMap(), length );
-		for ( List<Double> variant : variants ) {
-			MusicBlock musicBlock = handleVariant( variant, previousMusicBlock, lexicon );
-			if ( musicBlock == null ) {
-				logger.info( "There is no possible ways to compose new MusicBlock considering this variant: {}", variant );
-				continue;
-			}
-			if ( !Utils.containsMelody( musicBlock, exclusion ) ) {
-				return musicBlock;
-			} else {
-				logger.warn( "Music block has been composed, but was found in exclusion list" );
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Gets music block that can be put next to previousMusicBlock that inside has rhythmValueVariant structure
-	 * @param variant
-	 * @param previousMusicBlock
-	 * @param lexicon
-	 * @return
-	 */
-	public MusicBlock handleVariant( List<Double> variant, MusicBlock previousMusicBlock, Lexicon lexicon ) {
-		// Variant handling
-		List<CompositionStep> compositionSteps = new ArrayList<>(  );
-		compositionSteps.add( new CompositionStep( previousMusicBlock ) );
-		for ( int rhythmValueNumber = 0; rhythmValueNumber < variant.size(); rhythmValueNumber++ ) {
-
-			CompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
-
-			MusicBlock nextMusicBlock = musicBlockProvider.getFirstConvenientMusicBlock(
-			  lastCompositionStep.getMusicBlock(),
-			  lexicon.getMusicBlockList( variant.get( rhythmValueNumber ) ),
-			  lastCompositionStep.getNextMusicBlockExclusion() );
-
-			CompositionStep nextStep = new CompositionStep( nextMusicBlock );
-
-			if ( nextStep.getMusicBlock() == null ) {
-				if ( rhythmValueNumber != 0 ) {
-					CompositionStep preLastCompositionStep = compositionSteps.get( compositionSteps.size() - 2 );
-					preLastCompositionStep.addNextExclusion( lastCompositionStep.getMusicBlock() );
-					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
-					compositionSteps.remove( compositionSteps.size() -1 );
-					rhythmValueNumber = rhythmValueNumber - 2;
-					continue;
-				} else {
-					break;
-				}
-			} else {
-				compositionSteps.add( nextStep );
-			}
-		}
-		compositionSteps.remove( 0 );
-		if ( compositionSteps.size() == 0 ) return null;
-		// gathering MusicBlock
-		return new MusicBlock( null, Utils.getMusicBlocksList( compositionSteps ) );
+		// TODO implementation
+        return null;
 	}
 
 	/**

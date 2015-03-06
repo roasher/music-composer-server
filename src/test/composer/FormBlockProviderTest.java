@@ -34,31 +34,12 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 	@Test
 	public void formBlockProviderTest() {
 		List< Composition > compositionList = compositionLoader.getCompositionsFromFolder(new File("src\\test\\composer\\simpleMelodies"), Collections.<String>emptyList());
-		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
+		Lexicon lexiconFromFirst = compositionDecomposer.decompose(compositionList.get(0), JMC.WHOLE_NOTE);
 
 		MusicBlock formElement = formBlockProvider.getFormElement( new Form( 'A' ), JMC.WHOLE_NOTE, Collections.<CompositionStep>emptyList(), lexiconFromFirst );
 		List<MusicBlock> musicBlockList = new ArrayList<>(  );
-		musicBlockList.add( lexiconFromFirst.get( 0 ) );
-		musicBlockList.add( lexiconFromFirst.get( 1 ) );
+		musicBlockList.add( lexiconFromFirst.get( 0 ).getMusicBlock() );
+		musicBlockList.add( lexiconFromFirst.get( 1 ).getMusicBlock() );
 		assertEquals( formElement, new MusicBlock( null, musicBlockList ) );
-	}
-
-	@Test
-	public void variantHandleTest() {
-		List< Composition > compositionList = compositionLoader.getCompositionsFromFolder(new File("src\\test\\composer\\simpleMelodies"), Collections.<String>emptyList());
-		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
-
-		MusicBlock firstMusicBlock = formBlockProvider.handleVariant( Arrays.asList( new Double[] { 2., 2. } ), null, lexiconFromFirst );
-		assertNotNull( firstMusicBlock );
-		MusicBlock secondMusicBlock = formBlockProvider.handleVariant( Arrays.asList( new Double[] { 1., 1., 1., .5, .5 } ), firstMusicBlock, lexiconFromFirst );
-		assertNotNull( secondMusicBlock );
-		MusicBlock thirdMusicBlock = formBlockProvider.handleVariant( Arrays.asList( new Double[] { .5, 1.5, 1., .5, .5 } ), secondMusicBlock, lexiconFromFirst );
-		assertNotNull( thirdMusicBlock );
-		MusicBlock forthMusicBlock = formBlockProvider.handleVariant( Arrays.asList( new Double[] { .5, .5, .5, .5, .5, .5, 1. } ), thirdMusicBlock, lexiconFromFirst );
-		assertNotNull( forthMusicBlock );
-		MusicBlock fifthMusicBlock = formBlockProvider.handleVariant( Arrays.asList( new Double[] { .5, .5, .5, .5, .5, .5, .5, .5 } ), forthMusicBlock, lexiconFromFirst );
-		assertNotNull( fifthMusicBlock );
-		MusicBlock sixthMusicBlock = formBlockProvider.handleVariant( Arrays.asList( new Double[] { .5, .5, .5, .5, 2. } ), fifthMusicBlock, lexiconFromFirst );
-		assertNotNull( sixthMusicBlock );
 	}
 }

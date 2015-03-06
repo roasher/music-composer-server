@@ -1,5 +1,10 @@
 package model;
 
+import composer.MusicBlockProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import java.util.*;
 
 /**
@@ -7,42 +12,43 @@ import java.util.*;
  * Created by pyurkin on 13.02.15.
  */
 public class Lexicon {
-	private List<MusicBlock> musicBlockList;
-	private Map<Double,List<MusicBlock>> rhythmValueMusicBlockMap = new HashMap<>(  );
+
+	private List<ComposeBlock> composeBlockList = new ArrayList<>();
+	private Map<Double,List<ComposeBlock>> rhythmValueComposeBlockMap = new HashMap<>(  );
 
 	private Map<Double,Integer> rhythmValueQuantityMap = new HashMap<>(  );
 
-	public Lexicon( List<MusicBlock> musicBlockList ) {
-		if ( musicBlockList == null ) { throw new IllegalArgumentException( "Input music block list is null" ); }
-		this.musicBlockList = musicBlockList;
-		for ( MusicBlock musicBlock : musicBlockList ) {
-			Integer quantity = rhythmValueQuantityMap.get( musicBlock.getRhythmValue() ) != null ? rhythmValueQuantityMap.get( musicBlock.getRhythmValue() ) : 0;
-			rhythmValueQuantityMap.put( musicBlock.getRhythmValue(), quantity + 1 );
+	public Lexicon( List<ComposeBlock> composeBlockList ) {
+        this.composeBlockList = composeBlockList;
+        // filling rhythm value map
+        for ( ComposeBlock composeBlock : composeBlockList ) {
+            Integer quantity = rhythmValueQuantityMap.get( composeBlock.getRhythmValue() ) != null ? rhythmValueQuantityMap.get( composeBlock.getRhythmValue() ) : 0;
+            rhythmValueQuantityMap.put( composeBlock.getRhythmValue(), quantity + 1 );
 
-			List<MusicBlock> musicBlocks = rhythmValueMusicBlockMap.get( musicBlock.getRhythmValue() );
-			if ( musicBlocks != null ) {
-				musicBlocks.add( musicBlock );
-			} else {
-				musicBlocks = new ArrayList<>(  );
-				musicBlocks.add( musicBlock );
-				this.rhythmValueMusicBlockMap.put( musicBlock.getRhythmValue(), musicBlocks );
-			}
-		}
+            List<ComposeBlock> musicBlocks = rhythmValueComposeBlockMap.get( composeBlock.getRhythmValue() );
+            if ( musicBlocks != null ) {
+                musicBlocks.add( composeBlock );
+            } else {
+                musicBlocks = new ArrayList<>();
+                musicBlocks.add( composeBlock );
+                this.rhythmValueComposeBlockMap.put( composeBlock.getRhythmValue(), musicBlocks );
+            }
+        }
 	}
 
-	public List<MusicBlock> getMusicBlockList( double rhythmValue ) {
-		return rhythmValueMusicBlockMap.get( rhythmValue ) != null ? rhythmValueMusicBlockMap.get( rhythmValue ) : Collections.<MusicBlock>emptyList();
+	public List< ComposeBlock > getMusicBlockList( double rhythmValue ) {
+		return rhythmValueComposeBlockMap.get( rhythmValue ) != null ? rhythmValueComposeBlockMap.get( rhythmValue ) : Collections.<ComposeBlock>emptyList();
 	}
 
-	public MusicBlock get( int number ) {
-		return this.musicBlockList.get( number );
+	public ComposeBlock get( int number ) {
+		return this.composeBlockList.get( number );
 	}
 
 	public Map<Double,Integer> getRhythmValueQuantityMap() {
 		return rhythmValueQuantityMap;
 	}
 
-	public List<MusicBlock> getMusicBlockList() {
-		return musicBlockList;
+	public List<ComposeBlock> getComposeBlockList() {
+		return composeBlockList;
 	}
 }
