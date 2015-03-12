@@ -8,13 +8,11 @@ import helper.AbstractSpringTest;
 import jm.JMC;
 import jm.util.View;
 import junit.framework.Assert;
-import model.BlockMovement;
 import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
 import model.melody.Form;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -25,7 +23,6 @@ import utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static junit.framework.Assert.assertFalse;
@@ -86,10 +83,10 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 
 		List<CompositionStep> compositionSteps = compositionComposer.composeSteps( null, "ABCD", JMC.WHOLE_NOTE );
 		Assert.assertEquals( 4, compositionSteps.size() );
-		Assert.assertEquals( 4., compositionSteps.get( 0 ).getMusicBlock().getStartTime() );
-		Assert.assertEquals( 5., compositionSteps.get( 1 ).getMusicBlock().getStartTime() );
-		Assert.assertEquals( 6., compositionSteps.get( 2 ).getMusicBlock().getStartTime() );
-		Assert.assertEquals( 7., compositionSteps.get( 3 ).getMusicBlock().getStartTime() );
+		Assert.assertEquals( 4., compositionSteps.get( 0 ).getComposeBlock().getStartTime() );
+		Assert.assertEquals( 5., compositionSteps.get( 1 ).getComposeBlock().getStartTime() );
+		Assert.assertEquals( 6., compositionSteps.get( 2 ).getComposeBlock().getStartTime() );
+		Assert.assertEquals( 7., compositionSteps.get( 3 ).getComposeBlock().getStartTime() );
 
 	}
 
@@ -108,10 +105,10 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 
 		List<CompositionStep> compositionSteps = compositionComposer.composeSteps( null, "ABCD", 2*JMC.WHOLE_NOTE );
 		Assert.assertEquals( 4, compositionSteps.size() );
-		Assert.assertEquals( 0., compositionSteps.get( 0 ).getMusicBlock().getStartTime() );
-		Assert.assertEquals( 1., compositionSteps.get( 1 ).getMusicBlock().getStartTime() );
-		Assert.assertEquals( 4., compositionSteps.get( 2 ).getMusicBlock().getStartTime() );
-		Assert.assertEquals( 5., compositionSteps.get( 3 ).getMusicBlock().getStartTime() );
+		Assert.assertEquals( 0., compositionSteps.get( 0 ).getComposeBlock().getStartTime() );
+		Assert.assertEquals( 1., compositionSteps.get( 1 ).getComposeBlock().getStartTime() );
+		Assert.assertEquals( 4., compositionSteps.get( 2 ).getComposeBlock().getStartTime() );
+		Assert.assertEquals( 5., compositionSteps.get( 3 ).getComposeBlock().getStartTime() );
 
 	}
 

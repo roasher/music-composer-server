@@ -1,5 +1,6 @@
 package composer;
 
+import model.ComposeBlock;
 import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
@@ -33,11 +34,11 @@ public class CompositionComposer {
 	 */
 	public Composition compose( Lexicon lexicon, String form, double compositionLength ) {
 		List<CompositionStep> compositionSteps = composeSteps( lexicon, form, compositionLength );
-		List<MusicBlock> musicBlocks = new ArrayList<>(  );
+		List<ComposeBlock> composeBlocks = new ArrayList<>(  );
 		for ( CompositionStep compositionStep : compositionSteps ) {
-			musicBlocks.add( compositionStep.getMusicBlock() );
+			composeBlocks.add( compositionStep.getComposeBlock() );
 		}
-		return Utils.gatherComposition( musicBlocks );
+		return Utils.gatherComposition( composeBlocks );
 	}
 
 	/**
@@ -58,12 +59,12 @@ public class CompositionComposer {
 			CompositionStep lastCompositionStep = formElementNumber != 0 ? compositionSteps.get( compositionSteps.size() - 1 ) : null;
 			CompositionStep nextStep = composeNext( new Form( form.charAt( formElementNumber ) ), compositionLength/form.length(), compositionSteps,  lexicon );
 
-			if ( nextStep.getMusicBlock() == null ) {
+			if ( nextStep.getComposeBlock() == null ) {
 				if ( formElementNumber != 0 ) {
 					// there is no pre last step if we can't create second element
 					if ( formElementNumber != 1 ) {
 						CompositionStep preLastCompositionStep = compositionSteps.get( formElementNumber - 2 );
-						preLastCompositionStep.addNextExclusion( lastCompositionStep.getMusicBlock() );
+						preLastCompositionStep.addNextExclusion( lastCompositionStep.getComposeBlock() );
 					}
 					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
 					compositionSteps.remove( formElementNumber - 1 );
@@ -81,7 +82,7 @@ public class CompositionComposer {
 	}
 
 	public CompositionStep composeNext( Form form, double length, List<CompositionStep> previousSteps, Lexicon lexicon ) {
-		MusicBlock musicBlock = formBlockProvider.getFormElement( form, length, previousSteps, lexicon );
+		ComposeBlock musicBlock = formBlockProvider.getFormElement( form, length, previousSteps, lexicon );
 		return new CompositionStep( musicBlock, form );
 	}
 }

@@ -69,7 +69,6 @@ public class CompositionDecomposer implements ApplicationContextAware {
     }
 
     /**
-	 * // TODO tests
      * Wraps Music Blocks into Compose Blocks
      * @param musicBlockList
      * @return
@@ -78,8 +77,7 @@ public class CompositionDecomposer implements ApplicationContextAware {
         List<ComposeBlock> composeBlockList = new ArrayList<>();
         for ( MusicBlock musicBlock : musicBlockList ) {
             List< MusicBlock > possibleNextMusicBlockList = musicBlockProvider.getAllPossibleNextVariants( musicBlock, musicBlockList );
-            List< MusicBlock > possiblePreviousMusicBlockList = musicBlockProvider.getAllPossiblePreviousVariants( musicBlock, musicBlockList );
-            ComposeBlock composeBlock = new ComposeBlock( musicBlock, possibleNextMusicBlockList.toArray( new MusicBlock[]{} ), possiblePreviousMusicBlockList.toArray( new MusicBlock[]{} ) );
+            ComposeBlock composeBlock = new ComposeBlock( musicBlock, possibleNextMusicBlockList );
             composeBlockList.add( composeBlock );
         }
 		for ( ComposeBlock composeBlock : composeBlockList ) {
@@ -88,8 +86,10 @@ public class CompositionDecomposer implements ApplicationContextAware {
 					// Using "==" is legal
 					if ( possibleNextComposeBlocks.getMusicBlock() == anotherComposeBlock.getMusicBlock() ) {
 						possibleNextComposeBlocks.getPossibleNextComposeBlocks().addAll( anotherComposeBlock.getPossibleNextComposeBlocks() );
+						anotherComposeBlock.getPossiblePreviousComposeBlocks().add( composeBlock );
 					}
 				}
+				possibleNextComposeBlocks.getPossiblePreviousComposeBlocks().add( composeBlock );
 			}
 		}
         return composeBlockList;

@@ -99,31 +99,6 @@ public class MusicBlockProvider {
 		return musicBlockList;
 	}
 
-    /**
-     * // TODO TESTS
-     * Retrieves all music blocks that can be previous to current
-     * @param currentMusicBlock
-     * @param lexicon
-     * @return
-     */
-    public List<MusicBlock> getAllPossiblePreviousVariants( MusicBlock currentMusicBlock, List<MusicBlock> lexicon ) {
-        logger.debug( "Searching for all possible music block previous to {}", currentMusicBlock );
-        List<MusicBlock> musicBlockList = new ArrayList<>(  );
-        if ( currentMusicBlock == null ) {
-            logger.debug( "There can be no previous blocks to null" );
-        } else if ( currentMusicBlock.getPrevious() == null ) {
-            logger.info( "There can be no previous blocks to first block in the composition" );
-        } else {
-            for ( MusicBlock musicBlock : lexicon ) {
-                if ( musicBlock.getNext() != null && canSubstitute( currentMusicBlock, musicBlock.getNext() ) ) {
-                    logger.info( "Possible previous music block has been found: {}, {}", musicBlock.getCompositionInfo().getTitle(), musicBlock );
-                    musicBlockList.add( musicBlock );
-                }
-            }
-        }
-        return musicBlockList;
-    }
-
 	/**
 	 * Answers if origin can be replaced by substitutor
 	 * @param originBlock

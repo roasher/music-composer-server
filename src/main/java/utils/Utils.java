@@ -4,9 +4,9 @@ import composer.CompositionStep;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
+import model.ComposeBlock;
 import model.MusicBlock;
 import model.composition.Composition;
-import model.composition.CompositionInfo;
 import model.melody.Melody;
 
 import java.io.IOException;
@@ -105,26 +105,26 @@ public class Utils {
 	}
 
 	/**
-	 * Returns composition, build on input music blocks
-	 * @param musicBlockList
+	 * Returns composition, build on input compose blocks
+	 * @param composeBlockList
 	 * @return
 	 */
-	public static Composition gatherComposition( List<MusicBlock> musicBlockList ) {
+	public static Composition gatherComposition( List<ComposeBlock> composeBlockList ) {
 		List<Part> parts = new ArrayList<>();
-		for ( int partNumber = 0; partNumber < musicBlockList.get( 0 ).getMelodyList().size(); partNumber++ ) {
+		for ( int partNumber = 0; partNumber < composeBlockList.get( 0 ).getMusicBlock().getMelodyList().size(); partNumber++ ) {
 			parts.add( new Part() );
 		}
-		for ( MusicBlock musicBlock : musicBlockList ) {
+		for ( ComposeBlock composeBlock : composeBlockList ) {
 			for ( int partNumber = 0; partNumber < parts.size(); partNumber++ ) {
 				int melodiesAmount = parts.get( partNumber ).size();
-				Melody melody = musicBlock.getMelodyList().get( partNumber );
+				Melody melody = composeBlock.getMusicBlock().getMelodyList().get( partNumber );
 				Melody newMelody = null;
 				if ( melodiesAmount == 0 ) {
 					// First melody in partNumber part
 					newMelody = new Melody( melody.getNoteArray() );
 				} else {
 					// Need to bind first note of melody with previous if it has same pitch
-					Note newPhraseFirstNote = musicBlock.getMelodyList().get( partNumber ).getNoteArray()[0];
+					Note newPhraseFirstNote = composeBlock.getMusicBlock().getMelodyList().get( partNumber ).getNoteArray()[0];
 					Phrase previousPhrase = parts.get( partNumber ).getPhrase( melodiesAmount - 1 );
 					Note previousPhraseLastNote = previousPhrase.getNote( previousPhrase.getNoteArray().length - 1 );
 					if ( newPhraseFirstNote.getPitch() == previousPhraseLastNote.getPitch() ) {
@@ -143,16 +143,6 @@ public class Utils {
 		}
 		Composition composition = new Composition( parts );
 		return composition;
-	}
-
-	public static List<MusicBlock> getMusicBlocksList( List<CompositionStep> compositionSteps ) {
-		List<MusicBlock> musicBlockList = new ArrayList<>(  );
-		for ( CompositionStep compositionStep : compositionSteps ) {
-			if ( compositionStep.getMusicBlock() != null ) {
-				musicBlockList.add( compositionStep.getMusicBlock() );
-			}
-		}
-		return musicBlockList;
 	}
 
     /**

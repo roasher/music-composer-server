@@ -25,13 +25,10 @@ public class ComposeBlock {
         this.possiblePreviousComposeBlocks = possiblePreviousComposeBlocks;
     }
 
-	public ComposeBlock( MusicBlock musicBlock, MusicBlock[] possibleNextMusicBlocks, MusicBlock[] possiblePreviousMusicBlocks ) {
+	public ComposeBlock( MusicBlock musicBlock, List<MusicBlock> possibleNextMusicBlocks ) {
 		this.musicBlock = musicBlock;
 		for ( MusicBlock possibleNextMusicBlock : possibleNextMusicBlocks ) {
 			this.possibleNextComposeBlocks.add( new ComposeBlock( possibleNextMusicBlock ) );
-		}
-		for ( MusicBlock possiblePreviousMusicBlock : possiblePreviousMusicBlocks ) {
-			this.possiblePreviousComposeBlocks.add( new ComposeBlock( possiblePreviousMusicBlock ) );
 		}
 	}
 
