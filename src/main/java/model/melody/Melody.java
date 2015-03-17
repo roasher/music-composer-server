@@ -5,6 +5,7 @@ import jm.music.data.Phrase;
 import model.PlaceInTheComposition;
 import utils.ModelUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +29,14 @@ public class Melody extends Phrase {
     public Melody() {
         super();
     }
+
+	public static Melody gather( List<Melody> melodyList ) {
+		List<Note> noteList = new ArrayList<>(  );
+		for ( Melody melody : melodyList ) {
+			noteList.addAll( melody.getNoteList() );
+		}
+		return new Melody( noteList );
+	}
 
     public PlaceInTheComposition getPlaceInTheComposition() {
         return placeInTheComposition;

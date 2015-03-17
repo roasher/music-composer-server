@@ -108,6 +108,10 @@ public class MusicBlock implements Serializable {
 		}
 	}
 
+	public MusicBlock( List<MusicBlock> musicBlockList ) {
+		// TODO implementation
+	}
+
 	public String getForm() {
 		StringBuilder stringBuilder = new StringBuilder();
 		for ( Melody melody : this.getMelodyList() ) {

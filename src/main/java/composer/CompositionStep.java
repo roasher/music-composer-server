@@ -26,6 +26,12 @@ public class CompositionStep {
 		this.form = form;
 	}
 
+	public CompositionStep( ComposeBlock composeBlock ) {
+		this.composeBlock = composeBlock;
+	}
+
+	public CompositionStep() {}
+
 	public void addNextExclusion( ComposeBlock musicBlock ) {
 		this.nextMusicBlockExclusion.add( musicBlock );
 	}
@@ -44,5 +50,9 @@ public class CompositionStep {
 
 	public void setForm( Form form ) {
 		this.form = form;
+	}
+
+	public List<ComposeBlock> getNextMusicBlockExclusion() {
+		return nextMusicBlockExclusion;
 	}
 }

@@ -44,8 +44,8 @@ public class CompositionComposer {
 	/**
 	 * Main composing function.
 	 * Assuming we are on k-th step of composing.
-	 * Composing k+1 music block.
-	 * If it is impossible, than recomposing k-th music block.
+	 * Composing k+1 block according given form.
+	 * If it is impossible, than recomposing k-th block.
 	 * If it is impossible, going back to k-1 and so on.
 	 * @param lexicon
 	 * @param form
