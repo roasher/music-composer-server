@@ -74,22 +74,33 @@ public class CompositionDecomposer implements ApplicationContextAware {
      * @return
      */
     public List<ComposeBlock> getComposeBlocks( List<MusicBlock> musicBlockList ) {
-        List<ComposeBlock> composeBlockList = new ArrayList<>();
+
+		class ComposeBlockWrapper {
+			ComposeBlock composeBlock;
+			List<MusicBlock> possibleNextMusicBlocks;
+			ComposeBlockWrapper( ComposeBlock composeBlock, List<MusicBlock> possibleNextMusicBlocks ) {
+				this.composeBlock = composeBlock; this.possibleNextMusicBlocks = possibleNextMusicBlocks;
+			}
+		}
+
+        List<ComposeBlockWrapper> composeBlockWrapperList = new ArrayList<>();
+		List<ComposeBlock> composeBlockList = new ArrayList<>(  );
         for ( MusicBlock musicBlock : musicBlockList ) {
             List< MusicBlock > possibleNextMusicBlockList = musicBlockProvider.getAllPossibleNextVariants( musicBlock, musicBlockList );
-            ComposeBlock composeBlock = new ComposeBlock( musicBlock, possibleNextMusicBlockList );
-            composeBlockList.add( composeBlock );
+            ComposeBlockWrapper composeBlockWrapper = new ComposeBlockWrapper( new ComposeBlock( musicBlock ), possibleNextMusicBlockList );
+            composeBlockWrapperList.add( composeBlockWrapper );
+			composeBlockList.add( composeBlockWrapper.composeBlock );
         }
-		for ( ComposeBlock composeBlock : composeBlockList ) {
-			for ( ComposeBlock possibleNextComposeBlocks : composeBlock.getPossibleNextComposeBlocks() ) {
-				for ( ComposeBlock anotherComposeBlock : composeBlockList ) {
+		for ( ComposeBlockWrapper composeBlockWrapper : composeBlockWrapperList ) {
+			for ( MusicBlock musicBlock : composeBlockWrapper.possibleNextMusicBlocks ) {
+				for ( ComposeBlockWrapper anotherComposeBlockWrapper : composeBlockWrapperList ) {
 					// Using "==" is legal
-					if ( possibleNextComposeBlocks.getMusicBlock() == anotherComposeBlock.getMusicBlock() ) {
-						possibleNextComposeBlocks.getPossibleNextComposeBlocks().addAll( anotherComposeBlock.getPossibleNextComposeBlocks() );
-						anotherComposeBlock.getPossiblePreviousComposeBlocks().add( composeBlock );
+					if ( musicBlock == anotherComposeBlockWrapper.composeBlock.getMusicBlock() ) {
+						composeBlockWrapper.composeBlock.getPossibleNextComposeBlocks().add( anotherComposeBlockWrapper.composeBlock );
+						anotherComposeBlockWrapper.composeBlock.getPossiblePreviousComposeBlocks().add( composeBlockWrapper.composeBlock );
 					}
 				}
-				possibleNextComposeBlocks.getPossiblePreviousComposeBlocks().add( composeBlock );
+//				musicBlock.getPossiblePreviousComposeBlocks().add( composeBlockWrapper );
 			}
 		}
         return composeBlockList;

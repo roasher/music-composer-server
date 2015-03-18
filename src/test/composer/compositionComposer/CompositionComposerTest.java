@@ -62,7 +62,7 @@ public class CompositionComposerTest extends AbstractSpringTest {
 
 	@Test
     @Ignore
-	// TODO to slow
+	// TODO too slow
 	public void getRealPieceTest1() {
 		List< Composition > compositionList = compositionLoader.getCompositions(
 		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" )

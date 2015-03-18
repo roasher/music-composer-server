@@ -54,7 +54,7 @@ public class Lexicon {
 		allPossibleFirstBlocks.removeAll( exclusions );
 		if ( !allPossibleFirstBlocks.isEmpty() ) {
 			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );
-			logger.info( "Returning one of the first blocks witch are first in the original composition randomly" );
+			logger.info( "Returning one of the blocks witch are first in the original composition randomly" );
 			return allPossibleFirstBlocks.get( randomNumber );
 		} else {
 			return null;

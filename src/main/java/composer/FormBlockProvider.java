@@ -3,14 +3,11 @@ package composer;
 import decomposer.form.analyzer.MusicBlockFormEqualityAnalyser;
 import model.ComposeBlock;
 import model.Lexicon;
-import model.MusicBlock;
-import model.composition.Composition;
 import model.melody.Form;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,21 +36,23 @@ public class FormBlockProvider {
 	public ComposeBlock getFormElement( Form form, double length, List<CompositionStep> previousSteps, Lexicon lexicon ) {
 		logger.info( "Composing new form element : {}, length : {}", form.getValue(), length );
 		CompositionStep last = previousSteps.isEmpty() ? null : previousSteps.get( previousSteps.size() - 1 );
+		ComposeBlock composeBlock;
 		if ( last != null ) {
-			logger.info( "Creating first Compose block according to form: {}", form );
-			ComposeBlock composeBlock = lexicon.getRandomFirst();
-			return composeBlock;
+			composeBlock = composeBlock( last.getComposeBlock(), lexicon, length );
+			//			List<ComposeBlock> previouslyComposedBlocksHavingCertainForm = getComposeBlocksHavingCertainForm( previousSteps, form );
+			//			if ( !previouslyComposedBlocksHavingCertainForm.isEmpty() ) {
+			//				for ( ComposeBlock previouslyComposedBlock : previouslyComposedBlocksHavingCertainForm ) {
+			//					logger.info( "Taking {} as for the base", previouslyComposedBlock );
+			//				}
+			//			} else {
+			//				logger.info( "Composing first music block on the composition of certain form type: {}", form );
+			//			}
 		} else {
-			List<ComposeBlock> previouslyComposedBlocksHavingCertainForm = getComposeBlocksHavingCertainForm( previousSteps, form );
-			if ( !previouslyComposedBlocksHavingCertainForm.isEmpty() ) {
-				for ( ComposeBlock previouslyComposedBlock : previouslyComposedBlocksHavingCertainForm ) {
-					logger.info( "Taking {} as for the base", previouslyComposedBlock );
-				}
-			} else {
-				logger.info( "Composing first music block on the composition of certain form type: {}", form );
-			}
+			logger.info( "Creating first Compose block according to form: {}", form );
+			composeBlock = composeBlock( null, lexicon, length );
+			return composeBlock;
 		}
-
+		return composeBlock;
 	}
 
 	/**
@@ -62,18 +61,18 @@ public class FormBlockProvider {
 	 * @param lexicon
 	 * @return
 	 */
-	public ComposeBlock composeFirstBlock( double length, Lexicon lexicon ) {
-		List<CompositionStep> compositionSteps = composeSteps( length, lexicon );
+	public ComposeBlock composeBlock( ComposeBlock previousComposeBlock, Lexicon lexicon, double length ) {
+		List<CompositionStep> compositionSteps = composeSteps( previousComposeBlock, lexicon, length );
 		List<ComposeBlock> composeBlocks = new ArrayList<>(  );
 		for ( CompositionStep compositionStep : compositionSteps ) {
 			composeBlocks.add( compositionStep.getComposeBlock() );
 		}
-		return Utils.gatherComposition( composeBlocks );
+		return new ComposeBlock( composeBlocks );
 	}
 
-	public List<CompositionStep> composeSteps( double length, Lexicon lexicon ) {
+	public List<CompositionStep> composeSteps( ComposeBlock composeBlock, Lexicon lexicon, double length ) {
 		List<CompositionStep> compositionSteps = new ArrayList<>(  );
-		compositionSteps.add( new CompositionStep(  ) );
+		compositionSteps.add( new CompositionStep( composeBlock ) );
 		double currentLength = 0;
 
 		for ( int step = 0; step < length / lexicon.getMinRhythmValue(); step++ ) {
@@ -82,10 +81,13 @@ public class FormBlockProvider {
 			CompositionStep nextStep = lastCompositionStep.getComposeBlock() != null ?
 					new CompositionStep( lexicon.getRandomNext( lastCompositionStep.getComposeBlock(), lastCompositionStep.getNextMusicBlockExclusion() ) ) :
 					new CompositionStep( lexicon.getRandomFirst( lastCompositionStep.getNextMusicBlockExclusion() ) );
-			currentLength += nextStep.getComposeBlock().getRhythmValue();
 
-			if ( nextStep.getComposeBlock() != null || currentLength <= length ) {
+			if ( nextStep.getComposeBlock() != null && currentLength + nextStep.getComposeBlock().getRhythmValue() <= length ) {
+				currentLength += nextStep.getComposeBlock().getRhythmValue();
 				compositionSteps.add( nextStep );
+				if ( currentLength == length ) {
+					return compositionSteps;
+				}
 			} else {
 				if ( step != 0 ) {
 					// there is no pre last step if we can't create second element
@@ -94,6 +96,9 @@ public class FormBlockProvider {
 						preLastCompositionStep.addNextExclusion( lastCompositionStep.getComposeBlock() );
 					}
 					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
+					if ( compositionSteps.get( step - 1 ).getComposeBlock() != null ) {
+						currentLength -= compositionSteps.get( step - 1 ).getComposeBlock().getRhythmValue();
+					}
 					compositionSteps.remove( step - 1 );
 					step = step - 2;
 					continue;

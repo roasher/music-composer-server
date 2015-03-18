@@ -83,7 +83,7 @@ public class MusicBlock implements Serializable {
 	public MusicBlock( CompositionInfo inputCompositionInfo, List<MusicBlock> musicBlockList ) {
 		if ( musicBlockList != null && musicBlockList.size() > 0 ) {
 			List<Melody> melodyList = new ArrayList<>(  );
-			for ( int melodyNubmer = 0; melodyNubmer < musicBlockList.get( 0 ).getMelodyList().size(); melodyNubmer ++ ) {
+			for ( int melodyNumber = 0; melodyNumber < musicBlockList.get( 0 ).getMelodyList().size(); melodyNumber ++ ) {
 				melodyList.add( new Melody(  ) );
 			}
 			double rhythmValue = 0;
@@ -102,14 +102,11 @@ public class MusicBlock implements Serializable {
 			this.startTime = musicBlockList.get( 0 ).getStartTime();
 			setNext( musicBlockList.get( musicBlockList.size() - 1 ).getNext() );
 			setPrevious( musicBlockList.get( 0 ).getPrevious() );
-
+			// Tension and form stuff
+			// TODO implementation
 		} else {
 			throw new IllegalArgumentException( "Input music block in malformed ( null or zero-length )" );
 		}
-	}
-
-	public MusicBlock( List<MusicBlock> musicBlockList ) {
-		// TODO implementation
 	}
 
 	public String getForm() {

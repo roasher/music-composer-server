@@ -40,15 +40,69 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 	}
 
 	@Test
-	public void getComposeBlocksTest() {
+	public void isTwoLinked() {
+
+		MusicBlock musicBlock1 = mock( MusicBlock.class );
+		MusicBlock musicBlock2 = mock( MusicBlock.class );
+		MusicBlock musicBlock3 = mock( MusicBlock.class );
+		MusicBlock musicBlock4 = mock( MusicBlock.class );
 
 		List<MusicBlock> inputMusicBlock = new ArrayList<MusicBlock>(  );
+		inputMusicBlock.add( musicBlock1 );
+		inputMusicBlock.add( musicBlock2 );
+		inputMusicBlock.add( musicBlock3 );
+		inputMusicBlock.add( musicBlock4 );
+
+		when( musicBlockProvider.getAllPossibleNextVariants( any( MusicBlock.class ), any( List.class ) ) )
+		  .thenReturn( Arrays.asList( new MusicBlock[] { musicBlock2, musicBlock3 } ) )
+		  .thenReturn( Arrays.asList( new MusicBlock[] { musicBlock1, musicBlock3, musicBlock4 } ) )
+		  .thenReturn( Arrays.asList( new MusicBlock[] { musicBlock1, musicBlock2 } ) )
+		  .thenReturn( Arrays.asList( new MusicBlock[] { musicBlock2 } ) );
+
+		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock );
+
+		ComposeBlock composeBlock1 = null;
+		ComposeBlock composeBlock2 = null;
+		ComposeBlock composeBlock3 = null;
+		ComposeBlock composeBlock4 = null;
+		for ( ComposeBlock composeBlock : composeBlockList ) {
+			if ( composeBlock.getMusicBlock() == musicBlock1 ) composeBlock1 = composeBlock;
+			if ( composeBlock.getMusicBlock() == musicBlock2 ) composeBlock2 = composeBlock;
+			if ( composeBlock.getMusicBlock() == musicBlock3 ) composeBlock3 = composeBlock;
+			if ( composeBlock.getMusicBlock() == musicBlock4 ) composeBlock4 = composeBlock;
+		}
+
+		assertTrue( composeBlock1.getPossibleNextComposeBlocks().contains( composeBlock2 ) );
+		assertTrue( composeBlock1.getPossibleNextComposeBlocks().contains( composeBlock3 ) );
+		assertTrue( composeBlock1.getPossiblePreviousComposeBlocks().contains( composeBlock2 ) );
+		assertTrue( composeBlock1.getPossiblePreviousComposeBlocks().contains( composeBlock3 ) );
+
+		assertTrue( composeBlock2.getPossibleNextComposeBlocks().contains( composeBlock1 ) );
+		assertTrue( composeBlock2.getPossibleNextComposeBlocks().contains( composeBlock3 ) );
+		assertTrue( composeBlock2.getPossibleNextComposeBlocks().contains( composeBlock4 ) );
+		assertTrue( composeBlock2.getPossiblePreviousComposeBlocks().contains( composeBlock1 ) );
+		assertTrue( composeBlock2.getPossiblePreviousComposeBlocks().contains( composeBlock3 ) );
+		assertTrue( composeBlock2.getPossiblePreviousComposeBlocks().contains( composeBlock4 ) );
+
+		assertTrue( composeBlock3.getPossibleNextComposeBlocks().contains( composeBlock1 ) );
+		assertTrue( composeBlock3.getPossibleNextComposeBlocks().contains( composeBlock2 ) );
+		assertTrue( composeBlock3.getPossiblePreviousComposeBlocks().contains( composeBlock1 ) );
+		assertTrue( composeBlock3.getPossiblePreviousComposeBlocks().contains( composeBlock2 ) );
+
+		assertTrue( composeBlock4.getPossibleNextComposeBlocks().contains( composeBlock2 ) );
+		assertTrue( composeBlock4.getPossiblePreviousComposeBlocks().contains( composeBlock2 ) );
+	}
+
+	@Test
+	public void getComposeBlocksTest() {
+
 		MusicBlock musicBlock1 = mock( MusicBlock.class );
 		MusicBlock musicBlock2 = mock( MusicBlock.class );
 		MusicBlock musicBlock3 = mock( MusicBlock.class );
 		MusicBlock musicBlock4 = mock( MusicBlock.class );
 		MusicBlock musicBlock5 = mock( MusicBlock.class );
 
+		List<MusicBlock> inputMusicBlock = new ArrayList<MusicBlock>(  );
 		inputMusicBlock.add( musicBlock1 );
 		inputMusicBlock.add( musicBlock2 );
 		inputMusicBlock.add( musicBlock3 );

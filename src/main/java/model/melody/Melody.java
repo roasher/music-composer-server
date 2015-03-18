@@ -30,14 +30,6 @@ public class Melody extends Phrase {
         super();
     }
 
-	public static Melody gather( List<Melody> melodyList ) {
-		List<Note> noteList = new ArrayList<>(  );
-		for ( Melody melody : melodyList ) {
-			noteList.addAll( melody.getNoteList() );
-		}
-		return new Melody( noteList );
-	}
-
     public PlaceInTheComposition getPlaceInTheComposition() {
         return placeInTheComposition;
     }

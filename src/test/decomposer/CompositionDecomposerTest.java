@@ -2,9 +2,9 @@ package decomposer;
 
 import composer.MusicBlockProvider;
 import helper.AbstractSpringTest;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import jm.JMC;
 import jm.music.data.Note;
+import junit.framework.Assert;
 import model.ComposeBlock;
 import model.Lexicon;
 import model.MusicBlock;
@@ -12,6 +12,7 @@ import model.composition.Composition;
 import model.melody.Form;
 import model.melody.Melody;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,10 +23,13 @@ import utils.CompositionLoader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static jm.JMC.*;
 import static junit.framework.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -121,6 +125,41 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 	}
 
 	@Test
+	public void validBlockPossibleSurroundingTest() {
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ), Collections.<String>emptyList() );
+		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
+		for ( ComposeBlock composeBlock : lexicon.getComposeBlockList() ) {
+			boolean isFirst = composeBlock.getPossiblePreviousComposeBlocks().isEmpty() && composeBlock.getPossibleNextComposeBlocks().size() >= 1;
+			boolean isLast = composeBlock.getPossiblePreviousComposeBlocks().size() >= 1 && composeBlock.getPossibleNextComposeBlocks().isEmpty();
+			boolean isMiddle = composeBlock.getPossiblePreviousComposeBlocks().size() >= 1 && composeBlock.getPossibleNextComposeBlocks().size() >= 1;
+			assertTrue( isFirst || isLast || isMiddle );
+		}
+	}
+
+	@Test
+	public void possibleNextComposeBlocksTest() {
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ), Collections.<String>emptyList() );
+		Lexicon lexicon = compositionDecomposer.decompose( compositionList, WHOLE_NOTE );
+
+		ComposeBlock firstComposeBlock = null;
+		ComposeBlock secondPossibleComposeBlock = null;
+		for ( ComposeBlock  composeBlock : lexicon.getComposeBlockList() ) {
+			if ( composeBlock.getStartTime() == 8.0 && composeBlock.getMusicBlock().getCompositionInfo().getTitle().contains( "first" ) ) {
+				firstComposeBlock = composeBlock;
+			}
+			if ( composeBlock.getStartTime() == 8.5 && composeBlock.getMusicBlock().getCompositionInfo().getTitle().contains( "second" ) ) {
+				secondPossibleComposeBlock = composeBlock;
+			}
+		}
+		assertNotNull( firstComposeBlock );
+		Assert.assertNotNull( secondPossibleComposeBlock );
+
+		List<ComposeBlock> listOfPossibleMusicBlocks = firstComposeBlock.getPossibleNextComposeBlocks();
+		assertTrue( listOfPossibleMusicBlocks.contains( secondPossibleComposeBlock ) );
+	}
+
+	@Test
+	@Ignore
 	public void test() {
 		Composition composition = compositionLoader.getComposition( new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ) );
 		Lexicon lexicon = compositionDecomposer.decompose( composition, JMC.WHOLE_NOTE );

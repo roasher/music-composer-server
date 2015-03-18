@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,30 +18,30 @@ public class MusicBlockProvider {
 	private Logger logger = LoggerFactory.getLogger( getClass() );
 
 //	/**
-//	 * Returns first music block from lexicon except exclusion list that was found possible to be next to input currentMusicBlock
+//	 * Returns first music block from musicBlockList except exclusion list that was found possible to be next to input currentMusicBlock
 //	 * @param currentMusicBlock
-//	 * @param lexicon
+//	 * @param musicBlockList
 //	 * @param exclusion
 //	 * @return
 //	 */
-//	public MusicBlock getFirstConvenientMusicBlock( MusicBlock currentMusicBlock, List<MusicBlock> lexicon, List<MusicBlock> exclusion ) {
-//		List<MusicBlock> cloneLexicon = new ArrayList<>( lexicon );
+//	public MusicBlock getFirstConvenientMusicBlock( MusicBlock currentMusicBlock, List<MusicBlock> musicBlockList, List<MusicBlock> exclusion ) {
+//		List<MusicBlock> cloneLexicon = new ArrayList<>( musicBlockList );
 //		cloneLexicon.removeAll( exclusion );
 //		MusicBlock musicBlock = getFirstConvenientMusicBlock( currentMusicBlock, cloneLexicon );
 //		return musicBlock;
 //	}
 
 //	/**
-//	 * Returns first music block from lexicon that was found possible to be next to input currentMusicBlock
+//	 * Returns first music block from musicBlockList that was found possible to be next to input currentMusicBlock
 //	 * @param currentMusicBlock
-//	 * @param lexicon
+//	 * @param musicBlockList
 //	 * @return
 //	 */
-//	public MusicBlock getFirstConvenientMusicBlock( MusicBlock currentMusicBlock, List<MusicBlock> lexicon ) {
+//	public MusicBlock getFirstConvenientMusicBlock( MusicBlock currentMusicBlock, List<MusicBlock> musicBlockList ) {
 //		logger.debug( "Searching possible music block next to {}", currentMusicBlock );
 //		if ( currentMusicBlock == null ) {
-//			logger.debug( "Searching for first music block from the lexicon" );
-//			for ( MusicBlock musicBlock : lexicon ) {
+//			logger.debug( "Searching for first music block from the musicBlockList" );
+//			for ( MusicBlock musicBlock : musicBlockList ) {
 //				if ( musicBlock.getPrevious() == null ) {
 //					return musicBlock;
 //				}
@@ -50,7 +49,7 @@ public class MusicBlockProvider {
 //		} else if ( currentMusicBlock.getNext() == null ) {
 //			logger.info( "There is no music block after this one in the original composition." );
 //		} else {
-//			for ( MusicBlock musicBlock : lexicon ) {
+//			for ( MusicBlock musicBlock : musicBlockList ) {
 //				if ( canSubstitute( currentMusicBlock.getNext(), musicBlock ) ) {
 //					logger.info( "Possible next music block has been found: {}, {}", musicBlock.getCompositionInfo().getTitle(), musicBlock );
 //					canSubstitute( currentMusicBlock.getNext(), musicBlock );
@@ -58,8 +57,8 @@ public class MusicBlockProvider {
 //				}
 //			}
 //		}
-//		// If we didn't find the proper music block will return music block from the original composition if it is in input lexicon
-//		if ( currentMusicBlock != null && lexicon.contains( currentMusicBlock.getNext() ) ) {
+//		// If we didn't find the proper music block will return music block from the original composition if it is in input musicBlockList
+//		if ( currentMusicBlock != null && musicBlockList.contains( currentMusicBlock.getNext() ) ) {
 //			logger.warn( "Can't find proper music block. Returning next from the original composition." );
 //			return currentMusicBlock.getNext();
 //		} else {
@@ -71,32 +70,32 @@ public class MusicBlockProvider {
 	/**
      * // TODO TESTS
 	 * Retrieves all possible music blocks that can go after currentMusicBlock
-	 * If currentMusicBlock is null - function will return all first music blocks from the lexicon
+	 * If currentMusicBlock is null - function will return all first music blocks from the musicBlockList
 	 * @param currentMusicBlock
-	 * @param lexicon
+	 * @param musicBlockList - music block lexicon
 	 * @return
 	 */
-	public List<MusicBlock> getAllPossibleNextVariants( MusicBlock currentMusicBlock, List<MusicBlock> lexicon ) {
+	public List<MusicBlock> getAllPossibleNextVariants( MusicBlock currentMusicBlock, List<MusicBlock> musicBlockList ) {
 		logger.debug( "Searching for all possible music block next to {}", currentMusicBlock );
-		List<MusicBlock> musicBlockList = new ArrayList<>(  );
+		List<MusicBlock> possibleNext = new ArrayList<>(  );
 		if ( currentMusicBlock == null ) {
-			logger.debug( "Searching for first music blocks from the lexicon" );
-			for ( MusicBlock musicBlock : lexicon ) {
+			logger.debug( "Searching for first music blocks from the musicBlockList" );
+			for ( MusicBlock musicBlock : musicBlockList ) {
 				if ( musicBlock.getPrevious() == null ) {
-					musicBlockList.add( musicBlock );
+					possibleNext.add( musicBlock );
 				}
 			}
 		} else if ( currentMusicBlock.getNext() == null ) {
 			logger.info( "There is no music block after this one in the original composition." );
 		} else {
-			for ( MusicBlock musicBlock : lexicon ) {
+			for ( MusicBlock musicBlock : musicBlockList ) {
 				if ( canSubstitute( currentMusicBlock.getNext(), musicBlock ) ) {
-					logger.info( "Possible next music block has been found: {}, {}", musicBlock.getCompositionInfo().getTitle(), musicBlock );
-					musicBlockList.add( musicBlock );
+					logger.info( "Possible next music block has been found: {}", musicBlock );
+					possibleNext.add( musicBlock );
 				}
 			}
 		}
-		return musicBlockList;
+		return possibleNext;
 	}
 
 	/**
@@ -106,12 +105,14 @@ public class MusicBlockProvider {
 	 * @return
 	 */
 	public boolean canSubstitute( MusicBlock originBlock, MusicBlock substitutorBlock ) {
-		boolean totalEquality = originBlock.equals( substitutorBlock );
+//		boolean totalEquality = originBlock.equals( substitutorBlock );
 		boolean startIntervalPatternEquality = originBlock.getStartIntervalPattern().equals( substitutorBlock.getStartIntervalPattern() );
 		boolean blockMovementEquality = originBlock.getBlockMovementFromPreviousToThis().equals( substitutorBlock.getBlockMovementFromPreviousToThis() );
 		boolean correlatingTime = onCorrelatedTime( originBlock, substitutorBlock );
 
-		boolean canSubstitute = !totalEquality && startIntervalPatternEquality && blockMovementEquality && correlatingTime;
+//		boolean canSubstitute = !totalEquality && startIntervalPatternEquality && blockMovementEquality && correlatingTime;
+
+		boolean canSubstitute = startIntervalPatternEquality && blockMovementEquality && correlatingTime;
 		if ( canSubstitute ) {
 			logger.debug( "{} and {} has been considered substitutable", originBlock, substitutorBlock );
 		}

@@ -6,6 +6,7 @@ import helper.AbstractSpringTest;
 import jm.music.data.Note;
 import junit.framework.Assert;
 import model.melody.Melody;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class MelodyEqualityAnalyzerImplTest extends AbstractSpringTest {
 		Assert.assertFalse( melodyEqualityAnalyzer.isEqual( melody1, melody2 ) );
 	}
 
+	@Ignore
 	@Test
 	public void testCase2() {
 		Note[] notes1 = new Note[] {

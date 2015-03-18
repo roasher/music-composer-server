@@ -25,10 +25,17 @@ public class ComposeBlock {
         this.possiblePreviousComposeBlocks = possiblePreviousComposeBlocks;
     }
 
-	public ComposeBlock( MusicBlock musicBlock, List<MusicBlock> possibleNextMusicBlocks ) {
-		this.musicBlock = musicBlock;
-		for ( MusicBlock possibleNextMusicBlock : possibleNextMusicBlocks ) {
-			this.possibleNextComposeBlocks.add( new ComposeBlock( possibleNextMusicBlock ) );
+	public ComposeBlock( List<ComposeBlock> composeBlockList ) {
+		if ( composeBlockList != null && composeBlockList.size() != 0 ) {
+			List<MusicBlock> musicBlockList = new ArrayList<>();
+			for ( ComposeBlock composeBlock : composeBlockList ) {
+				musicBlockList.add( composeBlock.getMusicBlock() );
+			}
+			this.musicBlock = new MusicBlock( null, musicBlockList );
+			this.possiblePreviousComposeBlocks = composeBlockList.get( 0 ).getPossiblePreviousComposeBlocks();
+			this.possibleNextComposeBlocks = composeBlockList.get( composeBlockList.size() - 1 ).getPossibleNextComposeBlocks();
+		} else {
+			throw new RuntimeException( "Input compose block is malformed" );
 		}
 	}
 
@@ -47,4 +54,8 @@ public class ComposeBlock {
     public List<ComposeBlock> getPossiblePreviousComposeBlocks() {
         return possiblePreviousComposeBlocks;
     }
+
+	public double getStartTime() {
+		return this.musicBlock.getStartTime();
+	}
 }
