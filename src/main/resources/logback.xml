@@ -11,6 +11,7 @@
     <logger name="decomposer.SignatureDecomposer" level="DEBUG"/>
     <logger name="decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl" level="DEBUG"/>
     <logger name="composer.CompositionComposer" level="DEBUG"/>
+    <logger name="composer.FormBlockProvider" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

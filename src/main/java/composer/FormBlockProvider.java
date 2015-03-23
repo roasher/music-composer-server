@@ -29,8 +29,10 @@ public class FormBlockProvider {
 
 	/**
 	 * Generates new form block considering previously generated blocks and it's form.
-	 * @param form - form, from part of witch are going to be generated new Music Block
-	 * @param lexicon - Music Block's database
+	 * @param form - form, from part of witch new Block is going to be generated
+	 * @param length
+	 * @param previousSteps
+	 * @param lexicon
 	 * @return
 	 */
 	public ComposeBlock getFormElement( Form form, double length, List<CompositionStep> previousSteps, Lexicon lexicon ) {
@@ -55,12 +57,6 @@ public class FormBlockProvider {
 		return composeBlock;
 	}
 
-	/**
-	 * Composes first form block of the composition
-	 * @param length
-	 * @param lexicon
-	 * @return
-	 */
 	public ComposeBlock composeBlock( ComposeBlock previousComposeBlock, Lexicon lexicon, double length ) {
 		List<CompositionStep> compositionSteps = composeSteps( previousComposeBlock, lexicon, length );
 		List<ComposeBlock> composeBlocks = new ArrayList<>(  );
@@ -72,11 +68,12 @@ public class FormBlockProvider {
 
 	public List<CompositionStep> composeSteps( ComposeBlock composeBlock, Lexicon lexicon, double length ) {
 		List<CompositionStep> compositionSteps = new ArrayList<>(  );
+		// adding pre first step
 		compositionSteps.add( new CompositionStep( composeBlock ) );
 		double currentLength = 0;
 
 		for ( int step = 0; step < length / lexicon.getMinRhythmValue(); step++ ) {
-
+			logger.debug( "Current state {}", step );
 			CompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
 			CompositionStep nextStep = lastCompositionStep.getComposeBlock() != null ?
 					new CompositionStep( lexicon.getRandomNext( lastCompositionStep.getComposeBlock(), lastCompositionStep.getNextMusicBlockExclusion() ) ) :
@@ -86,6 +83,8 @@ public class FormBlockProvider {
 				currentLength += nextStep.getComposeBlock().getRhythmValue();
 				compositionSteps.add( nextStep );
 				if ( currentLength == length ) {
+					// removing prefirst step
+					compositionSteps.remove( 0 );
 					return compositionSteps;
 				}
 			} else {
@@ -108,7 +107,7 @@ public class FormBlockProvider {
 				}
 			}
 		}
-		return compositionSteps;
+		throw new RuntimeException( "Can't create new block" );
 	}
 
 	/**

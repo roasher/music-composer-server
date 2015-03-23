@@ -40,8 +40,7 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 
 	@Test
 	public void followTestCase() {
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ),
-		  Collections.<String>emptyList() );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 		Lexicon lexiconFromSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
 		MusicBlock current = lexiconFromFirst.get( 8 ).getMusicBlock();

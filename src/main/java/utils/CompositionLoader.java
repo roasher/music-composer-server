@@ -57,10 +57,10 @@ public class CompositionLoader {
         return getCompositionsFromFolder( folder, Collections.<String>emptyList() );
     }
 
-	public List< Composition > getCompositions( File ... files) {
+	public List< Composition > getCompositions( File ... files ) {
 		List< Composition > compositions = new ArrayList<>(  );
 		for ( File currentDirectory : files) {
-			compositions.add( getComposition(currentDirectory) );
+			compositions.add( getComposition( currentDirectory ) );
 		}
 		return compositions;
 	}

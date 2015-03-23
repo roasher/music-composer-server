@@ -50,7 +50,7 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	@Test
 //	@Ignore
 	public void getSimplePieceTest1() {
-		List< Composition > compositionList = compositionLoader.getCompositions( new File( "src\\test\\composer\\simpleMelodies" ) );
+		List< Composition > compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 		Composition composition = compositionComposer.compose( lexicon, "ABCD", 4 * JMC.WHOLE_NOTE );
 		assertEquals( 16., composition.getEndTime(), 0 );
@@ -61,13 +61,13 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	}
 
 	@Test
-    @Ignore
-	// TODO too slow
+//    @Ignore
+	// FIXME too slow
 	public void getRealPieceTest1() {
 		List< Composition > compositionList = compositionLoader.getCompositions(
 		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" )
-//		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.biosphere(midi).mid" )
-//		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" )
+//		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.biosphere(midi).mid" ),
+//		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ),
 //		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\Метания беспокойного разума.mid" )
 		);
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
