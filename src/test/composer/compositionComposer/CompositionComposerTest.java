@@ -61,7 +61,7 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	}
 
 	@Test
-//    @Ignore
+    @Ignore
 	// FIXME too slow
 	public void getRealPieceTest1() {
 		List< Composition > compositionList = compositionLoader.getCompositions(

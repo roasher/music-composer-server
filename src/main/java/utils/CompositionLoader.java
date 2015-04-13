@@ -1,5 +1,6 @@
 package utils;
 
+import database.StoreManager;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
@@ -78,7 +79,7 @@ public class CompositionLoader {
 		return composition;
 	}
 
-	public void roundAllRhythmValues( Composition composition ) {
+	private void roundAllRhythmValues( Composition composition ) {
 		for ( Part part : composition.getPartArray() ) {
 			for ( Phrase phrase : part.getPhraseArray() ) {
 				for ( Note note : phrase.getNoteArray() ) {

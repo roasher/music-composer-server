@@ -1,9 +1,12 @@
 package database;
 
-import model.melody.Melody;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import model.Lexicon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.*;
 
 /**
  * Class saves the results of work
@@ -11,46 +14,21 @@ import java.util.*;
  */
 public class StoreManager {
 
-    private String signatureStoreDir;
+	private String storeFile = "src\\main\\java\\database\\Lexicon.xml";
+	private XStream xStream = new XStream(  new DomDriver(  ) );
+	Logger logger = LoggerFactory.getLogger( getClass() );
 
-    /**
-     * Stores melodies into the melody store directory
-     * @param melodies
-     * @throws IOException
-     */
-    public void storeSignatures( Set<Melody> melodies ) throws IOException {
-        try ( FileOutputStream fileOutputStream = new FileOutputStream( signatureStoreDir );
-              ObjectOutputStream objectOutputStream = new ObjectOutputStream( fileOutputStream ); ) {
-            for ( Melody melody : melodies ) {
-                objectOutputStream.writeObject( melody );
-            }
-            objectOutputStream.flush();
-        }
-    }
+	public void store( Lexicon lexicon ) throws IOException {
+		logger.info( "Storing lexicon to file: {}", storeFile );
+		String lexiconXML = xStream.toXML( lexicon );
+		FileWriter fileWriter = new FileWriter( storeFile );
+		fileWriter.write( lexiconXML );
+	}
 
-    /**
-     * Retrieves melodies from melody store directory
-     * @return
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    public List<Melody> getStoredSignatures() throws IOException, ClassNotFoundException {
-        List<Melody> storedMelodies = new ArrayList<>();
-        try ( FileInputStream fileOutputStream = new FileInputStream( signatureStoreDir );
-              ObjectInputStream objectOutputStream = new ObjectInputStream( fileOutputStream ); ) {
-            Melody melody = null;
-            while ( ( melody = ( Melody ) objectOutputStream.readObject() ) != null ) {
-                storedMelodies.add( melody );
-            }
-        }
-        return storedMelodies;
-    }
+	public Lexicon fetch() {
+		logger.info( "Fetching lexicon from file: {}", storeFile );
+		Lexicon lexicon = ( Lexicon ) xStream.fromXML( storeFile );
+		return lexicon;
+	}
 
-    public String getSignatureStoreDir() {
-        return signatureStoreDir;
-    }
-
-    public void setSignatureStoreDir( String signatureStoreDir ) {
-        this.signatureStoreDir = signatureStoreDir;
-    }
 }

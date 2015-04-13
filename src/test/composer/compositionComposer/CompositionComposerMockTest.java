@@ -7,7 +7,6 @@ import decomposer.CompositionDecomposer;
 import helper.AbstractSpringTest;
 import jm.JMC;
 import jm.util.View;
-import junit.framework.Assert;
 import model.ComposeBlock;
 import model.Lexicon;
 import model.MusicBlock;
@@ -71,11 +70,11 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 		  .thenReturn( composeBlocks.get( 6 ) ).thenReturn( composeBlocks.get( 7 ) ).thenReturn( composeBlocks.get( 8 ) );
 
 		List<CompositionStep> compositionSteps = compositionComposer.composeSteps( null, "ABCD", JMC.WHOLE_NOTE );
-		Assert.assertEquals( 4, compositionSteps.size() );
-		Assert.assertEquals( 4., compositionSteps.get( 0 ).getComposeBlock().getStartTime() );
-		Assert.assertEquals( 5., compositionSteps.get( 1 ).getComposeBlock().getStartTime() );
-		Assert.assertEquals( 6., compositionSteps.get( 2 ).getComposeBlock().getStartTime() );
-		Assert.assertEquals( 7., compositionSteps.get( 3 ).getComposeBlock().getStartTime() );
+		assertEquals( 4, compositionSteps.size() );
+		assertEquals( 4., compositionSteps.get( 0 ).getComposeBlock().getStartTime() );
+		assertEquals( 5., compositionSteps.get( 1 ).getComposeBlock().getStartTime() );
+		assertEquals( 6., compositionSteps.get( 2 ).getComposeBlock().getStartTime() );
+		assertEquals( 7., compositionSteps.get( 3 ).getComposeBlock().getStartTime() );
 
 	}
 
@@ -93,11 +92,11 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 		  .thenReturn( composeBlocks.get( 6 ) ).thenReturn( composeBlocks.get( 7 ) ).thenReturn( composeBlocks.get( 8 ) );
 
 		List<CompositionStep> compositionSteps = compositionComposer.composeSteps( null, "ABCD", 2*JMC.WHOLE_NOTE );
-		Assert.assertEquals( 4, compositionSteps.size() );
-		Assert.assertEquals( 0., compositionSteps.get( 0 ).getComposeBlock().getStartTime() );
-		Assert.assertEquals( 1., compositionSteps.get( 1 ).getComposeBlock().getStartTime() );
-		Assert.assertEquals( 4., compositionSteps.get( 2 ).getComposeBlock().getStartTime() );
-		Assert.assertEquals( 5., compositionSteps.get( 3 ).getComposeBlock().getStartTime() );
+		assertEquals( 4, compositionSteps.size() );
+		assertEquals( 0., compositionSteps.get( 0 ).getComposeBlock().getStartTime() );
+		assertEquals( 1., compositionSteps.get( 1 ).getComposeBlock().getStartTime() );
+		assertEquals( 4., compositionSteps.get( 2 ).getComposeBlock().getStartTime() );
+		assertEquals( 5., compositionSteps.get( 3 ).getComposeBlock().getStartTime() );
 
 	}
 
@@ -115,7 +114,7 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 		  .thenReturn( composeBlocks.get( 6 ) ).thenReturn( composeBlocks.get( 7 ) ).thenReturn( composeBlocks.get( 8 ) );
 
 		List<CompositionStep> compositionSteps = compositionComposer.composeSteps( null, "ABCD", JMC.WHOLE_NOTE );
-		Assert.assertEquals( 0, compositionSteps.size() );
+		assertEquals( 0, compositionSteps.size() );
 	}
 
 	private ComposeBlock getMockComposeBlock( double mockStartTime ) {

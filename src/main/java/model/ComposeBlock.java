@@ -58,4 +58,9 @@ public class ComposeBlock {
 	public double getStartTime() {
 		return this.musicBlock.getStartTime();
 	}
+
+	@Override
+	public String toString() {
+		return this.musicBlock.toString();
+	}
 }

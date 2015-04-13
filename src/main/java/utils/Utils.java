@@ -119,25 +119,26 @@ public class Utils {
 				int melodiesAmount = parts.get( partNumber ).size();
 				Melody melody = composeBlock.getMusicBlock().getMelodyList().get( partNumber );
 				Melody newMelody = null;
-				if ( melodiesAmount == 0 ) {
+//				if ( melodiesAmount == 0 ) {
 					// First melody in partNumber part
 					newMelody = new Melody( melody.getNoteArray() );
-				} else {
-					// Need to bind first note of melody with previous if it has same pitch
-					Note newPhraseFirstNote = composeBlock.getMusicBlock().getMelodyList().get( partNumber ).getNoteArray()[0];
-					Phrase previousPhrase = parts.get( partNumber ).getPhrase( melodiesAmount - 1 );
-					Note previousPhraseLastNote = previousPhrase.getNote( previousPhrase.getNoteArray().length - 1 );
-					if ( newPhraseFirstNote.getPitch() == previousPhraseLastNote.getPitch() ) {
-						previousPhraseLastNote.setRhythmValue( previousPhraseLastNote.getRhythmValue() + newPhraseFirstNote.getRhythmValue(), true );
-						Note[] newNoteArray = Arrays.copyOfRange( melody.getNoteArray(), 1, melody.getNoteArray().length );
-						if ( newNoteArray.length == 0 ) {
-							continue;
-						}
-						newMelody = new Melody( newNoteArray );
-					} else {
-						newMelody = new Melody( melody.getNoteArray() );
-					}
-				}
+//				} else {
+				// TODO Need to clone all music blocks before gathering composition if we want to change rhythm values of some
+//					// Need to bind first note of melody with previous if it has same pitch
+//					Note newPhraseFirstNote = melody.getNoteArray()[0];
+//					Phrase previousPhrase = parts.get( partNumber ).getPhrase( melodiesAmount - 1 );
+//					Note previousPhraseLastNote = previousPhrase.getNote( previousPhrase.getNoteArray().length - 1 );
+//					if ( newPhraseFirstNote.getPitch() == previousPhraseLastNote.getPitch() ) {
+//						previousPhraseLastNote.setRhythmValue( previousPhraseLastNote.getRhythmValue() + newPhraseFirstNote.getRhythmValue(), true );
+//						Note[] newNoteArray = Arrays.copyOfRange( melody.getNoteArray(), 1, melody.getNoteArray().length );
+//						if ( newNoteArray.length == 0 ) {
+//							continue;
+//						}
+//						newMelody = new Melody( newNoteArray );
+//					} else {
+//						newMelody = new Melody( melody.getNoteArray() );
+//					}
+//				}
 				parts.get( partNumber ).add( newMelody );
 			}
 		}

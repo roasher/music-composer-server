@@ -37,9 +37,11 @@ public class Lexicon {
 		List<ComposeBlock> possibleNextComposeBlocks = currentBlock.getPossibleNextComposeBlocks();
 		possibleNextComposeBlocks.removeAll( exclusions );
 		if ( !possibleNextComposeBlocks.isEmpty() ) {
-			int randomNumber = ( int ) ( Math.random() * ( possibleNextComposeBlocks.size() - 1 ) );
-			logger.info( "Returning one of the next possible blocks randomly" );
-			return possibleNextComposeBlocks.get( randomNumber );
+//			int randomNumber = ( int ) ( Math.random() * ( possibleNextComposeBlocks.size() - 1 ) );
+			int randomNumber = 0;
+			ComposeBlock composeBlock = possibleNextComposeBlocks.get( randomNumber );
+			logger.info( "Returning one of the next possible blocks randomly: {}", composeBlock );
+			return composeBlock;
 		} else {
 			return null;
 		}
@@ -53,7 +55,8 @@ public class Lexicon {
 		List<ComposeBlock> allPossibleFirstBlocks = getAllPossibleFirst();
 		allPossibleFirstBlocks.removeAll( exclusions );
 		if ( !allPossibleFirstBlocks.isEmpty() ) {
-			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );
+//			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );
+			int randomNumber = 0;
 			logger.info( "Returning one of the blocks which are first in the original composition randomly" );
 			return allPossibleFirstBlocks.get( randomNumber );
 		} else {
