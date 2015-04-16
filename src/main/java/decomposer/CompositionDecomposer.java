@@ -7,6 +7,7 @@ import model.ComposeBlock;
 import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
+import model.composition.CompositionInfo;
 import model.melody.Melody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import utils.Recombinator;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -47,7 +49,7 @@ public class CompositionDecomposer {
     public List<MusicBlock> decomposeIntoMusicBlocks(Composition composition, double rhythmValue) {
 		// analyzing form
 		List< List< Melody > > melodyBlockList = formDecomposer.decompose( composition, rhythmValue );
-		// recombining result melodies into musicBlockList
+		// recombining result melodies into composeBlockList
 		List< List< Melody > > recombineList = recombinator.recombine( melodyBlockList );
 		// filling composition information
 		List< MusicBlock > lexiconMusicBlocks = new ArrayList< MusicBlock >();
@@ -109,7 +111,7 @@ public class CompositionDecomposer {
     }
 
 	/**
-	 * Decomposes compositions into musicBlockList
+	 * Decomposes compositions into composeBlockList
 	 * @param compositionList
 	 * @param rhythmValue
 	 * @return
@@ -119,9 +121,9 @@ public class CompositionDecomposer {
 		Lexicon dataBaseLexicon = lexiconDAO.fetch();
 
 		logger.info( "Deleting all blocks, build from other than input list compositions" );
-		List<ComposeBlock> trimmedComposedBlockList = trimToCompositions( dataBaseLexicon.getComposeBlockList(), compositionList, rhythmValue );
+		trimToCompositions( dataBaseLexicon.getComposeBlockList(), compositionList, rhythmValue );
 
-		logger.info( "Combining blocks from new compositinos" );
+		logger.info( "Combining blocks from new compositions" );
 		List< MusicBlock > musicBlockList = new ArrayList<>();
 		for ( Composition composition : compositionList ) {
 			if ( !dataBaseLexicon.getCompositionsInLexicon().contains( composition.getCompositionInfo() ) ) {
@@ -132,30 +134,66 @@ public class CompositionDecomposer {
 		List<ComposeBlock> composeBlockList = getComposeBlocks( musicBlockList );
 
 		logger.info( "Combining blocks from compositions and blocks from database" );
-		List<ComposeBlock> combinedComposeBlockList = union( trimmedComposedBlockList, composeBlockList );
+		List<ComposeBlock> combinedComposeBlockList = union( dataBaseLexicon.getComposeBlockList(), composeBlockList );
 
 		Lexicon lexicon = new Lexicon( combinedComposeBlockList );
         return lexicon;
 	}
 
 	/**
-	 * Deletes from musicBlockList all blocks that does not belong to compositions in composition list
-	 * @param musicBlockList
+	 * Deletes from composeBlockList all blocks that does not belong to compositions in composition list
+	 * @param composeBlockList
 	 * @param compositionList
 	 * @return
 	 */
-	private List<ComposeBlock> trimToCompositions ( List<ComposeBlock> musicBlockList, List<Composition> compositionList, double rhythmValue ) {
-		// TODO decide what to do with rhythm value. Does it need to be included in deleteAllBlocks... as an argument?
-		for ( Composition composition : compositionList ) {
-			logger.info( "Deleting music blocks belongs to composition: {}.", composition.getCompositionInfo() );
-			// TODO impl
+	private void trimToCompositions ( List<ComposeBlock> composeBlockList, List<Composition> compositionList, double rhythmValue ) {
+		for ( Iterator<ComposeBlock> composeBlockIterator = composeBlockList.iterator(); composeBlockIterator.hasNext(); ) {
+			ComposeBlock composeBlock = composeBlockIterator.next();
+			for ( Composition composition : compositionList ) {
+				if ( fromCompositionAndHasRhythmValue( composeBlock, composition.getCompositionInfo(), rhythmValue ) ) {
+					// Deleting all non convenient possible next/previous
+					for ( Iterator<ComposeBlock> possibleNextComposeBlockIterator = composeBlock.getPossibleNextComposeBlocks().iterator(); possibleNextComposeBlockIterator.hasNext(); ) {
+						ComposeBlock possibleNextComposeBlock = possibleNextComposeBlockIterator.next();
+						if ( !fromCompositionAndHasRhythmValue( possibleNextComposeBlock, composition.getCompositionInfo(), rhythmValue ) ) {
+							composeBlock.getPossibleNextComposeBlocks().remove( possibleNextComposeBlock );
+						}
+					}
+					for ( Iterator<ComposeBlock> possiblePreviousComposeBlockIterator = composeBlock.getPossiblePreviousComposeBlocks().iterator(); possiblePreviousComposeBlockIterator.hasNext(); ) {
+						ComposeBlock possiblePreviousComposeBlock = possiblePreviousComposeBlockIterator.next();
+						if ( !fromCompositionAndHasRhythmValue( possiblePreviousComposeBlock, composition.getCompositionInfo(), rhythmValue ) ) {
+							composeBlock.getPossibleNextComposeBlocks().remove( possiblePreviousComposeBlock );
+						}
+					}
+					continue;
+				} else {
+					composeBlockList.remove( composeBlock );
+				}
+			}
 		}
-		return null;
 	}
 
+	private boolean fromCompositionAndHasRhythmValue( ComposeBlock composeBlock, CompositionInfo compositionInfo, double rhythmValue) {
+		return composeBlock.getMusicBlock().getCompositionInfo().equals( compositionInfo ) && composeBlock.getMusicBlock().getRhythmValue() == rhythmValue;
+	}
+
+	/**
+	 * Unions but Changes both input Lists!!!
+	 * TODO impl cloning
+	 * @param firstComposeBlockList
+	 * @param secondComposeBlockList
+	 * @return
+	 */
 	private List<ComposeBlock> union( List<ComposeBlock> firstComposeBlockList, List<ComposeBlock> secondComposeBlockList ) {
-		List<ComposeBlock> union = new ArrayList<>(  );
-		// TODO Impl
+		List<ComposeBlock> union = new ArrayList<>( firstComposeBlockList );
+		union.addAll( secondComposeBlockList );
+		// adding the possible next/previous
+		for ( ComposeBlock firstComposeBlock : firstComposeBlockList ) {
+			for ( ComposeBlock secondComposeBlock : secondComposeBlockList ) {
+				if ( musicBlockProvider.canSubstitute( firstComposeBlock.getMusicBlock(), secondComposeBlock.getMusicBlock() ) ) {
+
+				}
+			}
+		}
 		return union;
 	}
 }

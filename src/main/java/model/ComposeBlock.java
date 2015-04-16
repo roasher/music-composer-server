@@ -11,6 +11,10 @@ public class ComposeBlock {
 
     private MusicBlock musicBlock;
 
+	// Links to the wrapper blocks in the original composition
+	private ComposeBlock previousComposeBlock;
+	private ComposeBlock nextComposeBlock;
+
     // Lists of possible next and previous Compose Blocks that has convenient voice leading in the original composition
     private List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>(  );
     private List<ComposeBlock> possiblePreviousComposeBlocks = new ArrayList<>(  );
@@ -19,10 +23,13 @@ public class ComposeBlock {
 		this.musicBlock = musicBlock;
 	}
 
-    public ComposeBlock( MusicBlock musicBlock, List<ComposeBlock> possibleNextComposeBlocks, List<ComposeBlock> possiblePreviousComposeBlocks ) {
+    public ComposeBlock( MusicBlock musicBlock, List<ComposeBlock> possibleNextComposeBlocks, List<ComposeBlock> possiblePreviousComposeBlocks, ComposeBlock previousComposeBlock, ComposeBlock nextComposeBlock ) {
         this.musicBlock = musicBlock;
         this.possibleNextComposeBlocks = possibleNextComposeBlocks;
         this.possiblePreviousComposeBlocks = possiblePreviousComposeBlocks;
+
+		this.previousComposeBlock = previousComposeBlock;
+		this.nextComposeBlock = nextComposeBlock;
     }
 
 	public ComposeBlock( List<ComposeBlock> composeBlockList ) {
@@ -34,6 +41,9 @@ public class ComposeBlock {
 			this.musicBlock = new MusicBlock( null, musicBlockList );
 			this.possiblePreviousComposeBlocks = composeBlockList.get( 0 ).getPossiblePreviousComposeBlocks();
 			this.possibleNextComposeBlocks = composeBlockList.get( composeBlockList.size() - 1 ).getPossibleNextComposeBlocks();
+
+			this.previousComposeBlock =  composeBlockList.get( 0 ).previousComposeBlock;
+			this.nextComposeBlock = composeBlockList.get( composeBlockList.size() - 1 ).nextComposeBlock;
 		} else {
 			throw new RuntimeException( "Input compose block is malformed" );
 		}
