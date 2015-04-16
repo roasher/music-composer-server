@@ -30,4 +30,5 @@ public class Composition extends jm.music.data.Score {
     public void setCompositionInfo( CompositionInfo compositionInfo ) {
         this.compositionInfo = compositionInfo;
     }
+
 }

@@ -1,6 +1,5 @@
 package utils;
 
-import database.StoreManager;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,9 +37,15 @@ public class CompositionLoader {
 		return nameArray;
 	}
 
-	public List < Composition > getCompositionsFromFolder( File directory, List<String> excludePatternList ) {
+	/**
+	 * Retrieve all midi composition from folder except those in exclude pattern list
+	 * @param folder
+	 * @param excludePatternList
+	 * @return
+	 */
+	public List < Composition > getCompositionsFromFolder( File folder, List<String> excludePatternList ) {
 		List< Composition > compositions = new ArrayList<Composition>(  );
-		List< File > listFiles = listFilesForFolder( directory );
+		List< File > listFiles = listFilesForFolder( folder );
 		for ( File currentFile : listFiles ) {
 			if ( !currentFile.getName().matches( ".*\\.mid" ) ) continue;
 			for ( String excludePattern : excludePatternList ) {
@@ -54,6 +58,11 @@ public class CompositionLoader {
 		return compositions;
 	}
 
+	/**
+	 * Retrieve all midi compositions from folders
+	 * @param folder
+	 * @return
+	 */
     public List< Composition > getCompositionsFromFolder( File folder ) {
         return getCompositionsFromFolder( folder, Collections.<String>emptyList() );
     }

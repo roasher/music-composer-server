@@ -63,4 +63,29 @@ public class ComposeBlock {
 	public String toString() {
 		return this.musicBlock.toString();
 	}
+
+	@Override public boolean equals( Object o ) {
+		if ( this == o )
+			return true;
+		if ( !( o instanceof ComposeBlock ) )
+			return false;
+
+		ComposeBlock that = ( ComposeBlock ) o;
+
+		if ( !musicBlock.equals( that.musicBlock ) )
+			return false;
+		if ( !possibleNextComposeBlocks.equals( that.possibleNextComposeBlocks ) )
+			return false;
+		if ( !possiblePreviousComposeBlocks.equals( that.possiblePreviousComposeBlocks ) )
+			return false;
+
+		return true;
+	}
+
+	@Override public int hashCode() {
+		int result = musicBlock.hashCode();
+		result = 31 * result + possibleNextComposeBlocks.hashCode();
+		result = 31 * result + possiblePreviousComposeBlocks.hashCode();
+		return result;
+	}
 }

@@ -28,9 +28,5 @@
         <property name="rhythmEqualityTest" ref="rhythmEqualityTestWrapper"/>
     </bean>
 
-    <bean id="StoreManager" class="database.StoreManager">
-        <property name="signatureStoreDir" value="D:\JAVA\dataBase"/>
-    </bean>
-
-    <context:component-scan base-package="model,decomposer,utils,composer"/>
+    <context:component-scan base-package="model,decomposer,utils,composer,database"/>
 </beans>

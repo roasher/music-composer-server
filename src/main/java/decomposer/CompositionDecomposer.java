@@ -1,16 +1,16 @@
 package decomposer;
 
 import composer.MusicBlockProvider;
+import database.LexiconDAO;
 import decomposer.form.FormDecomposer;
 import model.ComposeBlock;
 import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
 import model.melody.Melody;
-import org.springframework.beans.BeansException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import utils.Recombinator;
 
@@ -22,9 +22,7 @@ import java.util.List;
  * Created by Pavel Yurkin on 21.07.14.
  */
 @Component
-public class CompositionDecomposer implements ApplicationContextAware {
-
-    private ApplicationContext applicationContext;
+public class CompositionDecomposer {
 
 	@Autowired
 	private FormDecomposer formDecomposer;
@@ -35,6 +33,11 @@ public class CompositionDecomposer implements ApplicationContextAware {
     @Autowired
     private MusicBlockProvider musicBlockProvider;
 
+	@Autowired
+	private LexiconDAO lexiconDAO;
+
+	private Logger logger = LoggerFactory.getLogger( getClass() );
+
 	/**
 	 * Decomposes composition into music block list
 	 * @param composition
@@ -44,7 +47,7 @@ public class CompositionDecomposer implements ApplicationContextAware {
     public List<MusicBlock> decomposeIntoMusicBlocks(Composition composition, double rhythmValue) {
 		// analyzing form
 		List< List< Melody > > melodyBlockList = formDecomposer.decompose( composition, rhythmValue );
-		// recombining result melodies into lexicon
+		// recombining result melodies into musicBlockList
 		List< List< Melody > > recombineList = recombinator.recombine( melodyBlockList );
 		// filling composition information
 		List< MusicBlock > lexiconMusicBlocks = new ArrayList< MusicBlock >();
@@ -62,10 +65,9 @@ public class CompositionDecomposer implements ApplicationContextAware {
     }
 
     public Lexicon decompose( Composition composition, double rhythmValue ) {
-        List<MusicBlock> musicBlockList = decomposeIntoMusicBlocks( composition, rhythmValue );
-		List<ComposeBlock> composeBlockList = getComposeBlocks( musicBlockList );
-        Lexicon lexicon = new Lexicon( composeBlockList );
-        return lexicon;
+		List<Composition> compositionList = new ArrayList<>(  );
+		compositionList.add( composition );
+        return decompose( compositionList, rhythmValue );
     }
 
     /**
@@ -107,24 +109,53 @@ public class CompositionDecomposer implements ApplicationContextAware {
     }
 
 	/**
-	 * Decomposes compositions into lexicon
+	 * Decomposes compositions into musicBlockList
 	 * @param compositionList
 	 * @param rhythmValue
 	 * @return
 	 */
 	public Lexicon decompose ( List< Composition > compositionList, double rhythmValue ) {
+		logger.info( "Getting blocks from database" );
+		Lexicon dataBaseLexicon = lexiconDAO.fetch();
+
+		logger.info( "Deleting all blocks, build from other than input list compositions" );
+		List<ComposeBlock> trimmedComposedBlockList = trimToCompositions( dataBaseLexicon.getComposeBlockList(), compositionList, rhythmValue );
+
+		logger.info( "Combining blocks from new compositinos" );
 		List< MusicBlock > musicBlockList = new ArrayList<>();
 		for ( Composition composition : compositionList ) {
-			musicBlockList.addAll( decomposeIntoMusicBlocks(composition, rhythmValue) );
+			if ( !dataBaseLexicon.getCompositionsInLexicon().contains( composition.getCompositionInfo() ) ) {
+				logger.info( "Fetching blocks from composition: {}", composition.getCompositionInfo() );
+				musicBlockList.addAll( decomposeIntoMusicBlocks( composition, rhythmValue ) );
+			}
 		}
 		List<ComposeBlock> composeBlockList = getComposeBlocks( musicBlockList );
-		Lexicon lexicon = new Lexicon( composeBlockList );
+
+		logger.info( "Combining blocks from compositions and blocks from database" );
+		List<ComposeBlock> combinedComposeBlockList = union( trimmedComposedBlockList, composeBlockList );
+
+		Lexicon lexicon = new Lexicon( combinedComposeBlockList );
         return lexicon;
 	}
 
+	/**
+	 * Deletes from musicBlockList all blocks that does not belong to compositions in composition list
+	 * @param musicBlockList
+	 * @param compositionList
+	 * @return
+	 */
+	private List<ComposeBlock> trimToCompositions ( List<ComposeBlock> musicBlockList, List<Composition> compositionList, double rhythmValue ) {
+		// TODO decide what to do with rhythm value. Does it need to be included in deleteAllBlocks... as an argument?
+		for ( Composition composition : compositionList ) {
+			logger.info( "Deleting music blocks belongs to composition: {}.", composition.getCompositionInfo() );
+			// TODO impl
+		}
+		return null;
+	}
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
+	private List<ComposeBlock> union( List<ComposeBlock> firstComposeBlockList, List<ComposeBlock> secondComposeBlockList ) {
+		List<ComposeBlock> union = new ArrayList<>(  );
+		// TODO Impl
+		return union;
+	}
 }

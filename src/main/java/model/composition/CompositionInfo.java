@@ -49,6 +49,15 @@ public class CompositionInfo {
 		return result;
 	}
 
+	@Override public String toString() {
+		return "CompositionInfo{" +
+				"author='" + author + '\'' +
+				", title='" + title + '\'' +
+				", tempo=" + tempo +
+				", metre=" + metre +
+				'}';
+	}
+
 	public String getAuthor() {
         return author;
     }
