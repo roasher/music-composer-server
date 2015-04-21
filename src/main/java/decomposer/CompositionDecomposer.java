@@ -121,7 +121,7 @@ public class CompositionDecomposer {
 		Lexicon dataBaseLexicon = lexiconDAO.fetch();
 
 		logger.info( "Deleting all blocks, build from other than input list compositions" );
-		trimToCompositions( dataBaseLexicon.getComposeBlockList(), compositionList, rhythmValue );
+		trimToCompositions( dataBaseLexicon.getComposeBlockList(), compositionList );
 
 		logger.info( "Combining blocks from new compositions" );
 		List< MusicBlock > musicBlockList = new ArrayList<>();
@@ -146,39 +146,42 @@ public class CompositionDecomposer {
 	 * @param compositionList
 	 * @return
 	 */
-	private void trimToCompositions ( List<ComposeBlock> composeBlockList, List<Composition> compositionList, double rhythmValue ) {
+	private void trimToCompositions ( List<ComposeBlock> composeBlockList, List<Composition> compositionList ) {
 		for ( Iterator<ComposeBlock> composeBlockIterator = composeBlockList.iterator(); composeBlockIterator.hasNext(); ) {
 			ComposeBlock composeBlock = composeBlockIterator.next();
+			boolean foundInComposition = false;
 			for ( Composition composition : compositionList ) {
-				if ( fromCompositionAndHasRhythmValue( composeBlock, composition.getCompositionInfo(), rhythmValue ) ) {
+				if ( fromComposition( composeBlock, composition.getCompositionInfo() ) ) {
+					foundInComposition = true;
 					// Deleting all non convenient possible next/previous
 					for ( Iterator<ComposeBlock> possibleNextComposeBlockIterator = composeBlock.getPossibleNextComposeBlocks().iterator(); possibleNextComposeBlockIterator.hasNext(); ) {
 						ComposeBlock possibleNextComposeBlock = possibleNextComposeBlockIterator.next();
-						if ( !fromCompositionAndHasRhythmValue( possibleNextComposeBlock, composition.getCompositionInfo(), rhythmValue ) ) {
-							composeBlock.getPossibleNextComposeBlocks().remove( possibleNextComposeBlock );
+						if ( !fromComposition( possibleNextComposeBlock, composition.getCompositionInfo() ) ) {
+							possibleNextComposeBlockIterator.remove();
 						}
 					}
 					for ( Iterator<ComposeBlock> possiblePreviousComposeBlockIterator = composeBlock.getPossiblePreviousComposeBlocks().iterator(); possiblePreviousComposeBlockIterator.hasNext(); ) {
 						ComposeBlock possiblePreviousComposeBlock = possiblePreviousComposeBlockIterator.next();
-						if ( !fromCompositionAndHasRhythmValue( possiblePreviousComposeBlock, composition.getCompositionInfo(), rhythmValue ) ) {
-							composeBlock.getPossibleNextComposeBlocks().remove( possiblePreviousComposeBlock );
+						if ( !fromComposition( possiblePreviousComposeBlock, composition.getCompositionInfo() ) ) {
+							possiblePreviousComposeBlockIterator.remove();
 						}
 					}
 					continue;
-				} else {
-					composeBlockList.remove( composeBlock );
 				}
+			}
+			if ( !foundInComposition ) {
+				composeBlockIterator.remove();
 			}
 		}
 	}
 
-	private boolean fromCompositionAndHasRhythmValue( ComposeBlock composeBlock, CompositionInfo compositionInfo, double rhythmValue) {
-		return composeBlock.getMusicBlock().getCompositionInfo().equals( compositionInfo ) && composeBlock.getMusicBlock().getRhythmValue() == rhythmValue;
+	private boolean fromComposition( ComposeBlock composeBlock, CompositionInfo compositionInfo ) {
+		return composeBlock.getMusicBlock().getCompositionInfo().equals( compositionInfo );
 	}
 
 	/**
 	 * Unions but Changes both input Lists!!!
-	 * TODO impl cloning
+	 * TODO think of need to impl cloning ?
 	 * @param firstComposeBlockList
 	 * @param secondComposeBlockList
 	 * @return
@@ -190,7 +193,19 @@ public class CompositionDecomposer {
 		for ( ComposeBlock firstComposeBlock : firstComposeBlockList ) {
 			for ( ComposeBlock secondComposeBlock : secondComposeBlockList ) {
 				if ( musicBlockProvider.canSubstitute( firstComposeBlock.getMusicBlock(), secondComposeBlock.getMusicBlock() ) ) {
-
+					// We are assuming that first members of possiblePrevious and possibleNext list is taken from the original composition
+					if ( firstComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
+						firstComposeBlock.getPossiblePreviousComposeBlocks().get( 0 ).getPossibleNextComposeBlocks().add( secondComposeBlock );
+					}
+					if ( firstComposeBlock.getPossibleNextComposeBlocks().size() > 0 ) {
+						firstComposeBlock.getPossibleNextComposeBlocks().get( 0 ).getPossiblePreviousComposeBlocks().add( secondComposeBlock );
+					}
+					if ( secondComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
+						secondComposeBlock.getPossiblePreviousComposeBlocks().get( 0 ).getPossibleNextComposeBlocks().add( firstComposeBlock );
+					}
+					if ( secondComposeBlock.getPossibleNextComposeBlocks().size() > 0 ) {
+						secondComposeBlock.getPossibleNextComposeBlocks().get( 0 ).getPossiblePreviousComposeBlocks().add( firstComposeBlock );
+					}
 				}
 			}
 		}

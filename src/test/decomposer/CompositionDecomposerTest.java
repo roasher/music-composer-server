@@ -1,6 +1,7 @@
 package decomposer;
 
 import composer.MusicBlockProvider;
+import database.LexiconDAO;
 import helper.AbstractSpringTest;
 import jm.JMC;
 import jm.music.data.Note;
@@ -36,11 +37,8 @@ import static org.mockito.Mockito.when;
 
 public class CompositionDecomposerTest extends AbstractSpringTest {
 
-	@Autowired
-	private CompositionLoader compositionLoader;
-
-	@Autowired
-	private CompositionDecomposer compositionDecomposer;
+	@Autowired private CompositionLoader compositionLoader;
+	@Autowired private CompositionDecomposer compositionDecomposer;
 
 	@Test
 	public void getLexiconTest() {
@@ -152,7 +150,7 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 			}
 		}
 		assertNotNull( firstComposeBlock );
-		Assert.assertNotNull( secondPossibleComposeBlock );
+		assertNotNull( secondPossibleComposeBlock );
 
 		List<ComposeBlock> listOfPossibleMusicBlocks = firstComposeBlock.getPossibleNextComposeBlocks();
 		assertTrue( listOfPossibleMusicBlocks.contains( secondPossibleComposeBlock ) );

@@ -11,26 +11,14 @@ public class ComposeBlock {
 
     private MusicBlock musicBlock;
 
-	// Links to the wrapper blocks in the original composition
-	private ComposeBlock previousComposeBlock;
-	private ComposeBlock nextComposeBlock;
-
     // Lists of possible next and previous Compose Blocks that has convenient voice leading in the original composition
+	// We are assuming that first member of list is the original composition member - so all blocks except firsts and lasts will have at least one member in the list
     private List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>(  );
     private List<ComposeBlock> possiblePreviousComposeBlocks = new ArrayList<>(  );
 
 	public ComposeBlock( MusicBlock musicBlock ) {
 		this.musicBlock = musicBlock;
 	}
-
-    public ComposeBlock( MusicBlock musicBlock, List<ComposeBlock> possibleNextComposeBlocks, List<ComposeBlock> possiblePreviousComposeBlocks, ComposeBlock previousComposeBlock, ComposeBlock nextComposeBlock ) {
-        this.musicBlock = musicBlock;
-        this.possibleNextComposeBlocks = possibleNextComposeBlocks;
-        this.possiblePreviousComposeBlocks = possiblePreviousComposeBlocks;
-
-		this.previousComposeBlock = previousComposeBlock;
-		this.nextComposeBlock = nextComposeBlock;
-    }
 
 	public ComposeBlock( List<ComposeBlock> composeBlockList ) {
 		if ( composeBlockList != null && composeBlockList.size() != 0 ) {
@@ -42,8 +30,6 @@ public class ComposeBlock {
 			this.possiblePreviousComposeBlocks = composeBlockList.get( 0 ).getPossiblePreviousComposeBlocks();
 			this.possibleNextComposeBlocks = composeBlockList.get( composeBlockList.size() - 1 ).getPossibleNextComposeBlocks();
 
-			this.previousComposeBlock =  composeBlockList.get( 0 ).previousComposeBlock;
-			this.nextComposeBlock = composeBlockList.get( composeBlockList.size() - 1 ).nextComposeBlock;
 		} else {
 			throw new RuntimeException( "Input compose block is malformed" );
 		}
@@ -84,18 +70,34 @@ public class ComposeBlock {
 
 		if ( !musicBlock.equals( that.musicBlock ) )
 			return false;
-		if ( !possibleNextComposeBlocks.equals( that.possibleNextComposeBlocks ) )
+
+		// this will lead to stack overflow:
+//		if ( !possibleNextComposeBlocks.equals( that.possibleNextComposeBlocks ) )
+//			return false;
+//		if ( !possiblePreviousComposeBlocks.equals( that.possiblePreviousComposeBlocks ) )
+//			return false;
+
+		if ( possiblePreviousComposeBlocks.size() != that.possiblePreviousComposeBlocks.size() )
 			return false;
-		if ( !possiblePreviousComposeBlocks.equals( that.possiblePreviousComposeBlocks ) )
+		for ( int possiblePreviousComposeBlockNumber = 0; possiblePreviousComposeBlockNumber < possiblePreviousComposeBlocks.size(); possiblePreviousComposeBlockNumber++ ) {
+			if ( !possiblePreviousComposeBlocks.get( possiblePreviousComposeBlockNumber ).getMusicBlock().equals( that.possiblePreviousComposeBlocks.get( possiblePreviousComposeBlockNumber ).getMusicBlock() ) )
+				return false;
+		}
+
+		if ( possibleNextComposeBlocks.size() != that.possibleNextComposeBlocks.size() )
 			return false;
+		for ( int possibleNextComposeBlockNumber = 0; possibleNextComposeBlockNumber < possibleNextComposeBlocks.size(); possibleNextComposeBlockNumber++ ) {
+			if ( !possibleNextComposeBlocks.get( possibleNextComposeBlockNumber ).getMusicBlock().equals( that.possibleNextComposeBlocks.get( possibleNextComposeBlockNumber ).getMusicBlock() ) )
+				return false;
+		}
 
 		return true;
 	}
 
 	@Override public int hashCode() {
 		int result = musicBlock.hashCode();
-		result = 31 * result + possibleNextComposeBlocks.hashCode();
-		result = 31 * result + possiblePreviousComposeBlocks.hashCode();
+		result = 31 * result + possibleNextComposeBlocks.size();
+		result = 31 * result + possiblePreviousComposeBlocks.size();
 		return result;
 	}
 }

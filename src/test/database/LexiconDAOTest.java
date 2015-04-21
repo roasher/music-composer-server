@@ -33,18 +33,21 @@ public class LexiconDAOTest extends AbstractSpringTest {
 
 	@Before
 	public void before() throws IOException {
-		storeFile.toFile().delete();
+		deleteFile();
 		lexiconDAO.setStoreFile( storeFile.toFile() );
 	}
 
 	@After
 	public void after() {
-		// may delete the file
+		deleteFile();
+	}
 
+	private void deleteFile() {
+		storeFile.toFile().delete();
 	}
 
 	@Test
-	public void daoTest() throws IOException {
+	public void storeIdentityTest() throws IOException {
 
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
