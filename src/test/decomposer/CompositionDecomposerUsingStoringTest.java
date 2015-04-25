@@ -27,7 +27,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 	@Autowired CompositionLoader compositionLoader;
 	@Autowired LexiconDAO lexiconDAO;
 
-	public static final Path storeFile = Paths.get( "src\\main\\java\\database\\test\\Lexicon.xml" );
+	public static final Path storeFile = Paths.get( "src\\test\\database\\Lexicon.xml" );
 
 	@Before
 	public void before() throws IOException {

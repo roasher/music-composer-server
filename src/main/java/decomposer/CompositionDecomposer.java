@@ -149,30 +149,42 @@ public class CompositionDecomposer {
 	private void trimToCompositions ( List<ComposeBlock> composeBlockList, List<Composition> compositionList ) {
 		for ( Iterator<ComposeBlock> composeBlockIterator = composeBlockList.iterator(); composeBlockIterator.hasNext(); ) {
 			ComposeBlock composeBlock = composeBlockIterator.next();
-			boolean foundInComposition = false;
-			for ( Composition composition : compositionList ) {
-				if ( fromComposition( composeBlock, composition.getCompositionInfo() ) ) {
-					foundInComposition = true;
-					// Deleting all non convenient possible next/previous
-					for ( Iterator<ComposeBlock> possibleNextComposeBlockIterator = composeBlock.getPossibleNextComposeBlocks().iterator(); possibleNextComposeBlockIterator.hasNext(); ) {
-						ComposeBlock possibleNextComposeBlock = possibleNextComposeBlockIterator.next();
-						if ( !fromComposition( possibleNextComposeBlock, composition.getCompositionInfo() ) ) {
-							possibleNextComposeBlockIterator.remove();
-						}
+
+			if ( !isFromCompositionList( composeBlock, compositionList ) ) {
+				composeBlockIterator.remove();
+			} else {
+				// Deleting all non convenient possible next/previous
+				for ( Iterator<ComposeBlock> possibleNextComposeBlockIterator = composeBlock.getPossibleNextComposeBlocks().iterator(); possibleNextComposeBlockIterator.hasNext(); ) {
+					ComposeBlock possibleNextComposeBlock = possibleNextComposeBlockIterator.next();
+					if ( !isFromCompositionList( possibleNextComposeBlock, compositionList ) ) {
+						possibleNextComposeBlockIterator.remove();
 					}
-					for ( Iterator<ComposeBlock> possiblePreviousComposeBlockIterator = composeBlock.getPossiblePreviousComposeBlocks().iterator(); possiblePreviousComposeBlockIterator.hasNext(); ) {
-						ComposeBlock possiblePreviousComposeBlock = possiblePreviousComposeBlockIterator.next();
-						if ( !fromComposition( possiblePreviousComposeBlock, composition.getCompositionInfo() ) ) {
-							possiblePreviousComposeBlockIterator.remove();
-						}
+				}
+				for ( Iterator<ComposeBlock> possiblePreviousComposeBlockIterator = composeBlock.getPossiblePreviousComposeBlocks().iterator(); possiblePreviousComposeBlockIterator.hasNext(); ) {
+					ComposeBlock possiblePreviousComposeBlock = possiblePreviousComposeBlockIterator.next();
+					if ( !isFromCompositionList( possiblePreviousComposeBlock, compositionList ) ) {
+						possiblePreviousComposeBlockIterator.remove();
 					}
-					continue;
 				}
 			}
-			if ( !foundInComposition ) {
-				composeBlockIterator.remove();
+		}
+	}
+
+	/**
+	 * Finds if input block's original composition is in composition list
+	 * @param composeBlock
+	 * @param compositionList
+	 * @return
+	 */
+	private boolean isFromCompositionList( ComposeBlock composeBlock, List<Composition> compositionList ) {
+		boolean fromCompositionList = false;
+		for ( Composition composition : compositionList ) {
+			if ( composeBlock.getMusicBlock().getCompositionInfo().equals( composition.getCompositionInfo() ) ) {
+				fromCompositionList = true;
+				break;
 			}
 		}
+		return fromCompositionList;
 	}
 
 	private boolean fromComposition( ComposeBlock composeBlock, CompositionInfo compositionInfo ) {
@@ -194,16 +206,20 @@ public class CompositionDecomposer {
 			for ( ComposeBlock secondComposeBlock : secondComposeBlockList ) {
 				if ( musicBlockProvider.canSubstitute( firstComposeBlock.getMusicBlock(), secondComposeBlock.getMusicBlock() ) ) {
 					// We are assuming that first members of possiblePrevious and possibleNext list is taken from the original composition
-					if ( firstComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
+					if ( firstComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 &&
+					  !firstComposeBlock.getPossiblePreviousComposeBlocks().get( 0 ).getPossibleNextComposeBlocks().contains( secondComposeBlock ) ) {
 						firstComposeBlock.getPossiblePreviousComposeBlocks().get( 0 ).getPossibleNextComposeBlocks().add( secondComposeBlock );
 					}
-					if ( firstComposeBlock.getPossibleNextComposeBlocks().size() > 0 ) {
+					if ( firstComposeBlock.getPossibleNextComposeBlocks().size() > 0 &&
+					  !firstComposeBlock.getPossibleNextComposeBlocks().get( 0 ).getPossiblePreviousComposeBlocks().contains( secondComposeBlock ) ) {
 						firstComposeBlock.getPossibleNextComposeBlocks().get( 0 ).getPossiblePreviousComposeBlocks().add( secondComposeBlock );
 					}
-					if ( secondComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
+					if ( secondComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 &&
+					  !secondComposeBlock.getPossiblePreviousComposeBlocks().get( 0 ).getPossibleNextComposeBlocks().contains( firstComposeBlock ) ) {
 						secondComposeBlock.getPossiblePreviousComposeBlocks().get( 0 ).getPossibleNextComposeBlocks().add( firstComposeBlock );
 					}
-					if ( secondComposeBlock.getPossibleNextComposeBlocks().size() > 0 ) {
+					if ( secondComposeBlock.getPossibleNextComposeBlocks().size() > 0 &&
+					  !secondComposeBlock.getPossibleNextComposeBlocks().get( 0 ).getPossiblePreviousComposeBlocks().contains( firstComposeBlock ) ) {
 						secondComposeBlock.getPossibleNextComposeBlocks().get( 0 ).getPossiblePreviousComposeBlocks().add( firstComposeBlock );
 					}
 				}

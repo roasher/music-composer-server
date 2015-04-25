@@ -24,6 +24,9 @@ public class LexiconDAO {
 
 	public void store( Lexicon lexicon ) throws IOException {
 		logger.info( "Storing lexicon to file: {}", storeFile );
+		if ( !storeFile.exists() ) {
+			storeFile.createNewFile();
+		}
 		String lexiconXML = xStream.toXML( lexicon );
 		try( FileWriter fileWriter = new FileWriter( storeFile ) ) {
 			fileWriter.write( lexiconXML );

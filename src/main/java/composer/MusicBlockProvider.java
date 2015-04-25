@@ -107,7 +107,15 @@ public class MusicBlockProvider {
 	public boolean canSubstitute( MusicBlock originBlock, MusicBlock substitutorBlock ) {
 //		boolean totalEquality = originBlock.equals( substitutorBlock );
 		boolean startIntervalPatternEquality = originBlock.getStartIntervalPattern().equals( substitutorBlock.getStartIntervalPattern() );
-		boolean blockMovementEquality = originBlock.getBlockMovementFromPreviousToThis().equals( substitutorBlock.getBlockMovementFromPreviousToThis() );
+		boolean blockMovementEquality;
+		if ( originBlock.getBlockMovementFromPreviousToThis() == null && substitutorBlock.getBlockMovementFromPreviousToThis() == null ) {
+			blockMovementEquality = true;
+		} else if ( originBlock.getBlockMovementFromPreviousToThis() != null && substitutorBlock.getBlockMovementFromPreviousToThis() != null ) {
+			blockMovementEquality = originBlock.getBlockMovementFromPreviousToThis().equals( substitutorBlock.getBlockMovementFromPreviousToThis() );
+		} else {
+			blockMovementEquality = false;
+		}
+
 		boolean correlatingTime = onCorrelatedTime( originBlock, substitutorBlock );
 
 //		boolean canSubstitute = !totalEquality && startIntervalPatternEquality && blockMovementEquality && correlatingTime;
