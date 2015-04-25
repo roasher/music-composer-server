@@ -2,8 +2,11 @@ package decomposer;
 
 import composer.MusicBlockProvider;
 import helper.AbstractSpringTest;
+import jm.JMC;
 import model.ComposeBlock;
+import model.Lexicon;
 import model.MusicBlock;
+import model.composition.Composition;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -12,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import utils.CompositionLoader;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

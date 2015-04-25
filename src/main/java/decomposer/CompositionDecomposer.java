@@ -101,10 +101,13 @@ public class CompositionDecomposer {
 					// Using "==" is legal
 					if ( musicBlock == anotherComposeBlockWrapper.composeBlock.getMusicBlock() ) {
 						composeBlockWrapper.composeBlock.getPossibleNextComposeBlocks().add( anotherComposeBlockWrapper.composeBlock );
-						anotherComposeBlockWrapper.composeBlock.getPossiblePreviousComposeBlocks().add( composeBlockWrapper.composeBlock );
+						if ( composeBlockWrapper.composeBlock.getMusicBlock().getNext() == anotherComposeBlockWrapper.composeBlock.getMusicBlock() ) {
+							anotherComposeBlockWrapper.composeBlock.getPossiblePreviousComposeBlocks().add( 0, composeBlockWrapper.composeBlock );
+						} else {
+							anotherComposeBlockWrapper.composeBlock.getPossiblePreviousComposeBlocks().add( composeBlockWrapper.composeBlock );
+						}
 					}
 				}
-//				musicBlock.getPossiblePreviousComposeBlocks().add( composeBlockWrapper );
 			}
 		}
         return composeBlockList;
@@ -199,32 +202,35 @@ public class CompositionDecomposer {
 	 * @return
 	 */
 	private List<ComposeBlock> union( List<ComposeBlock> firstComposeBlockList, List<ComposeBlock> secondComposeBlockList ) {
-		List<ComposeBlock> union = new ArrayList<>( firstComposeBlockList );
-		union.addAll( secondComposeBlockList );
 		// adding the possible next/previous
 		for ( ComposeBlock firstComposeBlock : firstComposeBlockList ) {
 			for ( ComposeBlock secondComposeBlock : secondComposeBlockList ) {
 				if ( musicBlockProvider.canSubstitute( firstComposeBlock.getMusicBlock(), secondComposeBlock.getMusicBlock() ) ) {
 					// We are assuming that first members of possiblePrevious and possibleNext list is taken from the original composition
-					if ( firstComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 &&
-					  !firstComposeBlock.getPossiblePreviousComposeBlocks().get( 0 ).getPossibleNextComposeBlocks().contains( secondComposeBlock ) ) {
-						firstComposeBlock.getPossiblePreviousComposeBlocks().get( 0 ).getPossibleNextComposeBlocks().add( secondComposeBlock );
+					if ( firstComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
+						ComposeBlock originalPreviousFirst = firstComposeBlock.getPossiblePreviousComposeBlocks().get( 0 );
+						if ( !secondComposeBlock.getPossiblePreviousComposeBlocks().contains( originalPreviousFirst ) ) {
+							secondComposeBlock.getPossiblePreviousComposeBlocks().add( originalPreviousFirst );
+						}
+						if ( !originalPreviousFirst.getPossibleNextComposeBlocks().contains( secondComposeBlock ) ) {
+							originalPreviousFirst.getPossibleNextComposeBlocks().add( secondComposeBlock );
+						}
 					}
-					if ( firstComposeBlock.getPossibleNextComposeBlocks().size() > 0 &&
-					  !firstComposeBlock.getPossibleNextComposeBlocks().get( 0 ).getPossiblePreviousComposeBlocks().contains( secondComposeBlock ) ) {
-						firstComposeBlock.getPossibleNextComposeBlocks().get( 0 ).getPossiblePreviousComposeBlocks().add( secondComposeBlock );
-					}
-					if ( secondComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 &&
-					  !secondComposeBlock.getPossiblePreviousComposeBlocks().get( 0 ).getPossibleNextComposeBlocks().contains( firstComposeBlock ) ) {
-						secondComposeBlock.getPossiblePreviousComposeBlocks().get( 0 ).getPossibleNextComposeBlocks().add( firstComposeBlock );
-					}
-					if ( secondComposeBlock.getPossibleNextComposeBlocks().size() > 0 &&
-					  !secondComposeBlock.getPossibleNextComposeBlocks().get( 0 ).getPossiblePreviousComposeBlocks().contains( firstComposeBlock ) ) {
-						secondComposeBlock.getPossibleNextComposeBlocks().get( 0 ).getPossiblePreviousComposeBlocks().add( firstComposeBlock );
+
+					if ( secondComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
+						ComposeBlock originalPreviousSecond = secondComposeBlock.getPossiblePreviousComposeBlocks().get( 0 );
+						if ( !firstComposeBlock.getPossiblePreviousComposeBlocks().contains( originalPreviousSecond ) ) {
+							firstComposeBlock.getPossiblePreviousComposeBlocks().add( originalPreviousSecond );
+						}
+						if ( !originalPreviousSecond.getPossibleNextComposeBlocks().contains( firstComposeBlock ) ) {
+							originalPreviousSecond.getPossibleNextComposeBlocks().add( firstComposeBlock );
+						}
 					}
 				}
 			}
 		}
+		List<ComposeBlock> union = new ArrayList<>( firstComposeBlockList );
+		union.addAll( secondComposeBlockList );
 		return union;
 	}
 }

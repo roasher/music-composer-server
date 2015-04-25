@@ -163,4 +163,24 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 		Lexicon lexicon = compositionDecomposer.decompose( composition, JMC.WHOLE_NOTE );
 	}
 
+	/**
+	 * Tests if first possible next and previous is exact blocks from the original composition
+	 */
+	@Test
+	public void isFirstPossibleFromOriginalComposition() {
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
+		// Decompose all melodies
+		Lexicon lexiconFull = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
+		for ( ComposeBlock composeBlock : lexiconFull.getComposeBlockList() ) {
+			if ( composeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
+				ComposeBlock originPrevious = composeBlock.getPossiblePreviousComposeBlocks().get( 0 );
+				assertEquals( composeBlock.getMusicBlock().getPrevious(), originPrevious.getMusicBlock() );
+			}
+			if ( composeBlock.getPossibleNextComposeBlocks().size() > 0 ) {
+				ComposeBlock originNext = composeBlock.getPossibleNextComposeBlocks().get( 0 );
+				assertEquals( composeBlock.getMusicBlock().getNext(), originNext.getMusicBlock() );
+			}
+		}
+	}
+
 }

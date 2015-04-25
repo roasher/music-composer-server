@@ -71,23 +71,31 @@ public class ComposeBlock {
 		if ( !musicBlock.equals( that.musicBlock ) )
 			return false;
 
-		// this will lead to stack overflow:
-//		if ( !possibleNextComposeBlocks.equals( that.possibleNextComposeBlocks ) )
-//			return false;
-//		if ( !possiblePreviousComposeBlocks.equals( that.possiblePreviousComposeBlocks ) )
-//			return false;
-
 		if ( possiblePreviousComposeBlocks.size() != that.possiblePreviousComposeBlocks.size() )
 			return false;
-		for ( int possiblePreviousComposeBlockNumber = 0; possiblePreviousComposeBlockNumber < possiblePreviousComposeBlocks.size(); possiblePreviousComposeBlockNumber++ ) {
-			if ( !possiblePreviousComposeBlocks.get( possiblePreviousComposeBlockNumber ).getMusicBlock().equals( that.possiblePreviousComposeBlocks.get( possiblePreviousComposeBlockNumber ).getMusicBlock() ) )
+
+		for ( ComposeBlock thisPossiblePreviousComposeBlock : this.possiblePreviousComposeBlocks ) {
+			boolean isInList = false;
+			for ( ComposeBlock thatPossiblePreviousComposeBlock : that.possiblePreviousComposeBlocks ) {
+				if ( thisPossiblePreviousComposeBlock.getMusicBlock().equals( thatPossiblePreviousComposeBlock.getMusicBlock() ) ) {
+					isInList = true;
+				}
+			}
+			if ( !isInList )
 				return false;
 		}
 
 		if ( possibleNextComposeBlocks.size() != that.possibleNextComposeBlocks.size() )
 			return false;
-		for ( int possibleNextComposeBlockNumber = 0; possibleNextComposeBlockNumber < possibleNextComposeBlocks.size(); possibleNextComposeBlockNumber++ ) {
-			if ( !possibleNextComposeBlocks.get( possibleNextComposeBlockNumber ).getMusicBlock().equals( that.possibleNextComposeBlocks.get( possibleNextComposeBlockNumber ).getMusicBlock() ) )
+
+		for ( ComposeBlock thisPossibleNextComposeBlock : this.possibleNextComposeBlocks ) {
+			boolean isInList = false;
+			for ( ComposeBlock thatPossibleNextComposeBlock : that.possibleNextComposeBlocks ) {
+				if ( thisPossibleNextComposeBlock.getMusicBlock().equals( thatPossibleNextComposeBlock.getMusicBlock() ) ) {
+					isInList = true;
+				}
+			}
+			if ( !isInList )
 				return false;
 		}
 

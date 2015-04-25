@@ -1,6 +1,7 @@
 package composer;
 
 import com.sun.java.swing.plaf.motif.resources.motif_ko;
+import com.sun.org.apache.bcel.internal.generic.MULTIANEWARRAY;
 import decomposer.CompositionDecomposer;
 import helper.AbstractSpringTest;
 import jm.JMC;
@@ -43,9 +44,16 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 		Lexicon lexiconFromSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
-		MusicBlock current = lexiconFromFirst.get( 8 ).getMusicBlock();
-		MusicBlock next = lexiconFromSecond.get( 13 ).getMusicBlock();
+		MusicBlock current;
+		MusicBlock next;
+
+		current = lexiconFromFirst.get( 8 ).getMusicBlock();
+		next = lexiconFromSecond.get( 13 ).getMusicBlock();
 		assertTrue( musicBlockProvider.canSubstitute( current, next ) );
+
+		current = lexiconFromFirst.get( 1 ).getMusicBlock();
+		next = lexiconFromSecond.get( 1 ).getMusicBlock();
+		assertFalse( musicBlockProvider.canSubstitute( current, next ) );
 	}
 
 	@Test
@@ -114,17 +122,27 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 		doReturn( true ).doReturn( true ).doReturn( false).doReturn( false ).doReturn( true ).doReturn( false )
 		  .when( mockProvider ).canSubstitute( any( MusicBlock.class ), any( MusicBlock.class ) );
 
-		MusicBlock musicBlock = mock( MusicBlock.class );
-		when( musicBlock.getNext() ).thenReturn( musicBlock );
+		MusicBlock musicBlock0 = mock( MusicBlock.class );
+		MusicBlock musicBlock1 = mock( MusicBlock.class );
+		MusicBlock musicBlock2 = mock( MusicBlock.class );
+		MusicBlock musicBlock3 = mock( MusicBlock.class );
+		MusicBlock musicBlock4 = mock( MusicBlock.class );
+
+		when( musicBlock0.getNext() ).thenReturn( musicBlock1 );
+		when( musicBlock1.getNext() ).thenReturn( musicBlock2 );
+		when( musicBlock2.getNext() ).thenReturn( musicBlock3 );
+		when( musicBlock3.getNext() ).thenReturn( musicBlock4 );
+		when( musicBlock4.getNext() ).thenReturn( null );
 
 		List<MusicBlock> musicBlockList = new ArrayList<>(  );
-		musicBlockList.add( musicBlock );
-		musicBlockList.add( musicBlock );
-		musicBlockList.add( musicBlock );
-		musicBlockList.add( musicBlock );
-		musicBlockList.add( musicBlock );
+		musicBlockList.add( musicBlock0 );
+		musicBlockList.add( musicBlock1 );
+		musicBlockList.add( musicBlock2 );
+		musicBlockList.add( musicBlock3 );
+		musicBlockList.add( musicBlock4 );
 
-		List<MusicBlock> possibleNext = mockProvider.getAllPossibleNextVariants( musicBlock, musicBlockList );
+		List<MusicBlock> possibleNext = mockProvider.getAllPossibleNextVariants( musicBlock0, musicBlockList );
 		assertEquals( 3, possibleNext.size() );
+		assertEquals( musicBlock1, possibleNext.get( 0 ) );
 	}
 }

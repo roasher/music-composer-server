@@ -68,9 +68,9 @@ public class MusicBlockProvider {
 //	}
 
 	/**
-     * // TODO TESTS
 	 * Retrieves all possible music blocks that can go after currentMusicBlock
 	 * If currentMusicBlock is null - function will return all first music blocks from the musicBlockList
+	 * First possible next variant - Music block from original composition
 	 * @param currentMusicBlock
 	 * @param musicBlockList - music block lexicon
 	 * @return
@@ -88,8 +88,9 @@ public class MusicBlockProvider {
 		} else if ( currentMusicBlock.getNext() == null ) {
 			logger.info( "There is no music block after this one in the original composition." );
 		} else {
+			possibleNext.add( currentMusicBlock.getNext() );
 			for ( MusicBlock musicBlock : musicBlockList ) {
-				if ( canSubstitute( currentMusicBlock.getNext(), musicBlock ) ) {
+				if ( currentMusicBlock.getNext() != musicBlock && canSubstitute( currentMusicBlock.getNext(), musicBlock ) ) {
 					logger.info( "Possible next music block has been found: {}", musicBlock );
 					possibleNext.add( musicBlock );
 				}
