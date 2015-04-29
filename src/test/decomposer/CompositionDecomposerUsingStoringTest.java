@@ -1,6 +1,6 @@
 package decomposer;
 
-import database.LexiconDAO;
+import persistance.dao.LexiconDAO;
 import helper.AbstractSpringTest;
 import jm.JMC;
 import model.Lexicon;
@@ -28,27 +28,10 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 	@Autowired CompositionLoader compositionLoader;
 	@Autowired LexiconDAO lexiconDAO;
 
-	public static final Path storeFile = Paths.get( "src\\test\\database\\Lexicon.xml" );
-
-	@Before
-	public void before() throws IOException {
-		deleteFile();
-		lexiconDAO.setStoreFile( storeFile.toFile() );
-	}
-
-	@After
-	public void after() {
-		deleteFile();
-	}
-
-	private void deleteFile() {
-		storeFile.toFile().delete();
-	}
-
 	@Test
 	public void decomposeWithOrWithoutStoringEqual() throws IOException {
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
-		// first decompose with no database
+		// first decompose with no persistance
 		Lexicon lexiconWithoutDB = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 		lexiconDAO.store( lexiconWithoutDB );
 

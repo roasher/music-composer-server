@@ -13,6 +13,9 @@
         <jmusic.version>1.6.4</jmusic.version>
         <logback.version>1.1.2</logback.version>
         <xstream.version>1.4.8</xstream.version>
+
+        <h2.verstion>1.4.187</h2.verstion>
+        <hibernate.version>3.5.4-Final</hibernate.version>
     </properties>
 
     <dependencies>
@@ -76,6 +79,31 @@
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <version>${xstream.version}</version>
+        </dependency>
+
+        <!--Persitance layer-->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.verstion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
         </dependency>
 
     </dependencies>

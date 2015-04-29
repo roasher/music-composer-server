@@ -1,32 +1,29 @@
-package database;
+package persistance.dao;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import model.ComposeBlock;
 import model.Lexicon;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.util.ArrayList;
 
 /**
  * Class saves the results of work
  * Created by Pavel Yurkin on 01.08.14.
  */
 @Component
-public class LexiconDAO {
+public class LexiconDAO_XStreamImpl extends AbstractLexiconDAO {
 
-	private File storeFile = new File( "src\\main\\java\\database\\Lexicon.xml" );
-	private XStream xStream = new XStream(  new DomDriver(  ) );
-	Logger logger = LoggerFactory.getLogger( getClass() );
+	private File storeFile = getStoreFile();
 
-	public void store( Lexicon lexicon ) throws IOException {
-		logger.info( "Storing lexicon to file: {}", storeFile );
-		if ( !storeFile.exists() ) {
-			storeFile.createNewFile();
-		}
+	private XStream xStream;
+	{
+		xStream = new XStream( new DomDriver(  ) );
+//		xStream.omitField( MusicBlock.class, "next" );
+//		xStream.omitField( MusicBlock.class, "previous" );
+	}
+
+	@Override public void storeInFile( Lexicon lexicon ) throws IOException {
 		String lexiconXML = xStream.toXML( lexicon );
 		try( FileWriter fileWriter = new FileWriter( storeFile ) ) {
 			fileWriter.write( lexiconXML );
@@ -34,7 +31,7 @@ public class LexiconDAO {
 		}
 	}
 
-	public Lexicon fetch() {
+	@Override public Lexicon fetch() {
 		logger.info( "Fetching lexicon from file: {}", storeFile );
 		Lexicon lexicon;
 		if ( storeFile.exists() ) {
@@ -44,13 +41,5 @@ public class LexiconDAO {
 			lexicon = Lexicon.getBlankLexicon();
 		}
 		return lexicon;
-	}
-
-	public File getStoreFile() {
-		return storeFile;
-	}
-
-	public void setStoreFile( File storeFile ) {
-		this.storeFile = storeFile;
 	}
 }

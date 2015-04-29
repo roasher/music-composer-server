@@ -6,6 +6,7 @@
 
     <import resource="equalityTest.xml"/>
     <import resource="form_analyzez_config.xml"/>
+    <import resource="persistance.xml"/>
 
     <bean id="signatureDecomposer" class="decomposer.SignatureDecomposer">
         <property name="minSignatureLength" value="7"/>
@@ -28,5 +29,5 @@
         <property name="rhythmEqualityTest" ref="rhythmEqualityTestWrapper"/>
     </bean>
 
-    <context:component-scan base-package="model,decomposer,utils,composer,database"/>
+    <context:component-scan base-package="model,decomposer,utils,composer,persistance"/>
 </beans>

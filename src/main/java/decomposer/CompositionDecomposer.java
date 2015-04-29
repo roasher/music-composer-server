@@ -1,7 +1,7 @@
 package decomposer;
 
 import composer.MusicBlockProvider;
-import database.LexiconDAO;
+import persistance.dao.LexiconDAO;
 import decomposer.form.FormDecomposer;
 import model.ComposeBlock;
 import model.Lexicon;
@@ -12,6 +12,7 @@ import model.melody.Melody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import utils.Recombinator;
 
@@ -35,8 +36,8 @@ public class CompositionDecomposer {
     @Autowired
     private MusicBlockProvider musicBlockProvider;
 
-	@Autowired
-	private LexiconDAO lexiconDAO;
+	@Autowired @Qualifier("lexiconDAO_JAXBImpl")
+	private LexiconDAO LexiconDAO;
 
 	private Logger logger = LoggerFactory.getLogger( getClass() );
 
@@ -120,8 +121,8 @@ public class CompositionDecomposer {
 	 * @return
 	 */
 	public Lexicon decompose ( List< Composition > compositionList, double rhythmValue ) {
-		logger.info( "Getting blocks from database" );
-		Lexicon dataBaseLexicon = lexiconDAO.fetch();
+		logger.info( "Getting blocks frpersistancease" );
+		Lexicon dataBaseLexicon = LexiconDAO.fetch();
 
 		logger.info( "Deleting all blocks, build from other than input list compositions" );
 		trimToCompositions( dataBaseLexicon.getComposeBlockList(), compositionList );
@@ -136,7 +137,7 @@ public class CompositionDecomposer {
 		}
 		List<ComposeBlock> composeBlockList = getComposeBlocks( musicBlockList );
 
-		logger.info( "Combining blocks from compositions and blocks from database" );
+		logger.info( "Combining blocks from compositions and blocks frpersistancease" );
 		List<ComposeBlock> combinedComposeBlockList = union( dataBaseLexicon.getComposeBlockList(), composeBlockList );
 
 		Lexicon lexicon = new Lexicon( combinedComposeBlockList );
