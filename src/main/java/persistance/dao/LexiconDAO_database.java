@@ -17,13 +17,13 @@ import java.io.IOException;
 	@Autowired private SessionFactory sessionFactory;
 
 	@Override public void store( Lexicon lexicon ) throws IOException {
-		sessionFactory.getCurrentSession().save( PersistConverter.convertToPersistanceLexicon( lexicon ) );
+		sessionFactory.getCurrentSession().save( PersistConverter.convertLexicon( lexicon ) );
 	}
 
 	@Override public Lexicon fetch() {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria( persistance.model.Lexicon.class );
 		persistance.model.Lexicon lexicon = ( persistance.model.Lexicon ) criteria.list();
-		return PersistConverter.convertToLexicon( lexicon );
+		return PersistConverter.convertLexicon( lexicon );
 	}
 
 }

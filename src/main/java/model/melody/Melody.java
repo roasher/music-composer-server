@@ -19,10 +19,10 @@ public class Melody extends Phrase {
 	private Form form = new Form();
 
     public Melody( List<Note> notes ) {
-        this((Note[]) notes.toArray());
+        this((Note[]) notes.toArray( new Note[]{}));
     }
 
-    public Melody( Note[] notes ) {
+    public Melody( Note... notes ) {
         super(notes);
     }
 
@@ -94,13 +94,13 @@ public class Melody extends Phrase {
     }
 
 	@Override
-	public String toString() {
+		 public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append( this.getStartTime() ).append( " " );
 		for ( Note note : this.getNoteArray() ) {
 			stringBuilder.append( String.format( "{%d %s|%.3f}", note.getPitch(), ModelUtils.getNoteNameByPitch( note.getPitch() ), note.getRhythmValue() ) );
 		}
-        stringBuilder.append(" ").append(this.getEndTime() );
+		stringBuilder.append(" ").append(this.getEndTime() );
 		return stringBuilder.toString();
 	}
 }

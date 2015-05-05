@@ -8,6 +8,7 @@ import utils.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static utils.ModelUtils.*;
@@ -108,8 +109,8 @@ public class MusicBlock implements Serializable {
 		}
 	}
 
-	public MusicBlock( List<MusicBlock> musicBlockList ) {
-		// TODO implementation
+	public MusicBlock( CompositionInfo compositionInfo, Melody... melodies ) {
+		this( Arrays.asList( melodies ), compositionInfo );
 	}
 
 	public String getForm() {
@@ -141,6 +142,15 @@ public class MusicBlock implements Serializable {
 
 		if ( !Utils.listOfMelodiesAreEqual( this.melodyList, that.melodyList ) ) {
 			return false;
+		}
+
+		if ( ( this.previous == null && that.previous != null ) || ( this.previous != null && that.previous == null ) || ( this.next == null && that.next != null ) || ( this.next != null && that.next == null ) ) {
+			return false;
+		} else {
+			if ( ( this.previous != null && that.previous != null && !that.previous.melodyList.equals( that.previous.melodyList ) ) ||
+					( this.next != null && that.next != null && !that.next.melodyList.equals( that.next.melodyList ) ) ) {
+				return false;
+			}
 		}
 
 		return true;

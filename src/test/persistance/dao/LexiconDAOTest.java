@@ -1,4 +1,4 @@
-package persistance;
+package persistance.dao;
 
 import persistance.dao.LexiconDAO;
 import decomposer.CompositionDecomposer;
