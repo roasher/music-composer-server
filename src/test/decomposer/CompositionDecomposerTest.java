@@ -132,10 +132,10 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 		ComposeBlock firstComposeBlock = null;
 		ComposeBlock secondPossibleComposeBlock = null;
 		for ( ComposeBlock  composeBlock : lexicon.getComposeBlockList() ) {
-			if ( composeBlock.getStartTime() == 8.0 && composeBlock.getMusicBlock().getCompositionInfo().getTitle().contains( "first" ) ) {
+			if ( composeBlock.getStartTime() == 8.0 && composeBlock.getCompositionInfo().getTitle().contains( "first" ) ) {
 				firstComposeBlock = composeBlock;
 			}
-			if ( composeBlock.getStartTime() == 8.5 && composeBlock.getMusicBlock().getCompositionInfo().getTitle().contains( "second" ) ) {
+			if ( composeBlock.getStartTime() == 8.5 && composeBlock.getCompositionInfo().getTitle().contains( "second" ) ) {
 				secondPossibleComposeBlock = composeBlock;
 			}
 		}

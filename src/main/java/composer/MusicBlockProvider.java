@@ -1,5 +1,7 @@
 package composer;
 
+import model.BlockMovement;
+import model.ComposeBlock;
 import model.MusicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,37 +108,52 @@ public class MusicBlockProvider {
 	 * @return
 	 */
 	public boolean canSubstitute( MusicBlock originBlock, MusicBlock substitutorBlock ) {
-//		boolean totalEquality = originBlock.equals( substitutorBlock );
-		boolean startIntervalPatternEquality = originBlock.getStartIntervalPattern().equals( substitutorBlock.getStartIntervalPattern() );
+		return canSubstitute( originBlock.getStartIntervalPattern(), originBlock.getBlockMovementFromPreviousToThis(), originBlock.getStartTime(),
+				substitutorBlock.getStartIntervalPattern(), substitutorBlock.getBlockMovementFromPreviousToThis(), substitutorBlock.getStartTime() );
+	}
+
+	public boolean canSubstitute( ComposeBlock originBlock, ComposeBlock substitutorBlock ) {
+		return canSubstitute( originBlock.getStartIntervalPattern(), originBlock.getBlockMovementFromPreviousToThis(), originBlock.getStartTime(),
+				substitutorBlock.getStartIntervalPattern(), substitutorBlock.getBlockMovementFromPreviousToThis(), substitutorBlock.getStartTime() );
+	}
+
+	private boolean canSubstitute(
+			List<Integer> firstStartIntervalPattern,
+			BlockMovement fromPreviousToFirst,
+			double firstStartTime,
+
+			List<Integer> secondStartIntervalPattern,
+			BlockMovement fromPreviousToSecond,
+			double secondStartTime ) {
+
+		//		boolean totalEquality = originBlock.equals( substitutorBlock );
+		boolean startIntervalPatternEquality = firstStartIntervalPattern.equals( secondStartIntervalPattern );
 		boolean blockMovementEquality;
-		if ( originBlock.getBlockMovementFromPreviousToThis() == null && substitutorBlock.getBlockMovementFromPreviousToThis() == null ) {
+		if ( fromPreviousToFirst == null && fromPreviousToSecond == null ) {
 			blockMovementEquality = true;
-		} else if ( originBlock.getBlockMovementFromPreviousToThis() != null && substitutorBlock.getBlockMovementFromPreviousToThis() != null ) {
-			blockMovementEquality = originBlock.getBlockMovementFromPreviousToThis().equals( substitutorBlock.getBlockMovementFromPreviousToThis() );
+		} else if ( fromPreviousToFirst != null && fromPreviousToSecond != null ) {
+			blockMovementEquality = fromPreviousToFirst.equals( fromPreviousToSecond );
 		} else {
 			blockMovementEquality = false;
 		}
 
-		boolean correlatingTime = onCorrelatedTime( originBlock, substitutorBlock );
+		boolean correlatingTime = onCorrelatedTime( firstStartTime, secondStartTime );
 
-//		boolean canSubstitute = !totalEquality && startIntervalPatternEquality && blockMovementEquality && correlatingTime;
+		//		boolean canSubstitute = !totalEquality && startIntervalPatternEquality && blockMovementEquality && correlatingTime;
 
 		boolean canSubstitute = startIntervalPatternEquality && blockMovementEquality && correlatingTime;
-		if ( canSubstitute ) {
-			logger.debug( "{} and {} has been considered substitutable", originBlock, substitutorBlock );
-		}
 		return canSubstitute;
 	}
 
 	/**
-	 * Checks if one block can be substituted with another in terms of time accents
-	 * @param originBlock
-	 * @param substitutorBlock
+	 * Check if two times have equal "strength"
+	 * @param firstStartTime
+	 * @param secondStartTime
 	 * @return
 	 */
-	public boolean onCorrelatedTime( MusicBlock originBlock, MusicBlock substitutorBlock ) {
-		int originStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces( originBlock.getStartTime() );
-		int substitutorStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces( substitutorBlock.getStartTime() );
+	private boolean onCorrelatedTime( double firstStartTime, double secondStartTime ) {
+		int originStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces( firstStartTime );
+		int substitutorStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces( secondStartTime );
 		if ( originStartTimeDecimalPlacesNumber == substitutorStartTimeDecimalPlacesNumber ) {
 			return true;
 		}

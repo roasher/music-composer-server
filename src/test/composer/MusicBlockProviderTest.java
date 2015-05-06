@@ -44,15 +44,15 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 		Lexicon lexiconFromSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
-		MusicBlock current;
-		MusicBlock next;
+		ComposeBlock current;
+		ComposeBlock next;
 
-		current = lexiconFromFirst.get( 8 ).getMusicBlock();
-		next = lexiconFromSecond.get( 13 ).getMusicBlock();
+		current = lexiconFromFirst.get( 8 );
+		next = lexiconFromSecond.get( 13 );
 		assertTrue( musicBlockProvider.canSubstitute( current, next ) );
 
-		current = lexiconFromFirst.get( 1 ).getMusicBlock();
-		next = lexiconFromSecond.get( 1 ).getMusicBlock();
+		current = lexiconFromFirst.get( 1 );
+		next = lexiconFromSecond.get( 1 );
 		assertFalse( musicBlockProvider.canSubstitute( current, next ) );
 	}
 

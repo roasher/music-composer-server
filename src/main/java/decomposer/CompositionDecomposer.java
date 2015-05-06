@@ -99,10 +99,11 @@ public class CompositionDecomposer {
 		for ( ComposeBlockWrapper composeBlockWrapper : composeBlockWrapperList ) {
 			for ( MusicBlock musicBlock : composeBlockWrapper.possibleNextMusicBlocks ) {
 				for ( ComposeBlockWrapper anotherComposeBlockWrapper : composeBlockWrapperList ) {
-					// Using "==" is legal
-					if ( musicBlock == anotherComposeBlockWrapper.composeBlock.getMusicBlock() ) {
+					if ( anotherComposeBlockWrapper.composeBlock.isSimilar( musicBlock ) ) {
 						composeBlockWrapper.composeBlock.getPossibleNextComposeBlocks().add( anotherComposeBlockWrapper.composeBlock );
-						if ( composeBlockWrapper.composeBlock.getMusicBlock().getNext() == anotherComposeBlockWrapper.composeBlock.getMusicBlock() ) {
+//						if ( composeBlockWrapper.composeBlock.getMusicBlock().getNext() == anotherComposeBlockWrapper.composeBlock.getMusicBlock() ) {
+//						if (  anotherComposeBlockWrapper.composeBlock.isSimilar( musicBlock.getPrevious() ) ) {
+						if ( composeBlockWrapper.possibleNextMusicBlocks.size() > 0 && anotherComposeBlockWrapper.composeBlock.isSimilar( composeBlockWrapper.possibleNextMusicBlocks.get( 0 ) ) ) {
 							anotherComposeBlockWrapper.composeBlock.getPossiblePreviousComposeBlocks().add( 0, composeBlockWrapper.composeBlock );
 						} else {
 							anotherComposeBlockWrapper.composeBlock.getPossiblePreviousComposeBlocks().add( composeBlockWrapper.composeBlock );
@@ -121,7 +122,7 @@ public class CompositionDecomposer {
 	 * @return
 	 */
 	public Lexicon decompose ( List< Composition > compositionList, double rhythmValue ) {
-		logger.info( "Getting blocks frpersistancease" );
+		logger.info( "Getting blocks persisted blocks" );
 		Lexicon dataBaseLexicon = LexiconDAO.fetch();
 
 		logger.info( "Deleting all blocks, build from other than input list compositions" );
@@ -183,7 +184,7 @@ public class CompositionDecomposer {
 	private boolean isFromCompositionList( ComposeBlock composeBlock, List<Composition> compositionList ) {
 		boolean fromCompositionList = false;
 		for ( Composition composition : compositionList ) {
-			if ( composeBlock.getMusicBlock().getCompositionInfo().equals( composition.getCompositionInfo() ) ) {
+			if ( composeBlock.getCompositionInfo().equals( composition.getCompositionInfo() ) ) {
 				fromCompositionList = true;
 				break;
 			}
@@ -192,7 +193,7 @@ public class CompositionDecomposer {
 	}
 
 	private boolean fromComposition( ComposeBlock composeBlock, CompositionInfo compositionInfo ) {
-		return composeBlock.getMusicBlock().getCompositionInfo().equals( compositionInfo );
+		return composeBlock.getCompositionInfo().equals( compositionInfo );
 	}
 
 	/**
@@ -206,7 +207,7 @@ public class CompositionDecomposer {
 		// adding the possible next/previous
 		for ( ComposeBlock firstComposeBlock : firstComposeBlockList ) {
 			for ( ComposeBlock secondComposeBlock : secondComposeBlockList ) {
-				if ( musicBlockProvider.canSubstitute( firstComposeBlock.getMusicBlock(), secondComposeBlock.getMusicBlock() ) ) {
+				if ( musicBlockProvider.canSubstitute( firstComposeBlock, secondComposeBlock ) ) {
 					// We are assuming that first members of possiblePrevious and possibleNext list is taken from the original composition
 					if ( firstComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
 						ComposeBlock originalPreviousFirst = firstComposeBlock.getPossiblePreviousComposeBlocks().get( 0 );

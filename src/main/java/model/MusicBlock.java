@@ -81,33 +81,33 @@ public class MusicBlock implements Serializable {
 		}
 	}
 
-	public MusicBlock( CompositionInfo inputCompositionInfo, List<MusicBlock> musicBlockList ) {
-		if ( musicBlockList != null && musicBlockList.size() > 0 ) {
-			List<Melody> melodyList = new ArrayList<>(  );
-			for ( int melodyNubmer = 0; melodyNubmer < musicBlockList.get( 0 ).getMelodyList().size(); melodyNubmer ++ ) {
-				melodyList.add( new Melody(  ) );
-			}
-			double rhythmValue = 0;
-			for ( MusicBlock currentMusicBlock : musicBlockList ) {
-				for ( int melodyNumber = 0; melodyNumber < currentMusicBlock.getMelodyList().size(); melodyNumber ++ ) {
-					melodyList.get( melodyNumber ).addNoteList( currentMusicBlock.getMelodyList().get( melodyNumber ).getNoteArray() );
-				}
-				rhythmValue += currentMusicBlock.getRhythmValue();
-			}
-
-			this.melodyList = melodyList;
-			this.compositionInfo = inputCompositionInfo;
-			this.startIntervalPattern = musicBlockList.get( 0 ).getStartIntervalPattern();
-			this.endIntervalPattern = musicBlockList.get( musicBlockList.size() -1 ).getEndIntervalPattern();
-			this.rhythmValue = rhythmValue;
-			this.startTime = musicBlockList.get( 0 ).getStartTime();
-			setNext( musicBlockList.get( musicBlockList.size() - 1 ).getNext() );
-			setPrevious( musicBlockList.get( 0 ).getPrevious() );
-
-		} else {
-			throw new IllegalArgumentException( "Input music block in malformed ( null or zero-length )" );
-		}
-	}
+//	public MusicBlock( CompositionInfo inputCompositionInfo, List<MusicBlock> musicBlockList ) {
+//		if ( musicBlockList != null && musicBlockList.size() > 0 ) {
+//			List<Melody> melodyList = new ArrayList<>(  );
+//			for ( int melodyNubmer = 0; melodyNubmer < musicBlockList.get( 0 ).getMelodyList().size(); melodyNubmer ++ ) {
+//				melodyList.add( new Melody(  ) );
+//			}
+//			double rhythmValue = 0;
+//			for ( MusicBlock currentMusicBlock : musicBlockList ) {
+//				for ( int melodyNumber = 0; melodyNumber < currentMusicBlock.getMelodyList().size(); melodyNumber ++ ) {
+//					melodyList.get( melodyNumber ).addNoteList( currentMusicBlock.getMelodyList().get( melodyNumber ).getNoteArray() );
+//				}
+//				rhythmValue += currentMusicBlock.getRhythmValue();
+//			}
+//
+//			this.melodyList = melodyList;
+//			this.compositionInfo = inputCompositionInfo;
+//			this.startIntervalPattern = musicBlockList.get( 0 ).getStartIntervalPattern();
+//			this.endIntervalPattern = musicBlockList.get( musicBlockList.size() -1 ).getEndIntervalPattern();
+//			this.rhythmValue = rhythmValue;
+//			this.startTime = musicBlockList.get( 0 ).getStartTime();
+//			setNext( musicBlockList.get( musicBlockList.size() - 1 ).getNext() );
+//			setPrevious( musicBlockList.get( 0 ).getPrevious() );
+//
+//		} else {
+//			throw new IllegalArgumentException( "Input music block in malformed ( null or zero-length )" );
+//		}
+//	}
 
 	public MusicBlock( CompositionInfo compositionInfo, Melody... melodies ) {
 		this( Arrays.asList( melodies ), compositionInfo );

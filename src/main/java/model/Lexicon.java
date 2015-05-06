@@ -33,7 +33,7 @@ public class Lexicon {
 			if ( minRhythmValue > composeBlock.getRhythmValue() ) {
 				minRhythmValue = composeBlock.getRhythmValue();
 			}
-			compositionsInLexicon.add( composeBlock.getMusicBlock().getCompositionInfo() );
+			compositionsInLexicon.add( composeBlock.getCompositionInfo() );
 		}
 	}
 

@@ -111,13 +111,13 @@ public class Utils {
 	 */
 	public static Composition gatherComposition( List<ComposeBlock> composeBlockList ) {
 		List<Part> parts = new ArrayList<>();
-		for ( int partNumber = 0; partNumber < composeBlockList.get( 0 ).getMusicBlock().getMelodyList().size(); partNumber++ ) {
+		for ( int partNumber = 0; partNumber < composeBlockList.get( 0 ).getMelodyList().size(); partNumber++ ) {
 			parts.add( new Part() );
 		}
 		for ( ComposeBlock composeBlock : composeBlockList ) {
 			for ( int partNumber = 0; partNumber < parts.size(); partNumber++ ) {
 				int melodiesAmount = parts.get( partNumber ).size();
-				Melody melody = composeBlock.getMusicBlock().getMelodyList().get( partNumber );
+				Melody melody = composeBlock.getMelodyList().get( partNumber );
 				Melody newMelody = null;
 //				if ( melodiesAmount == 0 ) {
 					// First melody in partNumber part

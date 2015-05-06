@@ -12,7 +12,7 @@ public class PersistConverter {
 
 		List<model.ComposeBlock> composeBlockList = new ArrayList<>(  );
 		for ( persistance.model.ComposeBlock persistanceComposeBlock : lexicon.composeBlockList ) {
-			composeBlockList.add( new model.ComposeBlock( convertMusicBlock( persistanceComposeBlock.musicBlock ) ) );
+			composeBlockList.add( convertComposeBlock( persistanceComposeBlock ) );
 		}
 
 		for ( int composeBlockNumber = 0; composeBlockNumber < lexicon.composeBlockList.size(); composeBlockNumber++ ) {
@@ -38,7 +38,7 @@ public class PersistConverter {
 
 		List<persistance.model.ComposeBlock> persistanceComposeBlockList = new ArrayList<>(  );
 		for ( model.ComposeBlock composeBlock : lexicon.getComposeBlockList() ) {
-			persistanceComposeBlockList.add( new persistance.model.ComposeBlock( convertMusicBlock( composeBlock.getMusicBlock() ) ) );
+			persistanceComposeBlockList.add( convertComposeBlock( composeBlock ) );
 		}
 
 		for ( int composeBlockNumber = 0; composeBlockNumber < lexicon.getComposeBlockList().size(); composeBlockNumber++ ) {
@@ -62,16 +62,38 @@ public class PersistConverter {
 		return persitanceLexicon;
 	}
 
-	public static model.MusicBlock convertMusicBlock( persistance.model.MusicBlock persistanceMusicBlock ) {
-		List<model.melody.Melody> melodyList = convertMelodyList( persistanceMusicBlock.melodyList );
-		model.MusicBlock musicBlock = new model.MusicBlock( melodyList, convertCompositionInfo( persistanceMusicBlock.compositionInfo ) );
+	public static model.ComposeBlock convertComposeBlock( persistance.model.ComposeBlock persistanceComposeBlock ) {
+		model.ComposeBlock musicBlock = new model.ComposeBlock(
+				persistanceComposeBlock.rhythmValue,
+				persistanceComposeBlock.startTime,
+				convertCompositionInfo( persistanceComposeBlock.compositionInfo ),
+				convertMelodyList( persistanceComposeBlock.melodyList ),
+				persistanceComposeBlock.startIntervalPattern,
+				convertBlockMovement( persistanceComposeBlock.blockMovementFromPreviousToThis ) );
 		return musicBlock;
 	}
 
-	public static persistance.model.MusicBlock convertMusicBlock( model.MusicBlock musicBlock ) {
-		List<persistance.model.Melody> melodyList = convertToPersistMelodyList( musicBlock.getMelodyList() );
-		persistance.model.MusicBlock persistanceMusicBlock = new persistance.model.MusicBlock( melodyList, convertCompositionInfo( musicBlock.getCompositionInfo() ) );
+	public static persistance.model.ComposeBlock convertComposeBlock( model.ComposeBlock composeBlock ) {
+		List<persistance.model.Melody> melodyList = convertToPersistMelodyList( composeBlock.getMelodyList() );
+		persistance.model.ComposeBlock persistanceMusicBlock = new persistance.model.ComposeBlock(
+				composeBlock.getRhythmValue(),
+				composeBlock.getStartTime(),
+				convertCompositionInfo( composeBlock.getCompositionInfo() ),
+				convertToPersistMelodyList( composeBlock.getMelodyList() ),
+				composeBlock.getStartIntervalPattern(),
+				convertBlockMovement( composeBlock.getBlockMovementFromPreviousToThis() )
+		);
 		return persistanceMusicBlock;
+	}
+
+	public static persistance.model.BlockMovement convertBlockMovement( model.BlockMovement blockMovement ) {
+		//TODO impl
+		return null;
+	}
+
+	public static model.BlockMovement convertBlockMovement( persistance.model.BlockMovement persitanceBlockMovement ) {
+		//TODO impl
+		return null;
 	}
 
 	public static List<model.melody.Melody> convertMelodyList( List<persistance.model.Melody> persistanceMelodyList ) {
