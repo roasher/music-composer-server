@@ -19,10 +19,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import persistance.dao.LexiconDAO;
 import utils.CompositionLoader;
 import utils.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,6 +50,9 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	@Autowired
 	private CompositionComposer compositionComposer;
 
+	@Autowired @Qualifier( "lexiconDAO_stub" )
+	private LexiconDAO lexiconDAO;
+
 	@Test
 //	@Ignore
 	public void getSimplePieceTest1() {
@@ -63,16 +69,28 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	@Test
     @Ignore
 	// FIXME too slow
-	public void getRealPieceTest1() {
+	public void getRealPieceTest1() throws IOException {
 		List< Composition > compositionList = compositionLoader.getCompositions(
 		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" )
-//		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.biosphere(midi).mid" ),
-//		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ),
-//		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\Метания беспокойного разума.mid" )
+		  //		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.biosphere(midi).mid" ),
+		  //		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ),
+		  //		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\Метания беспокойного разума.mid" )
 		);
-		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
-		Composition composition = compositionComposer.compose( lexicon, "ABCD", 4 * JMC.WHOLE_NOTE );
-		assertEquals( 16., composition.getEndTime(), 0 );
 
+		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
+
+//		Composition composition = compositionComposer.compose( lexicon, "ABCD", 4 * JMC.WHOLE_NOTE );
+//		assertEquals( 16., composition.getEndTime(), 0 );
+
+	}
+
+	@Test
+	//TODO ??? perpose ???
+	public void store() throws IOException {
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
+		// Decompose second
+		Lexicon lexiconSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
+
+//		lexiconDAO.store( lexiconSecond.get( 3 ).getMusicBlock() );
 	}
 }

@@ -15,7 +15,8 @@
         <xstream.version>1.4.8</xstream.version>
 
         <h2.verstion>1.4.187</h2.verstion>
-        <hibernate.version>3.5.4-Final</hibernate.version>
+        <hibernate.core.version>4.3.9.Final</hibernate.core.version>
+        <!--<hibernate.annotation.version></hibernate.annotation.version>-->
     </properties>
 
     <dependencies>
@@ -90,14 +91,8 @@
 
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>${hibernate.version}</version>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.core.version}</version>
         </dependency>
 
         <dependency>

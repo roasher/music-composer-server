@@ -20,14 +20,14 @@ public class PersistConverter {
 			for ( persistance.model.ComposeBlock persistancePossibleNext : persistancePossibleNextList ) {
 				model.ComposeBlock composeBlock = composeBlockList.get( composeBlockNumber );
 				int index = lexicon.composeBlockList.lastIndexOf( persistancePossibleNext );
-				composeBlock.getPossibleNextComposeBlocks().add( composeBlockList.get( index ) );
+				composeBlock.getPossibleNextComposeBlocks().add( persistancePossibleNext != null ? composeBlockList.get( index ) : null );
 			}
 
 			List<persistance.model.ComposeBlock> persistancePossiblePrevoiusList = lexicon.composeBlockList.get( composeBlockNumber ).possiblePreviousComposeBlocks;
 			for ( persistance.model.ComposeBlock persistancePossiblePrevious : persistancePossiblePrevoiusList ) {
 				model.ComposeBlock composeBlock = composeBlockList.get( composeBlockNumber );
 				int index = lexicon.composeBlockList.lastIndexOf( persistancePossiblePrevious );
-				composeBlock.getPossiblePreviousComposeBlocks().add( composeBlockList.get( index ) );
+				composeBlock.getPossiblePreviousComposeBlocks().add( persistancePossiblePrevious != null ? composeBlockList.get( index ) : null );
 			}
 		}
 
@@ -46,14 +46,14 @@ public class PersistConverter {
 			for ( model.ComposeBlock possibleNext : possibleNextList ) {
 				persistance.model.ComposeBlock composeBlock = persistanceComposeBlockList.get( composeBlockNumber );
 				int index = lexicon.getComposeBlockList().lastIndexOf( possibleNext );
-				composeBlock.possibleNextComposeBlocks.add( persistanceComposeBlockList.get( index ) );
+				composeBlock.possibleNextComposeBlocks.add( possibleNext != null ? persistanceComposeBlockList.get( index ) : null );
 			}
 
 			List<model.ComposeBlock> possiblePrevoiusList = lexicon.getComposeBlockList().get( composeBlockNumber ).getPossiblePreviousComposeBlocks();
 			for ( model.ComposeBlock possiblePrevious : possiblePrevoiusList ) {
 				persistance.model.ComposeBlock composeBlock = persistanceComposeBlockList.get( composeBlockNumber );
 				int index = lexicon.getComposeBlockList().lastIndexOf( possiblePrevious );
-				composeBlock.possiblePreviousComposeBlocks.add( persistanceComposeBlockList.get( index ) );
+				composeBlock.possiblePreviousComposeBlocks.add( possiblePrevious != null ? persistanceComposeBlockList.get( index ) : null );
 			}
 		}
 
@@ -64,36 +64,37 @@ public class PersistConverter {
 
 	public static model.ComposeBlock convertComposeBlock( persistance.model.ComposeBlock persistanceComposeBlock ) {
 		model.ComposeBlock musicBlock = new model.ComposeBlock(
-				persistanceComposeBlock.rhythmValue,
 				persistanceComposeBlock.startTime,
 				convertCompositionInfo( persistanceComposeBlock.compositionInfo ),
 				convertMelodyList( persistanceComposeBlock.melodyList ),
-				persistanceComposeBlock.startIntervalPattern,
 				convertBlockMovement( persistanceComposeBlock.blockMovementFromPreviousToThis ) );
 		return musicBlock;
 	}
 
 	public static persistance.model.ComposeBlock convertComposeBlock( model.ComposeBlock composeBlock ) {
-		List<persistance.model.Melody> melodyList = convertToPersistMelodyList( composeBlock.getMelodyList() );
 		persistance.model.ComposeBlock persistanceMusicBlock = new persistance.model.ComposeBlock(
-				composeBlock.getRhythmValue(),
 				composeBlock.getStartTime(),
 				convertCompositionInfo( composeBlock.getCompositionInfo() ),
 				convertToPersistMelodyList( composeBlock.getMelodyList() ),
-				composeBlock.getStartIntervalPattern(),
 				convertBlockMovement( composeBlock.getBlockMovementFromPreviousToThis() )
 		);
 		return persistanceMusicBlock;
 	}
 
 	public static persistance.model.BlockMovement convertBlockMovement( model.BlockMovement blockMovement ) {
-		//TODO impl
-		return null;
+		persistance.model.BlockMovement persistBlockMovement = null;
+		if ( blockMovement != null ) {
+			persistBlockMovement = new persistance.model.BlockMovement( blockMovement.getTopVoiceMelodyMovement(), blockMovement.getBottomVoiceMelodyMovement() );
+		}
+		return persistBlockMovement;
 	}
 
 	public static model.BlockMovement convertBlockMovement( persistance.model.BlockMovement persitanceBlockMovement ) {
-		//TODO impl
-		return null;
+		model.BlockMovement blockMovement = null;
+		if ( persitanceBlockMovement != null ) {
+			blockMovement = new model.BlockMovement( persitanceBlockMovement.topVoiceMovement, persitanceBlockMovement.bottomVoiceMovement );
+		}
+		return blockMovement;
 	}
 
 	public static List<model.melody.Melody> convertMelodyList( List<persistance.model.Melody> persistanceMelodyList ) {

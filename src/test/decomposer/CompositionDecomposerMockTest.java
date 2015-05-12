@@ -3,10 +3,12 @@ package decomposer;
 import composer.MusicBlockProvider;
 import helper.AbstractSpringTest;
 import jm.JMC;
+import jm.music.data.Note;
 import model.ComposeBlock;
 import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
+import model.melody.Melody;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -28,9 +30,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class CompositionDecomposerMockTest extends AbstractSpringTest {
-
-	@Autowired
-	private CompositionLoader compositionLoader;
 
 	@InjectMocks
 	private CompositionDecomposer compositionDecomposer;
@@ -70,10 +69,10 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 		ComposeBlock composeBlock3 = null;
 		ComposeBlock composeBlock4 = null;
 		for ( ComposeBlock composeBlock : composeBlockList ) {
-			if ( composeBlock.getMusicBlock() == musicBlock1 ) composeBlock1 = composeBlock;
-			if ( composeBlock.getMusicBlock() == musicBlock2 ) composeBlock2 = composeBlock;
-			if ( composeBlock.getMusicBlock() == musicBlock3 ) composeBlock3 = composeBlock;
-			if ( composeBlock.getMusicBlock() == musicBlock4 ) composeBlock4 = composeBlock;
+			if ( composeBlock.isSimilar( musicBlock1 ) ) composeBlock1 = composeBlock;
+			if ( composeBlock.isSimilar( musicBlock2 ) ) composeBlock2 = composeBlock;
+			if ( composeBlock.isSimilar( musicBlock3 ) ) composeBlock3 = composeBlock;
+			if ( composeBlock.isSimilar( musicBlock4 ) ) composeBlock4 = composeBlock;
 		}
 
 		assertTrue( composeBlock1.getPossibleNextComposeBlocks().contains( composeBlock2 ) );
@@ -100,11 +99,11 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 	@Test
 	public void getComposeBlocksTest() {
 
-		MusicBlock musicBlock1 = mock( MusicBlock.class );
-		MusicBlock musicBlock2 = mock( MusicBlock.class );
-		MusicBlock musicBlock3 = mock( MusicBlock.class );
-		MusicBlock musicBlock4 = mock( MusicBlock.class );
-		MusicBlock musicBlock5 = mock( MusicBlock.class );
+		MusicBlock musicBlock1 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 60, 1 ) )} ), null );
+		MusicBlock musicBlock2 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 61, 2 ) )} ), null );
+		MusicBlock musicBlock3 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 62, 3 ) )} ), null );
+		MusicBlock musicBlock4 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 63, 4 ) )} ), null );
+		MusicBlock musicBlock5 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 64, 5 ) )} ), null );
 
 		List<MusicBlock> inputMusicBlock = new ArrayList<MusicBlock>(  );
 		inputMusicBlock.add( musicBlock1 );
@@ -189,7 +188,7 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 		List<ComposeBlock> currentRoutLexicon = composeBlocks;
 		nextRoute: for ( MusicBlock routState : route ) {
 			for ( ComposeBlock lexiconBlock : currentRoutLexicon ) {
-				if ( routState == lexiconBlock.getMusicBlock() ) {
+				if ( lexiconBlock.isSimilar( routState ) ) {
 					currentRoutLexicon = lexiconBlock.getPossibleNextComposeBlocks();
 					continue nextRoute;
 				}
@@ -203,7 +202,7 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 		List<ComposeBlock> currentRoutLexicon = composeBlocks;
 		nextRoute: for ( MusicBlock routState : route ) {
 			for ( ComposeBlock lexiconBlock : currentRoutLexicon ) {
-				if ( routState == lexiconBlock.getMusicBlock() ) {
+				if ( lexiconBlock.isSimilar( routState ) ) {
 					currentRoutLexicon = lexiconBlock.getPossiblePreviousComposeBlocks();
 					continue nextRoute;
 				}

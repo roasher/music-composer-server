@@ -40,25 +40,25 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 		assertEquals( lexicon.getComposeBlockList().size(), expectedMusicBlocksNumber );
 		// length check
 		double rhythmValue = 0;
-		for ( int musicBlockNumber = 0; musicBlockNumber < expectedMusicBlocksNumber; musicBlockNumber ++ ) {
-			// Music Block ckecks
-			MusicBlock musicBlock = lexicon.getComposeBlockList().get( musicBlockNumber ).getMusicBlock();
-			if ( musicBlockNumber != expectedMusicBlocksNumber - 1 ) {
-				assertEquals( musicBlock.getNext(), lexicon.getComposeBlockList().get( musicBlockNumber + 1 ).getMusicBlock() );
+		for ( int composeBlockNumber = 0; composeBlockNumber < expectedMusicBlocksNumber; composeBlockNumber ++ ) {
+			// Compose Block ckecks
+			ComposeBlock composeBlock = lexicon.getComposeBlockList().get( composeBlockNumber );
+			if ( composeBlockNumber != expectedMusicBlocksNumber - 1 ) {
+				assertEquals( composeBlock.getNext( 0 ), lexicon.getComposeBlockList().get( composeBlockNumber + 1 ) );
 			} else {
-				assertEquals( musicBlock.getNext(), null );
+				assertEquals( composeBlock.getNext( 0 ), null );
 			}
 
-			if ( musicBlockNumber != 0 ) {
-				assertEquals( musicBlock.getPrevious(), lexicon.getComposeBlockList().get( musicBlockNumber - 1 ).getMusicBlock() );
+			if ( composeBlockNumber != 0 ) {
+				assertEquals( composeBlock.getPrevious( 0 ), lexicon.getComposeBlockList().get( composeBlockNumber - 1 ) );
 			} else {
-				assertEquals( musicBlock.getPrevious(), null );
+				assertEquals( composeBlock.getPrevious( 0 ), null );
 			}
 
-			assertEquals( musicBlock.getCompositionInfo().getTitle(), fileName );
+			assertEquals( composeBlock.getCompositionInfo().getTitle(), fileName );
 
 			// Melody ckecks
-			List<Melody> melodyList = musicBlock.getMelodyList();
+			List<Melody> melodyList = composeBlock.getMelodyList();
 			assertEquals( melodyList.size(), 2 );
 
 			Melody firstMelody = melodyList.get( 0 );
@@ -72,40 +72,40 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 			Note firstNote = firstMelody.getNote( 0 );
 			Note secondNote = secondMelody.getNote( 0 );
 			// Note checks
-			if ( musicBlockNumber < 8 ) {
+			if ( composeBlockNumber < 8 ) {
 				assertEquals( firstNote.getRhythmValue(), EIGHTH_NOTE );
 				assertEquals( secondNote.getRhythmValue(), EIGHTH_NOTE );
-				assertEquals( musicBlock.getRhythmValue(), EIGHTH_NOTE );
+				assertEquals( composeBlock.getRhythmValue(), EIGHTH_NOTE );
 				assertEquals( firstMelody.getForm(), new Form( 'A' ) );
 				assertEquals( secondMelody.getForm(), new Form( 'A' ) );
-			} else if ( musicBlockNumber >= 8 && musicBlockNumber < 8 + 8 ) {
+			} else if ( composeBlockNumber >= 8 && composeBlockNumber < 8 + 8 ) {
 				assertEquals( firstNote.getRhythmValue(), EIGHTH_NOTE );
 				assertEquals( secondNote.getRhythmValue(), EIGHTH_NOTE );
-				assertEquals( musicBlock.getRhythmValue(), EIGHTH_NOTE );
+				assertEquals( composeBlock.getRhythmValue(), EIGHTH_NOTE );
 				assertEquals( firstMelody.getForm(), new Form( 'A' ) );
 				assertEquals( secondMelody.getForm(), new Form( 'B' ) );
-			} else if ( musicBlockNumber == 8 + 8 || musicBlockNumber == 8 + 8 + 1 ) {
+			} else if ( composeBlockNumber == 8 + 8 || composeBlockNumber == 8 + 8 + 1 ) {
 				assertEquals( firstNote.getRhythmValue(), DOTTED_QUARTER_NOTE );
 				assertEquals( secondNote.getRhythmValue(), DOTTED_QUARTER_NOTE );
-				assertEquals( musicBlock.getRhythmValue(), DOTTED_QUARTER_NOTE );
+				assertEquals( composeBlock.getRhythmValue(), DOTTED_QUARTER_NOTE );
 				assertEquals( firstMelody.getForm(), new Form( 'B' ) );
 				assertEquals( secondMelody.getForm(), new Form( 'A' ) );
-			} else if ( musicBlockNumber == 8 + 8 + 2 ) {
+			} else if ( composeBlockNumber == 8 + 8 + 2 ) {
 				assertEquals( firstNote.getRhythmValue(), QUARTER_NOTE );
 				assertEquals( secondNote.getRhythmValue(), QUARTER_NOTE );
-				assertEquals( musicBlock.getRhythmValue(), QUARTER_NOTE );
+				assertEquals( composeBlock.getRhythmValue(), QUARTER_NOTE );
 				assertEquals( firstMelody.getForm(), new Form( 'B' ) );
 				assertEquals( secondMelody.getForm(), new Form( 'A' ) );
-			} else if ( musicBlockNumber == 8 + 8 + 3 || musicBlockNumber == 8 + 8 + 4 ) {
+			} else if ( composeBlockNumber == 8 + 8 + 3 || composeBlockNumber == 8 + 8 + 4 ) {
 				assertEquals( firstNote.getRhythmValue(), EIGHTH_NOTE );
 				assertEquals( secondNote.getRhythmValue(), EIGHTH_NOTE );
-				assertEquals( musicBlock.getRhythmValue(), EIGHTH_NOTE );
+				assertEquals( composeBlock.getRhythmValue(), EIGHTH_NOTE );
 				assertEquals( firstMelody.getForm(), new Form( 'C' ) );
 				assertEquals( secondMelody.getForm(), new Form( 'C' ) );
 			} else {
 				assertEquals( firstNote.getRhythmValue(), DOTTED_HALF_NOTE );
 				assertEquals( secondNote.getRhythmValue(), DOTTED_HALF_NOTE );
-				assertEquals( musicBlock.getRhythmValue(), DOTTED_HALF_NOTE );
+				assertEquals( composeBlock.getRhythmValue(), DOTTED_HALF_NOTE );
 				assertEquals( firstMelody.getForm(), new Form( 'C' ) );
 				assertEquals( secondMelody.getForm(), new Form( 'C' ) );
 			}
@@ -164,11 +164,11 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 		for ( ComposeBlock composeBlock : lexiconFull.getComposeBlockList() ) {
 			if ( composeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
 				ComposeBlock originPrevious = composeBlock.getPossiblePreviousComposeBlocks().get( 0 );
-				assertEquals( composeBlock.getMusicBlock().getPrevious(), originPrevious.getMusicBlock() );
+				assertEquals( composeBlock.getPrevious( 0 ), originPrevious );
 			}
 			if ( composeBlock.getPossibleNextComposeBlocks().size() > 0 ) {
 				ComposeBlock originNext = composeBlock.getPossibleNextComposeBlocks().get( 0 );
-				assertEquals( composeBlock.getMusicBlock().getNext(), originNext.getMusicBlock() );
+				assertEquals( composeBlock.getNext( 0 ), originNext );
 			}
 		}
 	}

@@ -2,9 +2,12 @@ package model;
 
 import model.composition.CompositionInfo;
 import model.melody.Melody;
+import sun.plugin.com.event.COMEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static utils.ModelUtils.*;
 
 /**
  * Class represents blocks which can be used in composing process
@@ -13,12 +16,13 @@ import java.util.List;
 public class ComposeBlock {
 
 	// The only information we need to compose
-	private double rhythmValue;
 	private double startTime;
 	private CompositionInfo compositionInfo;
 	private List<Melody> melodyList;
-	private List<Integer> startIntervalPattern;
 	private BlockMovement blockMovementFromPreviousToThis;
+	// Derivative information
+	private double rhythmValue;
+	private List<Integer> startIntervalPattern;
 
     // Lists of possible next and previous Compose Blocks that has convenient voice leading in the original composition
 	// We are assuming that first member of list is the original composition member - so all blocks except firsts and lasts will have at least one member in the list
@@ -26,15 +30,23 @@ public class ComposeBlock {
     private List<ComposeBlock> possiblePreviousComposeBlocks = new ArrayList<>(  );
 
 	public ComposeBlock( MusicBlock musicBlock ) {
-		this( musicBlock.getRhythmValue(), musicBlock.getStartTime(), musicBlock.getCompositionInfo(), musicBlock.getMelodyList(), musicBlock.getStartIntervalPattern(), musicBlock.getBlockMovementFromPreviousToThis() );
+		init( musicBlock.getStartTime(), musicBlock.getCompositionInfo(), musicBlock.getMelodyList(), musicBlock.getBlockMovementFromPreviousToThis() );
+		this.rhythmValue = musicBlock.getRhythmValue();
+		this.startIntervalPattern = musicBlock.getStartIntervalPattern();
 	}
 
-	public ComposeBlock( double rhythmValue, double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, List<Integer> startIntervalPattern, BlockMovement blockMovementFromPreviousToThis ) {
-		this.rhythmValue = rhythmValue;
+	public ComposeBlock( double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, BlockMovement blockMovementFromPreviousToThis ) {
+		init( startTime, compositionInfo, melodyList, blockMovementFromPreviousToThis );
+		// Setting up derivative information
+		this.rhythmValue = retrieveRhythmValue( melodyList );
+		this.startIntervalPattern = retrieveFirstIntervalPattern( melodyList );
+	}
+
+	// Constructor helper
+	private void init( double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, BlockMovement blockMovementFromPreviousToThis ) {
 		this.startTime = startTime;
 		this.compositionInfo = compositionInfo;
 		this.melodyList = melodyList;
-		this.startIntervalPattern = startIntervalPattern;
 		this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
 	}
 
@@ -86,57 +98,51 @@ public class ComposeBlock {
 	}
 
 	public boolean isSimilar( double rhythmValue, double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, List<Integer> startIntervalPattern, BlockMovement blockMovementFromPreviousToThis ) {
-		return ( Double.compare( this.rhythmValue, rhythmValue ) == 0 ) && ( Double.compare( this.startTime, startTime ) == 0 ) &&
-				this.compositionInfo.equals( compositionInfo ) && this.melodyList.equals( melodyList ) &&
-				this.startIntervalPattern.equals( startIntervalPattern ) &&	this.blockMovementFromPreviousToThis.equals( blockMovementFromPreviousToThis );
+		boolean isEqualRhythmValues = Double.compare( this.rhythmValue, rhythmValue ) == 0;
+		boolean isEqualStartTimes = Double.compare( this.startTime, startTime ) == 0;
+
+		boolean isEqualCompositionInfos;
+		if ( this.compositionInfo != null ) {
+			isEqualCompositionInfos = this.compositionInfo.equals( compositionInfo );
+		} else {
+			isEqualCompositionInfos = compositionInfo == null;
+		}
+
+		boolean isEqualMelodyList = this.melodyList.equals( melodyList );
+		boolean isEqualStartIntervalPattern = this.startIntervalPattern.equals( startIntervalPattern );
+
+		boolean isEqualsBlockMovements;
+		if ( this.blockMovementFromPreviousToThis != null ) {
+			isEqualsBlockMovements = this.blockMovementFromPreviousToThis.equals( blockMovementFromPreviousToThis );
+		} else {
+			isEqualsBlockMovements = blockMovementFromPreviousToThis == null;
+		}
+
+		return isEqualRhythmValues && isEqualStartTimes && isEqualCompositionInfos && isEqualMelodyList && isEqualStartIntervalPattern && isEqualsBlockMovements;
 	}
 
 	public double getRhythmValue() {
 		return rhythmValue;
 	}
 
-	public void setRhythmValue( double rhythmValue ) {
-		this.rhythmValue = rhythmValue;
-	}
-
 	public double getStartTime() {
 		return startTime;
-	}
-
-	public void setStartTime( double startTime ) {
-		this.startTime = startTime;
 	}
 
 	public CompositionInfo getCompositionInfo() {
 		return compositionInfo;
 	}
 
-	public void setCompositionInfo( CompositionInfo compositionInfo ) {
-		this.compositionInfo = compositionInfo;
-	}
-
 	public List<Melody> getMelodyList() {
 		return melodyList;
-	}
-
-	public void setMelodyList( List<Melody> melodyList ) {
-		this.melodyList = melodyList;
 	}
 
 	public List<Integer> getStartIntervalPattern() {
 		return startIntervalPattern;
 	}
 
-	public void setStartIntervalPattern( List<Integer> startIntervalPattern ) {
-		this.startIntervalPattern = startIntervalPattern;
-	}
-
 	public BlockMovement getBlockMovementFromPreviousToThis() {
 		return blockMovementFromPreviousToThis;
-	}
-
-	public void setBlockMovementFromPreviousToThis( BlockMovement blockMovementFromPreviousToThis ) {
-		this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
 	}
 
 	public List<ComposeBlock> getPossibleNextComposeBlocks() {
@@ -146,6 +152,20 @@ public class ComposeBlock {
     public List<ComposeBlock> getPossiblePreviousComposeBlocks() {
         return possiblePreviousComposeBlocks;
     }
+
+	public ComposeBlock getNext( int number ) {
+		if ( this.possibleNextComposeBlocks.size() > number ) {
+			return this.possibleNextComposeBlocks.get( number );
+		}
+		return null;
+	}
+
+	public ComposeBlock getPrevious( int number ) {
+		if ( this.possiblePreviousComposeBlocks.size() > number ) {
+			return this.possiblePreviousComposeBlocks.get( number );
+		}
+		return null;
+	}
 
 	@Override
 	public String toString() {
@@ -168,34 +188,35 @@ public class ComposeBlock {
 		if ( !this.isSimilar( that ) )
 			return false;
 
-		if ( possiblePreviousComposeBlocks.size() != that.possiblePreviousComposeBlocks.size() )
-			return false;
+		if ( !isEquals( this.possibleNextComposeBlocks, that.possibleNextComposeBlocks ) ) return false;
+		if ( !isEquals( this.possiblePreviousComposeBlocks, that.possiblePreviousComposeBlocks ) ) return false;
 
-		for ( ComposeBlock thisPossiblePreviousComposeBlock : this.possiblePreviousComposeBlocks ) {
+		return true;
+	}
+
+	/**
+	 * Two lists considered equals if they have equal size and every entry from one has similar entry from another
+	 * @param firstComposeBlockList
+	 * @param secondComposeBlockList
+	 * @return
+	 */
+	private boolean isEquals( List<ComposeBlock> firstComposeBlockList, List<ComposeBlock> secondComposeBlockList ) {
+		if ( firstComposeBlockList.size() != secondComposeBlockList.size() ) return false;
+
+		for( ComposeBlock firstComposeBlock : firstComposeBlockList ) {
 			boolean isInList = false;
-			for ( ComposeBlock thatPossiblePreviousComposeBlock : that.possiblePreviousComposeBlocks ) {
-				if ( thisPossiblePreviousComposeBlock.isSimilar( thatPossiblePreviousComposeBlock ) ) {
+			for ( ComposeBlock secondComposeBlock : secondComposeBlockList ) {
+				if ( ( firstComposeBlock == null && secondComposeBlock != null ) ||
+						( firstComposeBlock != null && secondComposeBlock == null ) ) {
+					continue;
+				} else if ( firstComposeBlock == null && secondComposeBlock == null ||
+						firstComposeBlock.isSimilar( secondComposeBlock ) ) {
 					isInList = true;
+					break;
 				}
 			}
-			if ( !isInList )
-				return false;
+			if ( !isInList ) return false;
 		}
-
-		if ( possibleNextComposeBlocks.size() != that.possibleNextComposeBlocks.size() )
-			return false;
-
-		for ( ComposeBlock thisPossibleNextComposeBlock : this.possibleNextComposeBlocks ) {
-			boolean isInList = false;
-			for ( ComposeBlock thatPossibleNextComposeBlock : that.possibleNextComposeBlocks ) {
-				if ( thisPossibleNextComposeBlock.isSimilar( thatPossibleNextComposeBlock )  ) {
-					isInList = true;
-				}
-			}
-			if ( !isInList )
-				return false;
-		}
-
 		return true;
 	}
 

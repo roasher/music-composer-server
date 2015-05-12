@@ -25,5 +25,8 @@
         <module name="MusicComposer" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="MusicComposer" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

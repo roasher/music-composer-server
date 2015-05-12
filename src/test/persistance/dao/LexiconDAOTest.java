@@ -25,11 +25,9 @@ import static junit.framework.TestCase.assertTrue;
  */
 public class LexiconDAOTest extends AbstractSpringTest {
 
-	@Autowired @Qualifier("lexiconDAO_JAXBImpl") private LexiconDAO lexiconDAO;
+	@Autowired @Qualifier("lexiconDAO_database") private LexiconDAO lexiconDAO;
 	@Autowired private CompositionLoader compositionLoader;
 	@Autowired private CompositionDecomposer compositionDecomposer;
-
-	public static final Path storeFile = Paths.get( "src\\main\\persistancetabase\\test\\Lexicon.xml" );
 
 //	@Before
 //	public void before() throws IOException {
@@ -42,9 +40,6 @@ public class LexiconDAOTest extends AbstractSpringTest {
 //		deleteFile();
 //	}
 
-	private void deleteFile() {
-		storeFile.toFile().delete();
-	}
 
 	@Test
 	public void storeIdentityTest() throws IOException {
@@ -52,12 +47,9 @@ public class LexiconDAOTest extends AbstractSpringTest {
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 
-		storeFile.getParent().toFile().mkdirs();
-		storeFile.toFile().createNewFile();
 		lexiconDAO.store( lexicon );
-		assertTrue( storeFile.toFile().exists() );
-
 		Lexicon fetchedLexicon = lexiconDAO.fetch();
+
 		assertTrue( lexicon.equals( fetchedLexicon ) );
 	}
 }

@@ -13,7 +13,33 @@ public class BlockMovement {
 	@Id @GeneratedValue
 	long id;
 	@Column
-	MelodyMovement topVoiceMovement;
+	int topVoiceMovement;
 	@Column
-	MelodyMovement bottomVoiceMovement;
+	int bottomVoiceMovement;
+
+	BlockMovement() {}
+	BlockMovement( int topVoiceMovement, int bottomVoiceMovement ) {
+		this.topVoiceMovement = topVoiceMovement;
+		this.bottomVoiceMovement = bottomVoiceMovement;
+	}
+
+	@Override public boolean equals( Object o ) {
+		if ( this == o )
+			return true;
+		if ( !( o instanceof BlockMovement ) )
+			return false;
+
+		BlockMovement that = ( BlockMovement ) o;
+
+		if ( topVoiceMovement != that.topVoiceMovement )
+			return false;
+		return bottomVoiceMovement == that.bottomVoiceMovement;
+
+	}
+
+	@Override public int hashCode() {
+		int result = topVoiceMovement;
+		result = 31 * result + bottomVoiceMovement;
+		return result;
+	}
 }

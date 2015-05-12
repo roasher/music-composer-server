@@ -20,6 +20,64 @@ import java.util.Objects;
  * Created by Pavel Yurkin on 20.07.14.
  */
 public class ModelUtils {
+
+	/**
+	 * Checking that all melodies starts from the same time and returning that time
+	 * @param melodyList
+	 * @return
+	 */
+	public static double retrieveStartTime( List<Melody> melodyList ) {
+		double currentStartTime = melodyList.get( 0 ).getStartTime();
+		for ( int currentInstrument = 1; currentInstrument < melodyList.size(); currentInstrument++ ) {
+			if ( currentStartTime != melodyList.get( currentInstrument ).getStartTime() ) {
+				throw new IllegalArgumentException( String.format( "Several instrument parts has different start times, for example: 0 and %s ", currentInstrument ) );
+			}
+		}
+		return currentStartTime;
+	}
+
+	/**
+	 * Checking that all melodies has same rhythm value and returns this value
+	 * @param melodyList
+	 * @return
+	 */
+	public static double retrieveRhythmValue( List<Melody> melodyList ) {
+		double currentRhytmValue = sumAllRhytmValues( melodyList.get( 0 ) );
+		for ( int currentInstrument = 1; currentInstrument < melodyList.size(); currentInstrument++ ) {
+			if ( currentRhytmValue != sumAllRhytmValues( melodyList.get( currentInstrument ) ) ) {
+				throw new IllegalArgumentException( String.format( "Several instruments has different rhytmValues, for example: 0 and %s ", currentInstrument ) );
+			}
+		}
+		return currentRhytmValue;
+	}
+
+	/**
+	 * Retrieves interval pattern between first notes of melodies.
+	 * @param melodyList
+	 * @return
+	 */
+	public static List<Integer> retrieveFirstIntervalPattern( List<Melody> melodyList ) {
+		List<Integer> firstVertical = new ArrayList<Integer>();
+		for ( int currentInstrument = 0; currentInstrument < melodyList.size(); currentInstrument++ ) {
+			firstVertical.add( melodyList.get( currentInstrument ).getPitchArray()[0] );
+		}
+		return getIntervalPattern( firstVertical );
+	}
+
+	/**
+	 * Retrieves interval pattern between last notes of melodies.
+	 * @param melodyList
+	 * @return
+	 */
+	public static List<Integer> retrieveLastIntervalPattern( List<Melody> melodyList ) {
+		List<Integer> lastVertical = new ArrayList<Integer>();
+		for ( int currentInstrument = 0; currentInstrument < melodyList.size(); currentInstrument++ ) {
+			int lastNoteNumber = melodyList.get( currentInstrument ).size() - 1;
+			lastVertical.add( melodyList.get( currentInstrument ).getPitchArray()[lastNoteNumber] );
+		}
+		return getIntervalPattern( lastVertical );
+	}
+
     /**
      * Retrieves interval pattern from note list, represents music vertical
      * @param notePitches

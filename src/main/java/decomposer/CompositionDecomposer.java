@@ -36,7 +36,7 @@ public class CompositionDecomposer {
     @Autowired
     private MusicBlockProvider musicBlockProvider;
 
-	@Autowired @Qualifier("lexiconDAO_JAXBImpl")
+	@Autowired @Qualifier("lexiconDAO_stub")
 	private LexiconDAO LexiconDAO;
 
 	private Logger logger = LoggerFactory.getLogger( getClass() );

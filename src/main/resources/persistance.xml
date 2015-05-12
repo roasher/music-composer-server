@@ -5,14 +5,24 @@
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="org.h2.Driver"/>
-        <property name="url" value="jdbc:h2:file:src/main/java/persistance/file/Lexicon"/>
+        <property name="url" value="jdbc:h2:~/lexicon"/>
         <property name="username" value=""/>
         <property name="password" value=""/>
     </bean>
     
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <!--<property name="annotatedPackages" value="persistance.model"/>-->
+        <property name="annotatedClasses">
+            <list>
+                <value>persistance.model.BlockMovement</value>
+                <value>persistance.model.ComposeBlock</value>
+                <value>persistance.model.CompositionInfo</value>
+                <value>persistance.model.Lexicon</value>
+                <value>persistance.model.Melody</value>
+                <value>persistance.model.Note</value>
+            </list>
+        </property>
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
@@ -23,7 +33,7 @@
         </property>
     </bean>
 
-    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

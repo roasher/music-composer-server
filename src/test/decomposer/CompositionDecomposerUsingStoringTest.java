@@ -87,4 +87,5 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 		Lexicon lexiconAllWithDB = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 		assertNotEquals( lexiconAllWithDB, lexiconSecond );
 	}
+
 }

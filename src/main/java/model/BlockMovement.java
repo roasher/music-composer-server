@@ -18,10 +18,10 @@ import java.util.List;
  */
 public class BlockMovement implements Serializable {
 
-    private MelodyMovement topVoiceMelodyMovement;
-    private MelodyMovement bottomVoiceMelodyMovement;
+    private int topVoiceMelodyMovement;
+    private int bottomVoiceMelodyMovement;
 
-	public BlockMovement() {}
+	public BlockMovement( int topVoiceMelodyMovement, int bottomVoiceMelodyMovement ) { this.topVoiceMelodyMovement = topVoiceMelodyMovement; this.bottomVoiceMelodyMovement = bottomVoiceMelodyMovement; }
 
     public BlockMovement( MusicBlock firstMusicBlock, MusicBlock secondMusicBlock ) {
 
@@ -31,10 +31,10 @@ public class BlockMovement implements Serializable {
 		for ( Melody melody : firstMusicBlock.getMelodyList() ) {
 			int noteNumber = melody.size();
 			if ( melody.getNote( noteNumber - 1 ).getPitch() > firstMusicBlockTopNotePitch ) {
-				firstMusicBlockTopNotePitch = melody.getNote( 0 ).getPitch();
+				firstMusicBlockTopNotePitch = melody.getNote( noteNumber - 1 ).getPitch();
 			}
 			if ( melody.getNote( noteNumber - 1 ).getPitch() < firstMusicBlockBottomNotePitch ) {
-				firstMusicBlockBottomNotePitch = melody.getNote( 0 ).getPitch();
+				firstMusicBlockBottomNotePitch = melody.getNote( noteNumber - 1 ).getPitch();
 			}
 		}
 
@@ -50,52 +50,35 @@ public class BlockMovement implements Serializable {
 			}
 		}
 
-        topVoiceMelodyMovement = new MelodyMovement( new int[] { firstMusicBlockTopNotePitch, secondMusicBlockTopNotePitch } ) ;
-        bottomVoiceMelodyMovement = new MelodyMovement( new int[] { firstMusicBlockBottomNotePitch, secondMusicBlockBottomNotePitch } ) ;
+        topVoiceMelodyMovement = secondMusicBlockTopNotePitch - firstMusicBlockTopNotePitch ;
+        bottomVoiceMelodyMovement = secondMusicBlockBottomNotePitch - firstMusicBlockBottomNotePitch;
     }
 
-	@Override
-	public boolean equals( Object o ) {
-		if ( this == o ) {
+	public int getTopVoiceMelodyMovement() {
+		return topVoiceMelodyMovement;
+	}
+
+	public int getBottomVoiceMelodyMovement() {
+		return bottomVoiceMelodyMovement;
+	}
+
+	@Override public boolean equals( Object o ) {
+		if ( this == o )
 			return true;
-		}
-		if ( !( o instanceof BlockMovement ) ) {
+		if ( !( o instanceof BlockMovement ) )
 			return false;
-		}
 
 		BlockMovement that = ( BlockMovement ) o;
 
-		if ( !bottomVoiceMelodyMovement.equals( that.bottomVoiceMelodyMovement ) ) {
+		if ( topVoiceMelodyMovement != that.topVoiceMelodyMovement )
 			return false;
-		}
-		if ( !topVoiceMelodyMovement.equals( that.topVoiceMelodyMovement ) ) {
-			return false;
-		}
+		return bottomVoiceMelodyMovement == that.bottomVoiceMelodyMovement;
 
-		return true;
 	}
 
-	@Override
-	public int hashCode() {
-		int result = topVoiceMelodyMovement.hashCode();
-		result = 31 * result + bottomVoiceMelodyMovement.hashCode();
+	@Override public int hashCode() {
+		int result = topVoiceMelodyMovement;
+		result = 31 * result + bottomVoiceMelodyMovement;
 		return result;
 	}
-
-	// Getters & Setters
-    public MelodyMovement getTopVoiceMelodyMovement() {
-        return topVoiceMelodyMovement;
-    }
-
-    public void setTopVoiceMelodyMovement( MelodyMovement topVoiceMelodyMovement ) {
-        this.topVoiceMelodyMovement = topVoiceMelodyMovement;
-    }
-
-    public MelodyMovement getBottomVoiceMelodyMovement() {
-        return bottomVoiceMelodyMovement;
-    }
-
-    public void setBottomVoiceMelodyMovement( MelodyMovement bottomVoiceMelodyMovement ) {
-        this.bottomVoiceMelodyMovement = bottomVoiceMelodyMovement;
-    }
 }

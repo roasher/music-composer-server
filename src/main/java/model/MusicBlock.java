@@ -44,38 +44,13 @@ public class MusicBlock implements Serializable {
 		// Computing derivative information
 		{
 			// Computing interval patterns
-			// first
-			{
-				List<Integer> firstVertical = new ArrayList<Integer>();
-				for ( int currentInstrument = 0; currentInstrument < inputMelodyList.size(); currentInstrument++ ) {
-					firstVertical.add( inputMelodyList.get( currentInstrument ).getPitchArray()[0] );
-				}
-				this.startIntervalPattern = getIntervalPattern( firstVertical );
-			}
-			// last
-			{
-				List<Integer> lastVertical = new ArrayList<Integer>();
-				for ( int currentInstrument = 0; currentInstrument < inputMelodyList.size(); currentInstrument++ ) {
-					int lastNoteNumber = inputMelodyList.get( currentInstrument ).size() - 1;
-					lastVertical.add( inputMelodyList.get( currentInstrument ).getPitchArray()[lastNoteNumber] );
-				}
-				this.endIntervalPattern = getIntervalPattern( lastVertical );
-			}
+			this.startIntervalPattern = retrieveFirstIntervalPattern( inputMelodyList );
+			this.endIntervalPattern = retrieveLastIntervalPattern( inputMelodyList );
+
 			// rhytmValue && start time
-			{
-				double currentStartTime = inputMelodyList.get( 0 ).getStartTime();
-				double currentRhytmValue = sumAllRhytmValues( inputMelodyList.get( 0 ) );
-				for ( int currentInstrument = 1; currentInstrument < inputMelodyList.size(); currentInstrument++ ) {
-					if ( currentRhytmValue != sumAllRhytmValues( inputMelodyList.get( currentInstrument ) ) ) {
-						throw new IllegalArgumentException( String.format( "Several instruments has different rhytmValues, for example: 0 and %s ", currentInstrument ) );
-					}
-					if ( currentStartTime != inputMelodyList.get( currentInstrument ).getStartTime() ) {
-						throw new IllegalArgumentException( String.format( "Several instrument parts has different start times, for example: 0 and %s ", currentInstrument ) );
-					}
-				}
-				this.rhythmValue = currentRhytmValue;
-				this.startTime = currentStartTime;
-			}
+			this.rhythmValue = retrieveRhythmValue( inputMelodyList );
+			this.startTime = retrieveStartTime( inputMelodyList );
+
 			// Tension and form stuff
 			// TODO implementation
 		}
