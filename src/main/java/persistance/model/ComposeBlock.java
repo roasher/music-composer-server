@@ -13,11 +13,11 @@ class ComposeBlock {
 	long id;
 	@Column
 	double startTime;
-	@Column
+	@ManyToOne
 	CompositionInfo compositionInfo;
 	@OneToMany
 	List<Melody> melodyList;
-	@Column
+	@ManyToOne
 	BlockMovement blockMovementFromPreviousToThis;
 
 	@ManyToMany

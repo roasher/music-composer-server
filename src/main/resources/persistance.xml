@@ -5,8 +5,8 @@
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="org.h2.Driver"/>
-        <property name="url" value="jdbc:h2:~/lexicon"/>
-        <property name="username" value=""/>
+        <property name="url" value="jdbc:h2:~/test;AUTO_SERVER=TRUE"/>
+        <property name="username" value="sa"/>
         <property name="password" value=""/>
     </bean>
     
@@ -15,12 +15,14 @@
         <!--<property name="annotatedPackages" value="persistance.model"/>-->
         <property name="annotatedClasses">
             <list>
-                <value>persistance.model.BlockMovement</value>
-                <value>persistance.model.ComposeBlock</value>
-                <value>persistance.model.CompositionInfo</value>
-                <value>persistance.model.Lexicon</value>
-                <value>persistance.model.Melody</value>
-                <value>persistance.model.Note</value>
+                <!--<value>persistance.model.BlockMovement</value>-->
+                <!--<value>persistance.model.ComposeBlock</value>-->
+                <!--<value>persistance.model.CompositionInfo</value>-->
+                <!--<value>persistance.model.Lexicon</value>-->
+                <!--<value>persistance.model.Melody</value>-->
+                <!--<value>persistance.model.Note</value>-->
+                <value>persistance.test.Vagon</value>
+                <value>persistance.test.VagonCollection</value>
             </list>
         </property>
         <property name="hibernateProperties">
