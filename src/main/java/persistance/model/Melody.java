@@ -2,10 +2,7 @@ package persistance.model;
 
 import utils.ModelUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,7 +13,7 @@ import java.util.List;
 class Melody {
 	@Id @GeneratedValue
 	long id;
-	@ManyToMany
+	@ManyToMany( cascade = CascadeType.ALL )
 	List<Note> noteList;
 
 	Melody() {}

@@ -25,21 +25,24 @@ import static junit.framework.TestCase.assertTrue;
  */
 public class LexiconDAOTest extends AbstractSpringTest {
 
-	@Autowired @Qualifier("lexiconDAO_database") private LexiconDAO lexiconDAO;
-	@Autowired private CompositionLoader compositionLoader;
-	@Autowired private CompositionDecomposer compositionDecomposer;
+	@Autowired
+	@Qualifier( "lexiconDAO_database" )
+	private LexiconDAO lexiconDAO;
+	@Autowired
+	private CompositionLoader compositionLoader;
+	@Autowired
+	private CompositionDecomposer compositionDecomposer;
 
-//	@Before
-//	public void before() throws IOException {
-//		deleteFile();
-//		lexiconDAO.setStoreFile( storeFile.toFile() );
-//	}
+	//	@Before
+	//	public void before() throws IOException {
+	//		deleteFile();
+	//		lexiconDAO.setStoreFile( storeFile.toFile() );
+	//	}
 
-//	@After
-//	public void after() {
-//		deleteFile();
-//	}
-
+	//	@After
+	//	public void after() {
+	//		deleteFile();
+	//	}
 
 	@Test
 	public void storeIdentityTest() throws IOException {

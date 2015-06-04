@@ -15,14 +15,14 @@
         <!--<property name="annotatedPackages" value="persistance.model"/>-->
         <property name="annotatedClasses">
             <list>
-                <!--<value>persistance.model.BlockMovement</value>-->
-                <!--<value>persistance.model.ComposeBlock</value>-->
-                <!--<value>persistance.model.CompositionInfo</value>-->
-                <!--<value>persistance.model.Lexicon</value>-->
-                <!--<value>persistance.model.Melody</value>-->
-                <!--<value>persistance.model.Note</value>-->
-                <value>persistance.test.Vagon</value>
-                <value>persistance.test.VagonCollection</value>
+                <value>persistance.model.BlockMovement</value>
+                <value>persistance.model.ComposeBlock</value>
+                <value>persistance.model.CompositionInfo</value>
+                <value>persistance.model.Lexicon</value>
+                <value>persistance.model.Melody</value>
+                <value>persistance.model.Note</value>
+                <!--<value>persistance.test.Vagon</value>-->
+                <!--<value>persistance.test.VagonCollection</value>-->
             </list>
         </property>
         <property name="hibernateProperties">

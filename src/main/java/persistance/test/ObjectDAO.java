@@ -26,7 +26,9 @@ public class ObjectDAO {
 
 	public void persist( List objectList ) {
 		Session session = sessionFactory.getCurrentSession();
-		session.save( objectList );
+		for( Object entry : objectList ) {
+			session.save( entry );
+		}
 	}
 
 	public List<Object> getAll() {

@@ -9,57 +9,65 @@ import java.util.List;
 public class PersistConverter {
 
 	public static model.Lexicon convertLexicon( persistance.model.Lexicon lexicon ) {
+		return new model.Lexicon( convertPersistComposeBlockList( lexicon.composeBlockList ) );
+	}
+
+	public static persistance.model.Lexicon convertLexicon( model.Lexicon lexicon ) {
+		persistance.model.Lexicon persitanceLexicon = new persistance.model.Lexicon( convertComposeBlockList( lexicon.getComposeBlockList() ) );
+		persitanceLexicon.minRhythmValue = lexicon.getMinRhythmValue();
+		return persitanceLexicon;
+	}
+
+	public static List<model.ComposeBlock> convertPersistComposeBlockList( List<persistance.model.ComposeBlock> persistanceComposeBlockList ) {
 
 		List<model.ComposeBlock> composeBlockList = new ArrayList<>(  );
-		for ( persistance.model.ComposeBlock persistanceComposeBlock : lexicon.composeBlockList ) {
+		for ( persistance.model.ComposeBlock persistanceComposeBlock : persistanceComposeBlockList ) {
 			composeBlockList.add( convertComposeBlock( persistanceComposeBlock ) );
 		}
 
-		for ( int composeBlockNumber = 0; composeBlockNumber < lexicon.composeBlockList.size(); composeBlockNumber++ ) {
-			List<persistance.model.ComposeBlock> persistancePossibleNextList = lexicon.composeBlockList.get( composeBlockNumber ).possibleNextComposeBlocks;
+		for ( int composeBlockNumber = 0; composeBlockNumber < persistanceComposeBlockList.size(); composeBlockNumber++ ) {
+			List<persistance.model.ComposeBlock> persistancePossibleNextList = persistanceComposeBlockList.get( composeBlockNumber ).possibleNextComposeBlocks;
 			for ( persistance.model.ComposeBlock persistancePossibleNext : persistancePossibleNextList ) {
 				model.ComposeBlock composeBlock = composeBlockList.get( composeBlockNumber );
-				int index = lexicon.composeBlockList.lastIndexOf( persistancePossibleNext );
+				int index = persistanceComposeBlockList.lastIndexOf( persistancePossibleNext );
 				composeBlock.getPossibleNextComposeBlocks().add( persistancePossibleNext != null ? composeBlockList.get( index ) : null );
 			}
 
-			List<persistance.model.ComposeBlock> persistancePossiblePrevoiusList = lexicon.composeBlockList.get( composeBlockNumber ).possiblePreviousComposeBlocks;
+			List<persistance.model.ComposeBlock> persistancePossiblePrevoiusList = persistanceComposeBlockList.get( composeBlockNumber ).possiblePreviousComposeBlocks;
 			for ( persistance.model.ComposeBlock persistancePossiblePrevious : persistancePossiblePrevoiusList ) {
 				model.ComposeBlock composeBlock = composeBlockList.get( composeBlockNumber );
-				int index = lexicon.composeBlockList.lastIndexOf( persistancePossiblePrevious );
+				int index = persistanceComposeBlockList.lastIndexOf( persistancePossiblePrevious );
 				composeBlock.getPossiblePreviousComposeBlocks().add( persistancePossiblePrevious != null ? composeBlockList.get( index ) : null );
 			}
 		}
 
-		return new model.Lexicon( composeBlockList );
+		return composeBlockList;
 	}
 
-	public static persistance.model.Lexicon convertLexicon( model.Lexicon lexicon ) {
+	public static List<persistance.model.ComposeBlock> convertComposeBlockList( List<model.ComposeBlock> composeBlockList ) {
 
 		List<persistance.model.ComposeBlock> persistanceComposeBlockList = new ArrayList<>(  );
-		for ( model.ComposeBlock composeBlock : lexicon.getComposeBlockList() ) {
+		for ( model.ComposeBlock composeBlock : composeBlockList ) {
 			persistanceComposeBlockList.add( convertComposeBlock( composeBlock ) );
 		}
 
-		for ( int composeBlockNumber = 0; composeBlockNumber < lexicon.getComposeBlockList().size(); composeBlockNumber++ ) {
-			List<model.ComposeBlock> possibleNextList = lexicon.getComposeBlockList().get( composeBlockNumber ).getPossibleNextComposeBlocks();
+		for ( int composeBlockNumber = 0; composeBlockNumber < composeBlockList.size(); composeBlockNumber++ ) {
+			List<model.ComposeBlock> possibleNextList = composeBlockList.get( composeBlockNumber ).getPossibleNextComposeBlocks();
 			for ( model.ComposeBlock possibleNext : possibleNextList ) {
 				persistance.model.ComposeBlock composeBlock = persistanceComposeBlockList.get( composeBlockNumber );
-				int index = lexicon.getComposeBlockList().lastIndexOf( possibleNext );
+				int index = composeBlockList.lastIndexOf( possibleNext );
 				composeBlock.possibleNextComposeBlocks.add( possibleNext != null ? persistanceComposeBlockList.get( index ) : null );
 			}
 
-			List<model.ComposeBlock> possiblePrevoiusList = lexicon.getComposeBlockList().get( composeBlockNumber ).getPossiblePreviousComposeBlocks();
+			List<model.ComposeBlock> possiblePrevoiusList = composeBlockList.get( composeBlockNumber ).getPossiblePreviousComposeBlocks();
 			for ( model.ComposeBlock possiblePrevious : possiblePrevoiusList ) {
 				persistance.model.ComposeBlock composeBlock = persistanceComposeBlockList.get( composeBlockNumber );
-				int index = lexicon.getComposeBlockList().lastIndexOf( possiblePrevious );
+				int index = composeBlockList.lastIndexOf( possiblePrevious );
 				composeBlock.possiblePreviousComposeBlocks.add( possiblePrevious != null ? persistanceComposeBlockList.get( index ) : null );
 			}
 		}
 
-		persistance.model.Lexicon persitanceLexicon = new persistance.model.Lexicon( persistanceComposeBlockList );
-		persitanceLexicon.minRhythmValue = lexicon.getMinRhythmValue();
-		return persitanceLexicon;
+		return persistanceComposeBlockList;
 	}
 
 	public static model.ComposeBlock convertComposeBlock( persistance.model.ComposeBlock persistanceComposeBlock ) {

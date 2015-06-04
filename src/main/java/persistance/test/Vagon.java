@@ -9,13 +9,13 @@ import java.util.Set;
  */
 @Entity
 public class Vagon {
-	@Id @GeneratedValue @Column( name = "VAGON_ID" )
+	@Id @Column( name = "VAGON_ID" )
 	public int id;
 	@Column( name = "NAME" )
 	public String name;
 
 	public Vagon() {}
-	public Vagon( String name ) { this.name = name; }
+	public Vagon( int id, String name ) { this.id = id; this.name = name; }
 
 	@ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER )
 	@JoinTable( name = "VAGON_NEXT_REL",
@@ -24,8 +24,5 @@ public class Vagon {
 	public Set<Vagon> possiblePreviousVagons = new HashSet<>(  );
 
 	@ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "possiblePreviousVagons" )
-//	@JoinTable( name = "VAGON_PREV_REL",
-//			joinColumns = {@JoinColumn( name = "VAGON_ID" )},
-//			inverseJoinColumns = {@JoinColumn( name = "PREV_VAGON_ID" )})
 	public Set<Vagon> possibleNextVagons = new HashSet<>(  );
 }

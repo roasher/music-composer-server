@@ -2,28 +2,34 @@ package persistance.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by pyurkin on 29.04.2015.
  */
 @Entity
-class ComposeBlock {
-	@Id @GeneratedValue
-	long id;
+public class ComposeBlock {
+	@Id @GeneratedValue @Column( name = "COMPOSE_BLOCK_ID" )
+	public long id;
 	@Column
-	double startTime;
-	@ManyToOne
-	CompositionInfo compositionInfo;
-	@OneToMany
-	List<Melody> melodyList;
-	@ManyToOne
-	BlockMovement blockMovementFromPreviousToThis;
+	public double startTime;
+	@ManyToOne( cascade = CascadeType.ALL )
+	public CompositionInfo compositionInfo;
+	@OneToMany( cascade = CascadeType.ALL )
+	public List<Melody> melodyList;
+	@ManyToOne( cascade = CascadeType.ALL )
+	public BlockMovement blockMovementFromPreviousToThis;
 
-	@ManyToMany
-	List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>(  );
-	@ManyToMany
-	List<ComposeBlock> possiblePreviousComposeBlocks = new ArrayList<>(  );
+	@ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "possiblePreviousComposeBlocks" )
+	public List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>(  );
+
+	@ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER )
+	@JoinTable( name = "COMPOSE_BLOCKS_NEXT_REL",
+			joinColumns = {@JoinColumn( name = "COMPOSE_BLOCK_ID" )},
+			inverseJoinColumns = {@JoinColumn( name = "PREV_COMPOSE_BLOCK_ID" )})
+	public List<ComposeBlock> possiblePreviousComposeBlocks = new ArrayList<>(  );
 
 	ComposeBlock() {}
 	ComposeBlock( double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, BlockMovement blockMovementFromPreviousToThis ) {

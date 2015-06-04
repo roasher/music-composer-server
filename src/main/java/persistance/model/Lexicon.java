@@ -10,11 +10,11 @@ import java.util.List;
 @Entity
 public class Lexicon {
 	@Id @GeneratedValue
-	long id;
+	public long id;
 	@Column
-	double minRhythmValue;
-	@ManyToMany
-	List<ComposeBlock> composeBlockList = new ArrayList<>(  );
+	public double minRhythmValue;
+	@OneToMany
+	public List<ComposeBlock> composeBlockList = new ArrayList<>(  );
 
 	Lexicon() {}
 	Lexicon( List<ComposeBlock> composeBlockList ) { this.composeBlockList = composeBlockList; }
