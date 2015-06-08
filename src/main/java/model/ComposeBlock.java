@@ -129,6 +129,10 @@ public class ComposeBlock {
 		return startTime;
 	}
 
+	public void setStartTime( double startTime ) {
+		this.startTime = startTime;
+	}
+
 	public CompositionInfo getCompositionInfo() {
 		return compositionInfo;
 	}
@@ -188,9 +192,12 @@ public class ComposeBlock {
 		if ( !this.isSimilar( that ) )
 			return false;
 
-		if ( !isEquals( this.possibleNextComposeBlocks, that.possibleNextComposeBlocks ) ) return false;
-		if ( !isEquals( this.possiblePreviousComposeBlocks, that.possiblePreviousComposeBlocks ) ) return false;
-
+		if ( !isEquals( this.possibleNextComposeBlocks, that.possibleNextComposeBlocks ) ) {
+			return false;
+		}
+		if ( !isEquals( this.possiblePreviousComposeBlocks, that.possiblePreviousComposeBlocks ) ) {
+			return false;
+		}
 		return true;
 	}
 

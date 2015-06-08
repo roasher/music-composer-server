@@ -18,11 +18,12 @@
                 <value>persistance.model.BlockMovement</value>
                 <value>persistance.model.ComposeBlock</value>
                 <value>persistance.model.CompositionInfo</value>
-                <value>persistance.model.Lexicon</value>
                 <value>persistance.model.Melody</value>
                 <value>persistance.model.Note</value>
-                <!--<value>persistance.test.Vagon</value>-->
-                <!--<value>persistance.test.VagonCollection</value>-->
+                <value>persistance.model.Form</value>
+
+                <value>persistance.test.Vagon</value>
+                <value>persistance.test.VagonCollection</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -30,7 +31,7 @@
                 <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.format_sql">true</prop>
-                <prop key="hibernate.hbm2ddl.auto">create</prop>
+                <!--<prop key="hibernate.hbm2ddl.auto">create</prop>-->
             </props>
         </property>
     </bean>

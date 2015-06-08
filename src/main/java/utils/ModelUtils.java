@@ -2,9 +2,7 @@ package utils;
 
 import jm.constants.Pitches;
 import jm.music.data.Note;
-import jm.music.data.Phrase;
 import jm.music.data.Score;
-import model.MusicBlock;
 import model.melody.Melody;
 import model.composition.CompositionInfo;
 import model.composition.Meter;
@@ -13,7 +11,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Class aggregates useful utilities upon Model objects
@@ -61,7 +58,7 @@ public class ModelUtils {
 		for ( int currentInstrument = 0; currentInstrument < melodyList.size(); currentInstrument++ ) {
 			firstVertical.add( melodyList.get( currentInstrument ).getPitchArray()[0] );
 		}
-		return getIntervalPattern( firstVertical );
+		return retrieveIntervalPattern( firstVertical );
 	}
 
 	/**
@@ -75,7 +72,7 @@ public class ModelUtils {
 			int lastNoteNumber = melodyList.get( currentInstrument ).size() - 1;
 			lastVertical.add( melodyList.get( currentInstrument ).getPitchArray()[lastNoteNumber] );
 		}
-		return getIntervalPattern( lastVertical );
+		return retrieveIntervalPattern( lastVertical );
 	}
 
     /**
@@ -83,7 +80,7 @@ public class ModelUtils {
      * @param notePitches
      * @return
      */
-    public static List< Integer > getIntervalPattern( List< Integer > notePitches ) {
+    public static List< Integer > retrieveIntervalPattern( List<Integer> notePitches ) {
         // To prevent input List changing we will create a copy
         List< Integer > copyInputNotePitches = new ArrayList< Integer >( notePitches );
 
@@ -122,7 +119,7 @@ public class ModelUtils {
 		return rhytmSum;
 	}
 
-    public static CompositionInfo getCompositionInfo( Score score, String author, Meter meter ) {
+    public static CompositionInfo buildCompositionInfo( Score score, String author, Meter meter ) {
         CompositionInfo compositionInfo = new CompositionInfo();
         compositionInfo.setTitle( score.getTitle() );
         compositionInfo.setTempo( score.getTempo() );
@@ -156,4 +153,6 @@ public class ModelUtils {
 		}
 		return "";
 	}
+
+
 }

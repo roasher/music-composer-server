@@ -15,6 +15,8 @@ class Melody {
 	long id;
 	@ManyToMany( cascade = CascadeType.ALL )
 	List<Note> noteList;
+	@ManyToOne( cascade = CascadeType.ALL )
+	Form form;
 
 	Melody() {}
 	Melody( List<Note> noteList ) { this.noteList = noteList; }

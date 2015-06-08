@@ -11,6 +11,8 @@ import persistance.test.VagonCollection;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by night wish on 01.06.2015.
  */
@@ -51,6 +53,6 @@ public class ManyToManyTest extends AbstractSpringTest {
 
 //		vagonDAO.persist( vagonWheels );
 
-		System.out.print( vagonWheels );
+		assertEquals( vagonWheels.size(), vagonWheelsFromDB.size() );
 	}
 }

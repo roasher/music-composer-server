@@ -1,5 +1,6 @@
 package persistance.dao;
 
+import model.melody.Melody;
 import persistance.dao.LexiconDAO;
 import decomposer.CompositionDecomposer;
 import helper.AbstractSpringTest;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import model.ComposeBlock;
 import utils.CompositionLoader;
 
 import java.io.File;
@@ -18,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 /**
@@ -33,26 +36,22 @@ public class LexiconDAOTest extends AbstractSpringTest {
 	@Autowired
 	private CompositionDecomposer compositionDecomposer;
 
-	//	@Before
-	//	public void before() throws IOException {
-	//		deleteFile();
-	//		lexiconDAO.setStoreFile( storeFile.toFile() );
-	//	}
-
-	//	@After
-	//	public void after() {
-	//		deleteFile();
-	//	}
-
 	@Test
 	public void storeIdentityTest() throws IOException {
 
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder(
+				new File( "src\\test\\composer\\simpleMelodies" ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 
 		lexiconDAO.store( lexicon );
 		Lexicon fetchedLexicon = lexiconDAO.fetch();
 
+		// We are not persisting start time, so for test comparing purposes setting it to zero
+		for ( ComposeBlock composeBlock : lexicon.getComposeBlockList() ) {
+			for ( Melody melody : composeBlock.getMelodyList() ) {
+				melody.setStartTime( 0 );
+			}
+		}
 		assertTrue( lexicon.equals( fetchedLexicon ) );
 	}
 }

@@ -39,7 +39,7 @@ public class ModelUtilsTest {
         intervalPattern.add( 19 );
         intervalPattern.add( 11 );
 
-        assertEquals( intervalPattern, getIntervalPattern( pitches ) );
+        assertEquals( intervalPattern, retrieveIntervalPattern( pitches ) );
     }
 
 	@Test

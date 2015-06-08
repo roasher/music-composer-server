@@ -34,7 +34,7 @@ public class LexiconDAO_database implements LexiconDAO {
 	@Override
 	public Lexicon fetch() {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria( persistance.model.ComposeBlock.class );
-		List<ComposeBlock> persistanceComposeBlockList = criteria.list();
+		List<ComposeBlock> persistanceComposeBlockList = criteria.setResultTransformer( Criteria.DISTINCT_ROOT_ENTITY ).list();
 		List<model.ComposeBlock> composeBlockList = PersistConverter.convertPersistComposeBlockList( persistanceComposeBlockList );
 		return new Lexicon( composeBlockList );
 	}

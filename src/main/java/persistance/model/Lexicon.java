@@ -9,11 +9,7 @@ import java.util.List;
  */
 @Entity
 public class Lexicon {
-	@Id @GeneratedValue
-	public long id;
-	@Column
 	public double minRhythmValue;
-	@OneToMany
 	public List<ComposeBlock> composeBlockList = new ArrayList<>(  );
 
 	Lexicon() {}

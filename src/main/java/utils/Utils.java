@@ -5,8 +5,10 @@ import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import model.ComposeBlock;
+import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
+import model.composition.CompositionInfo;
 import model.melody.Melody;
 
 import java.io.IOException;
@@ -202,4 +204,24 @@ public class Utils {
 			getVariantsOfDistributionWrapper( analyzed, toAnalyze, value - listValue, results );
 		}
 	}
+
+//	public static boolean areLexiconsSimilar( Lexicon firstLexicon, Lexicon secondLexicon ) {
+//		if ( firstLexicon.getMinRhythmValue() != secondLexicon.getMinRhythmValue() ) return false;
+//		// Compositions check
+//		if ( firstLexicon.getCompositionsInLexicon().size() != secondLexicon.getCompositionsInLexicon().size() ) return false;
+//		for ( CompositionInfo firstLexiconCompositionInfo : firstLexicon.getCompositionsInLexicon() ) {
+//			boolean found = false;
+//			for ( CompositionInfo secondLexiconCompositionInfo : secondLexicon.getCompositionsInLexicon() ) {
+//				if ( firstLexiconCompositionInfo.equals( secondLexiconCompositionInfo ) ) found = true;
+//			}
+//			if ( !found ) return false;
+//		}
+//		// Compose blocks check
+//		for ( int composeBlockNumber = 0; composeBlockNumber < firstLexicon.getComposeBlockList().size(); composeBlockNumber++ ) {
+//			ComposeBlock firstComposeBlock = firstLexicon.getComposeBlockList().get( composeBlockNumber );
+//			ComposeBlock secondComposeBlock = secondLexicon.getComposeBlockList().get( composeBlockNumber );
+//			if ( firstComposeBlock.isSimilar(  ))
+//		}
+//		return true;
+//	}
 }

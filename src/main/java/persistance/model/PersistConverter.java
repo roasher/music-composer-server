@@ -149,11 +149,15 @@ public class PersistConverter {
 	}
 
 	public static model.melody.Melody convertMelody( persistance.model.Melody persistanceMelody ) {
-		return new model.melody.Melody( convertNoteList( persistanceMelody.noteList ) );
+		model.melody.Melody melody = new model.melody.Melody( convertNoteList( persistanceMelody.noteList ) );
+		melody.setForm( new model.melody.Form( persistanceMelody.form.value ) );
+		return melody;
 	}
 
 	public static persistance.model.Melody convertMelody( model.melody.Melody melody ) {
-		return new persistance.model.Melody( convertToPersistNoteList( melody.getNoteList() ) );
+		Melody persistMelody = new Melody( convertToPersistNoteList( melody.getNoteList() ) );
+		persistMelody.form = new persistance.model.Form( melody.getForm().getValue() );
+		return persistMelody;
 	}
 
 	public static List<jm.music.data.Note> convertNoteList( List<persistance.model.Note> persistanceNoteList ) {

@@ -53,7 +53,7 @@ public class MusicBlockProvider {
 //		} else {
 //			for ( MusicBlock musicBlock : musicBlockList ) {
 //				if ( canSubstitute( currentMusicBlock.getNext(), musicBlock ) ) {
-//					logger.info( "Possible next music block has been found: {}, {}", musicBlock.getCompositionInfo().getTitle(), musicBlock );
+//					logger.info( "Possible next music block has been found: {}, {}", musicBlock.buildCompositionInfo().getTitle(), musicBlock );
 //					canSubstitute( currentMusicBlock.getNext(), musicBlock );
 //					return musicBlock;
 //				}
