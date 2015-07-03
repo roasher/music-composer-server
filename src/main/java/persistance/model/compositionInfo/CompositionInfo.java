@@ -1,23 +1,24 @@
-package persistance.model;
+package persistance.model.compositionInfo;
+
+import persistance.model.AbstractPersistanceModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 /**
  * Created by pyurkin on 29.04.2015.
  */
 @Entity
-class CompositionInfo {
-	@Id @GeneratedValue
-	long id;
+public class CompositionInfo extends AbstractPersistanceModel {
+
 	@Column
-	String author;
+	public String author;
 	@Column
-	String title;
+	public String title;
 	@Column
-	double tempo;
+	public double tempo;
+
+	CompositionInfo() {}
 
 	@Override public boolean equals( Object o ) {
 		if ( this == o )
@@ -27,8 +28,6 @@ class CompositionInfo {
 
 		CompositionInfo that = ( CompositionInfo ) o;
 
-		if ( id != that.id )
-			return false;
 		if ( Double.compare( that.tempo, tempo ) != 0 )
 			return false;
 		if ( author != null ? !author.equals( that.author ) : that.author != null )

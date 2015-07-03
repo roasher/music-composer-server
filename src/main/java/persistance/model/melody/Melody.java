@@ -1,5 +1,7 @@
-package persistance.model;
+package persistance.model.melody;
 
+import persistance.model.AbstractPersistanceModel;
+import persistance.model.note.Note;
 import utils.ModelUtils;
 
 import javax.persistence.*;
@@ -10,17 +12,16 @@ import java.util.List;
  * Created by pyurkin on 29.04.2015.
  */
 @Entity
-class Melody {
-	@Id @GeneratedValue
-	long id;
+public class Melody extends AbstractPersistanceModel {
+
 	@ManyToMany( cascade = CascadeType.ALL )
+	public
 	List<Note> noteList;
-	@ManyToOne( cascade = CascadeType.ALL )
-	Form form;
+//	@ManyToOne( cascade = CascadeType.ALL )
+//	public
+//	Form form;
 
 	Melody() {}
-	Melody( List<Note> noteList ) { this.noteList = noteList; }
-	Melody( Note... notes ) { this( Arrays.asList( notes ) ); }
 
 	@Override public boolean equals( Object o ) {
 		if ( this == o )

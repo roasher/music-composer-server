@@ -1,18 +1,19 @@
 package persistance.model;
 
+import persistance.model.blockMovement.BlockMovement;
+import persistance.model.compositionInfo.CompositionInfo;
+import persistance.model.melody.Melody;
+
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by pyurkin on 29.04.2015.
  */
 @Entity
-public class ComposeBlock {
-	@Id @GeneratedValue @Column( name = "COMPOSE_BLOCK_ID" )
-	public long id;
+public class ComposeBlock extends AbstractPersistanceModel {
+
 	@Column
 	public double startTime;
 	@ManyToOne( cascade = CascadeType.ALL )
@@ -32,7 +33,7 @@ public class ComposeBlock {
 	public List<ComposeBlock> possiblePreviousComposeBlocks = new ArrayList<>(  );
 
 	ComposeBlock() {}
-	ComposeBlock( double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, BlockMovement blockMovementFromPreviousToThis ) {
+	public ComposeBlock(double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, BlockMovement blockMovementFromPreviousToThis) {
 		this.startTime = startTime;
 		this.compositionInfo = compositionInfo;
 		this.melodyList = melodyList;
@@ -117,7 +118,7 @@ public class ComposeBlock {
 		return result;
 	}
 
-	public boolean isSimilar( persistance.model.ComposeBlock composeBlock ) {
+	public boolean isSimilar( ComposeBlock composeBlock ) {
 		boolean isEqualStartTimes = Double.compare( this.startTime, composeBlock.startTime ) == 0;
 
 		boolean isEqualCompositionInfos;

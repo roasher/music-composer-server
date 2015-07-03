@@ -1,29 +1,26 @@
-package persistance.model;
+package persistance.model.note;
+
+import persistance.model.AbstractPersistanceModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 /**
  * Created by pyurkin on 29.04.2015.
  */
 @Entity
-class Note {
-	@Id @GeneratedValue
-	long id;
+public class Note extends AbstractPersistanceModel {
+
 	@Column
-	int pitch;
+	public int pitch;
 	@Column
-	double rhythmValue;
+	public double rhythmValue;
 	@Column
-	int dynamic;
+	public int dynamic;
 	@Column
-	double pan;
+	public double pan;
 
 	Note() {}
-	Note( int pitch, double rhythmValue ) { this.pitch = pitch; this.rhythmValue = rhythmValue; }
-	Note( int pitch, double rhythmValue, int dynamic, double pan ) { this( pitch, rhythmValue ); this.dynamic = dynamic; this.pan = pan; }
 
 	@Override public boolean equals( Object o ) {
 		if ( this == o )
