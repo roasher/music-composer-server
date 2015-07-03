@@ -15,12 +15,12 @@
         <!--<property name="annotatedPackages" value="persistance.model"/>-->
         <property name="annotatedClasses">
             <list>
-                <value>persistance.model.BlockMovement</value>
+                <value>persistance.model.blockMovement.BlockMovement</value>
                 <value>persistance.model.ComposeBlock</value>
-                <value>persistance.model.CompositionInfo</value>
-                <value>persistance.model.Melody</value>
-                <value>persistance.model.Note</value>
-                <value>persistance.model.Form</value>
+                <value>persistance.model.compositionInfo.CompositionInfo</value>
+                <value>persistance.model.melody.Melody</value>
+                <value>persistance.model.note.Note</value>
+                <!--<value>persistance.model.Form</value>-->
 
                 <value>persistance.test.Vagon</value>
                 <value>persistance.test.VagonCollection</value>
