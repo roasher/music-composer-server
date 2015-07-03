@@ -1,6 +1,15 @@
 package persistance.model;
 
+import helper.AbstractSpringTest;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import persistance.Lexicon;
+import persistance.PersistConverter;
+import persistance.model.blockMovement.BlockMovement;
+import persistance.model.blockMovement.BlockMovementFactory;
+import persistance.model.melody.Melody;
+import persistance.model.melody.MelodyFactory;
+import persistance.model.note.NoteFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,99 +17,107 @@ import java.util.List;
 
 import static jm.JMC.*;
 import static org.junit.Assert.assertEquals;
-import static persistance.model.PersistConverter.convertLexicon;
 
 /**
  * Created by pyurkin on 05.05.2015.
  */
-public class PersistConverterTest {
+public class PersistConverterTest extends AbstractSpringTest {
+
+	@Autowired
+	private PersistConverter persistConverter;
+	@Autowired
+	private NoteFactory noteFactory;
+	@Autowired
+	private BlockMovementFactory blockMovementFactory;
+	@Autowired
+	private MelodyFactory melodyFactory;
 
 	@Test public void convert() {
-		persistance.model.Lexicon persistanceLexicon = getDefaultPersitanceLexicon();
+		Lexicon persistanceLexicon = getDefaultPersitanceLexicon();
 		model.Lexicon lexicon = getDefaultLexicon();
-		persistance.model.Lexicon convertedLexicon = convertLexicon( lexicon );
-		assertEquals( lexicon, convertLexicon( persistanceLexicon ) );
+		Lexicon convertedLexicon = persistConverter.convertLexicon(lexicon);
+		assertEquals( lexicon, persistConverter.convertLexicon(persistanceLexicon) );
 		assertEquals( persistanceLexicon, convertedLexicon );
 	}
 
 	@Test public void doubleConvert() {
-		persistance.model.Lexicon persistanceLexicon = getDefaultPersitanceLexicon();
-		assertEquals( persistanceLexicon, convertLexicon( convertLexicon( persistanceLexicon ) ) );
+		Lexicon persistanceLexicon = getDefaultPersitanceLexicon();
+		assertEquals( persistanceLexicon, persistConverter.convertLexicon(persistConverter.convertLexicon(persistanceLexicon) ) );
 
 		model.Lexicon lexicon = getDefaultLexicon();
-		assertEquals( lexicon, convertLexicon( convertLexicon( lexicon ) ) );
+		assertEquals( lexicon, persistConverter.convertLexicon(persistConverter.convertLexicon(lexicon) ) );
 	}
 
-	private persistance.model.Lexicon getDefaultPersitanceLexicon() {
-		persistance.model.ComposeBlock composeBlock1 = new ComposeBlock(
+	private Lexicon getDefaultPersitanceLexicon() {
+		ComposeBlock composeBlock1 = new ComposeBlock(
 				0,
 				null,
 				Arrays.asList(
-					new persistance.model.Melody[] {
-							new persistance.model.Melody(
-									new persistance.model.Note( C4, WHOLE_NOTE, 0, 0 ),
-									new persistance.model.Note( D4, HALF_NOTE, 0, 0 ),
-									new persistance.model.Note( E4, EIGHTH_NOTE, 0, 0 ),
-									new persistance.model.Note( DS4, EIGHTH_NOTE, 0, 0 ) ),
-							new persistance.model.Melody(
-									new persistance.model.Note( B4, WHOLE_NOTE, 0, 0 ),
-									new persistance.model.Note( A4, DOTTED_HALF_NOTE, 0, 0 ) ) } ),
+					new Melody[] {
+							melodyFactory.getInstance( Arrays.asList(
+									noteFactory.getInstance(C4, WHOLE_NOTE, 0, 0),
+									noteFactory.getInstance(D4, HALF_NOTE, 0, 0),
+									noteFactory.getInstance(E4, EIGHTH_NOTE, 0, 0),
+									noteFactory.getInstance(DS4, EIGHTH_NOTE, 0, 0) ) ),
+							melodyFactory.getInstance( Arrays.asList(
+									noteFactory.getInstance( B4, WHOLE_NOTE, 0, 0 ),
+									noteFactory.getInstance( A4, DOTTED_HALF_NOTE, 0, 0 ) ) ) } ),
 				null
 				);
 
-		persistance.model.ComposeBlock composeBlock2 = new ComposeBlock(
+		ComposeBlock composeBlock2 = new ComposeBlock(
 				0,
 				null,
 				Arrays.asList(
-						new persistance.model.Melody[] {
-								new persistance.model.Melody(
-										new persistance.model.Note( C4, DOTTED_HALF_NOTE, 0, 0 ) ),
-								new persistance.model.Melody(
-										new persistance.model.Note( G4, QUARTER_NOTE, 0, 0 ),
-										new persistance.model.Note( GS4, QUARTER_NOTE, 0, 0 ),
-										new persistance.model.Note( A4, QUARTER_NOTE, 0, 0 ) ) } ),
-				new persistance.model.BlockMovement( G4-A4, C4-DS4 )
+						new Melody[] {
+								melodyFactory.getInstance( Arrays.asList(
+										noteFactory.getInstance( C4, DOTTED_HALF_NOTE, 0, 0 ) ) ),
+								melodyFactory.getInstance( Arrays.asList(
+										noteFactory.getInstance(G4, QUARTER_NOTE, 0, 0),
+										noteFactory.getInstance(GS4, QUARTER_NOTE, 0, 0),
+										noteFactory.getInstance(A4, QUARTER_NOTE, 0, 0)) ) } ),
+				blockMovementFactory.getInstance( G4-A4, C4-DS4 )
 		);
 
-		persistance.model.ComposeBlock composeBlock3 = new ComposeBlock(
+		ComposeBlock composeBlock3 = new ComposeBlock(
 				0,
 				null,
 				Arrays.asList(
-						new persistance.model.Melody[] {
-								new persistance.model.Melody(
-										new persistance.model.Note( B4, EIGHTH_NOTE, 0, 0 ) ),
-								new persistance.model.Melody(
-										new persistance.model.Note( B4, SIXTEENTH_NOTE, 0, 0 ),
-										new persistance.model.Note( B4, SIXTEENTH_NOTE, 0, 0 ) ) } ),
-				new persistance.model.BlockMovement( B4-A4, B4-C4)
+						new Melody[] {
+								melodyFactory.getInstance( Arrays.asList(
+										noteFactory.getInstance( B4, EIGHTH_NOTE, 0, 0 ) ) ),
+								melodyFactory.getInstance( Arrays.asList(
+										noteFactory.getInstance( B4, SIXTEENTH_NOTE, 0, 0 ),
+										noteFactory.getInstance( B4, SIXTEENTH_NOTE, 0, 0 ) ) ) } ),
+				blockMovementFactory.getInstance( B4-A4, B4-C4)
 		);
 
-		persistance.model.ComposeBlock composeBlock4 = new ComposeBlock(
+		ComposeBlock composeBlock4 = new ComposeBlock(
 				0,
 				null,
 				Arrays.asList(
-						new persistance.model.Melody[] {
-								new persistance.model.Melody(
-										new persistance.model.Note( CS4, WHOLE_NOTE, 0, 0 ) ),
-								new persistance.model.Melody(
-										new persistance.model.Note( C3, HALF_NOTE_TRIPLET, 0, 0 ),
-										new persistance.model.Note( C3, HALF_NOTE_TRIPLET, 0, 0 ),
-										new persistance.model.Note( C3, HALF_NOTE_TRIPLET, 0, 0 ) ) } ),
-				new persistance.model.BlockMovement( CS4-B4, C3-B4 )
+						new Melody[] {
+								melodyFactory.getInstance( Arrays.asList(
+										noteFactory.getInstance( CS4, WHOLE_NOTE, 0, 0 ) ) ),
+								melodyFactory.getInstance( Arrays.asList(
+										noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ),
+										noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ),
+										noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ) ) ) } ),
+				blockMovementFactory.getInstance( CS4-B4, C3-B4 )
 		);
 
-		persistance.model.ComposeBlock composeBlock5 = new ComposeBlock(
+		ComposeBlock composeBlock5 = new ComposeBlock(
 				0,
 				null,
 				Arrays.asList(
-						new persistance.model.Melody[] {
-								new persistance.model.Melody(
-										new persistance.model.Note( E4, DOTTED_EIGHTH_NOTE, 0, 0 ) ),
-								new persistance.model.Melody(
-										new persistance.model.Note( G4, SIXTEENTH_NOTE, 0, 0 ),
-										new persistance.model.Note( F4, SIXTEENTH_NOTE, 0, 0 ),
-										new persistance.model.Note( E4, SIXTEENTH_NOTE, 0, 0 ) ) } ),
-				new persistance.model.BlockMovement( G4-CS4, E4-C3)
+						new Melody[] {
+								melodyFactory.getInstance( Arrays.asList(
+										noteFactory.getInstance( E4, DOTTED_EIGHTH_NOTE, 0, 0 ) ) ),
+								melodyFactory.getInstance( Arrays.asList(
+										noteFactory.getInstance( G4, SIXTEENTH_NOTE, 0, 0 ),
+										noteFactory.getInstance( F4, SIXTEENTH_NOTE, 0, 0 ),
+										noteFactory.getInstance( E4, SIXTEENTH_NOTE, 0, 0 ) ) ) } ),
+				blockMovementFactory.getInstance( G4-CS4, E4-C3)
 		);
 
 		composeBlock1.possiblePreviousComposeBlocks.add( null );
@@ -135,7 +152,7 @@ public class PersistConverterTest {
 		composeBlockList.add( composeBlock4 );
 		composeBlockList.add( composeBlock5 );
 
-		persistance.model.Lexicon persistanceLexicon = new Lexicon( composeBlockList, EIGHTH_NOTE );
+		Lexicon persistanceLexicon = new Lexicon( composeBlockList, EIGHTH_NOTE );
 		return persistanceLexicon;
 	}
 
