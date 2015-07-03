@@ -1,4 +1,6 @@
-package persistance.model;
+package persistance;
+
+import persistance.model.ComposeBlock;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ public class Lexicon {
 
 	Lexicon() {}
 	Lexicon( List<ComposeBlock> composeBlockList ) { this.composeBlockList = composeBlockList; }
-	Lexicon( List<ComposeBlock> composeBlockList, double minRhythmValue ) { this( composeBlockList ); this.minRhythmValue = minRhythmValue; }
+	public Lexicon(List<ComposeBlock> composeBlockList, double minRhythmValue) { this( composeBlockList ); this.minRhythmValue = minRhythmValue; }
 
 	@Override public boolean equals( Object o ) {
 		if ( this == o )
