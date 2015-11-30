@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import persistance.test.ObjectDAO;
 import persistance.test.Vagon;
-import persistance.test.VagonCollection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by night wish on 01.06.2015.
  */
-public class ManyToManyTest extends AbstractSpringTest {
+public class VagonTest extends AbstractSpringTest {
 
 	@Autowired ObjectDAO vagonDAO;
 
@@ -28,11 +27,17 @@ public class ManyToManyTest extends AbstractSpringTest {
 		Vagon vagon4 = new Vagon( 4, "vagon4" );
 		Vagon vagon5 = new Vagon( 5, "vagon5" );
 
-		vagon3.possiblePreviousVagons.add( vagon1 ); vagon1.possibleNextVagons.add( vagon3 );
-		vagon3.possiblePreviousVagons.add( vagon2 ); vagon2.possibleNextVagons.add( vagon3 );
+		vagon3.possiblePreviousVagons.add( vagon1 );
+		vagon1.possibleNextVagons.add( vagon3 );
 
-		vagon3.possibleNextVagons.add( vagon4 ); vagon4.possiblePreviousVagons.add( vagon3 );
-		vagon3.possibleNextVagons.add( vagon5 ); vagon5.possiblePreviousVagons.add( vagon3 );
+		vagon3.possiblePreviousVagons.add( vagon2 );
+		vagon2.possibleNextVagons.add( vagon3 );
+
+		vagon3.possibleNextVagons.add( vagon4 );
+		vagon4.possiblePreviousVagons.add( vagon3 );
+
+		vagon3.possibleNextVagons.add( vagon5 );
+		vagon5.possiblePreviousVagons.add( vagon3 );
 
 		List<Vagon> vagonWheels = new ArrayList<>(  );
 		vagonWheels.add( vagon1 );
@@ -42,17 +47,19 @@ public class ManyToManyTest extends AbstractSpringTest {
 		vagonWheels.add( vagon5 );
 
 		vagonDAO.persist( vagonWheels );
-
-//		vagonDAO.persist( vagon1 );
-//		vagonDAO.persist( vagon2 );
-//		vagonDAO.persist( vagon3 );
-//		vagonDAO.persist( vagon4 );
-//		vagonDAO.persist( vagon5 );
-
 		List<Object> vagonWheelsFromDB = vagonDAO.getAll();
 
-//		vagonDAO.persist( vagonWheels );
-
 		assertEquals( vagonWheels.size(), vagonWheelsFromDB.size() );
+
+		for ( Object o : vagonWheelsFromDB ) {
+			Vagon vagonFromDB = ( Vagon ) o;
+			for ( Vagon vagon : vagonWheels ) {
+				if ( vagon.name.equals( vagonFromDB.name ) ) {
+					assertEquals( vagon.possibleNextVagons.size(), vagonFromDB.possibleNextVagons.size() );
+					assertEquals( vagon.possibleNextVagons.size(), vagonFromDB.possibleNextVagons.size() );
+				}
+			}
+		}
+
 	}
 }

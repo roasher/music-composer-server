@@ -18,11 +18,10 @@ public class Vagon {
 	public Vagon( int id, String name ) { this.id = id; this.name = name; }
 
 	@ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER )
-	@JoinTable( name = "VAGON_NEXT_REL",
-		joinColumns = {@JoinColumn( name = "VAGON_ID" )},
-		inverseJoinColumns = {@JoinColumn( name = "PREV_VAGON_ID" )})
+	@JoinTable( name = "VAGON_RELATION", joinColumns = {@JoinColumn( name = "LEFT_VAGON_ID" )})
 	public Set<Vagon> possiblePreviousVagons = new HashSet<>(  );
 
 	@ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "possiblePreviousVagons" )
 	public Set<Vagon> possibleNextVagons = new HashSet<>(  );
+
 }
