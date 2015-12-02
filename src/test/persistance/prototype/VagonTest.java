@@ -1,11 +1,10 @@
-package persistance;
+package persistance.prototype;
 
 import helper.AbstractSpringTest;
-import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import persistance.test.ObjectDAO;
-import persistance.test.Vagon;
+import persistance.prototype.ObjectDAO;
+import persistance.prototype.Vagon;
 
 import java.util.ArrayList;
 import java.util.List;

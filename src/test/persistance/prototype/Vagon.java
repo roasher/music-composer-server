@@ -1,4 +1,4 @@
-package persistance.test;
+package persistance.prototype;
 
 import javax.persistence.*;
 import java.util.HashSet;

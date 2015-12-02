@@ -21,7 +21,7 @@
                 <value>persistance.model.melody.Melody</value>
                 <value>persistance.model.note.Note</value>
                 <!--<value>persistance.model.Form</value>-->
-                <value>persistance.test.Vagon</value>
+                <value>persistance.prototype.Vagon</value>
             </list>
         </property>
         <property name="hibernateProperties">
