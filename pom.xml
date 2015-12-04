@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>MusicComposer</groupId>
     <artifactId>MusicComposer</artifactId>
@@ -9,6 +9,7 @@
     <properties>
         <spring.version>4.0.6.RELEASE</spring.version>
         <junit.version>4.12</junit.version>
+        <spring-test-dbunit.version>1.2.1</spring-test-dbunit.version>
         <mockito.version>1.10.19</mockito.version>
         <jmusic.version>1.6.4</jmusic.version>
         <logback.version>1.1.2</logback.version>
@@ -25,12 +26,27 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.5.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.springtestdbunit</groupId>
+            <artifactId>spring-test-dbunit</artifactId>
+            <version>${spring-test-dbunit.version}</version>
         </dependency>
 
         <dependency>
@@ -63,7 +79,7 @@
             <version>${spring.version}</version>
         </dependency>
 
-          <!-- Logging -->
+        <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -80,12 +96,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
             <version>${logback.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-            <version>${xstream.version}</version>
         </dependency>
 
         <!--Persitance layer-->
@@ -109,7 +119,17 @@
 
     </dependencies>
 
-  <build>
-    <finalName>MusicComposer</finalName>
-  </build>
+    <build>
+        <finalName>MusicComposer</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

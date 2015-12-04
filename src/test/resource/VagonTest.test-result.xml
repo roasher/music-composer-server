@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+
+    <VAGON id="1" name="vagon1"/>
+    <VAGON id="2" name="vagon2"/>
+    <VAGON id="3" name="vagon3"/>
+    <VAGON id="4" name="vagon4"/>
+    <VAGON id="5" name="vagon5"/>
+
+    <VAGON_RELATION VAGON_ID="3" PREVIOUSVAGONS_ID="1"/>
+    <VAGON_RELATION VAGON_ID="3" PREVIOUSVAGONS_ID="2"/>
+    <VAGON_RELATION VAGON_ID="4" PREVIOUSVAGONS_ID="3"/>
+    <VAGON_RELATION VAGON_ID="5" PREVIOUSVAGONS_ID="3"/>
+
+</dataset>

@@ -1,10 +1,14 @@
 package persistance.prototype;
 
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import com.github.springtestdbunit.annotation.ExpectedDatabase;
+import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import helper.AbstractSpringTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import persistance.prototype.ObjectDAO;
-import persistance.prototype.Vagon;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +18,16 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by night wish on 01.06.2015.
  */
+@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
+		DbUnitTestExecutionListener.class })
 public class VagonTest extends AbstractSpringTest {
 
-	@Autowired ObjectDAO vagonDAO;
+	@Autowired
+	ObjectDAO vagonDAO;
 
 	@Test
+	@DatabaseSetup("/VagonTest.xml")
+	@ExpectedDatabase( assertionMode= DatabaseAssertionMode.NON_STRICT, value = "/VagonTest.test-result.xml" )
 	public void test() {
 		Vagon vagon1 = new Vagon( 1, "vagon1" );
 		Vagon vagon2 = new Vagon( 2, "vagon2" );
@@ -26,17 +35,17 @@ public class VagonTest extends AbstractSpringTest {
 		Vagon vagon4 = new Vagon( 4, "vagon4" );
 		Vagon vagon5 = new Vagon( 5, "vagon5" );
 
-		vagon3.possiblePreviousVagons.add( vagon1 );
-		vagon1.possibleNextVagons.add( vagon3 );
+		vagon3.previousVagons.add( vagon1 );
+		vagon1.nextVagons.add( vagon3 );
 
-		vagon3.possiblePreviousVagons.add( vagon2 );
-		vagon2.possibleNextVagons.add( vagon3 );
+		vagon3.previousVagons.add( vagon2 );
+		vagon2.nextVagons.add( vagon3 );
 
-		vagon3.possibleNextVagons.add( vagon4 );
-		vagon4.possiblePreviousVagons.add( vagon3 );
+		vagon3.nextVagons.add( vagon4 );
+		vagon4.previousVagons.add( vagon3 );
 
-		vagon3.possibleNextVagons.add( vagon5 );
-		vagon5.possiblePreviousVagons.add( vagon3 );
+		vagon3.nextVagons.add( vagon5 );
+		vagon5.previousVagons.add( vagon3 );
 
 		List<Vagon> vagonWheels = new ArrayList<>(  );
 		vagonWheels.add( vagon1 );
@@ -46,19 +55,19 @@ public class VagonTest extends AbstractSpringTest {
 		vagonWheels.add( vagon5 );
 
 		vagonDAO.persist( vagonWheels );
-		List<Object> vagonWheelsFromDB = vagonDAO.getAll();
-
-		assertEquals( vagonWheels.size(), vagonWheelsFromDB.size() );
-
-		for ( Object o : vagonWheelsFromDB ) {
-			Vagon vagonFromDB = ( Vagon ) o;
-			for ( Vagon vagon : vagonWheels ) {
-				if ( vagon.name.equals( vagonFromDB.name ) ) {
-					assertEquals( vagon.possibleNextVagons.size(), vagonFromDB.possibleNextVagons.size() );
-					assertEquals( vagon.possibleNextVagons.size(), vagonFromDB.possibleNextVagons.size() );
-				}
-			}
-		}
+//		List<Object> vagonWheelsFromDB = vagonDAO.getAll();
+//
+//		assertEquals( vagonWheels.size(), vagonWheelsFromDB.size() );
+//
+//		for ( Object o : vagonWheelsFromDB ) {
+//			Vagon vagonFromDB = ( Vagon ) o;
+//			for ( Vagon vagon : vagonWheels ) {
+//				if ( vagon.name.equals( vagonFromDB.name ) ) {
+//					assertEquals( vagon.nextVagons.size(), vagonFromDB.nextVagons.size() );
+//					assertEquals( vagon.nextVagons.size(), vagonFromDB.nextVagons.size() );
+//				}
+//			}
+//		}
 
 	}
 }
