@@ -17,11 +17,11 @@ public class Vagon {
 	public Vagon() {}
 	public Vagon( int id, String name ) { this.id = id; this.name = name; }
 
-	@ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER )
+	@ManyToMany
 	@JoinTable( name = "VAGON_RELATION", joinColumns = {@JoinColumn( name = "VAGON_ID" )})
 	public Set<Vagon> previousVagons = new HashSet<>(  );
 
-	@ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "previousVagons" )
+	@ManyToMany( mappedBy = "previousVagons" )
 	public Set<Vagon> nextVagons = new HashSet<>(  );
 
 }

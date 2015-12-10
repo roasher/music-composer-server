@@ -55,19 +55,6 @@ public class VagonTest extends AbstractSpringTest {
 		vagonWheels.add( vagon5 );
 
 		vagonDAO.persist( vagonWheels );
-//		List<Object> vagonWheelsFromDB = vagonDAO.getAll();
-//
-//		assertEquals( vagonWheels.size(), vagonWheelsFromDB.size() );
-//
-//		for ( Object o : vagonWheelsFromDB ) {
-//			Vagon vagonFromDB = ( Vagon ) o;
-//			for ( Vagon vagon : vagonWheels ) {
-//				if ( vagon.name.equals( vagonFromDB.name ) ) {
-//					assertEquals( vagon.nextVagons.size(), vagonFromDB.nextVagons.size() );
-//					assertEquals( vagon.nextVagons.size(), vagonFromDB.nextVagons.size() );
-//				}
-//			}
-//		}
 
 	}
 }
