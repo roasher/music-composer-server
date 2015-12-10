@@ -18,18 +18,17 @@ public class ComposeBlock extends AbstractPersistanceModel {
 	public double startTime;
 	@ManyToOne( cascade = CascadeType.ALL )
 	public CompositionInfo compositionInfo;
-	@OneToMany( cascade = CascadeType.ALL )
+	@ManyToMany( cascade = CascadeType.ALL )
+	@JoinTable( name = "BLOCKS_MELODIES", joinColumns = {@JoinColumn( name = "BLOCK_ID" )})
 	public List<Melody> melodyList;
 	@ManyToOne( cascade = CascadeType.ALL )
 	public BlockMovement blockMovementFromPreviousToThis;
 
-	@ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "possiblePreviousComposeBlocks" )
+	@ManyToMany( mappedBy = "possiblePreviousComposeBlocks" )
 	public List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>(  );
 
-	@ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER )
-	@JoinTable( name = "COMPOSE_BLOCKS_NEXT_REL",
-			joinColumns = {@JoinColumn( name = "COMPOSE_BLOCK_ID" )},
-			inverseJoinColumns = {@JoinColumn( name = "PREV_COMPOSE_BLOCK_ID" )})
+	@ManyToMany
+	@JoinTable( name = "BLOCKS_RELATION", joinColumns = {@JoinColumn( name = "BLOCK_ID" )})
 	public List<ComposeBlock> possiblePreviousComposeBlocks = new ArrayList<>(  );
 
 	ComposeBlock() {}

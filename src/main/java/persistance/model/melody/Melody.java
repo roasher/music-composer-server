@@ -5,7 +5,6 @@ import persistance.model.note.Note;
 import utils.ModelUtils;
 
 import javax.persistence.*;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,13 +14,11 @@ import java.util.List;
 public class Melody extends AbstractPersistanceModel {
 
 	@ManyToMany( cascade = CascadeType.ALL )
-	public
-	List<Note> noteList;
-//	@ManyToOne( cascade = CascadeType.ALL )
-//	public
-//	Form form;
+	@JoinTable( name = "MELODY_NOTES", joinColumns = {@JoinColumn( name = "MELODY_ID" )})
+	public List<Note> noteList;
 
-	Melody() {}
+	@Column
+	public char form;
 
 	@Override public boolean equals( Object o ) {
 		if ( this == o )

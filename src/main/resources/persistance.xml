@@ -20,7 +20,6 @@
                 <value>persistance.model.compositionInfo.CompositionInfo</value>
                 <value>persistance.model.melody.Melody</value>
                 <value>persistance.model.note.Note</value>
-                <!--<value>persistance.model.Form</value>-->
                 <value>persistance.prototype.Vagon</value>
             </list>
         </property>

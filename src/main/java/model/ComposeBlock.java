@@ -222,7 +222,9 @@ public class ComposeBlock {
 					break;
 				}
 			}
-			if ( !isInList ) return false;
+			if ( !isInList ) {
+				return false;
+			}
 		}
 		return true;
 	}

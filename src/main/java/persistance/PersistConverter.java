@@ -167,13 +167,13 @@ public class PersistConverter {
 
 	public model.melody.Melody convertMelody( Melody persistanceMelody ) {
 		model.melody.Melody melody = new model.melody.Melody( convertNoteList( persistanceMelody.noteList ) );
-//		melody.setForm( new model.melody.Form( persistanceMelody.form.value ) );
+		melody.setForm( new model.melody.Form( persistanceMelody.form ) );
 		return melody;
 	}
 
 	public Melody convertMelody( model.melody.Melody melody ) {
 		Melody persistMelody = melodyFactory.getInstance(convertToPersistNoteList(melody.getNoteList()));
-//		persistMelody.form = new persistance.model.Form( melody.getForm().getValue() );
+		persistMelody.form = melody.getForm().getValue();
 		return persistMelody;
 	}
 
