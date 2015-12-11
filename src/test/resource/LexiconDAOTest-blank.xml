@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <COMPOSITION_INFO/>
+
+    <COMPOSE_BLOCK ID="0" START_TIME="0" BLOCKS_MELODIES_ID="0"/>
+    <BLOCK_MELODY ID="0" BLOCK_ID="0" MELODY_ID="0"/>
+
+    <BLOCK_RELATION/>
+
+
+    <BLOCK_MOVEMENT/>
+
+
+    <!--noteFactory.getInstance(C4, WHOLE_NOTE, 0, 0),-->
+    <NOTE ID="1" PITCH="60" RHYTHM_VALUE="4.0" DYNAMIC="0" PAN="0"/>
+    <!--noteFactory.getInstance(D4, HALF_NOTE, 0, 0),-->
+    <NOTE ID="2" PITCH="62" RHYTHM_VALUE="2.0" DYNAMIC="0" PAN="0"/>
+    <!--noteFactory.getInstance(E4, EIGHTH_NOTE, 0, 0),-->
+    <NOTE ID="3" PITCH="64" RHYTHM_VALUE="0.5" DYNAMIC="0" PAN="0"/>
+    <!--noteFactory.getInstance(DS4, EIGHTH_NOTE, 0, 0) ) ),-->
+    <NOTE ID="4" PITCH="63" RHYTHM_VALUE="0.5" DYNAMIC="0" PAN="0"/>
+    <MELODY ID="1" FORM="A"/>
+    <MELODY_NOTE ID="1" NOTE_ID="1" MELODY_ID="1"/>
+    <MELODY_NOTE ID="2" NOTE_ID="2" MELODY_ID="2"/>
+    <MELODY_NOTE ID="3" NOTE_ID="3" MELODY_ID="3"/>
+    <MELODY_NOTE ID="4" NOTE_ID="4" MELODY_ID="4"/>
+
+    <!--noteFactory.getInstance( B4, WHOLE_NOTE, 0, 0 ),-->
+    <NOTE ID="5" PITCH="71" RHYTHM_VALUE="4.0" DYNAMIC="0" PAN="0"/>
+    <!--noteFactory.getInstance( A4, DOTTED_HALF_NOTE, 0, 0 ) ) ) } ),-->
+    <NOTE ID="6" PITCH="69" RHYTHM_VALUE="3.0" DYNAMIC="0" PAN="0"/>
+    <MELODY ID="2" FORM="B"/>
+    <MELODY_NOTE ID="5" NOTE_ID="5" MELODY_ID="2"/>
+    <MELODY_NOTE ID="6" NOTE_ID="6" MELODY_ID="2"/>
+
+    <!--noteFactory.getInstance( C4, DOTTED_HALF_NOTE, 0, 0 ) ) ),-->
+    <NOTE ID="7" PITCH="60" RHYTHM_VALUE="3.0" DYNAMIC="0" PAN="0"/>
+    <MELODY ID="3" FORM="C"/>
+    <MELODY_NOTE ID="7" NOTE_ID="6" MELODY_ID="3"/>
+
+    <MELODY ID="4" FORM="A"/>
+    <!--noteFactory.getInstance(G4, QUARTER_NOTE, 0, 0),-->
+    <NOTE ID="8" PITCH="67" RHYTHM_VALUE="1.0" DYNAMIC="0" PAN="0"/>
+    <!--noteFactory.getInstance(GS4, QUARTER_NOTE, 0, 0),-->
+    <NOTE ID="9" PITCH="68" RHYTHM_VALUE="1.0" DYNAMIC="0" PAN="0"/>
+    <!--noteFactory.getInstance(A4, QUARTER_NOTE, 0, 0)) ) } ),-->
+    <NOTE ID="10" PITCH="69" RHYTHM_VALUE="1.0" DYNAMIC="0" PAN="0"/>
+    <MELODY_NOTE ID="8" NOTE_ID="8" MELODY_ID="4"/>
+    <MELODY_NOTE ID="9" NOTE_ID="9" MELODY_ID="4"/>
+    <MELODY_NOTE ID="10" NOTE_ID="10" MELODY_ID="4"/>
+
+    <MELODY ID="5" FORM="B"/>
+    <!--noteFactory.getInstance( B4, EIGHTH_NOTE, 0, 0 ) ) ),-->
+    <NOTE ID="11" PITCH="71" RHYTHM_VALUE="0.5" DYNAMIC="0" PAN="0"/>
+    <MELODY_NOTE ID="11" NOTE_ID="11" MELODY_ID="5"/>
+
+    <MELODY ID="6" FORM="C"/>
+    <!--noteFactory.getInstance( B4, SIXTEENTH_NOTE, 0, 0 ) ) ) } ),-->
+    <NOTE ID="12" PITCH="71" RHYTHM_VALUE="0.25" DYNAMIC="0" PAN="0"/>
+    <MELODY_NOTE ID="12" NOTE_ID="12" MELODY_ID="6"/>
+
+    <MELODY ID="7" FORM="A"/>
+    <MELODY_NOTE ID="13" NOTE_ID="12" MELODY_ID="7"/>
+
+    <MELODY ID="8" FORM="B"/>
+    <!--noteFactory.getInstance( CS4, WHOLE_NOTE, 0, 0 ) ) ),-->
+    <NOTE ID="13" PITCH="61" RHYTHM_VALUE="4.0" DYNAMIC="0" PAN="0"/>
+    <MELODY_NOTE ID="14" NOTE_ID="13" MELODY_ID="8"/>
+
+    <MELODY ID="9" FORM="C"/>
+    <!--noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ),-->
+    <NOTE ID="14" PITCH="48" RHYTHM_VALUE="1.3333333333333" DYNAMIC="0" PAN="0"/>
+    <MELODY_NOTE ID="15" NOTE_ID="14" MELODY_ID="9"/>
+    <MELODY_NOTE ID="16" NOTE_ID="14" MELODY_ID="9"/>
+    <MELODY_NOTE ID="17" NOTE_ID="14" MELODY_ID="9"/>
+
+    <MELODY ID="10" FORM="A"/>
+    <!--noteFactory.getInstance( E4, DOTTED_EIGHTH_NOTE, 0, 0 ) ) ),-->
+    <NOTE ID="15" PITCH="64" RHYTHM_VALUE="0.75" DYNAMIC="0" PAN="0"/>
+    <MELODY_NOTE ID="18" NOTE_ID="15" MELODY_ID="10"/>
+
+    <MELODY ID="11" FORM="B"/>
+    <!--noteFactory.getInstance( G4, SIXTEENTH_NOTE, 0, 0 ),-->
+    <NOTE ID="16" PITCH="67" RHYTHM_VALUE="0.25" DYNAMIC="0" PAN="0"/>
+    <!--noteFactory.getInstance( F4, SIXTEENTH_NOTE, 0, 0 ),-->
+    <NOTE ID="17" PITCH="65" RHYTHM_VALUE="0.25" DYNAMIC="0" PAN="0"/>
+    <!--noteFactory.getInstance( E4, SIXTEENTH_NOTE, 0, 0 ) ) ) } ),-->
+    <NOTE ID="18" PITCH="64" RHYTHM_VALUE="0.25" DYNAMIC="0" PAN="0"/>
+    <MELODY_NOTE ID="19" NOTE_ID="16" MELODY_ID="11"/>
+    <MELODY_NOTE ID="20" NOTE_ID="17" MELODY_ID="11"/>
+    <MELODY_NOTE ID="21" NOTE_ID="18" MELODY_ID="11"/>
+
+</dataset>

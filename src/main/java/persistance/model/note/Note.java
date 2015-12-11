@@ -13,7 +13,7 @@ public class Note extends AbstractPersistanceModel {
 
 	@Column
 	public int pitch;
-	@Column
+	@Column( name = "RHYTHM_VALUE" )
 	public double rhythmValue;
 	@Column
 	public int dynamic;

@@ -11,15 +11,15 @@ import java.util.List;
 /**
  * Created by pyurkin on 29.04.2015.
  */
-@Entity
+@Entity( name = "COMPOSE_BLOCK" )
 public class ComposeBlock extends AbstractPersistanceModel {
 
-	@Column
+	@Column( name = "START_TIME" )
 	public double startTime;
 	@ManyToOne( cascade = CascadeType.ALL )
 	public CompositionInfo compositionInfo;
 	@ManyToMany( cascade = CascadeType.ALL )
-	@JoinTable( name = "BLOCKS_MELODIES", joinColumns = {@JoinColumn( name = "BLOCK_ID" )})
+	@JoinTable( name = "BLOCK_MELODY", joinColumns = {@JoinColumn( name = "BLOCK_ID" )})
 	public List<Melody> melodyList;
 	@ManyToOne( cascade = CascadeType.ALL )
 	public BlockMovement blockMovementFromPreviousToThis;
@@ -28,7 +28,7 @@ public class ComposeBlock extends AbstractPersistanceModel {
 	public List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>(  );
 
 	@ManyToMany
-	@JoinTable( name = "BLOCKS_RELATION", joinColumns = {@JoinColumn( name = "BLOCK_ID" )})
+	@JoinTable( name = "BLOCK_RELATION", joinColumns = {@JoinColumn( name = "BLOCK_ID" )})
 	public List<ComposeBlock> possiblePreviousComposeBlocks = new ArrayList<>(  );
 
 	ComposeBlock() {}

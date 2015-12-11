@@ -14,7 +14,7 @@ public class MelodyFactory extends AbstractFactory<Melody> {
 
     public Melody getInstance(List<Note> noteList) {
         Melody melody = new Melody();
-        melody.noteList = noteList;
+        melody.notes = noteList;
         return getUniqueInstance( melody );
     }
 

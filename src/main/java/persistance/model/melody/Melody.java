@@ -10,12 +10,12 @@ import java.util.List;
 /**
  * Created by pyurkin on 29.04.2015.
  */
-@Entity
+@Entity( name = "MELODY" )
 public class Melody extends AbstractPersistanceModel {
 
 	@ManyToMany( cascade = CascadeType.ALL )
-	@JoinTable( name = "MELODY_NOTES", joinColumns = {@JoinColumn( name = "MELODY_ID" )})
-	public List<Note> noteList;
+	@JoinTable( name = "MELODY_NOTE", joinColumns = {@JoinColumn( name = "MELODY_ID" )})
+	public List<Note> notes;
 
 	@Column
 	public char form;
@@ -28,20 +28,20 @@ public class Melody extends AbstractPersistanceModel {
 
 		Melody melody = ( Melody ) o;
 
-		if ( !noteList.equals( melody.noteList ) )
+		if ( !notes.equals( melody.notes ) )
 			return false;
 
 		return true;
 	}
 
 	@Override public int hashCode() {
-		return noteList.hashCode();
+		return notes.hashCode();
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
-		for ( Note note : this.noteList ) {
+		for ( Note note : this.notes ) {
 			stringBuilder.append( String.format( "{%d %s|%.3f}", note.pitch, ModelUtils.getNoteNameByPitch( note.pitch ), note.rhythmValue ) );
 		}
 		return stringBuilder.toString();

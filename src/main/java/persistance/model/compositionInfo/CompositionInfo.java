@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 /**
  * Created by pyurkin on 29.04.2015.
  */
-@Entity
+@Entity( name = "COMPOSITION_INFO" )
 public class CompositionInfo extends AbstractPersistanceModel {
 
 	@Column

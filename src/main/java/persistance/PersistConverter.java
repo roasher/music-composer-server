@@ -166,7 +166,7 @@ public class PersistConverter {
 	}
 
 	public model.melody.Melody convertMelody( Melody persistanceMelody ) {
-		model.melody.Melody melody = new model.melody.Melody( convertNoteList( persistanceMelody.noteList ) );
+		model.melody.Melody melody = new model.melody.Melody( convertNoteList( persistanceMelody.notes ) );
 		melody.setForm( new model.melody.Form( persistanceMelody.form ) );
 		return melody;
 	}

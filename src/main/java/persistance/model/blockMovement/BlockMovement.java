@@ -8,11 +8,11 @@ import javax.persistence.Entity;
 /**
  * Created by pyurkin on 06.05.2015.
  */
-@Entity
+@Entity( name = "BLOCK_MOVEMENT" )
 public class BlockMovement extends AbstractPersistanceModel {
-    @Column
+    @Column( name = "TOP_VOICE_MOVEMENT" )
     public int topVoiceMovement;
-    @Column
+    @Column( name = "BOTTOM_VOICE_MOVEMENT" )
     public int bottomVoiceMovement;
 
     BlockMovement() {}
