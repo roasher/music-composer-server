@@ -54,14 +54,6 @@ public class LexiconDAOTest extends AbstractSpringTest {
 		lexiconDAO.persist( lexicon );
 		Lexicon fetchedLexicon = lexiconDAO.fetch();
 
-		// TODO figure out why
-		// We are not persisting start time, so for test comparing purposes setting it to zero
-		for ( ComposeBlock composeBlock : lexicon.getComposeBlockList() ) {
-			for ( Melody melody : composeBlock.getMelodyList() ) {
-				melody.setStartTime( 0 );
-			}
-		}
-
 		assertTrue( lexicon.equals( fetchedLexicon ) );
 	}
 

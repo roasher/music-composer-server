@@ -71,10 +71,6 @@ public class Melody extends Phrase {
 			return false;
 		}
 
-		if ( Double.compare( this.getStartTime(), melody.getStartTime() ) != 0 ) {
-			return false;
-		}
-
         Note[] thisNoteArray = this.getNoteArray();
         Note[] melodyNoteArray = melody.getNoteArray();
 
