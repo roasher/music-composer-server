@@ -1,6 +1,6 @@
 package persistance;
 
-import persistance.model.ComposeBlock;
+import persistance.jpa.ComposeBlock;
 
 import javax.persistence.*;
 import java.util.ArrayList;

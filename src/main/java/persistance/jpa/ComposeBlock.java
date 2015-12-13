@@ -1,8 +1,4 @@
-package persistance.model;
-
-import persistance.model.blockMovement.BlockMovement;
-import persistance.model.compositionInfo.CompositionInfo;
-import persistance.model.melody.Melody;
+package persistance.jpa;
 
 import javax.persistence.*;
 import java.util.ArrayList;

@@ -1,6 +1,4 @@
-package persistance.model.blockMovement;
-
-import persistance.model.AbstractPersistanceModel;
+package persistance.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,12 +8,11 @@ import javax.persistence.Entity;
  */
 @Entity( name = "BLOCK_MOVEMENT" )
 public class BlockMovement extends AbstractPersistanceModel {
+
     @Column( name = "TOP_VOICE_MOVEMENT" )
     public int topVoiceMovement;
     @Column( name = "BOTTOM_VOICE_MOVEMENT" )
     public int bottomVoiceMovement;
-
-    BlockMovement() {}
 
     @Override
     public boolean equals(Object o) {

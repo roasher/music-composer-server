@@ -1,7 +1,8 @@
-package persistance.model.compositionInfo;
+package persistance.factory;
 
 import org.springframework.stereotype.Component;
 import persistance.factory.AbstractFactory;
+import persistance.jpa.CompositionInfo;
 
 /**
  * Created by Wish on 03.07.2015.

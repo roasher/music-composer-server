@@ -5,11 +5,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import persistance.Lexicon;
 import persistance.PersistConverter;
-import persistance.model.blockMovement.BlockMovement;
-import persistance.model.blockMovement.BlockMovementFactory;
-import persistance.model.melody.Melody;
-import persistance.model.melody.MelodyFactory;
-import persistance.model.note.NoteFactory;
+import persistance.factory.BlockMovementFactory;
+import persistance.jpa.ComposeBlock;
+import persistance.jpa.Melody;
+import persistance.factory.MelodyFactory;
+import persistance.factory.NoteFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;

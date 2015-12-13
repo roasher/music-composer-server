@@ -1,6 +1,4 @@
-package persistance.model.note;
-
-import persistance.model.AbstractPersistanceModel;
+package persistance.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,8 +17,6 @@ public class Note extends AbstractPersistanceModel {
 	public int dynamic;
 	@Column
 	public double pan;
-
-	Note() {}
 
 	@Override public boolean equals( Object o ) {
 		if ( this == o )

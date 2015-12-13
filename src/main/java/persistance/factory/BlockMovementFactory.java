@@ -1,7 +1,8 @@
-package persistance.model.blockMovement;
+package persistance.factory;
 
 import org.springframework.stereotype.Component;
 import persistance.factory.AbstractFactory;
+import persistance.jpa.BlockMovement;
 
 /**
  * Created by Wish on 03.07.2015.

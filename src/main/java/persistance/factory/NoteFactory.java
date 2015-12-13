@@ -1,8 +1,8 @@
-package persistance.model.note;
+package persistance.factory;
 
 import org.springframework.stereotype.Component;
 import persistance.factory.AbstractFactory;
-import persistance.model.note.Note;
+import persistance.jpa.Note;
 
 /**
  * Created by Wish on 03.07.2015.

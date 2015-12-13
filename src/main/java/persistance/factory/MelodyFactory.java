@@ -1,8 +1,8 @@
-package persistance.model.melody;
+package persistance.factory;
 
 import org.springframework.stereotype.Component;
-import persistance.factory.AbstractFactory;
-import persistance.model.note.Note;
+import persistance.jpa.Melody;
+import persistance.jpa.Note;
 
 import java.util.List;
 

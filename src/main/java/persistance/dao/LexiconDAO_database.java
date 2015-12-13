@@ -5,7 +5,7 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import persistance.model.ComposeBlock;
+import persistance.jpa.ComposeBlock;
 import persistance.PersistConverter;
 
 import javax.transaction.Transactional;

@@ -1,7 +1,5 @@
-package persistance.model.melody;
+package persistance.jpa;
 
-import persistance.model.AbstractPersistanceModel;
-import persistance.model.note.Note;
 import utils.ModelUtils;
 
 import javax.persistence.*;

@@ -1,6 +1,4 @@
-package persistance.model.compositionInfo;
-
-import persistance.model.AbstractPersistanceModel;
+package persistance.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,8 +15,6 @@ public class CompositionInfo extends AbstractPersistanceModel {
 	public String title;
 	@Column
 	public double tempo;
-
-	CompositionInfo() {}
 
 	@Override public boolean equals( Object o ) {
 		if ( this == o )

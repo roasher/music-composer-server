@@ -2,15 +2,15 @@ package persistance;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import persistance.model.blockMovement.BlockMovement;
-import persistance.model.ComposeBlock;
-import persistance.model.blockMovement.BlockMovementFactory;
-import persistance.model.compositionInfo.CompositionInfo;
-import persistance.model.compositionInfo.CompositionInfoFactory;
-import persistance.model.melody.Melody;
-import persistance.model.melody.MelodyFactory;
-import persistance.model.note.Note;
-import persistance.model.note.NoteFactory;
+import persistance.jpa.BlockMovement;
+import persistance.jpa.ComposeBlock;
+import persistance.factory.BlockMovementFactory;
+import persistance.jpa.CompositionInfo;
+import persistance.factory.CompositionInfoFactory;
+import persistance.jpa.Melody;
+import persistance.factory.MelodyFactory;
+import persistance.jpa.Note;
+import persistance.factory.NoteFactory;
 
 import java.util.ArrayList;
 import java.util.List;
