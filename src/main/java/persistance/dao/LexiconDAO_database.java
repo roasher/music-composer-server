@@ -27,8 +27,8 @@ public class LexiconDAO_database implements LexiconDAO {
 
 	@Override
 	public void persist( Lexicon lexicon ) throws IOException {
-		persistance.Lexicon persistLexicon = persistConverter.convertLexicon( lexicon );
-		for ( ComposeBlock composeBlock : persistLexicon.composeBlockList ) {
+		List <persistance.jpa.ComposeBlock> composeBlocks = persistConverter.convertComposeBlockList( lexicon.getComposeBlockList() );
+		for ( ComposeBlock composeBlock : composeBlocks ) {
 			sessionFactory.getCurrentSession().save( composeBlock );
 		}
 	}

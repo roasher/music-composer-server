@@ -2,14 +2,10 @@ package persistance;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import persistance.jpa.BlockMovement;
-import persistance.jpa.ComposeBlock;
+import persistance.jpa.*;
 import persistance.factory.BlockMovementFactory;
-import persistance.jpa.CompositionInfo;
 import persistance.factory.CompositionInfoFactory;
-import persistance.jpa.Melody;
 import persistance.factory.MelodyFactory;
-import persistance.jpa.Note;
 import persistance.factory.NoteFactory;
 
 import java.util.ArrayList;
@@ -29,16 +25,6 @@ public class PersistConverter {
 	private CompositionInfoFactory compositionInfoFactory;
 	@Autowired
 	private BlockMovementFactory blockMovementFactory;
-
-	public model.Lexicon convertLexicon( Lexicon lexicon ) {
-		return new model.Lexicon( convertPersistComposeBlockList( lexicon.composeBlockList ) );
-	}
-
-	public Lexicon convertLexicon( model.Lexicon lexicon ) {
-		Lexicon persitanceLexicon = new Lexicon( convertComposeBlockList( lexicon.getComposeBlockList() ) );
-		persitanceLexicon.minRhythmValue = lexicon.getMinRhythmValue();
-		return persitanceLexicon;
-	}
 
 	public List<model.ComposeBlock> convertPersistComposeBlockList( List<ComposeBlock> persistanceComposeBlockList ) {
 

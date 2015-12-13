@@ -5,7 +5,6 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
 import jm.music.data.Note;
-import junit.framework.TestCase;
 import model.BlockMovement;
 import model.composition.CompositionInfo;
 import model.melody.Melody;
@@ -67,7 +66,7 @@ public class LexiconDAOTest extends AbstractSpringTest {
 	@DatabaseSetup( "/LexiconDAOTest-blank.xml" )
 	@ExpectedDatabase( assertionMode = DatabaseAssertionMode.NON_STRICT, value = "/LexiconDAOTest-with-data.xml" )
 	public void persistTest() throws IOException {
-		Lexicon lexicon = new Lexicon( getTestComposeBlocks() );
+		Lexicon lexicon = getTestLexicon();
 		lexiconDAO.persist( lexicon );
 	}
 
@@ -75,10 +74,10 @@ public class LexiconDAOTest extends AbstractSpringTest {
 	@DatabaseSetup( "/LexiconDAOTest-with-data.xml" )
 	public void fetchTest() {
 		Lexicon lexicon = lexiconDAO.fetch();
-		assertEquals( lexicon.getComposeBlockList(), getTestComposeBlocks() );
+		assertEquals( lexicon.getComposeBlockList(), getTestLexicon().getComposeBlockList() );
 	}
 
-	private List<ComposeBlock> getTestComposeBlocks() {
+	private Lexicon getTestLexicon() {
 
 		Note note1 = new Note( C4, WHOLE_NOTE, 0, 0 );
 		Note note2 = new Note( D4, HALF_NOTE, 0, 0 );
@@ -110,7 +109,9 @@ public class LexiconDAOTest extends AbstractSpringTest {
 
 		List<ComposeBlock> composeBlocks = Arrays.asList( composeBlock1, composeBlock2, composeBlock3 );
 
-		return composeBlocks;
+		Lexicon lexicon = new Lexicon( composeBlocks );
+
+		return lexicon;
 
 	}
 }

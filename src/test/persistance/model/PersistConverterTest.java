@@ -3,7 +3,6 @@ package persistance.model;
 import helper.AbstractSpringTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import persistance.Lexicon;
 import persistance.PersistConverter;
 import persistance.factory.BlockMovementFactory;
 import persistance.jpa.ComposeBlock;
@@ -33,22 +32,22 @@ public class PersistConverterTest extends AbstractSpringTest {
 	private MelodyFactory melodyFactory;
 
 	@Test public void convert() {
-		Lexicon persistanceLexicon = getDefaultPersitanceLexicon();
+		List<ComposeBlock> persitanceMusicBlocks = getDefaultPersitanceMusicBlocks();
 		model.Lexicon lexicon = getDefaultLexicon();
-		Lexicon convertedLexicon = persistConverter.convertLexicon(lexicon);
-		assertEquals( lexicon, persistConverter.convertLexicon(persistanceLexicon) );
-		assertEquals( persistanceLexicon, convertedLexicon );
+		List<ComposeBlock> convertedComposeBlocks = persistConverter.convertComposeBlockList( lexicon.getComposeBlockList() );
+		assertEquals( lexicon.getComposeBlockList(), persistConverter.convertPersistComposeBlockList( persitanceMusicBlocks ) );
+		assertEquals( persitanceMusicBlocks, convertedComposeBlocks );
 	}
 
 	@Test public void doubleConvert() {
-		Lexicon persistanceLexicon = getDefaultPersitanceLexicon();
-		assertEquals( persistanceLexicon, persistConverter.convertLexicon(persistConverter.convertLexicon(persistanceLexicon) ) );
+		List<ComposeBlock> persitanceMusicBlocks = getDefaultPersitanceMusicBlocks();
+		assertEquals( persitanceMusicBlocks, persistConverter.convertComposeBlockList( persistConverter.convertPersistComposeBlockList( persitanceMusicBlocks ) ) );
 
 		model.Lexicon lexicon = getDefaultLexicon();
-		assertEquals( lexicon, persistConverter.convertLexicon(persistConverter.convertLexicon(lexicon) ) );
+		assertEquals( lexicon.getComposeBlockList(), persistConverter.convertPersistComposeBlockList(persistConverter.convertComposeBlockList( lexicon.getComposeBlockList() ) ) );
 	}
 
-	private Lexicon getDefaultPersitanceLexicon() {
+	private List<ComposeBlock> getDefaultPersitanceMusicBlocks() {
 		ComposeBlock composeBlock1 = new ComposeBlock(
 				0,
 				null,
@@ -152,8 +151,7 @@ public class PersistConverterTest extends AbstractSpringTest {
 		composeBlockList.add( composeBlock4 );
 		composeBlockList.add( composeBlock5 );
 
-		Lexicon persistanceLexicon = new Lexicon( composeBlockList, EIGHTH_NOTE );
-		return persistanceLexicon;
+		return composeBlockList;
 	}
 
 	private model.Lexicon getDefaultLexicon() {
