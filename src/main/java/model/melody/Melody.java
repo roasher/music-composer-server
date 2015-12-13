@@ -26,6 +26,11 @@ public class Melody extends Phrase {
         super(notes);
     }
 
+    public Melody( char form, Note... notes ) {
+        super(notes);
+        this.form = new Form( form );
+    }
+
     public Melody() {
         super();
     }

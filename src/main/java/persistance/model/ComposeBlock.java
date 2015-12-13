@@ -17,11 +17,13 @@ public class ComposeBlock extends AbstractPersistanceModel {
 	@Column( name = "START_TIME" )
 	public double startTime;
 	@ManyToOne( cascade = CascadeType.ALL )
+	@JoinColumn(name="COMPOSITION_INFO_ID")
 	public CompositionInfo compositionInfo;
 	@ManyToMany( cascade = CascadeType.ALL )
-	@JoinTable( name = "BLOCK_MELODY", joinColumns = {@JoinColumn( name = "BLOCK_ID" )})
-	public List<Melody> melodyList;
+	@JoinTable( name = "BLOCK_MELODY", joinColumns = {@JoinColumn( name = "BLOCK_ID" )}, inverseJoinColumns = {@JoinColumn( name = "MELODY_ID")} )
+	public List<Melody> melodies;
 	@ManyToOne( cascade = CascadeType.ALL )
+	@JoinColumn(name="BLOCK_MOVEMENT_ID")
 	public BlockMovement blockMovementFromPreviousToThis;
 
 	@ManyToMany( mappedBy = "possiblePreviousComposeBlocks" )
@@ -32,16 +34,16 @@ public class ComposeBlock extends AbstractPersistanceModel {
 	public List<ComposeBlock> possiblePreviousComposeBlocks = new ArrayList<>(  );
 
 	ComposeBlock() {}
-	public ComposeBlock(double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, BlockMovement blockMovementFromPreviousToThis) {
+	public ComposeBlock(double startTime, CompositionInfo compositionInfo, List<Melody> melodies, BlockMovement blockMovementFromPreviousToThis) {
 		this.startTime = startTime;
 		this.compositionInfo = compositionInfo;
-		this.melodyList = melodyList;
+		this.melodies = melodies;
 		this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
 	}
 
-	ComposeBlock( double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, BlockMovement blockMovementFromPreviousToThis,
+	ComposeBlock( double startTime, CompositionInfo compositionInfo, List<Melody> melodies, BlockMovement blockMovementFromPreviousToThis,
 			List<ComposeBlock> possibleNextComposeBlocks, List<ComposeBlock> possiblePreviousComposeBlocks ) {
-		this( startTime, compositionInfo, melodyList, blockMovementFromPreviousToThis );
+		this( startTime, compositionInfo, melodies, blockMovementFromPreviousToThis );
 		this.possibleNextComposeBlocks = possibleNextComposeBlocks;
 		this.possiblePreviousComposeBlocks = possiblePreviousComposeBlocks;
 	}
@@ -49,7 +51,7 @@ public class ComposeBlock extends AbstractPersistanceModel {
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder(  );
-		for ( Melody melody : this.melodyList ) {
+		for ( Melody melody : this.melodies ) {
 			stringBuilder.append('|').append( melody.toString() );
 		}
 		return stringBuilder.toString();
@@ -67,7 +69,7 @@ public class ComposeBlock extends AbstractPersistanceModel {
 			return false;
 		if ( compositionInfo != null ? !compositionInfo.equals( that.compositionInfo ) : that.compositionInfo != null )
 			return false;
-		if ( !melodyList.equals( that.melodyList ) )
+		if ( !melodies.equals( that.melodies ) )
 			return false;
 
 		if ( !isEquals( this.possibleNextComposeBlocks, that.possibleNextComposeBlocks ) ) return false;
@@ -108,7 +110,7 @@ public class ComposeBlock extends AbstractPersistanceModel {
 		temp = Double.doubleToLongBits( startTime );
 		result = ( int ) ( temp ^ ( temp >>> 32 ) );
 		result = 31 * result + ( compositionInfo != null ? compositionInfo.hashCode() : 0 );
-		result = 31 * result + melodyList.hashCode();
+		result = 31 * result + melodies.hashCode();
 		result = 31 * result + ( blockMovementFromPreviousToThis != null ?
 				blockMovementFromPreviousToThis.hashCode() :
 				0 );
@@ -127,7 +129,7 @@ public class ComposeBlock extends AbstractPersistanceModel {
 			isEqualCompositionInfos = composeBlock.compositionInfo == null;
 		}
 
-		boolean isEqualMelodyList = this.melodyList.equals( composeBlock.melodyList );
+		boolean isEqualMelodyList = this.melodies.equals( composeBlock.melodies );
 
 		boolean isEqualsBlockMovements;
 		if ( this.blockMovementFromPreviousToThis != null ) {

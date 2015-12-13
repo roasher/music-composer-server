@@ -58,19 +58,19 @@ public class MusicBlock implements Serializable {
 
 //	public MusicBlock( CompositionInfo inputCompositionInfo, List<MusicBlock> musicBlockList ) {
 //		if ( musicBlockList != null && musicBlockList.size() > 0 ) {
-//			List<Melody> melodyList = new ArrayList<>(  );
+//			List<Melody> melodies = new ArrayList<>(  );
 //			for ( int melodyNubmer = 0; melodyNubmer < musicBlockList.get( 0 ).getMelodyList().size(); melodyNubmer ++ ) {
-//				melodyList.add( new Melody(  ) );
+//				melodies.add( new Melody(  ) );
 //			}
 //			double rhythmValue = 0;
 //			for ( MusicBlock currentMusicBlock : musicBlockList ) {
 //				for ( int melodyNumber = 0; melodyNumber < currentMusicBlock.getMelodyList().size(); melodyNumber ++ ) {
-//					melodyList.get( melodyNumber ).addNoteList( currentMusicBlock.getMelodyList().get( melodyNumber ).getNoteArray() );
+//					melodies.get( melodyNumber ).addNoteList( currentMusicBlock.getMelodyList().get( melodyNumber ).getNoteArray() );
 //				}
 //				rhythmValue += currentMusicBlock.getRhythmValue();
 //			}
 //
-//			this.melodyList = melodyList;
+//			this.melodies = melodies;
 //			this.compositionInfo = inputCompositionInfo;
 //			this.startIntervalPattern = musicBlockList.get( 0 ).getStartIntervalPattern();
 //			this.endIntervalPattern = musicBlockList.get( musicBlockList.size() -1 ).getEndIntervalPattern();

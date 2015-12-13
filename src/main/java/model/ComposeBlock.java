@@ -121,6 +121,14 @@ public class ComposeBlock {
 		return isEqualRhythmValues && isEqualStartTimes && isEqualCompositionInfos && isEqualMelodyList && isEqualStartIntervalPattern && isEqualsBlockMovements;
 	}
 
+	public void setPossibleNextComposeBlocks( List<ComposeBlock> possibleNextComposeBlocks ) {
+		this.possibleNextComposeBlocks = possibleNextComposeBlocks;
+	}
+
+	public void setPossiblePreviousComposeBlocks( List<ComposeBlock> possiblePreviousComposeBlocks ) {
+		this.possiblePreviousComposeBlocks = possiblePreviousComposeBlocks;
+	}
+
 	public double getRhythmValue() {
 		return rhythmValue;
 	}

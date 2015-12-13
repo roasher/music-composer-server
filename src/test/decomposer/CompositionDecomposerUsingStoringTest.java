@@ -6,16 +6,12 @@ import helper.AbstractSpringTest;
 import jm.JMC;
 import model.Lexicon;
 import model.composition.Composition;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utils.CompositionLoader;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -39,7 +35,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 				.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		// first decompose with no persistance
 		Lexicon lexiconWithoutDB = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
-		lexiconDAO.store( lexiconWithoutDB );
+		lexiconDAO.persist( lexiconWithoutDB );
 
 		// second decompose with file
 		Lexicon lexiconWithDB = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
@@ -55,7 +51,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 		// Decompose first melody and storing it into DB
 		Lexicon lexiconWithoutDB = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
-		lexiconDAO.store( lexiconWithoutDB );
+		lexiconDAO.persist( lexiconWithoutDB );
 
 		// Decompose all melodies using DB with only one melody
 		Lexicon lexiconWithDB = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
@@ -71,7 +67,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 		// Decompose first melody and storing it into DB
 		Lexicon lexiconFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
-		lexiconDAO.store( lexiconFirst );
+		lexiconDAO.persist( lexiconFirst );
 
 		// Decompose second melody using DB with only first melody
 		Lexicon lexiconSecondWithDB = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
@@ -87,7 +83,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 		// Decompose first melody and storing it into DB
 		Lexicon lexiconFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
-		lexiconDAO.store( lexiconFirst );
+		lexiconDAO.persist( lexiconFirst );
 
 		// Decompose second melody using DB with only first melody
 		Lexicon lexiconSecondWithDB = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );

@@ -96,7 +96,7 @@ public class PersistConverter {
 		model.ComposeBlock musicBlock = new model.ComposeBlock(
 				persistanceComposeBlock.startTime,
 				convertCompositionInfo( persistanceComposeBlock.compositionInfo ),
-				convertMelodyList( persistanceComposeBlock.melodyList ),
+				convertMelodyList( persistanceComposeBlock.melodies ),
 				convertBlockMovement( persistanceComposeBlock.blockMovementFromPreviousToThis ) );
 		return musicBlock;
 	}

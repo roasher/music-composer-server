@@ -14,7 +14,7 @@ import java.util.List;
 public class Melody extends AbstractPersistanceModel {
 
 	@ManyToMany( cascade = CascadeType.ALL )
-	@JoinTable( name = "MELODY_NOTE", joinColumns = {@JoinColumn( name = "MELODY_ID" )})
+	@JoinTable( name = "MELODY_NOTE", joinColumns = {@JoinColumn( name = "MELODY_ID" )}, inverseJoinColumns = {@JoinColumn( name = "NOTE_ID") })
 	public List<Note> notes;
 
 	@Column

@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Created by night wish on 01.06.2015.
  */
-@Entity
+@Entity( name = "VAGON" )
 public class Vagon {
 	@Id @Column( name = "ID" )
 	public int id;
