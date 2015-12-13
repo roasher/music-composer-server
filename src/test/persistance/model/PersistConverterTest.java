@@ -9,6 +9,7 @@ import persistance.jpa.ComposeBlock;
 import persistance.jpa.Melody;
 import persistance.factory.MelodyFactory;
 import persistance.factory.NoteFactory;
+import persistance.jpa.Note;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,8 @@ import java.util.List;
 
 import static jm.JMC.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by pyurkin on 05.05.2015.
@@ -57,10 +60,10 @@ public class PersistConverterTest extends AbstractSpringTest {
 									noteFactory.getInstance(C4, WHOLE_NOTE, 0, 0),
 									noteFactory.getInstance(D4, HALF_NOTE, 0, 0),
 									noteFactory.getInstance(E4, EIGHTH_NOTE, 0, 0),
-									noteFactory.getInstance(DS4, EIGHTH_NOTE, 0, 0) ) ),
+									noteFactory.getInstance(DS4, EIGHTH_NOTE, 0, 0) ), 'A' ),
 							melodyFactory.getInstance( Arrays.asList(
 									noteFactory.getInstance( B4, WHOLE_NOTE, 0, 0 ),
-									noteFactory.getInstance( A4, DOTTED_HALF_NOTE, 0, 0 ) ) ) } ),
+									noteFactory.getInstance( A4, DOTTED_HALF_NOTE, 0, 0 ) ), 'B' ) } ),
 				null
 				);
 
@@ -70,11 +73,11 @@ public class PersistConverterTest extends AbstractSpringTest {
 				Arrays.asList(
 						new Melody[] {
 								melodyFactory.getInstance( Arrays.asList(
-										noteFactory.getInstance( C4, DOTTED_HALF_NOTE, 0, 0 ) ) ),
+										noteFactory.getInstance( C4, DOTTED_HALF_NOTE, 0, 0 ) ), 'C' ),
 								melodyFactory.getInstance( Arrays.asList(
 										noteFactory.getInstance(G4, QUARTER_NOTE, 0, 0),
 										noteFactory.getInstance(GS4, QUARTER_NOTE, 0, 0),
-										noteFactory.getInstance(A4, QUARTER_NOTE, 0, 0)) ) } ),
+										noteFactory.getInstance(A4, QUARTER_NOTE, 0, 0) ), 'D' ) } ),
 				blockMovementFactory.getInstance( G4-A4, C4-DS4 )
 		);
 
@@ -84,10 +87,10 @@ public class PersistConverterTest extends AbstractSpringTest {
 				Arrays.asList(
 						new Melody[] {
 								melodyFactory.getInstance( Arrays.asList(
-										noteFactory.getInstance( B4, EIGHTH_NOTE, 0, 0 ) ) ),
+										noteFactory.getInstance( B4, EIGHTH_NOTE, 0, 0 ) ), 'A' ),
 								melodyFactory.getInstance( Arrays.asList(
 										noteFactory.getInstance( B4, SIXTEENTH_NOTE, 0, 0 ),
-										noteFactory.getInstance( B4, SIXTEENTH_NOTE, 0, 0 ) ) ) } ),
+										noteFactory.getInstance( B4, SIXTEENTH_NOTE, 0, 0 ) ), 'B' ) } ),
 				blockMovementFactory.getInstance( B4-A4, B4-C4)
 		);
 
@@ -97,11 +100,11 @@ public class PersistConverterTest extends AbstractSpringTest {
 				Arrays.asList(
 						new Melody[] {
 								melodyFactory.getInstance( Arrays.asList(
-										noteFactory.getInstance( CS4, WHOLE_NOTE, 0, 0 ) ) ),
+										noteFactory.getInstance( CS4, WHOLE_NOTE, 0, 0 ) ), 'C' ),
 								melodyFactory.getInstance( Arrays.asList(
 										noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ),
 										noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ),
-										noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ) ) ) } ),
+										noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ) ), 'D' ) } ),
 				blockMovementFactory.getInstance( CS4-B4, C3-B4 )
 		);
 
@@ -111,11 +114,11 @@ public class PersistConverterTest extends AbstractSpringTest {
 				Arrays.asList(
 						new Melody[] {
 								melodyFactory.getInstance( Arrays.asList(
-										noteFactory.getInstance( E4, DOTTED_EIGHTH_NOTE, 0, 0 ) ) ),
+										noteFactory.getInstance( E4, DOTTED_EIGHTH_NOTE, 0, 0 ) ), 'A' ),
 								melodyFactory.getInstance( Arrays.asList(
 										noteFactory.getInstance( G4, SIXTEENTH_NOTE, 0, 0 ),
 										noteFactory.getInstance( F4, SIXTEENTH_NOTE, 0, 0 ),
-										noteFactory.getInstance( E4, SIXTEENTH_NOTE, 0, 0 ) ) ) } ),
+										noteFactory.getInstance( E4, SIXTEENTH_NOTE, 0, 0 ) ), 'B' ) } ),
 				blockMovementFactory.getInstance( G4-CS4, E4-C3)
 		);
 
@@ -158,41 +161,51 @@ public class PersistConverterTest extends AbstractSpringTest {
 		List<model.melody.Melody> melodyList1 = new ArrayList<>();
 		model.MusicBlock musicBlock1 = new model.MusicBlock( null,
 				new model.melody.Melody(
+						'A',
 						new jm.music.data.Note( C4, WHOLE_NOTE, 0, 0 ),
 						new jm.music.data.Note( D4, HALF_NOTE, 0, 0 ),
 						new jm.music.data.Note( E4, EIGHTH_NOTE, 0, 0 ),
 						new jm.music.data.Note( DS4, EIGHTH_NOTE, 0, 0 ) ),
 				new model.melody.Melody(
+						'B',
 						new jm.music.data.Note( B4, WHOLE_NOTE, 0, 0 ),
 						new jm.music.data.Note( A4, DOTTED_HALF_NOTE, 0, 0 ) ) );
 
 		model.MusicBlock musicBlock2 = new model.MusicBlock( null,
 				new model.melody.Melody(
+						'C',
 						new jm.music.data.Note( C4, DOTTED_HALF_NOTE, 0, 0 ) ),
 				new model.melody.Melody(
+						'D',
 						new jm.music.data.Note( G4, QUARTER_NOTE, 0, 0 ),
 						new jm.music.data.Note( GS4, QUARTER_NOTE, 0, 0 ),
 						new jm.music.data.Note( A4, QUARTER_NOTE, 0, 0 ) ) );
 
 		model.MusicBlock musicBlock3 = new model.MusicBlock( null,
 				new model.melody.Melody(
+						'A',
 						new jm.music.data.Note( B4, EIGHTH_NOTE, 0, 0 ) ),
 				new model.melody.Melody(
+						'B',
 						new jm.music.data.Note( B4, SIXTEENTH_NOTE, 0, 0 ),
 						new jm.music.data.Note( B4, SIXTEENTH_NOTE, 0, 0 ) ) );
 
 		model.MusicBlock musicBlock4 = new model.MusicBlock( null,
 				new model.melody.Melody(
+						'C',
 						new jm.music.data.Note( CS4, WHOLE_NOTE, 0, 0 ) ),
 				new model.melody.Melody(
+						'D',
 						new jm.music.data.Note( C3, HALF_NOTE_TRIPLET, 0, 0 ),
 						new jm.music.data.Note( C3, HALF_NOTE_TRIPLET, 0, 0 ),
 						new jm.music.data.Note( C3, HALF_NOTE_TRIPLET, 0, 0 ) ) );
 
 		model.MusicBlock musicBlock5 = new model.MusicBlock( null,
 				new model.melody.Melody(
+						'A',
 						new jm.music.data.Note( E4, DOTTED_EIGHTH_NOTE, 0, 0 ) ),
 				new model.melody.Melody(
+						'B',
 						new jm.music.data.Note( G4, SIXTEENTH_NOTE, 0, 0 ),
 						new jm.music.data.Note( F4, SIXTEENTH_NOTE, 0, 0 ),
 						new jm.music.data.Note( E4, SIXTEENTH_NOTE, 0, 0 ) ) );
@@ -248,6 +261,20 @@ public class PersistConverterTest extends AbstractSpringTest {
 
 		model.Lexicon persistanceLexicon = new model.Lexicon( composeBlockList );
 		return persistanceLexicon;
+	}
+
+	@Test
+	public void wrongFormTest() {
+		ComposeBlock composeBlock = new ComposeBlock(  );
+		composeBlock.melodies = Arrays.asList( new Melody( Arrays.asList( new Note( C3, HALF_NOTE_TRIPLET, 0, 0 ) ), 'A' ) );
+
+		model.ComposeBlock modelComposeBlock = new model.ComposeBlock( 0, null, Arrays.asList( new model.melody.Melody( 'B', new jm.music.data.Note( C3, HALF_NOTE_TRIPLET, 0, 0 ) ) ) ,null );
+
+		ComposeBlock convertedFromModel = persistConverter.convertComposeBlock( modelComposeBlock );
+		assertNotEquals( composeBlock, convertedFromModel );
+		model.ComposeBlock convertedFromPersist = persistConverter.convertComposeBlock( composeBlock );
+		assertNotEquals( convertedFromPersist,  modelComposeBlock );
+
 	}
 
 }

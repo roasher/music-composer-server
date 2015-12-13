@@ -1,15 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
+    <NOTE/>
+
+    <MELODY/>
+    <MELODY_NOTE/>
+
     <COMPOSITION_INFO/>
+
+    <BLOCK_MOVEMENT/>
 
     <COMPOSE_BLOCK/>
     <BLOCK_MELODY/>
 
-    <BLOCK_MOVEMENT/>
-
     <BLOCK_RELATION/>
-
-    <MELODY/>
-    <MELODY_NOTE/>
-    <NOTE/>
 </dataset>

@@ -18,6 +18,15 @@ public class Note extends AbstractPersistanceModel {
 	@Column
 	public double pan;
 
+	public Note() {}
+
+	public Note( int pitch, double rhythmValue, int dynamic, double pan ) {
+		this.pitch = pitch;
+		this.rhythmValue = rhythmValue;
+		this.dynamic = dynamic;
+		this.pan = pan;
+	}
+
 	@Override public boolean equals( Object o ) {
 		if ( this == o )
 			return true;

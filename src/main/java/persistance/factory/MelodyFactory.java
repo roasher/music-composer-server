@@ -12,10 +12,9 @@ import java.util.List;
 @Component
 public class MelodyFactory extends AbstractFactory<Melody> {
 
-    public Melody getInstance(List<Note> noteList) {
-        Melody melody = new Melody();
-        melody.notes = noteList;
-        return getUniqueInstance( melody );
-    }
+	public Melody getInstance( List<Note> noteList, char form ) {
+		Melody melody = new Melody( noteList, form );
+		return getUniqueInstance( melody );
+	}
 
 }

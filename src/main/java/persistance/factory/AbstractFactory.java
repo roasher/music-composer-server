@@ -11,16 +11,16 @@ import java.util.Set;
 @Component
 public abstract class AbstractFactory<T> {
 
-    protected Set<T> uniqueValueSet = new HashSet<>();
+	protected Set<T> uniqueValueSet = new HashSet<>();
 
-    protected T getUniqueInstance( T object) {
-        for ( T currentObject : this.uniqueValueSet ) {
-            if ( currentObject.equals(object) ) {
-                return currentObject;
-            }
-        }
-        this.uniqueValueSet.add(object);
-        return object;
-    }
+	protected T getUniqueInstance( T object ) {
+		for ( T currentObject : this.uniqueValueSet ) {
+			if ( currentObject.equals( object ) ) {
+				return currentObject;
+			}
+		}
+		this.uniqueValueSet.add( object );
+		return object;
+	}
 
 }

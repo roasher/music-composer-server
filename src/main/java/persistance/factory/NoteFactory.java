@@ -15,11 +15,7 @@ public class NoteFactory extends AbstractFactory<Note> {
     }
 
     public Note getInstance( int pitch, double rhythmValue, int dynamic, double pan ) {
-        Note note = new Note();
-        note.pitch = pitch;
-        note.rhythmValue = rhythmValue;
-        note.dynamic = dynamic;
-        note.pan = pan;
+        Note note = new Note( pitch, rhythmValue, dynamic, pan );
         return getUniqueInstance( note );
     }
 

@@ -158,7 +158,7 @@ public class PersistConverter {
 	}
 
 	public Melody convertMelody( model.melody.Melody melody ) {
-		Melody persistMelody = melodyFactory.getInstance(convertToPersistNoteList(melody.getNoteList()));
+		Melody persistMelody = melodyFactory.getInstance( convertToPersistNoteList(melody.getNoteList()), melody.getForm().getValue() );
 		persistMelody.form = melody.getForm().getValue();
 		return persistMelody;
 	}

@@ -18,7 +18,15 @@ public class Melody extends AbstractPersistanceModel {
 	@Column
 	public char form;
 
-	@Override public boolean equals( Object o ) {
+	public Melody() {}
+
+	public Melody( List<Note> notes, char form ) {
+		this.notes = notes;
+		this.form = form;
+	}
+
+	@Override
+	public boolean equals( Object o ) {
 		if ( this == o )
 			return true;
 		if ( !( o instanceof Melody ) )
@@ -26,14 +34,17 @@ public class Melody extends AbstractPersistanceModel {
 
 		Melody melody = ( Melody ) o;
 
-		if ( !notes.equals( melody.notes ) )
+		if ( form != melody.form )
 			return false;
+		return notes.equals( melody.notes );
 
-		return true;
 	}
 
-	@Override public int hashCode() {
-		return notes.hashCode();
+	@Override
+	public int hashCode() {
+		int result = notes.hashCode();
+		result = 31 * result + ( int ) form;
+		return result;
 	}
 
 	@Override
