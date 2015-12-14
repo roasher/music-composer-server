@@ -1,6 +1,10 @@
 package decomposer;
 
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import persistance.dao.LexiconDAO;
 import helper.AbstractSpringTest;
 import jm.JMC;
@@ -20,6 +24,8 @@ import static org.junit.Assert.assertNotEquals;
 /**
  * Created by pyurkin on 17.04.2015.
  */
+@TestExecutionListeners( { DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class } )
+@DatabaseSetup( "/LexiconDAOTest-blank.xml" )
 public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 	@Autowired
 	CompositionDecomposer compositionDecomposer;
@@ -31,8 +37,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 	@Test
 	public void decomposeWithOrWithoutStoringEqual() throws IOException {
-		List<Composition> compositionList = compositionLoader
-				.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		// first decompose with no persistance
 		Lexicon lexiconWithoutDB = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 		lexiconDAO.persist( lexiconWithoutDB );
@@ -44,8 +49,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 	@Test
 	public void decomposeWithOrWithoutStoring_intersect() throws IOException {
-		List<Composition> compositionList = compositionLoader
-				.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		// Decompose all melodies
 		Lexicon lexiconFull = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 
@@ -60,8 +64,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 	@Test
 	public void decomposeWithOrWithoutStoring_nonoverlapping() throws IOException {
-		List<Composition> compositionList = compositionLoader
-				.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		// Decompose second
 		Lexicon lexiconSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
 
@@ -76,8 +79,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 	@Test
 	public void failDecompose() throws IOException {
-		List<Composition> compositionList = compositionLoader
-				.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		// Decompose second
 		Lexicon lexiconSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
 

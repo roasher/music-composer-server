@@ -2,11 +2,13 @@ package persistance.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Created by pyurkin on 29.04.2015.
  */
 @Entity( name = "COMPOSITION_INFO" )
+@SequenceGenerator( name="SEQ",sequenceName="COMPOSITION_INFO_SEQ" )
 public class CompositionInfo extends AbstractPersistanceModel {
 
 	@Column

@@ -9,6 +9,7 @@ import java.util.List;
  * Created by pyurkin on 29.04.2015.
  */
 @Entity( name = "MELODY" )
+@SequenceGenerator( name="SEQ",sequenceName="MELODY_SEQ" )
 public class Melody extends AbstractPersistanceModel {
 
 	@ManyToMany( cascade = CascadeType.ALL )

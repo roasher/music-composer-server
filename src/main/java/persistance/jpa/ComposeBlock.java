@@ -8,6 +8,7 @@ import java.util.List;
  * Created by pyurkin on 29.04.2015.
  */
 @Entity( name = "COMPOSE_BLOCK" )
+@SequenceGenerator( name="SEQ",sequenceName="COMPOSE_BLOCK_SEQ" )
 public class ComposeBlock extends AbstractPersistanceModel {
 
 	@Column( name = "START_TIME" )

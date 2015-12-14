@@ -36,8 +36,8 @@ public class CompositionDecomposer {
     @Autowired
     private MusicBlockProvider musicBlockProvider;
 
-	@Autowired @Qualifier("lexiconDAO_stub")
-	private LexiconDAO LexiconDAO;
+	@Autowired @Qualifier("lexiconDAO_database")
+	private LexiconDAO lexiconDAO;
 
 	private Logger logger = LoggerFactory.getLogger( getClass() );
 
@@ -123,7 +123,7 @@ public class CompositionDecomposer {
 	 */
 	public Lexicon decompose ( List< Composition > compositionList, double rhythmValue ) {
 		logger.info( "Getting blocks persisted blocks" );
-		Lexicon dataBaseLexicon = LexiconDAO.fetch();
+		Lexicon dataBaseLexicon = lexiconDAO.fetch();
 
 		logger.info( "Deleting all blocks, build from other than input list compositions" );
 		trimToCompositions( dataBaseLexicon.getComposeBlockList(), compositionList );
@@ -138,7 +138,7 @@ public class CompositionDecomposer {
 		}
 		List<ComposeBlock> composeBlockList = getComposeBlocks( musicBlockList );
 
-		logger.info( "Combining blocks from compositions and blocks frpersistancease" );
+		logger.info( "Combining blocks from compositions and blocks persistance" );
 		List<ComposeBlock> combinedComposeBlockList = union( dataBaseLexicon.getComposeBlockList(), composeBlockList );
 
 		Lexicon lexicon = new Lexicon( combinedComposeBlockList );

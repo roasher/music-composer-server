@@ -2,11 +2,13 @@ package persistance.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Created by pyurkin on 29.04.2015.
  */
 @Entity
+@SequenceGenerator( name="SEQ",sequenceName="NOTE_SEQ" )
 public class Note extends AbstractPersistanceModel {
 
 	@Column
