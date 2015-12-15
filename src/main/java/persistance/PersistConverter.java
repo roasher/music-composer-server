@@ -3,10 +3,10 @@ package persistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import persistance.jpa.*;
-import persistance.factory.BlockMovementFactory;
-import persistance.factory.CompositionInfoFactory;
-import persistance.factory.MelodyFactory;
-import persistance.factory.NoteFactory;
+import persistance.jpa.factory.BlockMovementFactory;
+import persistance.jpa.factory.CompositionInfoFactory;
+import persistance.jpa.factory.MelodyFactory;
+import persistance.jpa.factory.NoteFactory;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package persistance.factory;
+package persistance.jpa.factory;
 
 import org.springframework.stereotype.Component;
 

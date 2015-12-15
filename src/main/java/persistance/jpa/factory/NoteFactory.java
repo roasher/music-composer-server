@@ -1,7 +1,6 @@
-package persistance.factory;
+package persistance.jpa.factory;
 
 import org.springframework.stereotype.Component;
-import persistance.factory.AbstractFactory;
 import persistance.jpa.Note;
 
 /**

@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
-import persistance.factory.AbstractFactory;
+import persistance.jpa.factory.AbstractFactory;
 
-import java.util.List;
 import java.util.Map;
 
 /**
