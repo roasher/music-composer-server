@@ -7,6 +7,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import utils.test.FactoryConfigurer;
 
+import java.sql.SQLException;
+
 /**
  * Parent test class
  * Created by pyurkin on 05.12.14.
@@ -20,10 +22,8 @@ public abstract class AbstractSpringTest {
 
 
 	@Before
-	public void reset() {
+	public void reset() throws SQLException {
 		factoryConfigurer.resetAllFactories();
-
 	}
-
 
 }

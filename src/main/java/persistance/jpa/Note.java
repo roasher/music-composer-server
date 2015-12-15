@@ -8,7 +8,7 @@ import javax.persistence.SequenceGenerator;
  * Created by pyurkin on 29.04.2015.
  */
 @Entity
-@SequenceGenerator( name="SEQ",sequenceName="NOTE_SEQ" )
+@SequenceGenerator( name="SEQ", sequenceName="NOTE_SEQ", initialValue = 1, allocationSize = 1 )
 public class Note extends AbstractPersistanceModel {
 
 	@Column

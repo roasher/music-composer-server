@@ -8,7 +8,7 @@ import javax.persistence.SequenceGenerator;
  * Created by pyurkin on 29.04.2015.
  */
 @Entity( name = "COMPOSITION_INFO" )
-@SequenceGenerator( name="SEQ",sequenceName="COMPOSITION_INFO_SEQ" )
+@SequenceGenerator( name="SEQ",sequenceName="COMPOSITION_INFO_SEQ", initialValue = 1, allocationSize = 1 )
 public class CompositionInfo extends AbstractPersistanceModel {
 
 	@Column

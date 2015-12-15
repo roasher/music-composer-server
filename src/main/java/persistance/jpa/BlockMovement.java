@@ -8,7 +8,7 @@ import javax.persistence.SequenceGenerator;
  * Created by pyurkin on 06.05.2015.
  */
 @Entity( name = "BLOCK_MOVEMENT" )
-@SequenceGenerator( name="SEQ",sequenceName="BLOCK_MOVEMENT_SEQ" )
+@SequenceGenerator( name="SEQ",sequenceName="BLOCK_MOVEMENT_SEQ", initialValue = 1, allocationSize = 1 )
 public class BlockMovement extends AbstractPersistanceModel {
 
     @Column( name = "TOP_VOICE_MOVEMENT" )
