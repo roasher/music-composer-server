@@ -26,8 +26,8 @@ public class VagonTest extends AbstractSpringTest {
 	ObjectDAO vagonDAO;
 
 	@Test
-	@DatabaseSetup("/VagonTest.xml")
-	@ExpectedDatabase( assertionMode= DatabaseAssertionMode.NON_STRICT, value = "/VagonTest.test-result.xml" )
+	@DatabaseSetup( "/persistance/prototype/VagonTest.xml" )
+	@ExpectedDatabase( assertionMode= DatabaseAssertionMode.NON_STRICT, value = "/persistance/prototype/VagonTest.test-result.xml" )
 	public void test() {
 		Vagon vagon1 = new Vagon( 1, "vagon1" );
 		Vagon vagon2 = new Vagon( 2, "vagon2" );

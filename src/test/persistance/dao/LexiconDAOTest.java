@@ -45,7 +45,7 @@ public class LexiconDAOTest extends AbstractSpringTest {
 	private CompositionDecomposer compositionDecomposer;
 
 	@Test
-	@DatabaseSetup( "/LexiconDAOTest-blank.xml" )
+	@DatabaseSetup( "/persistance/dao/LexiconDAOTest-blank.xml" )
 	public void storeIdentityTest() throws IOException {
 
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
@@ -58,15 +58,15 @@ public class LexiconDAOTest extends AbstractSpringTest {
 	}
 
 	@Test
-	@DatabaseSetup( "/LexiconDAOTest-blank.xml" )
-	@ExpectedDatabase( assertionMode = DatabaseAssertionMode.NON_STRICT, value = "/LexiconDAOTest-with-data.xml" )
+	@DatabaseSetup( "/persistance/dao/LexiconDAOTest-blank.xml" )
+	@ExpectedDatabase( assertionMode = DatabaseAssertionMode.NON_STRICT, value = "/persistance/dao/LexiconDAOTest-with-data.xml" )
 	public void persistTest() throws IOException {
 		Lexicon lexicon = getTestLexicon();
 		lexiconDAO.persist( lexicon );
 	}
 
 	@Test
-	@DatabaseSetup( "/LexiconDAOTest-with-data.xml" )
+	@DatabaseSetup( "/persistance/dao/LexiconDAOTest-with-data.xml" )
 	public void fetchTest() {
 		Lexicon lexicon = lexiconDAO.fetch();
 		assertEquals( lexicon.getComposeBlockList(), getTestLexicon().getComposeBlockList() );

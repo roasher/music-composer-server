@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNotEquals;
  * Created by pyurkin on 17.04.2015.
  */
 @TestExecutionListeners( { DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class } )
-@DatabaseSetup( "/LexiconDAOTest-blank.xml" )
+@DatabaseSetup( "/persistance/dao/LexiconDAOTest-blank.xml" )
 public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 	@Autowired
 	private CompositionDecomposer compositionDecomposer;
