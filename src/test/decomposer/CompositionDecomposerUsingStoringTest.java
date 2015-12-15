@@ -28,12 +28,12 @@ import static org.junit.Assert.assertNotEquals;
 @DatabaseSetup( "/LexiconDAOTest-blank.xml" )
 public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 	@Autowired
-	CompositionDecomposer compositionDecomposer;
+	private CompositionDecomposer compositionDecomposer;
 	@Autowired
-	CompositionLoader compositionLoader;
+	private CompositionLoader compositionLoader;
 	@Autowired
 	@Qualifier( "lexiconDAO_database" )
-	LexiconDAO lexiconDAO;
+	private LexiconDAO lexiconDAO;
 
 	@Test
 	public void decomposeWithOrWithoutStoringEqual() throws IOException {

@@ -23,4 +23,8 @@ public abstract class AbstractFactory<T> {
 		return object;
 	}
 
+	public void reset() {
+		uniqueValueSet = new HashSet<>(  );
+	}
+
 }
