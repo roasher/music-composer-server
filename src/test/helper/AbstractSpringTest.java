@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * Created by pyurkin on 05.12.14.
  */
 @RunWith( SpringJUnit4ClassRunner.class )
-@ContextConfiguration( locations = "classpath:spring.configuration.xml" )
+@ContextConfiguration( locations = "classpath:spring-test.configuration.xml" )
 public abstract class AbstractSpringTest {
 
 	@Autowired
