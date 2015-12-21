@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 @Component
 public class LexiconDAO_stub implements LexiconDAO {
-	@Override public void store( Lexicon lexicon ) throws IOException {
+	@Override public void persist( Lexicon lexicon ) throws IOException {
 		// doing nothing
 	}
 

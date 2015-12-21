@@ -91,6 +91,6 @@ public class CompositionComposerTest extends AbstractSpringTest {
 		// Decompose second
 		Lexicon lexiconSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
 
-//		lexiconDAO.store( lexiconSecond.get( 3 ).getMusicBlock() );
+//		lexiconDAO.persist( lexiconSecond.get( 3 ).getMusicBlock() );
 	}
 }

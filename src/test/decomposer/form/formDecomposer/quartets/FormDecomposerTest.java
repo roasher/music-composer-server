@@ -30,7 +30,7 @@ public class FormDecomposerTest extends AbstractSpringTest {
 		Composition composition = compositionLoader.getComposition( new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ) );
 
 		List< List< Melody > > melodyBlockList = formDecomposer.decompose( composition, JMC.WHOLE_NOTE );
-//		List<MusicBlock> musicBlockList = ModelUtils.simpleWrap( melodyList );
+//		List<MusicBlock> musicBlockList = ModelUtils.simpleWrap( melodies );
 
 		List<String> etalonList = new ArrayList<>(  );
 

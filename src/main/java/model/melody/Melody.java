@@ -26,6 +26,11 @@ public class Melody extends Phrase {
         super(notes);
     }
 
+    public Melody( char form, Note... notes ) {
+        super(notes);
+        this.form = new Form( form );
+    }
+
     public Melody() {
         super();
     }
@@ -63,10 +68,6 @@ public class Melody extends Phrase {
         Melody melody = ( Melody ) o;
 
 		if ( !this.form.equals( melody.form ) ) {
-			return false;
-		}
-
-		if ( Double.compare( this.getStartTime(), melody.getStartTime() ) != 0 ) {
 			return false;
 		}
 

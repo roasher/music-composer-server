@@ -12,7 +12,7 @@ import java.io.IOException;
 @Component
 public interface LexiconDAO {
 
-	void store( Lexicon lexicon ) throws IOException;
+	void persist( Lexicon lexicon ) throws IOException;
 
 	Lexicon fetch();
 

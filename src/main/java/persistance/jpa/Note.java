@@ -1,29 +1,33 @@
-package persistance.model;
+package persistance.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Created by pyurkin on 29.04.2015.
  */
 @Entity
-class Note {
-	@Id @GeneratedValue
-	long id;
-	@Column
-	int pitch;
-	@Column
-	double rhythmValue;
-	@Column
-	int dynamic;
-	@Column
-	double pan;
+@SequenceGenerator( name="SEQ", sequenceName="NOTE_SEQ", initialValue = 1, allocationSize = 1 )
+public class Note extends AbstractPersistanceModel {
 
-	Note() {}
-	Note( int pitch, double rhythmValue ) { this.pitch = pitch; this.rhythmValue = rhythmValue; }
-	Note( int pitch, double rhythmValue, int dynamic, double pan ) { this( pitch, rhythmValue ); this.dynamic = dynamic; this.pan = pan; }
+	@Column
+	public int pitch;
+	@Column( name = "RHYTHM_VALUE" )
+	public double rhythmValue;
+	@Column
+	public int dynamic;
+	@Column
+	public double pan;
+
+	public Note() {}
+
+	public Note( int pitch, double rhythmValue, int dynamic, double pan ) {
+		this.pitch = pitch;
+		this.rhythmValue = rhythmValue;
+		this.dynamic = dynamic;
+		this.pan = pan;
+	}
 
 	@Override public boolean equals( Object o ) {
 		if ( this == o )

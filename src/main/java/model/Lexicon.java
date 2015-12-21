@@ -116,12 +116,15 @@ public class Lexicon {
 
 		Lexicon lexicon = ( Lexicon ) o;
 
-		if ( Double.compare( lexicon.minRhythmValue, minRhythmValue ) != 0 )
+		if ( Double.compare( lexicon.minRhythmValue, minRhythmValue ) != 0 ) {
 			return false;
-		if ( !composeBlockList.equals( lexicon.composeBlockList ) )
+		}
+		if ( !composeBlockList.equals( lexicon.composeBlockList ) ) {
 			return false;
-		if ( !compositionsInLexicon.equals( lexicon.compositionsInLexicon ) )
+		}
+		if ( !compositionsInLexicon.equals( lexicon.compositionsInLexicon ) ) {
 			return false;
+		}
 
 		return true;
 	}

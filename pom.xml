@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>MusicComposer</groupId>
     <artifactId>MusicComposer</artifactId>
@@ -7,15 +7,16 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <spring.version>4.0.6.RELEASE</spring.version>
-        <junit.version>3.8.1</junit.version>
+        <spring.version>4.2.3.RELEASE</spring.version>
+        <junit.version>4.12</junit.version>
+        <spring-test-dbunit.version>1.2.1</spring-test-dbunit.version>
         <mockito.version>1.10.19</mockito.version>
         <jmusic.version>1.6.4</jmusic.version>
         <logback.version>1.1.2</logback.version>
         <xstream.version>1.4.8</xstream.version>
 
         <h2.verstion>1.4.187</h2.verstion>
-        <hibernate.core.version>4.3.9.Final</hibernate.core.version>
+        <hibernate.core.version>4.3.11.Final</hibernate.core.version>
         <!--<hibernate.annotation.version></hibernate.annotation.version>-->
     </properties>
 
@@ -25,6 +26,33 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.5.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>2.1.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.springtestdbunit</groupId>
+            <artifactId>spring-test-dbunit</artifactId>
+            <version>${spring-test-dbunit.version}</version>
         </dependency>
 
         <dependency>
@@ -57,11 +85,11 @@
             <version>${spring.version}</version>
         </dependency>
 
-          <!-- Logging -->
+        <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.7</version>
+            <version>1.7.13</version>
         </dependency>
 
         <dependency>
@@ -74,12 +102,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
             <version>${logback.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-            <version>${xstream.version}</version>
         </dependency>
 
         <!--Persitance layer-->
@@ -103,7 +125,17 @@
 
     </dependencies>
 
-  <build>
-    <finalName>MusicComposer</finalName>
-  </build>
+    <build>
+        <finalName>MusicComposer</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

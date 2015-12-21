@@ -93,7 +93,7 @@ public class MusicBlockProvider {
 			possibleNext.add( currentMusicBlock.getNext() );
 			for ( MusicBlock musicBlock : musicBlockList ) {
 				if ( currentMusicBlock.getNext() != musicBlock && canSubstitute( currentMusicBlock.getNext(), musicBlock ) ) {
-					logger.info( "Possible next music block has been found: {}", musicBlock );
+					logger.debug( "Possible next music block has been found: {}", musicBlock );
 					possibleNext.add( musicBlock );
 				}
 			}

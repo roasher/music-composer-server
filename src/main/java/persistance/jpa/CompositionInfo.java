@@ -1,23 +1,22 @@
-package persistance.model;
+package persistance.jpa;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Created by pyurkin on 29.04.2015.
  */
-@Entity
-class CompositionInfo {
-	@Id @GeneratedValue
-	long id;
+@Entity( name = "COMPOSITION_INFO" )
+@SequenceGenerator( name="SEQ",sequenceName="COMPOSITION_INFO_SEQ", initialValue = 1, allocationSize = 1 )
+public class CompositionInfo extends AbstractPersistanceModel {
+
 	@Column
-	String author;
+	public String author;
 	@Column
-	String title;
+	public String title;
 	@Column
-	double tempo;
+	public double tempo;
 
 	@Override public boolean equals( Object o ) {
 		if ( this == o )
@@ -27,8 +26,6 @@ class CompositionInfo {
 
 		CompositionInfo that = ( CompositionInfo ) o;
 
-		if ( id != that.id )
-			return false;
 		if ( Double.compare( that.tempo, tempo ) != 0 )
 			return false;
 		if ( author != null ? !author.equals( that.author ) : that.author != null )

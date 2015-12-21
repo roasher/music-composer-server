@@ -4,10 +4,9 @@ import model.Lexicon;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import persistance.model.ComposeBlock;
-import persistance.model.PersistConverter;
+import persistance.jpa.ComposeBlock;
+import persistance.PersistConverter;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -23,19 +22,22 @@ public class LexiconDAO_database implements LexiconDAO {
 	@Autowired
 	private SessionFactory sessionFactory;
 
+	@Autowired
+	private PersistConverter persistConverter;
+
 	@Override
-	public void store( Lexicon lexicon ) throws IOException {
-		persistance.model.Lexicon persistLexicon = PersistConverter.convertLexicon( lexicon );
-		for ( persistance.model.ComposeBlock composeBlock : persistLexicon.composeBlockList ) {
+	public void persist( Lexicon lexicon ) throws IOException {
+		List <persistance.jpa.ComposeBlock> composeBlocks = persistConverter.convertComposeBlockList( lexicon.getComposeBlockList() );
+		for ( ComposeBlock composeBlock : composeBlocks ) {
 			sessionFactory.getCurrentSession().save( composeBlock );
 		}
 	}
 
 	@Override
 	public Lexicon fetch() {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria( persistance.model.ComposeBlock.class );
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria( ComposeBlock.class );
 		List<ComposeBlock> persistanceComposeBlockList = criteria.setResultTransformer( Criteria.DISTINCT_ROOT_ENTITY ).list();
-		List<model.ComposeBlock> composeBlockList = PersistConverter.convertPersistComposeBlockList( persistanceComposeBlockList );
+		List<model.ComposeBlock> composeBlockList = persistConverter.convertPersistComposeBlockList( persistanceComposeBlockList );
 		return new Lexicon( composeBlockList );
 	}
 
