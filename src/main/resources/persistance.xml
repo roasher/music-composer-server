@@ -10,14 +10,8 @@
         <property name="password" value=""/>
     </bean>
 
-    <bean id="myDataSource" class="com.p6spy.engine.spy.P6DataSource">
-        <constructor-arg>
-            <ref bean="dataSource"/>
-        </constructor-arg>
-    </bean>
-    
     <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-        <property name="dataSource" ref="myDataSource"/>
+        <property name="dataSource" ref="dataSource"/>
         <!--<property name="annotatedPackages" value="persistance.model"/>-->
         <property name="annotatedClasses">
             <list>
