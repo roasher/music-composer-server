@@ -4,8 +4,10 @@ import composer.CompositionComposer;
 import composer.CompositionStep;
 import composer.FormBlockProvider;
 import decomposer.CompositionDecomposer;
+import helper.AbstractSpringComposerTest;
 import helper.AbstractSpringTest;
 import jm.JMC;
+import jm.util.Play;
 import jm.util.View;
 import junit.framework.Assert;
 import model.Lexicon;
@@ -39,7 +41,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by pyurkin on 15.12.14.
  */
-public class CompositionComposerTest extends AbstractSpringTest {
+public class CompositionComposerTest extends AbstractSpringComposerTest {
 
 	@Autowired
 	private CompositionDecomposer compositionDecomposer;
@@ -50,7 +52,7 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	@Autowired
 	private CompositionComposer compositionComposer;
 
-	@Autowired @Qualifier( "lexiconDAO_stub" )
+	@Autowired @Qualifier( "lexiconDAO_database" )
 	private LexiconDAO lexiconDAO;
 
 	@Test
@@ -71,26 +73,22 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	// FIXME too slow
 	public void getRealPieceTest1() throws IOException {
 		List< Composition > compositionList = compositionLoader.getCompositions(
-		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" )
-		  //		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.biosphere(midi).mid" ),
-		  //		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ),
-		  //		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\Метания беспокойного разума.mid" )
+		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ),
+		  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.biosphere(midi).mid" ),
+		  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ),
+		  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\Метания беспокойного разума.mid" )
 		);
 
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
+//		lexiconDAO.persist( lexicon );
 
-//		Composition composition = compositionComposer.compose( lexicon, "ABCD", 4 * JMC.WHOLE_NOTE );
-//		assertEquals( 16., composition.getEndTime(), 0 );
+		Composition composition = compositionComposer.compose( lexicon, "ABCD", 4 * JMC.WHOLE_NOTE );
+		assertEquals( 16., composition.getEndTime(), 0 );
+
+//		View.notate( composition );
+//		Utils.suspend();
+		Play.midi( composition );
 
 	}
 
-	@Test
-	//TODO ??? perpose ???
-	public void store() throws IOException {
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
-		// Decompose second
-		Lexicon lexiconSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
-
-//		lexiconDAO.persist( lexiconSecond.get( 3 ).getMusicBlock() );
-	}
 }
