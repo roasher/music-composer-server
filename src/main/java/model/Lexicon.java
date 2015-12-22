@@ -44,7 +44,7 @@ public class Lexicon {
 	 * @return
 	 */
 	public ComposeBlock getRandomNext( ComposeBlock currentBlock, List<ComposeBlock> exclusions ) {
-		List<ComposeBlock> possibleNextComposeBlocks = currentBlock.getPossibleNextComposeBlocks();
+		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( currentBlock.getPossibleNextComposeBlocks() );
 		possibleNextComposeBlocks.removeAll( exclusions );
 		if ( !possibleNextComposeBlocks.isEmpty() ) {
 //			int randomNumber = ( int ) ( Math.random() * ( possibleNextComposeBlocks.size() - 1 ) );
