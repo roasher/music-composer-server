@@ -3,6 +3,8 @@ package composer.compositionComposer;
 import composer.CompositionComposer;
 import composer.CompositionStep;
 import composer.FormBlockProvider;
+import composer.first.FirstBlockProvider;
+import composer.next.NextBlockProvider;
 import decomposer.CompositionDecomposer;
 import helper.AbstractSpringTest;
 import jm.JMC;
@@ -59,17 +61,17 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 	@Test
 	public void composeStepsTest() {
 
-		List<ComposeBlock> composeBlocks = new ArrayList<>(  );
-		for ( int musicBlockNumber = 0; musicBlockNumber < 10; musicBlockNumber ++ ) {
+		List<ComposeBlock> composeBlocks = new ArrayList<>();
+		for ( int musicBlockNumber = 0; musicBlockNumber < 10; musicBlockNumber++ ) {
 			composeBlocks.add( getMockComposeBlock( musicBlockNumber ) );
 		}
 
-		when( formBlockProvider.getFormElement( any( Form.class ), any( Double.class ), any( List.class ), any( Lexicon.class ) ) )
-		  .thenReturn( composeBlocks.get( 0 ) ).thenReturn( composeBlocks.get( 1 ) ).thenReturn( composeBlocks.get( 2 ) ).thenReturn( null )
-		  .thenReturn( null ).thenReturn( composeBlocks.get( 3 ) ).thenReturn( null ).thenReturn( null ).thenReturn( composeBlocks.get( 4 ) ).thenReturn( composeBlocks.get( 5 ) )
-		  .thenReturn( composeBlocks.get( 6 ) ).thenReturn( composeBlocks.get( 7 ) ).thenReturn( composeBlocks.get( 8 ) );
+		when( formBlockProvider.getFormElement( any( FirstBlockProvider.class ), any( NextBlockProvider.class ), any( Form.class ), any( Double.class ), any( List.class ),
+				any( Lexicon.class ) ) ).thenReturn( composeBlocks.get( 0 ) ).thenReturn( composeBlocks.get( 1 ) ).thenReturn( composeBlocks.get( 2 ) ).thenReturn( null )
+				.thenReturn( null ).thenReturn( composeBlocks.get( 3 ) ).thenReturn( null ).thenReturn( null ).thenReturn( composeBlocks.get( 4 ) )
+				.thenReturn( composeBlocks.get( 5 ) ).thenReturn( composeBlocks.get( 6 ) ).thenReturn( composeBlocks.get( 7 ) ).thenReturn( composeBlocks.get( 8 ) );
 
-		List<CompositionStep> compositionSteps = compositionComposer.composeSteps( null, "ABCD", JMC.WHOLE_NOTE );
+		List<CompositionStep> compositionSteps = compositionComposer.composeSteps( null, null, null, "ABCD", JMC.WHOLE_NOTE );
 		assertEquals( 4, compositionSteps.size() );
 		assertEquals( 4., compositionSteps.get( 0 ).getComposeBlock().getStartTime(), 0 );
 		assertEquals( 5., compositionSteps.get( 1 ).getComposeBlock().getStartTime(), 0 );
@@ -81,17 +83,17 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 	@Test
 	public void composeStepsTest2() {
 
-		List< ComposeBlock > composeBlocks = new ArrayList<>(  );
-		for ( int musicBlockNumber = 0; musicBlockNumber < 10; musicBlockNumber ++ ) {
+		List<ComposeBlock> composeBlocks = new ArrayList<>();
+		for ( int musicBlockNumber = 0; musicBlockNumber < 10; musicBlockNumber++ ) {
 			composeBlocks.add( getMockComposeBlock( musicBlockNumber ) );
 		}
 
-		when( formBlockProvider.getFormElement( any( Form.class ), any( Double.class ), any( List.class ), any( Lexicon.class ) ) )
-		  .thenReturn( composeBlocks.get( 0 ) ).thenReturn( composeBlocks.get( 1 ) ).thenReturn( composeBlocks.get( 2 ) ).thenReturn( null )
-		  .thenReturn( composeBlocks.get( 3 ) ).thenReturn( null ).thenReturn( composeBlocks.get( 4 ) ).thenReturn( composeBlocks.get( 5 ) )
-		  .thenReturn( composeBlocks.get( 6 ) ).thenReturn( composeBlocks.get( 7 ) ).thenReturn( composeBlocks.get( 8 ) );
+		when( formBlockProvider.getFormElement( any( FirstBlockProvider.class ), any( NextBlockProvider.class ), any( Form.class ), any( Double.class ), any( List.class ),
+				any( Lexicon.class ) ) ).thenReturn( composeBlocks.get( 0 ) ).thenReturn( composeBlocks.get( 1 ) ).thenReturn( composeBlocks.get( 2 ) ).thenReturn( null )
+				.thenReturn( composeBlocks.get( 3 ) ).thenReturn( null ).thenReturn( composeBlocks.get( 4 ) ).thenReturn( composeBlocks.get( 5 ) )
+				.thenReturn( composeBlocks.get( 6 ) ).thenReturn( composeBlocks.get( 7 ) ).thenReturn( composeBlocks.get( 8 ) );
 
-		List<CompositionStep> compositionSteps = compositionComposer.composeSteps( null, "ABCD", 2*JMC.WHOLE_NOTE );
+		List<CompositionStep> compositionSteps = compositionComposer.composeSteps( null, null, null, "ABCD", 2 * JMC.WHOLE_NOTE );
 		assertEquals( 4, compositionSteps.size() );
 		assertEquals( 0., compositionSteps.get( 0 ).getComposeBlock().getStartTime(), 0 );
 		assertEquals( 1., compositionSteps.get( 1 ).getComposeBlock().getStartTime(), 0 );
@@ -103,17 +105,18 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 	@Test
 	public void composeStepsFailing() {
 
-		List< ComposeBlock > composeBlocks = new ArrayList<>(  );
-		for ( int musicBlockNumber = 0; musicBlockNumber < 10; musicBlockNumber ++ ) {
+		List<ComposeBlock> composeBlocks = new ArrayList<>();
+		for ( int musicBlockNumber = 0; musicBlockNumber < 10; musicBlockNumber++ ) {
 			composeBlocks.add( getMockComposeBlock( musicBlockNumber ) );
 		}
 
-		when( formBlockProvider.getFormElement( any( Form.class ), any( Double.class ), any( List.class ), any( Lexicon.class ) ) )
-		  .thenReturn( composeBlocks.get( 0 ) ).thenReturn( composeBlocks.get( 1 ) ).thenReturn( composeBlocks.get( 2 ) ).thenReturn( null )
-		  .thenReturn( null ).thenReturn( null ).thenReturn( null ).thenReturn( composeBlocks.get( 3 ) ).thenReturn( null ).thenReturn( null ).thenReturn( composeBlocks.get( 4 ) ).thenReturn( composeBlocks.get( 5 ) )
-		  .thenReturn( composeBlocks.get( 6 ) ).thenReturn( composeBlocks.get( 7 ) ).thenReturn( composeBlocks.get( 8 ) );
+		when( formBlockProvider.getFormElement( any( FirstBlockProvider.class ), any( NextBlockProvider.class ), any( Form.class ), any( Double.class ), any( List.class ),
+				any( Lexicon.class ) ) ).thenReturn( composeBlocks.get( 0 ) ).thenReturn( composeBlocks.get( 1 ) ).thenReturn( composeBlocks.get( 2 ) ).thenReturn( null )
+				.thenReturn( null ).thenReturn( null ).thenReturn( null ).thenReturn( composeBlocks.get( 3 ) ).thenReturn( null ).thenReturn( null )
+				.thenReturn( composeBlocks.get( 4 ) ).thenReturn( composeBlocks.get( 5 ) ).thenReturn( composeBlocks.get( 6 ) ).thenReturn( composeBlocks.get( 7 ) )
+				.thenReturn( composeBlocks.get( 8 ) );
 
-		List<CompositionStep> compositionSteps = compositionComposer.composeSteps( null, "ABCD", JMC.WHOLE_NOTE );
+		List<CompositionStep> compositionSteps = compositionComposer.composeSteps( null, null, null, "ABCD", JMC.WHOLE_NOTE );
 		assertEquals( 0, compositionSteps.size() );
 	}
 

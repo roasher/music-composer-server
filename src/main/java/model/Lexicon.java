@@ -37,43 +37,6 @@ public class Lexicon {
 		}
 	}
 
-	/**
-	 * Returns one of the possible next currentBlocks randomly
-	 * @param currentBlock
-	 * @param exclusions
-	 * @return
-	 */
-	public ComposeBlock getRandomNext( ComposeBlock currentBlock, List<ComposeBlock> exclusions ) {
-		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( currentBlock.getPossibleNextComposeBlocks() );
-		possibleNextComposeBlocks.removeAll( exclusions );
-		if ( !possibleNextComposeBlocks.isEmpty() ) {
-//			int randomNumber = ( int ) ( Math.random() * ( possibleNextComposeBlocks.size() - 1 ) );
-			int randomNumber = 0;
-			ComposeBlock composeBlock = possibleNextComposeBlocks.get( randomNumber );
-			logger.info( "Returning one of the next possible blocks randomly: {}", composeBlock );
-			return composeBlock;
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * Randomly returns one of the compose blocks witch have no possible previous blocks - it means that they are first blocks in the original composition
-	 * @return
-	 */
-	public ComposeBlock getRandomFirst( List<ComposeBlock> exclusions ) {
-		List<ComposeBlock> allPossibleFirstBlocks = getAllPossibleFirst();
-		allPossibleFirstBlocks.removeAll( exclusions );
-		if ( !allPossibleFirstBlocks.isEmpty() ) {
-//			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );
-			int randomNumber = 0;
-			logger.info( "Returning one of the blocks which are first in the original composition randomly" );
-			return allPossibleFirstBlocks.get( randomNumber );
-		} else {
-			return null;
-		}
-	}
-
 	public List<ComposeBlock> getAllPossibleFirst() {
 		List<ComposeBlock> firstBlocks = new ArrayList<>(  );
 		for ( ComposeBlock composeBlock : this.composeBlockList ) {

@@ -1,11 +1,12 @@
 package composer;
 
+import composer.first.RandomFirstBlockProvider;
+import composer.next.SimpleNextBlockProvider;
 import decomposer.CompositionDecomposer;
 import helper.AbstractSpringTest;
 import jm.JMC;
 import model.ComposeBlock;
 import model.Lexicon;
-import model.MusicBlock;
 import model.composition.Composition;
 import model.melody.Form;
 import org.junit.Test;
@@ -14,7 +15,6 @@ import utils.CompositionLoader;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 
-		ComposeBlock formElement = formBlockProvider.getFormElement( new Form( 'A' ), JMC.WHOLE_NOTE,
+		ComposeBlock formElement = formBlockProvider.getFormElement( new RandomFirstBlockProvider(), new SimpleNextBlockProvider(), new Form( 'A' ), JMC.WHOLE_NOTE,
 				Collections.<CompositionStep>emptyList(), lexiconFromFirst );
 
 		List<ComposeBlock> composeBlockList = new ArrayList<>();
