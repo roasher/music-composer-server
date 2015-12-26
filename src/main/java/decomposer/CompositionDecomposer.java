@@ -122,7 +122,7 @@ public class CompositionDecomposer {
 	 * @return
 	 */
 	public Lexicon decompose ( List< Composition > compositionList, double rhythmValue ) {
-		logger.info( "Getting blocks persisted blocks" );
+		logger.info( "Getting persisted blocks" );
 		Lexicon dataBaseLexicon = lexiconDAO.fetch();
 
 		logger.info( "Deleting all blocks, build from other than input list compositions" );
