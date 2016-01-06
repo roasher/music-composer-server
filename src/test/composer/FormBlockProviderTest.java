@@ -2,6 +2,8 @@ package composer;
 
 import composer.first.RandomFirstBlockProvider;
 import composer.next.SimpleNextBlockProvider;
+import composer.step.CompositionStep;
+import composer.step.FormCompositionStep;
 import decomposer.CompositionDecomposer;
 import helper.AbstractSpringTest;
 import jm.JMC;
@@ -37,12 +39,12 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 
-		ComposeBlock formElement = formBlockProvider.getFormElement( new RandomFirstBlockProvider(), new SimpleNextBlockProvider(), new Form( 'A' ), JMC.WHOLE_NOTE,
-				Collections.<CompositionStep>emptyList(), lexiconFromFirst );
+		List<ComposeBlock> formElement = formBlockProvider.getFormElement( new RandomFirstBlockProvider(), new SimpleNextBlockProvider(), new Form( 'A' ), JMC.WHOLE_NOTE,
+				Collections.<FormCompositionStep>emptyList(), lexiconFromFirst );
 
 		List<ComposeBlock> composeBlockList = new ArrayList<>();
 		composeBlockList.add( lexiconFromFirst.get( 0 ) );
 		composeBlockList.add( lexiconFromFirst.get( 1 ) );
-		assertEquals( formElement, new ComposeBlock( composeBlockList ) );
+		assertEquals( formElement, composeBlockList );
 	}
 }

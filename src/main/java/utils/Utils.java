@@ -1,14 +1,10 @@
 package utils;
 
-import composer.CompositionStep;
 import jm.music.data.Note;
 import jm.music.data.Part;
-import jm.music.data.Phrase;
 import model.ComposeBlock;
-import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
-import model.composition.CompositionInfo;
 import model.melody.Melody;
 
 import java.io.IOException;

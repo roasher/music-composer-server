@@ -65,7 +65,6 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 
 	@Test
     @Ignore
-	// FIXME too slow
 	public void getRealPieceTest1() throws IOException {
 		List< Composition > compositionList = compositionLoader.getCompositions(
 		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ),
@@ -100,7 +99,7 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 			}
 		};
 
-		Composition composition = compositionComposer.compose( firstStepProvider, nextBlockProvider, lexicon, "ABCD", 8 * JMC.WHOLE_NOTE );
+		Composition composition = compositionComposer.compose( firstStepProvider, nextBlockProvider, lexicon, "ABCD", 16 * JMC.WHOLE_NOTE );
 //		assertEquals( 16., composition.getEndTime(), 0 );
 
 //		View.notate( composition );
