@@ -45,79 +45,73 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 	@Test
 	public void isTwoLinked() {
 
+		MusicBlock musicBlock0 = mock( MusicBlock.class );
 		MusicBlock musicBlock1 = mock( MusicBlock.class );
 		MusicBlock musicBlock2 = mock( MusicBlock.class );
 		MusicBlock musicBlock3 = mock( MusicBlock.class );
-		MusicBlock musicBlock4 = mock( MusicBlock.class );
 
 		List<MusicBlock> inputMusicBlock = new ArrayList<MusicBlock>(  );
+		inputMusicBlock.add( musicBlock0 );
 		inputMusicBlock.add( musicBlock1 );
 		inputMusicBlock.add( musicBlock2 );
 		inputMusicBlock.add( musicBlock3 );
-		inputMusicBlock.add( musicBlock4 );
 
-		when( musicBlockProvider.getAllPossibleNextVariants( any( MusicBlock.class ), any( List.class ) ) )
-		  .thenReturn( Arrays.asList( new MusicBlock[] { musicBlock2, musicBlock3 } ) )
-		  .thenReturn( Arrays.asList( new MusicBlock[] { musicBlock1, musicBlock3, musicBlock4 } ) )
-		  .thenReturn( Arrays.asList( new MusicBlock[] { musicBlock1, musicBlock2 } ) )
-		  .thenReturn( Arrays.asList( new MusicBlock[] { musicBlock2 } ) );
+		when( musicBlockProvider.getAllPossibleNextVariantNumbers( any( Integer.class ), any( List.class ) ) )
+		  .thenReturn( Arrays.asList( 1, 2 ) )
+		  .thenReturn( Arrays.asList( 0, 2, 3 ) )
+		  .thenReturn( Arrays.asList( 0, 1 ) )
+		  .thenReturn( Arrays.asList( 1 ) );
 
 		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock );
 
-		ComposeBlock composeBlock1 = null;
-		ComposeBlock composeBlock2 = null;
-		ComposeBlock composeBlock3 = null;
-		ComposeBlock composeBlock4 = null;
-		for ( ComposeBlock composeBlock : composeBlockList ) {
-			if ( composeBlock.isSimilar( musicBlock1 ) ) composeBlock1 = composeBlock;
-			if ( composeBlock.isSimilar( musicBlock2 ) ) composeBlock2 = composeBlock;
-			if ( composeBlock.isSimilar( musicBlock3 ) ) composeBlock3 = composeBlock;
-			if ( composeBlock.isSimilar( musicBlock4 ) ) composeBlock4 = composeBlock;
-		}
+		ComposeBlock composeBlock0 = composeBlockList.get( 0 );
+		ComposeBlock composeBlock1 = composeBlockList.get( 1 );
+		ComposeBlock composeBlock2 = composeBlockList.get( 2 );
+		ComposeBlock composeBlock3 = composeBlockList.get( 3 );
 
+		assertTrue( composeBlock0.getPossibleNextComposeBlocks().contains( composeBlock1 ) );
+		assertTrue( composeBlock0.getPossibleNextComposeBlocks().contains( composeBlock2 ) );
+		assertTrue( composeBlock0.getPossiblePreviousComposeBlocks().contains( composeBlock1 ) );
+		assertTrue( composeBlock0.getPossiblePreviousComposeBlocks().contains( composeBlock2 ) );
+
+		assertTrue( composeBlock1.getPossibleNextComposeBlocks().contains( composeBlock0 ) );
 		assertTrue( composeBlock1.getPossibleNextComposeBlocks().contains( composeBlock2 ) );
 		assertTrue( composeBlock1.getPossibleNextComposeBlocks().contains( composeBlock3 ) );
+		assertTrue( composeBlock1.getPossiblePreviousComposeBlocks().contains( composeBlock0 ) );
 		assertTrue( composeBlock1.getPossiblePreviousComposeBlocks().contains( composeBlock2 ) );
 		assertTrue( composeBlock1.getPossiblePreviousComposeBlocks().contains( composeBlock3 ) );
 
+		assertTrue( composeBlock2.getPossibleNextComposeBlocks().contains( composeBlock0 ) );
 		assertTrue( composeBlock2.getPossibleNextComposeBlocks().contains( composeBlock1 ) );
-		assertTrue( composeBlock2.getPossibleNextComposeBlocks().contains( composeBlock3 ) );
-		assertTrue( composeBlock2.getPossibleNextComposeBlocks().contains( composeBlock4 ) );
+		assertTrue( composeBlock2.getPossiblePreviousComposeBlocks().contains( composeBlock0 ) );
 		assertTrue( composeBlock2.getPossiblePreviousComposeBlocks().contains( composeBlock1 ) );
-		assertTrue( composeBlock2.getPossiblePreviousComposeBlocks().contains( composeBlock3 ) );
-		assertTrue( composeBlock2.getPossiblePreviousComposeBlocks().contains( composeBlock4 ) );
 
 		assertTrue( composeBlock3.getPossibleNextComposeBlocks().contains( composeBlock1 ) );
-		assertTrue( composeBlock3.getPossibleNextComposeBlocks().contains( composeBlock2 ) );
 		assertTrue( composeBlock3.getPossiblePreviousComposeBlocks().contains( composeBlock1 ) );
-		assertTrue( composeBlock3.getPossiblePreviousComposeBlocks().contains( composeBlock2 ) );
-
-		assertTrue( composeBlock4.getPossibleNextComposeBlocks().contains( composeBlock2 ) );
-		assertTrue( composeBlock4.getPossiblePreviousComposeBlocks().contains( composeBlock2 ) );
 	}
 
 	@Test
 	public void getComposeBlocksTest() {
 
-		MusicBlock musicBlock1 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 60, 1 ) )} ), null );
-		MusicBlock musicBlock2 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 61, 2 ) )} ), null );
-		MusicBlock musicBlock3 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 62, 3 ) )} ), null );
-		MusicBlock musicBlock4 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 63, 4 ) )} ), null );
-		MusicBlock musicBlock5 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 64, 5 ) )} ), null );
+		MusicBlock musicBlock0 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 60, 0 ) )} ), null );
+		MusicBlock musicBlock1 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 61, 1 ) )} ), null );
+		MusicBlock musicBlock2 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 62, 2 ) )} ), null );
+		MusicBlock musicBlock3 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 63, 3 ) )} ), null );
+		MusicBlock musicBlock4 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 64, 4 ) )} ), null );
 
 		List<MusicBlock> inputMusicBlock = new ArrayList<MusicBlock>(  );
+		inputMusicBlock.add( musicBlock0 );
 		inputMusicBlock.add( musicBlock1 );
 		inputMusicBlock.add( musicBlock2 );
 		inputMusicBlock.add( musicBlock3 );
 		inputMusicBlock.add( musicBlock4 );
-		inputMusicBlock.add( musicBlock5 );
 
-		when( musicBlockProvider.getAllPossibleNextVariants( any( MusicBlock.class ), any( List.class ) ) )
-				.thenReturn( Arrays.asList( new MusicBlock[] { musicBlock2, musicBlock4, musicBlock5 } ) )
-				.thenReturn( Arrays.asList( new MusicBlock[] { musicBlock1, musicBlock5 } ) )
-				.thenReturn( Arrays.asList( new MusicBlock[]{ musicBlock1, musicBlock4, musicBlock5 } ) )
-				.thenReturn( Arrays.asList( new MusicBlock[]{ musicBlock1, musicBlock3 } ) )
-				.thenReturn( Arrays.asList( new MusicBlock[]{ musicBlock1, musicBlock2, musicBlock3 } ) );
+		when( musicBlockProvider.getAllPossibleNextVariantNumbers( any( Integer.class ), any( List.class ) ) )
+				.thenReturn( Arrays.asList( 1, 3, 4 ) )
+				.thenReturn( Arrays.asList( 0, 4 ) )
+				.thenReturn( Arrays.asList( 0, 3, 4 ) )
+				.thenReturn( Arrays.asList( 0, 2 ) )
+				.thenReturn( Arrays.asList( 0, 1, 2 ) );
 		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock );
 		assertEquals( inputMusicBlock.size(), composeBlockList.size() );
 
@@ -141,47 +135,45 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 
 		assertEquals( 2, composeBlockList.get( 0 ).getPossiblePreviousComposeBlocks().get( 1 ).getPossiblePreviousComposeBlocks().size() );
 		assertEquals( 3, composeBlockList.get( 1 ).getPossiblePreviousComposeBlocks().get( 1 ).getPossiblePreviousComposeBlocks().size() );
-		assertEquals( 4, composeBlockList.get( 2 ).getPossiblePreviousComposeBlocks().get( 0 ).getPossiblePreviousComposeBlocks().get( 0 ).getPossiblePreviousComposeBlocks().size() );
-		assertEquals( 2, composeBlockList.get( 3 ).getPossiblePreviousComposeBlocks().get( 1 ).getPossiblePreviousComposeBlocks().size() );
 		assertEquals( 2, composeBlockList.get( 4 ).getPossiblePreviousComposeBlocks().get( 1 ).getPossiblePreviousComposeBlocks().size() );
 
-		assertTrue( isValidForwardRoute( composeBlockList, musicBlock1, musicBlock4, musicBlock1, musicBlock4, musicBlock3, musicBlock5 ) );
-		assertTrue( isValidForwardRoute( composeBlockList, musicBlock2, musicBlock1, musicBlock2, musicBlock5, musicBlock3, musicBlock4 ) );
-		assertTrue( isValidForwardRoute( composeBlockList, musicBlock3, musicBlock1, musicBlock4 ) );
-		assertTrue( isValidForwardRoute( composeBlockList, musicBlock3, musicBlock1, musicBlock4, musicBlock3 ) );
-		assertTrue( isValidForwardRoute( composeBlockList, musicBlock5, musicBlock2, musicBlock1, musicBlock4 ) );
+		assertTrue( isValidForwardRoute( composeBlockList, musicBlock0, musicBlock3, musicBlock0, musicBlock3, musicBlock2, musicBlock4 ) );
+		assertTrue( isValidForwardRoute( composeBlockList, musicBlock1, musicBlock0, musicBlock1, musicBlock4, musicBlock2, musicBlock3 ) );
+		assertTrue( isValidForwardRoute( composeBlockList, musicBlock2, musicBlock0, musicBlock3 ) );
+		assertTrue( isValidForwardRoute( composeBlockList, musicBlock2, musicBlock0, musicBlock3, musicBlock2 ) );
+		assertTrue( isValidForwardRoute( composeBlockList, musicBlock4, musicBlock1, musicBlock0, musicBlock3 ) );
 
-		assertFalse( isValidForwardRoute( composeBlockList, musicBlock1, musicBlock3 ) );
-		assertFalse( isValidForwardRoute( composeBlockList, musicBlock2, musicBlock2 ) );
-		assertFalse( isValidForwardRoute( composeBlockList, musicBlock2, musicBlock3 ) );
-		assertFalse( isValidForwardRoute( composeBlockList, musicBlock3, musicBlock2 ) );
-		assertFalse( isValidForwardRoute( composeBlockList, musicBlock4, musicBlock5 ) );
-		assertFalse( isValidForwardRoute( composeBlockList, musicBlock5, musicBlock4 ) );
+		assertFalse( isValidForwardRoute( composeBlockList, musicBlock0, musicBlock2 ) );
+		assertFalse( isValidForwardRoute( composeBlockList, musicBlock1, musicBlock1 ) );
+		assertFalse( isValidForwardRoute( composeBlockList, musicBlock1, musicBlock2 ) );
+		assertFalse( isValidForwardRoute( composeBlockList, musicBlock2, musicBlock1 ) );
+		assertFalse( isValidForwardRoute( composeBlockList, musicBlock3, musicBlock4 ) );
+		assertFalse( isValidForwardRoute( composeBlockList, musicBlock4, musicBlock3 ) );
 
-		assertFalse( isValidForwardRoute( composeBlockList, musicBlock1, musicBlock4, musicBlock3, musicBlock2 ) );
-		assertFalse( isValidForwardRoute( composeBlockList, musicBlock2, musicBlock5, musicBlock4 ) );
-		assertFalse( isValidForwardRoute( composeBlockList, musicBlock3, musicBlock4, musicBlock2 ) );
-		assertFalse( isValidForwardRoute( composeBlockList, musicBlock4, musicBlock1, musicBlock4, musicBlock1, musicBlock3, musicBlock5 ) );
-		assertFalse( isValidForwardRoute( composeBlockList, musicBlock5, musicBlock3, musicBlock2, musicBlock1, musicBlock2 ) );
+		assertFalse( isValidForwardRoute( composeBlockList, musicBlock0, musicBlock3, musicBlock2, musicBlock1 ) );
+		assertFalse( isValidForwardRoute( composeBlockList, musicBlock1, musicBlock4, musicBlock3 ) );
+		assertFalse( isValidForwardRoute( composeBlockList, musicBlock2, musicBlock3, musicBlock1 ) );
+		assertFalse( isValidForwardRoute( composeBlockList, musicBlock3, musicBlock0, musicBlock3, musicBlock0, musicBlock2, musicBlock4 ) );
+		assertFalse( isValidForwardRoute( composeBlockList, musicBlock4, musicBlock2, musicBlock1, musicBlock0, musicBlock1 ) );
 
-		assertTrue( isValidBackwardRoute( composeBlockList, musicBlock1, musicBlock4, musicBlock1, musicBlock4, musicBlock3, musicBlock5 ) );
-		assertTrue( isValidBackwardRoute( composeBlockList, musicBlock2, musicBlock1, musicBlock2, musicBlock5, musicBlock3, musicBlock4 ) );
-		assertTrue( isValidBackwardRoute( composeBlockList, musicBlock3, musicBlock4, musicBlock3 ) );
-		assertTrue( isValidBackwardRoute( composeBlockList, musicBlock3, musicBlock5, musicBlock1, musicBlock3 ) );
-		assertTrue( isValidBackwardRoute( composeBlockList, musicBlock5, musicBlock2, musicBlock1, musicBlock4 ) );
+		assertTrue( isValidBackwardRoute( composeBlockList, musicBlock0, musicBlock3, musicBlock0, musicBlock3, musicBlock2, musicBlock4 ) );
+		assertTrue( isValidBackwardRoute( composeBlockList, musicBlock1, musicBlock0, musicBlock1, musicBlock4, musicBlock2, musicBlock3 ) );
+		assertTrue( isValidBackwardRoute( composeBlockList, musicBlock2, musicBlock3, musicBlock2 ) );
+		assertTrue( isValidBackwardRoute( composeBlockList, musicBlock2, musicBlock4, musicBlock0, musicBlock2 ) );
+		assertTrue( isValidBackwardRoute( composeBlockList, musicBlock4, musicBlock1, musicBlock0, musicBlock3 ) );
 
-		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock2, musicBlock3 ) );
-		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock2, musicBlock2 ) );
-		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock2, musicBlock4 ) );
-		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock3, musicBlock2 ) );
-		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock4, musicBlock5 ) );
-		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock5, musicBlock4 ) );
+		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock1, musicBlock2 ) );
+		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock1, musicBlock1 ) );
+		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock1, musicBlock3 ) );
+		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock2, musicBlock1 ) );
+		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock3, musicBlock4 ) );
+		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock4, musicBlock3 ) );
 
-		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock1, musicBlock4, musicBlock3, musicBlock2 ) );
-		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock2, musicBlock5, musicBlock4 ) );
-		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock3, musicBlock4, musicBlock2 ) );
-		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock4, musicBlock1, musicBlock4, musicBlock1, musicBlock4, musicBlock5 ) );
-		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock5, musicBlock3, musicBlock2, musicBlock1, musicBlock2 ) );
+		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock0, musicBlock3, musicBlock2, musicBlock1 ) );
+		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock1, musicBlock4, musicBlock3 ) );
+		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock2, musicBlock3, musicBlock1 ) );
+		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock3, musicBlock0, musicBlock3, musicBlock0, musicBlock3, musicBlock4 ) );
+		assertFalse( isValidBackwardRoute( composeBlockList, musicBlock4, musicBlock2, musicBlock1, musicBlock0, musicBlock1 ) );
 	}
 
 	private boolean isValidForwardRoute( List<ComposeBlock> composeBlocks, MusicBlock... route ) {

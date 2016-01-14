@@ -141,8 +141,12 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 		musicBlockList.add( musicBlock3 );
 		musicBlockList.add( musicBlock4 );
 
-		List<MusicBlock> possibleNext = mockProvider.getAllPossibleNextVariants( musicBlock0, musicBlockList );
-		assertEquals( 3, possibleNext.size() );
-		assertEquals( musicBlock1, possibleNext.get( 0 ) );
+//		List<MusicBlock> possibleNext = mockProvider.getAllPossibleNextVariants( musicBlock0, musicBlockList );
+//		assertEquals( 3, possibleNext.size() );
+//		assertEquals( musicBlock1, possibleNext.get( 0 ) );
+
+		List<Integer> possibleNextNumbers = mockProvider.getAllPossibleNextVariantNumbers( 0, musicBlockList );
+		assertEquals( 3, possibleNextNumbers.size() );
+		assertEquals( musicBlock1, musicBlockList.get( possibleNextNumbers.get( 0 ) ) );
 	}
 }
