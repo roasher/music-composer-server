@@ -18,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import utils.CompositionLoader;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -56,11 +54,13 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 		inputMusicBlock.add( musicBlock2 );
 		inputMusicBlock.add( musicBlock3 );
 
-		when( musicBlockProvider.getAllPossibleNextVariantNumbers( any( Integer.class ), any( List.class ) ) )
-		  .thenReturn( Arrays.asList( 1, 2 ) )
-		  .thenReturn( Arrays.asList( 0, 2, 3 ) )
-		  .thenReturn( Arrays.asList( 0, 1 ) )
-		  .thenReturn( Arrays.asList( 1 ) );
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		map.put( 0, Arrays.asList( 1, 2 ) );
+		map.put( 1, Arrays.asList( 0, 2, 3 ) );
+		map.put( 2, Arrays.asList( 0, 1 ) );
+		map.put( 3, Arrays.asList( 1 ) );
+
+		when( musicBlockProvider.getAllPossibleNextVariants( any( List.class ) ) ).thenReturn( map );
 
 		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock );
 
@@ -106,12 +106,15 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 		inputMusicBlock.add( musicBlock3 );
 		inputMusicBlock.add( musicBlock4 );
 
-		when( musicBlockProvider.getAllPossibleNextVariantNumbers( any( Integer.class ), any( List.class ) ) )
-				.thenReturn( Arrays.asList( 1, 3, 4 ) )
-				.thenReturn( Arrays.asList( 0, 4 ) )
-				.thenReturn( Arrays.asList( 0, 3, 4 ) )
-				.thenReturn( Arrays.asList( 0, 2 ) )
-				.thenReturn( Arrays.asList( 0, 1, 2 ) );
+		Map<Integer, List<Integer>> map = new HashMap<>();
+		map.put( 0, Arrays.asList( 1, 3, 4 ) );
+		map.put( 1, Arrays.asList( 0, 4 ) );
+		map.put( 2, Arrays.asList( 0, 3, 4 ) );
+		map.put( 3, Arrays.asList( 0, 2 ) );
+		map.put( 4, Arrays.asList( 0, 1, 2 ) );
+
+		when( musicBlockProvider.getAllPossibleNextVariants( any( List.class ) ) ).thenReturn( map );
+
 		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock );
 		assertEquals( inputMusicBlock.size(), composeBlockList.size() );
 

@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import utils.CompositionLoader;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -86,10 +84,6 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 
 		MockFactory mockFactory = new MockFactory();
 
-		//		MusicBlock musicBlock01 = mockFactory.getOrigin( JMC.WHOLE_NOTE, 20 );
-		//		MusicBlock musicBlock02 = mockFactory.getSubstitutor( JMC.DOUBLE_DOTTED_HALF_NOTE, 0.11 );
-		//		assertTrue( compositionComposer.canSubstitute( musicBlock01, musicBlock02 ) );
-
 		MusicBlock musicBlock11 = mockFactory.getOrigin( JMC.WHOLE_NOTE, 20 );
 		MusicBlock musicBlock12 = mockFactory.getSubstitutor( JMC.WHOLE_NOTE + JMC.QUARTER_NOTE_TRIPLET, 0.11 );
 		assertFalse( musicBlockProvider.canSubstitute( musicBlock11, musicBlock12 ) );
@@ -117,10 +111,27 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 	}
 
 	@Test
-	public void getAllNextTest() {
+	public void getAllPossibleNextMapTest() {
+
+		List<MusicBlock> musicBlocks = getMusicBlockMocks();
+
 		MusicBlockProvider mockProvider = spy( musicBlockProvider );
-		doReturn( true ).doReturn( true ).doReturn( false).doReturn( false ).doReturn( true ).doReturn( false )
-		  .when( mockProvider ).canSubstitute( any( MusicBlock.class ), any( MusicBlock.class ) );
+
+		doReturn( false ).when( mockProvider ).canSubstitute( any( MusicBlock.class ), any( MusicBlock.class ) );
+		doReturn( true ).when( mockProvider ).canSubstitute( musicBlocks.get( 1 ), musicBlocks.get( 2 ) );
+		doReturn( true ).when( mockProvider ).canSubstitute( musicBlocks.get( 3 ), musicBlocks.get( 1 ) );
+
+		Map<Integer, List<Integer>> allPossibleNextVariants = mockProvider.getAllPossibleNextVariants( musicBlocks );
+
+		assertEquals( musicBlocks.size(), allPossibleNextVariants.size() );
+		assertEquals( Arrays.asList( 1, 2 ), allPossibleNextVariants.get( 0 ) );
+		assertEquals( Arrays.asList( 2 ), allPossibleNextVariants.get( 1 ) );
+		assertEquals( Arrays.asList( 3, 1 ), allPossibleNextVariants.get( 2 ) );
+		assertEquals( Arrays.asList( 4 ), allPossibleNextVariants.get( 3 ) );
+		assertEquals( Arrays.asList(  ), allPossibleNextVariants.get( 4 ) );
+	}
+
+	private List<MusicBlock> getMusicBlockMocks() {
 
 		MusicBlock musicBlock0 = mock( MusicBlock.class );
 		MusicBlock musicBlock1 = mock( MusicBlock.class );
@@ -141,12 +152,7 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 		musicBlockList.add( musicBlock3 );
 		musicBlockList.add( musicBlock4 );
 
-//		List<MusicBlock> possibleNext = mockProvider.getAllPossibleNextVariants( musicBlock0, musicBlockList );
-//		assertEquals( 3, possibleNext.size() );
-//		assertEquals( musicBlock1, possibleNext.get( 0 ) );
-
-		List<Integer> possibleNextNumbers = mockProvider.getAllPossibleNextVariantNumbers( 0, musicBlockList );
-		assertEquals( 3, possibleNextNumbers.size() );
-		assertEquals( musicBlock1, musicBlockList.get( possibleNextNumbers.get( 0 ) ) );
+		return musicBlockList;
 	}
+
 }

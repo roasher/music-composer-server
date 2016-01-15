@@ -1,6 +1,7 @@
 package decomposer;
 
 import composer.MusicBlockProvider;
+import org.omg.CORBA.COMM_FAILURE;
 import persistance.dao.LexiconDAO;
 import decomposer.form.FormDecomposer;
 import model.ComposeBlock;
@@ -19,6 +20,7 @@ import utils.Recombinator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class analyses and decomposes the composition, creating MusicBlocks
@@ -96,11 +98,10 @@ public class CompositionDecomposer {
 		List<ComposeBlockWrapper> composeBlockWrapperList = new ArrayList<>();
 		List<ComposeBlock> composeBlockList = new ArrayList<>();
 
-		// TODO Optimize cycle - instead of calling getAllPossibleNextVariants we can create function that returns map(int, list<int>) of all possible variants - it will be faster
+		Map<Integer, List<Integer>> possibleNextMusicBlockNumbers = musicBlockProvider.getAllPossibleNextVariants( musicBlockList );
+
 		for ( int musicBlockNumber = 0; musicBlockNumber < musicBlockList.size(); musicBlockNumber++ ) {
-			List<Integer> possibleNextMusicBlockNumbers = musicBlockProvider.getAllPossibleNextVariantNumbers( musicBlockNumber, musicBlockList );
-			MusicBlock musicBlock = musicBlockList.get( musicBlockNumber );
-			ComposeBlockWrapper composeBlockWrapper = new ComposeBlockWrapper( new ComposeBlock( musicBlock ), possibleNextMusicBlockNumbers );
+			ComposeBlockWrapper composeBlockWrapper = new ComposeBlockWrapper( new ComposeBlock( musicBlockList.get( musicBlockNumber ) ), possibleNextMusicBlockNumbers.get( musicBlockNumber ) );
 			composeBlockWrapperList.add( composeBlockWrapper );
 			composeBlockList.add( composeBlockWrapper.composeBlock );
 		}

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 import utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by pyurkin on 15.01.15.
@@ -20,40 +22,28 @@ public class MusicBlockProvider {
 	private Logger logger = LoggerFactory.getLogger( getClass() );
 
 	/**
-	 * Return numbers that corresponds to MusicBlocks from input collection that considered to be possible next to MusicBlock
-	 * that is in currentMusicBlockNumber position in input collection
-	 * @param currentMusicBlockNumber
+	 * Retruns Map<Integer, List<Integer>> where Integer - number of music block from input collection,
+	 * corresponding list - collection of possible next music block numbers
 	 * @param musicBlocks
 	 * @return
 	 */
-	public List<Integer> getAllPossibleNextVariantNumbers( int currentMusicBlockNumber, List<MusicBlock> musicBlocks ) {
-		MusicBlock currentMusicBlock = musicBlocks.get( currentMusicBlockNumber );
-		logger.debug( "Searching for all possible music block next to {}", currentMusicBlock );
-		List<Integer> possibleNext = new ArrayList<>(  );
-		if ( currentMusicBlock.getNext() == null ) {
-			logger.info( "There is no music block after this one in the original composition." );
-		} else {
-			possibleNext.add( currentMusicBlockNumber + 1 );
-			for ( int musicBlockNumber = 0; musicBlockNumber < musicBlocks.size(); musicBlockNumber++ ) {
-				MusicBlock musicBlock = musicBlocks.get( musicBlockNumber );
-				if ( currentMusicBlock.getNext() != musicBlock && canSubstitute( currentMusicBlock.getNext(), musicBlock ) ) {
-					logger.debug( "Possible next music block has been found: {}", musicBlock );
-					possibleNext.add( musicBlockNumber );
+	public Map<Integer, List<Integer>> getAllPossibleNextVariants( List<MusicBlock> musicBlocks ) {
+		Map<Integer, List<Integer>> map = new HashMap<>( musicBlocks.size() );
+		for ( int firstMusicBlockNumber = 0; firstMusicBlockNumber < musicBlocks.size(); firstMusicBlockNumber++ ) {
+			List<Integer> possibleNextMusicBlockNumbers = new ArrayList<>();
+			map.put( firstMusicBlockNumber, possibleNextMusicBlockNumbers );
+			for ( int secondMusicBlockNumber = 0; secondMusicBlockNumber < musicBlocks.size(); secondMusicBlockNumber++ ) {
+				MusicBlock firstMusicBlock = musicBlocks.get( firstMusicBlockNumber );
+				MusicBlock secondMusicBlock = musicBlocks.get( secondMusicBlockNumber );
+				boolean isOriginallyNext = secondMusicBlock == firstMusicBlock.getNext();
+				if ( isOriginallyNext ) {
+					possibleNextMusicBlockNumbers.add( 0, secondMusicBlockNumber );
+				} else if ( canSubstitute( firstMusicBlock.getNext(), secondMusicBlock ) ) {
+					possibleNextMusicBlockNumbers.add( secondMusicBlockNumber );
 				}
 			}
 		}
-		return possibleNext;
-	}
-
-	public List<Integer> getAllFirstMusicBlockNumbers( List<MusicBlock> musicBlocks ) {
-		logger.debug( "Searching for first music blocks from the musicBlocks" );
-		List<Integer> firstMusicBlockNumbers = new ArrayList<>();
-		for ( int musicBlockNumber = 0; musicBlockNumber < musicBlocks.size(); musicBlockNumber++ ) {
-			if ( musicBlocks.get( musicBlockNumber ).getPrevious() == null ) {
-				firstMusicBlockNumbers.add( musicBlockNumber );
-			}
-		}
-		return firstMusicBlockNumbers;
+		return map;
 	}
 
 	/**
@@ -63,11 +53,13 @@ public class MusicBlockProvider {
 	 * @return
 	 */
 	public boolean canSubstitute( MusicBlock originBlock, MusicBlock substitutorBlock ) {
+		if ( originBlock == null || substitutorBlock == null ) return false;
 		return canSubstitute( originBlock.getStartIntervalPattern(), originBlock.getBlockMovementFromPreviousToThis(), originBlock.getStartTime(),
 				substitutorBlock.getStartIntervalPattern(), substitutorBlock.getBlockMovementFromPreviousToThis(), substitutorBlock.getStartTime() );
 	}
 
 	public boolean canSubstitute( ComposeBlock originBlock, ComposeBlock substitutorBlock ) {
+		if ( originBlock == null || substitutorBlock == null ) return false;
 		return canSubstitute( originBlock.getStartIntervalPattern(), originBlock.getBlockMovementFromPreviousToThis(), originBlock.getStartTime(),
 				substitutorBlock.getStartIntervalPattern(), substitutorBlock.getBlockMovementFromPreviousToThis(), substitutorBlock.getStartTime() );
 	}
