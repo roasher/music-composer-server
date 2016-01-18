@@ -40,6 +40,11 @@ public class ComposeBlock extends AbstractPersistanceModel {
 		this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
 	}
 
+	public ComposeBlock( long id, double startTime, CompositionInfo compositionInfo, List<Melody> melodies, BlockMovement blockMovementFromPreviousToThis ) {
+		this( startTime, compositionInfo, melodies, blockMovementFromPreviousToThis );
+		this.id = id;
+	}
+
 	public ComposeBlock( double startTime, CompositionInfo compositionInfo, List<Melody> melodies, BlockMovement blockMovementFromPreviousToThis,
 			List<ComposeBlock> possibleNextComposeBlocks, List<ComposeBlock> possiblePreviousComposeBlocks ) {
 		this( startTime, compositionInfo, melodies, blockMovementFromPreviousToThis );

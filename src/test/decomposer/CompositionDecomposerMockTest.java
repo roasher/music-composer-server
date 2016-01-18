@@ -62,7 +62,7 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 
 		when( musicBlockProvider.getAllPossibleNextVariants( any( List.class ) ) ).thenReturn( map );
 
-		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock );
+		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock ).getComposeBlockList();
 
 		ComposeBlock composeBlock0 = composeBlockList.get( 0 );
 		ComposeBlock composeBlock1 = composeBlockList.get( 1 );
@@ -115,7 +115,7 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 
 		when( musicBlockProvider.getAllPossibleNextVariants( any( List.class ) ) ).thenReturn( map );
 
-		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock );
+		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock ).getComposeBlockList();
 		assertEquals( inputMusicBlock.size(), composeBlockList.size() );
 
 		assertEquals( 3, composeBlockList.get( 0 ).getPossibleNextComposeBlocks().size() );

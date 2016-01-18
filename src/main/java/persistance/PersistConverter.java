@@ -1,15 +1,21 @@
 package persistance;
 
+import model.Lexicon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import persistance.jpa.*;
+import persistance.jpa.BlockMovement;
+import persistance.jpa.ComposeBlock;
 import persistance.jpa.factory.BlockMovementFactory;
 import persistance.jpa.factory.CompositionInfoFactory;
 import persistance.jpa.factory.MelodyFactory;
 import persistance.jpa.factory.NoteFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by pyurkin on 29.04.2015.
@@ -26,56 +32,54 @@ public class PersistConverter {
 	@Autowired
 	private BlockMovementFactory blockMovementFactory;
 
-	public List<model.ComposeBlock> convertPersistComposeBlockList( List<ComposeBlock> persistanceComposeBlockList ) {
+	public Lexicon convertPersistComposeBlockList( List<ComposeBlock> persistanceComposeBlockList ) {
 
-		List<model.ComposeBlock> composeBlockList = new ArrayList<>(  );
+		List<model.ComposeBlock> composeBlocks = new ArrayList<>(  );
+		Map<Integer, List<Integer>> possibleNexts = new HashMap<>(  );
 		for ( ComposeBlock persistanceComposeBlock : persistanceComposeBlockList ) {
-			composeBlockList.add( convertComposeBlock( persistanceComposeBlock ) );
+			model.ComposeBlock composeBlock = convertComposeBlock( persistanceComposeBlock );
+			composeBlocks.add( composeBlock );
+			List<Integer> possibleNextToCurrent = persistanceComposeBlock.possibleNextComposeBlocks.stream()
+					.map( composeBlock1 -> composeBlock1.getId().intValue() ).collect( Collectors.toList());
+			possibleNexts.put( persistanceComposeBlock.getId().intValue(), possibleNextToCurrent );
 		}
 
-		for ( int composeBlockNumber = 0; composeBlockNumber < persistanceComposeBlockList.size(); composeBlockNumber++ ) {
-			List<ComposeBlock> persistancePossibleNextList = persistanceComposeBlockList.get( composeBlockNumber ).possibleNextComposeBlocks;
-			for ( ComposeBlock persistancePossibleNext : persistancePossibleNextList ) {
-				model.ComposeBlock composeBlock = composeBlockList.get( composeBlockNumber );
-				int index = persistanceComposeBlockList.lastIndexOf( persistancePossibleNext );
-				composeBlock.getPossibleNextComposeBlocks().add( persistancePossibleNext != null ? composeBlockList.get( index ) : null );
-			}
-
-			List<ComposeBlock> persistancePossiblePrevoiusList = persistanceComposeBlockList.get( composeBlockNumber ).possiblePreviousComposeBlocks;
-			for ( ComposeBlock persistancePossiblePrevious : persistancePossiblePrevoiusList ) {
-				model.ComposeBlock composeBlock = composeBlockList.get( composeBlockNumber );
-				int index = persistanceComposeBlockList.lastIndexOf( persistancePossiblePrevious );
-				composeBlock.getPossiblePreviousComposeBlocks().add( persistancePossiblePrevious != null ? composeBlockList.get( index ) : null );
+		for ( int composeBlockNumber = 0; composeBlockNumber < composeBlocks.size(); composeBlockNumber++ ) {
+			model.ComposeBlock composeBlock = composeBlocks.get( composeBlockNumber );
+			for ( Integer possibleNextComposeBlockNumber : possibleNexts.get( composeBlockNumber ) ) {
+				model.ComposeBlock possibleNextComposeBlock = composeBlocks.get( possibleNextComposeBlockNumber );
+				composeBlock.getPossibleNextComposeBlocks().add( possibleNextComposeBlock );
+				// we should check if we need to add previous at first place
+				if ( composeBlockNumber + 1 != possibleNextComposeBlockNumber ) {
+					possibleNextComposeBlock.getPossiblePreviousComposeBlocks().add( composeBlock );
+				} else {
+					possibleNextComposeBlock.getPossiblePreviousComposeBlocks().add( 0, composeBlock );
+				}
 			}
 		}
 
-		return composeBlockList;
+		return new Lexicon( composeBlocks, possibleNexts);
 	}
 
-	public List<ComposeBlock> convertComposeBlockList( List<model.ComposeBlock> composeBlockList ) {
+	public List<ComposeBlock> convertComposeBlockList( Lexicon lexicon ) {
 
-		List<ComposeBlock> persistanceComposeBlockList = new ArrayList<>(  );
-		for ( model.ComposeBlock composeBlock : composeBlockList ) {
-			persistanceComposeBlockList.add( convertComposeBlock( composeBlock ) );
-		}
+		List<ComposeBlock> persistanceComposeBlocks = lexicon.getComposeBlockList().stream().map( this::convertComposeBlock ).collect( Collectors.toList() );
 
-		for ( int composeBlockNumber = 0; composeBlockNumber < composeBlockList.size(); composeBlockNumber++ ) {
-			List<model.ComposeBlock> possibleNextList = composeBlockList.get( composeBlockNumber ).getPossibleNextComposeBlocks();
-			for ( model.ComposeBlock possibleNext : possibleNextList ) {
-				ComposeBlock composeBlock = persistanceComposeBlockList.get( composeBlockNumber );
-				int index = composeBlockList.lastIndexOf( possibleNext );
-				composeBlock.possibleNextComposeBlocks.add( possibleNext != null ? persistanceComposeBlockList.get( index ) : null );
-			}
-
-			List<model.ComposeBlock> possiblePrevoiusList = composeBlockList.get( composeBlockNumber ).getPossiblePreviousComposeBlocks();
-			for ( model.ComposeBlock possiblePrevious : possiblePrevoiusList ) {
-				ComposeBlock composeBlock = persistanceComposeBlockList.get( composeBlockNumber );
-				int index = composeBlockList.lastIndexOf( possiblePrevious );
-				composeBlock.possiblePreviousComposeBlocks.add( possiblePrevious != null ? persistanceComposeBlockList.get( index ) : null );
+		for ( int composeBlockNumber = 0; composeBlockNumber < persistanceComposeBlocks.size(); composeBlockNumber++ ) {
+			ComposeBlock composeBlock = persistanceComposeBlocks.get( composeBlockNumber );
+			for ( int possibleNextComposeBlockNumber : lexicon.getPossibleNextMusicBlockNumbers().get( composeBlockNumber ) ) {
+				ComposeBlock possibleNextComposeBlock = persistanceComposeBlocks.get( possibleNextComposeBlockNumber );
+				composeBlock.possibleNextComposeBlocks.add( possibleNextComposeBlock );
+				// we should check if we need to add previous at first place
+				if ( composeBlockNumber + 1 != possibleNextComposeBlockNumber ) {
+					possibleNextComposeBlock.possiblePreviousComposeBlocks.add( composeBlock );
+				} else {
+					possibleNextComposeBlock.possiblePreviousComposeBlocks.add( 0, composeBlock );
+				}
 			}
 		}
 
-		return persistanceComposeBlockList;
+		return persistanceComposeBlocks;
 	}
 
 	public model.ComposeBlock convertComposeBlock( ComposeBlock persistanceComposeBlock ) {

@@ -10,4 +10,8 @@ public abstract class AbstractPersistanceModel {
 	@Id
 	@GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "SEQ" )
 	Long id;
+
+	public Long getId() {
+		return id;
+	}
 }

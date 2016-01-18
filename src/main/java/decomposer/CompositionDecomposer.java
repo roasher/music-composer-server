@@ -83,37 +83,22 @@ public class CompositionDecomposer {
 	 * @param musicBlockList
 	 * @return
 	 */
-	public List<ComposeBlock> getComposeBlocks( List<MusicBlock> musicBlockList ) {
+	public Lexicon getComposeBlocks( List<MusicBlock> musicBlockList ) {
 
-		class ComposeBlockWrapper {
-			ComposeBlock composeBlock;
-			List<Integer> possibleNextMusicBlockNumbers;
-
-			ComposeBlockWrapper( ComposeBlock composeBlock, List<Integer> possibleNextMusicBlockNumbers ) {
-				this.composeBlock = composeBlock;
-				this.possibleNextMusicBlockNumbers = possibleNextMusicBlockNumbers;
-			}
-		}
-
-		List<ComposeBlockWrapper> composeBlockWrapperList = new ArrayList<>();
-		List<ComposeBlock> composeBlockList = new ArrayList<>();
-
+		List<ComposeBlock> composeBlocks = new ArrayList<>();
 		Map<Integer, List<Integer>> possibleNextMusicBlockNumbers = musicBlockProvider.getAllPossibleNextVariants( musicBlockList );
 
 		for ( int musicBlockNumber = 0; musicBlockNumber < musicBlockList.size(); musicBlockNumber++ ) {
-			ComposeBlockWrapper composeBlockWrapper = new ComposeBlockWrapper( new ComposeBlock( musicBlockList.get( musicBlockNumber ) ), possibleNextMusicBlockNumbers.get( musicBlockNumber ) );
-			composeBlockWrapperList.add( composeBlockWrapper );
-			composeBlockList.add( composeBlockWrapper.composeBlock );
+			composeBlocks.add( new ComposeBlock( musicBlockList.get( musicBlockNumber ) ) );
 		}
 
-		for ( int composeBlockWrapperNumber = 0; composeBlockWrapperNumber < composeBlockWrapperList.size(); composeBlockWrapperNumber++ ) {
-			ComposeBlockWrapper composeBlockWrapper = composeBlockWrapperList.get( composeBlockWrapperNumber );
-			ComposeBlock composeBlock = composeBlockWrapper.composeBlock;
-			for ( int musicBlockNumber : composeBlockWrapper.possibleNextMusicBlockNumbers ) {
-				ComposeBlock possibleNextComposeBlock = composeBlockWrapperList.get( musicBlockNumber ).composeBlock;
+		for ( int composeBlockNumber = 0; composeBlockNumber < composeBlocks.size(); composeBlockNumber++ ) {
+			ComposeBlock composeBlock = composeBlocks.get( composeBlockNumber );
+			for ( int musicBlockNumber : possibleNextMusicBlockNumbers.get( composeBlockNumber ) ) {
+				ComposeBlock possibleNextComposeBlock = composeBlocks.get( musicBlockNumber );
 				composeBlock.getPossibleNextComposeBlocks().add( possibleNextComposeBlock );
 				// we should check if we need to add previous at first place
-				if ( composeBlockWrapperNumber + 1 != musicBlockNumber ) {
+				if ( composeBlockNumber + 1 != musicBlockNumber ) {
 					possibleNextComposeBlock.getPossiblePreviousComposeBlocks().add( composeBlock );
 				} else {
 					possibleNextComposeBlock.getPossiblePreviousComposeBlocks().add( 0, composeBlock );
@@ -121,7 +106,8 @@ public class CompositionDecomposer {
 			}
 		}
 
-		return composeBlockList;
+		Lexicon lexicon = new Lexicon( composeBlocks, possibleNextMusicBlockNumbers );
+		return lexicon;
 	}
 
 	/**
@@ -146,12 +132,12 @@ public class CompositionDecomposer {
 				musicBlockList.addAll( decomposeIntoMusicBlocks( composition, rhythmValue ) );
 			}
 		}
-		List<ComposeBlock> composeBlockList = getComposeBlocks( musicBlockList );
+		Lexicon lexicon = getComposeBlocks( musicBlockList );
 
-		logger.info( "Combining blocks from compositions and blocks persistance" );
-		List<ComposeBlock> combinedComposeBlockList = union( dataBaseLexicon.getComposeBlockList(), composeBlockList );
+		// TODO Fix combining
+//		logger.info( "Combining blocks from compositions and blocks persistance" );
+//		List<ComposeBlock> combinedComposeBlockList = union( dataBaseLexicon.getComposeBlockList(), lexicon.getComposeBlockList() );
 
-		Lexicon lexicon = new Lexicon( combinedComposeBlockList );
 		return lexicon;
 	}
 

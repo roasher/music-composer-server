@@ -23,9 +23,16 @@ public class Lexicon {
 
 	private List<ComposeBlock> composeBlockList = new ArrayList<>();
 
+	private Map<Integer, List<Integer>> possibleNextMusicBlockNumbers;
+
 	// metadata
 	private double minRhythmValue = Double.MAX_VALUE;
 	private Set<CompositionInfo> compositionsInLexicon = new HashSet<>(  );
+
+	public Lexicon( List<ComposeBlock> composeBlocks, Map<Integer, List<Integer>> possibleNextMusicBlockNumbers ) {
+		this( composeBlocks );
+		this.possibleNextMusicBlockNumbers = possibleNextMusicBlockNumbers;
+	}
 
 	public Lexicon( List<ComposeBlock> composeBlockList ) {
         this.composeBlockList = composeBlockList;
@@ -45,6 +52,10 @@ public class Lexicon {
 			}
 		}
 		return firstBlocks;
+	}
+
+	public Map<Integer, List<Integer>> getPossibleNextMusicBlockNumbers() {
+		return possibleNextMusicBlockNumbers;
 	}
 
 	public static Lexicon getBlankLexicon() {
