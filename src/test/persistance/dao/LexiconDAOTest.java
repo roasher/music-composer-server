@@ -23,8 +23,7 @@ import utils.CompositionLoader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -93,18 +92,25 @@ public class LexiconDAOTest extends AbstractSpringTest {
 		BlockMovement blockMovement1 = new BlockMovement( 10, 20 );
 		BlockMovement blockMovement2 = new BlockMovement( 11, 22 );
 
-		ComposeBlock composeBlock1 = new ComposeBlock( 0, compositionInfo, Arrays.asList( melody1, melody2 ), blockMovement1 );
-		ComposeBlock composeBlock2 = new ComposeBlock( 0, compositionInfo, Arrays.asList( melody1, melody3 ), blockMovement1 );
-		ComposeBlock composeBlock3 = new ComposeBlock( 0, compositionInfo, Arrays.asList( melody3, melody4 ), blockMovement2 );
+		ComposeBlock composeBlock0 = new ComposeBlock( 0, compositionInfo, Arrays.asList( melody1, melody2 ), blockMovement1 );
+		ComposeBlock composeBlock1 = new ComposeBlock( 0, compositionInfo, Arrays.asList( melody1, melody3 ), blockMovement1 );
+		ComposeBlock composeBlock2 = new ComposeBlock( 0, compositionInfo, Arrays.asList( melody3, melody4 ), blockMovement2 );
 
-		composeBlock1.setPossibleNextComposeBlocks( Arrays.asList( composeBlock3 ) );
-		composeBlock3.setPossiblePreviousComposeBlocks( Arrays.asList( composeBlock1 ) );
-		composeBlock3.setPossibleNextComposeBlocks( Arrays.asList( composeBlock1 ) );
-		composeBlock1.setPossiblePreviousComposeBlocks( Arrays.asList( composeBlock3 ) );
+		composeBlock0.setPossibleNextComposeBlocks( Arrays.asList( composeBlock2 ) );
+		composeBlock2.setPossiblePreviousComposeBlocks( Arrays.asList( composeBlock0 ) );
+		composeBlock2.setPossibleNextComposeBlocks( Arrays.asList( composeBlock0 ) );
+		composeBlock0.setPossiblePreviousComposeBlocks( Arrays.asList( composeBlock2 ) );
 
-		List<ComposeBlock> composeBlocks = Arrays.asList( composeBlock1, composeBlock2, composeBlock3 );
+		List<ComposeBlock> composeBlocks = Arrays.asList( composeBlock0, composeBlock1, composeBlock2 );
 
-		Lexicon lexicon = new Lexicon( composeBlocks );
+		List<Integer> possibleNext0 = Arrays.asList( 2 );
+		List<Integer> possibleNext2 = Arrays.asList( 0 );
+		Map<Integer, List<Integer>> mapOfNexts = new HashMap<>();
+		mapOfNexts.put( 0, possibleNext0 );
+		mapOfNexts.put( 1, Collections.emptyList() );
+		mapOfNexts.put( 2, possibleNext2 );
+
+		Lexicon lexicon = new Lexicon( composeBlocks, mapOfNexts );
 
 		return lexicon;
 

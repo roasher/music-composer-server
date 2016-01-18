@@ -32,16 +32,18 @@ public class PersistConverter {
 	@Autowired
 	private BlockMovementFactory blockMovementFactory;
 
-	public Lexicon convertPersistComposeBlockList( List<ComposeBlock> persistanceComposeBlockList ) {
+	public Lexicon convertPersistComposeBlockList( List<ComposeBlock> persistanceComposeBlocks ) {
 
-		List<model.ComposeBlock> composeBlocks = new ArrayList<>(  );
-		Map<Integer, List<Integer>> possibleNexts = new HashMap<>(  );
-		for ( ComposeBlock persistanceComposeBlock : persistanceComposeBlockList ) {
+		List<model.ComposeBlock> composeBlocks = new ArrayList<>();
+		Map<Integer, List<Integer>> possibleNexts = new HashMap<>();
+
+		for ( int persistanceComposeBlockNumber = 0; persistanceComposeBlockNumber < persistanceComposeBlocks.size(); persistanceComposeBlockNumber++ ) {
+			ComposeBlock persistanceComposeBlock = persistanceComposeBlocks.get( persistanceComposeBlockNumber );
 			model.ComposeBlock composeBlock = convertComposeBlock( persistanceComposeBlock );
 			composeBlocks.add( composeBlock );
-			List<Integer> possibleNextToCurrent = persistanceComposeBlock.possibleNextComposeBlocks.stream()
-					.map( composeBlock1 -> composeBlock1.getId().intValue() ).collect( Collectors.toList());
-			possibleNexts.put( persistanceComposeBlock.getId().intValue(), possibleNextToCurrent );
+			List<Integer> possibleNextToCurrent = persistanceComposeBlock.possibleNextComposeBlocks.stream().map( composeBlock1 -> composeBlock1.getId().intValue() )
+					.collect( Collectors.toList() );
+			possibleNexts.put( persistanceComposeBlockNumber, possibleNextToCurrent );
 		}
 
 		for ( int composeBlockNumber = 0; composeBlockNumber < composeBlocks.size(); composeBlockNumber++ ) {
@@ -58,7 +60,7 @@ public class PersistConverter {
 			}
 		}
 
-		return new Lexicon( composeBlocks, possibleNexts);
+		return new Lexicon( composeBlocks, possibleNexts );
 	}
 
 	public List<ComposeBlock> convertComposeBlockList( Lexicon lexicon ) {
@@ -83,21 +85,14 @@ public class PersistConverter {
 	}
 
 	public model.ComposeBlock convertComposeBlock( ComposeBlock persistanceComposeBlock ) {
-		model.ComposeBlock musicBlock = new model.ComposeBlock(
-				persistanceComposeBlock.startTime,
-				convertCompositionInfo( persistanceComposeBlock.compositionInfo ),
-				convertMelodyList( persistanceComposeBlock.melodies ),
-				convertBlockMovement( persistanceComposeBlock.blockMovementFromPreviousToThis ) );
+		model.ComposeBlock musicBlock = new model.ComposeBlock( persistanceComposeBlock.startTime, convertCompositionInfo( persistanceComposeBlock.compositionInfo ),
+				convertMelodyList( persistanceComposeBlock.melodies ), convertBlockMovement( persistanceComposeBlock.blockMovementFromPreviousToThis ) );
 		return musicBlock;
 	}
 
 	public ComposeBlock convertComposeBlock( model.ComposeBlock composeBlock ) {
-		ComposeBlock persistanceMusicBlock = new ComposeBlock(
-				composeBlock.getStartTime(),
-				convertCompositionInfo( composeBlock.getCompositionInfo() ),
-				convertToPersistMelodyList( composeBlock.getMelodyList() ),
-				convertBlockMovement( composeBlock.getBlockMovementFromPreviousToThis() )
-		);
+		ComposeBlock persistanceMusicBlock = new ComposeBlock( composeBlock.getStartTime(), convertCompositionInfo( composeBlock.getCompositionInfo() ),
+				convertToPersistMelodyList( composeBlock.getMelodyList() ), convertBlockMovement( composeBlock.getBlockMovementFromPreviousToThis() ) );
 		return persistanceMusicBlock;
 	}
 
@@ -118,7 +113,7 @@ public class PersistConverter {
 	}
 
 	public List<model.melody.Melody> convertMelodyList( List<Melody> persistanceMelodyList ) {
-		List<model.melody.Melody> melodyList = new ArrayList<>(  );
+		List<model.melody.Melody> melodyList = new ArrayList<>();
 		for ( Melody melody : persistanceMelodyList ) {
 			melodyList.add( convertMelody( melody ) );
 		}
@@ -126,8 +121,8 @@ public class PersistConverter {
 	}
 
 	public List<Melody> convertToPersistMelodyList( List<model.melody.Melody> melodyList ) {
-		List<Melody> persistanceMelodyList = new ArrayList<>(  );
-		for (model.melody.Melody melody : melodyList ) {
+		List<Melody> persistanceMelodyList = new ArrayList<>();
+		for ( model.melody.Melody melody : melodyList ) {
 			persistanceMelodyList.add( convertMelody( melody ) );
 		}
 		return persistanceMelodyList;
@@ -162,13 +157,13 @@ public class PersistConverter {
 	}
 
 	public Melody convertMelody( model.melody.Melody melody ) {
-		Melody persistMelody = melodyFactory.getInstance( convertToPersistNoteList(melody.getNoteList()), melody.getForm().getValue() );
+		Melody persistMelody = melodyFactory.getInstance( convertToPersistNoteList( melody.getNoteList() ), melody.getForm().getValue() );
 		persistMelody.form = melody.getForm().getValue();
 		return persistMelody;
 	}
 
 	public List<jm.music.data.Note> convertNoteList( List<Note> persistanceNoteList ) {
-		List<jm.music.data.Note> noteList = new ArrayList<>(  );
+		List<jm.music.data.Note> noteList = new ArrayList<>();
 		for ( Note note : persistanceNoteList ) {
 			noteList.add( convertNote( note ) );
 		}
@@ -176,7 +171,7 @@ public class PersistConverter {
 	}
 
 	public List<Note> convertToPersistNoteList( List<jm.music.data.Note> noteList ) {
-		List<Note> persistanceNoteList = new ArrayList<>(  );
+		List<Note> persistanceNoteList = new ArrayList<>();
 		for ( jm.music.data.Note note : noteList ) {
 			persistanceNoteList.add( convertNote( note ) );
 		}
