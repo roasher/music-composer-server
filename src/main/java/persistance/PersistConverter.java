@@ -33,6 +33,12 @@ public class PersistConverter {
 	private BlockMovementFactory blockMovementFactory;
 
 	public Lexicon convertPersistComposeBlockList( List<ComposeBlock> persistanceComposeBlocks ) {
+		// persitance block can have id seq with gaps or start not with 0
+		Map<ComposeBlock, Integer> remap = new HashMap<>(  );
+		int id = 0;
+		for ( ComposeBlock persistanceComposeBlock : persistanceComposeBlocks ) {
+			remap.put( persistanceComposeBlock, id++ );
+		}
 
 		List<model.ComposeBlock> composeBlocks = new ArrayList<>();
 		Map<Integer, List<Integer>> possibleNexts = new HashMap<>();
@@ -41,7 +47,7 @@ public class PersistConverter {
 			ComposeBlock persistanceComposeBlock = persistanceComposeBlocks.get( persistanceComposeBlockNumber );
 			model.ComposeBlock composeBlock = convertComposeBlock( persistanceComposeBlock );
 			composeBlocks.add( composeBlock );
-			List<Integer> possibleNextToCurrent = persistanceComposeBlock.possibleNextComposeBlocks.stream().map( composeBlock1 -> composeBlock1.getId().intValue() )
+			List<Integer> possibleNextToCurrent = persistanceComposeBlock.possibleNextComposeBlocks.stream().map( composeBlock1 -> remap.get( composeBlock1 ) )
 					.collect( Collectors.toList() );
 			possibleNexts.put( persistanceComposeBlockNumber, possibleNextToCurrent );
 		}

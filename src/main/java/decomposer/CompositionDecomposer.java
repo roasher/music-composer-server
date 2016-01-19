@@ -17,10 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import utils.Recombinator;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class analyses and decomposes the composition, creating MusicBlocks
@@ -132,13 +129,12 @@ public class CompositionDecomposer {
 				musicBlockList.addAll( decomposeIntoMusicBlocks( composition, rhythmValue ) );
 			}
 		}
-		Lexicon lexicon = getComposeBlocks( musicBlockList );
+		Lexicon lexiconFromComposition = getComposeBlocks( musicBlockList );
 
-		// TODO Fix combining
-//		logger.info( "Combining blocks from compositions and blocks persistance" );
-//		List<ComposeBlock> combinedComposeBlockList = union( dataBaseLexicon.getComposeBlockList(), lexicon.getComposeBlockList() );
+		logger.info( "Combining blocks from compositions and blocks persistance" );
+		Lexicon combinedLexicon= union( dataBaseLexicon, lexiconFromComposition );
 
-		return lexicon;
+		return combinedLexicon;
 	}
 
 	/**
@@ -199,15 +195,19 @@ public class CompositionDecomposer {
 	/**
 	 * Unions but Changes both input Lists!!!
 	 * TODO think of need to impl cloning ?
-	 *
-	 * @param firstComposeBlockList
-	 * @param secondComposeBlockList
+	 * TODO write tests
 	 * @return
 	 */
-	private List<ComposeBlock> union( List<ComposeBlock> firstComposeBlockList, List<ComposeBlock> secondComposeBlockList ) {
+	private Lexicon union( Lexicon firstLexicon, Lexicon secondLexicon ) {
+		Map<Integer, List<Integer>> unionMap = unionMaps( firstLexicon.getPossibleNextMusicBlockNumbers(), secondLexicon.getPossibleNextMusicBlockNumbers() );
 		// adding the possible next/previous
-		for ( ComposeBlock firstComposeBlock : firstComposeBlockList ) {
-			for ( ComposeBlock secondComposeBlock : secondComposeBlockList ) {
+		List<ComposeBlock> firstComposeBlocks = firstLexicon.getComposeBlockList();
+		List<ComposeBlock> secondComposeBlocks = secondLexicon.getComposeBlockList();
+		for ( int firstComposeBlockNumber = 0; firstComposeBlockNumber < firstComposeBlocks.size(); firstComposeBlockNumber++ ) {
+			ComposeBlock firstComposeBlock = firstComposeBlocks.get( firstComposeBlockNumber );
+			for ( int secondComposeBlockNumber = 0; secondComposeBlockNumber < secondComposeBlocks.size(); secondComposeBlockNumber++ ) {
+				ComposeBlock secondComposeBlock = secondComposeBlocks.get( secondComposeBlockNumber );
+
 				if ( musicBlockProvider.canSubstitute( firstComposeBlock, secondComposeBlock ) ) {
 					// We are assuming that first members of possiblePrevious and possibleNext list is taken from the original composition
 					if ( firstComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
@@ -217,6 +217,8 @@ public class CompositionDecomposer {
 						}
 						if ( !originalPreviousFirst.getPossibleNextComposeBlocks().contains( secondComposeBlock ) ) {
 							originalPreviousFirst.getPossibleNextComposeBlocks().add( secondComposeBlock );
+							int originalPreviousFirstNumber = unionMap.get( firstComposeBlockNumber ).get( 0 );
+							unionMap.get( originalPreviousFirstNumber ).add( secondComposeBlockNumber );
 						}
 					}
 
@@ -227,13 +229,23 @@ public class CompositionDecomposer {
 						}
 						if ( !originalPreviousSecond.getPossibleNextComposeBlocks().contains( firstComposeBlock ) ) {
 							originalPreviousSecond.getPossibleNextComposeBlocks().add( firstComposeBlock );
+							int originalPreviousSecondNumber = unionMap.get( secondComposeBlockNumber ).get( 0 );
+							unionMap.get( originalPreviousSecondNumber ).add( firstComposeBlockNumber );
 						}
 					}
 				}
 			}
 		}
-		List<ComposeBlock> union = new ArrayList<>( firstComposeBlockList );
-		union.addAll( secondComposeBlockList );
+		List<ComposeBlock> union = new ArrayList<>( firstComposeBlocks );
+		union.addAll( secondComposeBlocks );
+		return new Lexicon( union, unionMap );
+	}
+
+	private Map<Integer, List<Integer>> unionMaps( Map<Integer, List<Integer>> firstMap, Map<Integer, List<Integer>> secondMap ) {
+		Map<Integer, List<Integer>> union = new HashMap<>( firstMap );
+		for ( Map.Entry<Integer, List<Integer>> mapEntry : secondMap.entrySet() ) {
+			union.put( mapEntry.getKey() + firstMap.size(), mapEntry.getValue() );
+		}
 		return union;
 	}
 }

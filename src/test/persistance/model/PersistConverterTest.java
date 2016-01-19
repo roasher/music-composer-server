@@ -13,10 +13,7 @@ import persistance.jpa.factory.MelodyFactory;
 import persistance.jpa.factory.NoteFactory;
 import persistance.jpa.Note;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static jm.JMC.*;
 import static org.junit.Assert.assertEquals;
@@ -39,24 +36,29 @@ public class PersistConverterTest extends AbstractSpringTest {
 
 	@Test public void convert() {
 		List<ComposeBlock> persitanceMusicBlocks = getDefaultPersitanceMusicBlocks();
+		Lexicon convertedFromPersistanceLexicon = persistConverter.convertPersistComposeBlockList( persitanceMusicBlocks );
 		model.Lexicon lexicon = getDefaultLexicon();
-		List<ComposeBlock> convertedComposeBlocks = persistConverter.convertComposeBlockList( lexicon );
-		assertEquals( lexicon.getComposeBlockList(), persistConverter.convertPersistComposeBlockList( persitanceMusicBlocks ) );
-		assertEquals( persitanceMusicBlocks, convertedComposeBlocks );
+		assertEquals( lexicon, convertedFromPersistanceLexicon );
+
+		List<ComposeBlock> persistanceComposeBlocks = persistConverter.convertComposeBlockList( lexicon );
+		assertEquals( persitanceMusicBlocks, persistanceComposeBlocks );
 	}
 
 	@Test public void doubleConvert() {
 		List<ComposeBlock> persitanceMusicBlocks = getDefaultPersitanceMusicBlocks();
-		Lexicon convertedLexicon = persistConverter.convertPersistComposeBlockList( persitanceMusicBlocks );
-		assertEquals( persitanceMusicBlocks, persistConverter.convertComposeBlockList( convertedLexicon ) );
+		Lexicon persistLexiconFirstConvertion = persistConverter.convertPersistComposeBlockList( persitanceMusicBlocks );
+		List<ComposeBlock> persistLexiconSecondConversion = persistConverter.convertComposeBlockList( persistLexiconFirstConvertion );
+		assertEquals( persitanceMusicBlocks, persistLexiconSecondConversion );
 
 		model.Lexicon lexicon = getDefaultLexicon();
-		assertEquals( lexicon.getComposeBlockList(), persistConverter.convertPersistComposeBlockList(persistConverter.convertComposeBlockList( lexicon ) ) );
+		List<ComposeBlock> lexiconFirstConvertion = persistConverter.convertComposeBlockList( lexicon );
+		Lexicon lexoconSecondConvertion = persistConverter.convertPersistComposeBlockList( lexiconFirstConvertion );
+		assertEquals( lexicon, lexoconSecondConvertion );
 	}
 
 	private List<ComposeBlock> getDefaultPersitanceMusicBlocks() {
 		ComposeBlock composeBlock0 = new ComposeBlock(
-				0,
+				10,
 				0,
 				null,
 				Arrays.asList(
@@ -73,7 +75,7 @@ public class PersistConverterTest extends AbstractSpringTest {
 				);
 
 		ComposeBlock composeBlock1 = new ComposeBlock(
-				1,
+				20,
 				0,
 				null,
 				Arrays.asList(
@@ -88,7 +90,7 @@ public class PersistConverterTest extends AbstractSpringTest {
 		);
 
 		ComposeBlock composeBlock2 = new ComposeBlock(
-				2,
+				30,
 				0,
 				null,
 				Arrays.asList(
@@ -102,7 +104,7 @@ public class PersistConverterTest extends AbstractSpringTest {
 		);
 
 		ComposeBlock composeBlock3 = new ComposeBlock(
-				3,
+				31,
 				0,
 				null,
 				Arrays.asList(
@@ -117,7 +119,7 @@ public class PersistConverterTest extends AbstractSpringTest {
 		);
 
 		ComposeBlock composeBlock4 = new ComposeBlock(
-				4,
+				32,
 				0,
 				null,
 				Arrays.asList(
@@ -131,16 +133,12 @@ public class PersistConverterTest extends AbstractSpringTest {
 				blockMovementFactory.getInstance( G4-CS4, E4-C3)
 		);
 
-		composeBlock0.possiblePreviousComposeBlocks.add( null );
-		composeBlock0.possiblePreviousComposeBlocks.add( composeBlock1 );
 		composeBlock0.possibleNextComposeBlocks.add( composeBlock1 );
 		composeBlock0.possibleNextComposeBlocks.add( composeBlock3 );
 		composeBlock0.possibleNextComposeBlocks.add( composeBlock4 );
 
 		composeBlock1.possiblePreviousComposeBlocks.add( composeBlock0 );
-		composeBlock1.possiblePreviousComposeBlocks.add( composeBlock4 );
 		composeBlock1.possibleNextComposeBlocks.add( composeBlock2 );
-		composeBlock1.possibleNextComposeBlocks.add( composeBlock0 );
 
 		composeBlock2.possiblePreviousComposeBlocks.add( composeBlock1 );
 		composeBlock2.possibleNextComposeBlocks.add( composeBlock3 );
@@ -153,8 +151,6 @@ public class PersistConverterTest extends AbstractSpringTest {
 		composeBlock4.possiblePreviousComposeBlocks.add( composeBlock3 );
 		composeBlock4.possiblePreviousComposeBlocks.add( composeBlock0 );
 		composeBlock4.possiblePreviousComposeBlocks.add( composeBlock2 );
-		composeBlock4.possibleNextComposeBlocks.add( null );
-		composeBlock4.possibleNextComposeBlocks.add( composeBlock1 );
 
 		List<ComposeBlock> composeBlockList = new ArrayList<>();
 		composeBlockList.add( composeBlock0 );
@@ -236,42 +232,36 @@ public class PersistConverterTest extends AbstractSpringTest {
 		model.ComposeBlock composeBlock3 = new model.ComposeBlock( musicBlock3 );
 		model.ComposeBlock composeBlock4 = new model.ComposeBlock( musicBlock4 );
 
-		composeBlock0.getPossiblePreviousComposeBlocks().add( null );
-		composeBlock0.getPossiblePreviousComposeBlocks().add( composeBlock1 );
 		composeBlock0.getPossibleNextComposeBlocks().add( composeBlock1 );
 		composeBlock0.getPossibleNextComposeBlocks().add( composeBlock3 );
 		composeBlock0.getPossibleNextComposeBlocks().add( composeBlock4 );
-		List<Integer> possiblePrev0 = Arrays.asList( 1, 3, 4 );
+		List<Integer> possibleNext0 = Arrays.asList( 1, 3, 4 );
 
 		composeBlock1.getPossiblePreviousComposeBlocks().add( composeBlock0 );
-		composeBlock1.getPossiblePreviousComposeBlocks().add( composeBlock4 );
 		composeBlock1.getPossibleNextComposeBlocks().add( composeBlock2 );
-		composeBlock1.getPossibleNextComposeBlocks().add( composeBlock0 );
-		List<Integer> possiblePrev1 = Arrays.asList( 2, 0 );
+		List<Integer> possibleNext1 = Arrays.asList( 2 );
 
 		composeBlock2.getPossiblePreviousComposeBlocks().add( composeBlock1 );
 		composeBlock2.getPossibleNextComposeBlocks().add( composeBlock3 );
 		composeBlock2.getPossibleNextComposeBlocks().add( composeBlock4 );
-		List<Integer> possiblePrev2 = Arrays.asList( 3, 4 );
+		List<Integer> possibleNext2 = Arrays.asList( 3, 4 );
 
 		composeBlock3.getPossiblePreviousComposeBlocks().add( composeBlock2 );
 		composeBlock3.getPossiblePreviousComposeBlocks().add( composeBlock0 );
 		composeBlock3.getPossibleNextComposeBlocks().add( composeBlock4 );
-		List<Integer> possiblePrev3 = Arrays.asList( 4 );
+		List<Integer> possibleNext3 = Arrays.asList( 4 );
 
 		composeBlock4.getPossiblePreviousComposeBlocks().add( composeBlock3 );
 		composeBlock4.getPossiblePreviousComposeBlocks().add( composeBlock0 );
 		composeBlock4.getPossiblePreviousComposeBlocks().add( composeBlock2 );
-		composeBlock4.getPossibleNextComposeBlocks().add( null );
-		composeBlock4.getPossibleNextComposeBlocks().add( composeBlock1 );
-		List<Integer> possiblePrev4 = Arrays.asList( 1 );
+		List<Integer> possibleNext4 = Collections.emptyList();
 
 		Map<Integer, List<Integer>> nextMap = new HashedMap();
-		nextMap.put( 0, possiblePrev0 );
-		nextMap.put( 1, possiblePrev1 );
-		nextMap.put( 2, possiblePrev2 );
-		nextMap.put( 3, possiblePrev3 );
-		nextMap.put( 4, possiblePrev4 );
+		nextMap.put( 0, possibleNext0 );
+		nextMap.put( 1, possibleNext1 );
+		nextMap.put( 2, possibleNext2 );
+		nextMap.put( 3, possibleNext3 );
+		nextMap.put( 4, possibleNext4 );
 
 		List<model.ComposeBlock> composeBlockList = new ArrayList<>();
 		composeBlockList.add( composeBlock0 );
