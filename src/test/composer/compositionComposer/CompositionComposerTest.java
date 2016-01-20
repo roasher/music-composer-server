@@ -64,14 +64,16 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 	}
 
 	@Test
-    @Ignore
+//    @Ignore
 	public void getRealPieceTest1() throws IOException {
-		List< Composition > compositionList = compositionLoader.getCompositions(
-		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ),
-		  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.biosphere(midi).mid" ),
-		  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ),
-		  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\Метания беспокойного разума.mid" )
-		);
+//		List< Composition > compositionList = compositionLoader.getCompositions(
+//		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ),
+//		  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.biosphere(midi).mid" ),
+//		  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ),
+//		  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\Метания беспокойного разума.mid" )
+//		);
+
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "C:\\Users\\wish\\Downloads\\Bach chorals" ) );
 
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 //		lexiconDAO.persist( lexicon );
@@ -80,7 +82,7 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 			@Override
 			public ComposeBlock getNextBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
 				ComposeBlock composeBlock1 = lexicon.getAllPossibleFirst().stream()
-						.filter( composeBlock -> composeBlock.getCompositionInfo().equals( compositionList.get(1).getCompositionInfo() ) ).findFirst().get();
+						.filter( composeBlock -> composeBlock.getCompositionInfo().equals( compositionList.get(1).getCompositionInfo() ) && !exclusions.contains( composeBlock ) ).findFirst().get();
 				return composeBlock1;
 			}
 		};
@@ -105,7 +107,7 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 //		View.notate( composition );
 //		Utils.suspend();
 //		Play.midi( composition );
-		Write.midi( composition, "D:\\work\\music\\sample_outputs\\1.mid" );
+		Write.midi( composition, "D:\\Projects\\test\\output\\1.mid" );
 
 	}
 

@@ -43,12 +43,11 @@ public class FormBlockProvider {
 	 */
 	public List<ComposeBlock> getFormElement( FirstBlockProvider firstBlockProvider, NextBlockProvider nextBlockProvider, Form form, double length, List<FormCompositionStep> previousSteps, Lexicon lexicon ) {
 		logger.info( "Composing new form element : {}, length : {}", form.getValue(), length );
-		Optional<FormCompositionStep> last = Optional.ofNullable( previousSteps.isEmpty() ? null : previousSteps.get( previousSteps.size() - 1 ) );
-		List<ComposeBlock> composeBlock = composeBlock( firstBlockProvider, nextBlockProvider, last, lexicon, length );
+		List<ComposeBlock> composeBlock = composeBlock( firstBlockProvider, nextBlockProvider, previousSteps.get( previousSteps.size() - 1 ), lexicon, length );
 		return composeBlock;
 	}
 
-	public List<ComposeBlock> composeBlock( FirstBlockProvider firstBlockProvider, NextBlockProvider nextBlockProvider, Optional<FormCompositionStep> previousCompositionStep, Lexicon lexicon, double length ) {
+	public List<ComposeBlock> composeBlock( FirstBlockProvider firstBlockProvider, NextBlockProvider nextBlockProvider, FormCompositionStep previousCompositionStep, Lexicon lexicon, double length ) {
 		List<CompositionStep> compositionSteps = composeSteps( firstBlockProvider, nextBlockProvider, previousCompositionStep, lexicon, length );
 		if ( compositionSteps != null ) {
 			List<ComposeBlock> composeBlocks = new ArrayList<>();
@@ -70,7 +69,7 @@ public class FormBlockProvider {
 	 * @return
 	 * TODO refactor
 	 */
-	public List<CompositionStep> composeSteps( FirstBlockProvider firstBlockProvider, NextBlockProvider nextBlockProvider, Optional<FormCompositionStep> previousCompositionStep, Lexicon lexicon,
+	public List<CompositionStep> composeSteps( FirstBlockProvider firstBlockProvider, NextBlockProvider nextBlockProvider, FormCompositionStep previousCompositionStep, Lexicon lexicon,
 			double length ) {
 		List<CompositionStep> compositionSteps = new ArrayList<>();
 
@@ -95,9 +94,9 @@ public class FormBlockProvider {
 					return compositionSteps;
 				}
 			} else {
-				if ( step != 0 ) {
+				if ( step != 1 ) {
 					// there is no pre last step if we can't create second element
-					if ( step != 1 ) {
+					if ( step != 2 ) {
 						CompositionStep preLastCompositionStep = compositionSteps.get( step - 2 );
 						preLastCompositionStep.addNextExclusion( lastCompositionStep.getComposeBlock() );
 					}
@@ -121,15 +120,15 @@ public class FormBlockProvider {
 	/**
 	 * Fetches CompositionStep from FormCompositionStep:
 	 * last Compose Block of input = Compose Block for output
-	 * List of first Compose Blocks of exclusions of input = output exclustion
+	 * List of first Compose Blocks of exclusions of input = output exclusion
 	 * @param formCompositionStep
 	 * @return
 	 */
-	public Optional<CompositionStep> fetchLastCompositionStep( Optional<FormCompositionStep> formCompositionStep ) {
+	public Optional<CompositionStep> fetchLastCompositionStep( FormCompositionStep formCompositionStep ) {
 		CompositionStep compositionStep = null;
-		if ( formCompositionStep.isPresent() ) {
-			List<ComposeBlock> exclusions = CollectionUtils.getListOfFirsts( formCompositionStep.get().getNextMusicBlockExclusions() );
-			List<ComposeBlock> composeBlocks = formCompositionStep.get().getComposeBlocks();
+		if ( formCompositionStep.getComposeBlocks() != null ) {
+			List<ComposeBlock> exclusions = CollectionUtils.getListOfFirsts( formCompositionStep.getNextMusicBlockExclusions() );
+			List<ComposeBlock> composeBlocks = formCompositionStep.getComposeBlocks();
 			compositionStep = new CompositionStep( composeBlocks.get( composeBlocks.size() - 1 ) );
 			compositionStep.setNextMusicBlockExclusions( exclusions );
 		}

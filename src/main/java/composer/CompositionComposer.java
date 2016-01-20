@@ -60,16 +60,18 @@ public class CompositionComposer {
 	 */
 	public List<FormCompositionStep> composeSteps( FirstBlockProvider firstStepProvider, NextBlockProvider nextBlockProvider, Lexicon lexicon, String form, double compositionLength ) {
 		List<FormCompositionStep> compositionSteps = new ArrayList<>();
-		for ( int formElementNumber = 0; formElementNumber < form.length(); formElementNumber++ ) {
+		compositionSteps.add( new FormCompositionStep(  ) );
 
-			FormCompositionStep lastCompositionStep = formElementNumber != 0 ? compositionSteps.get( compositionSteps.size() - 1 ) : null;
+		for ( int formElementNumber = 1; formElementNumber < form.length(); formElementNumber++ ) {
+
+			FormCompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
 			double stepLength = compositionLength / form.length();
-			FormCompositionStep nextStep = composeNext( firstStepProvider, nextBlockProvider, new Form( form.charAt( formElementNumber ) ), stepLength, compositionSteps, lexicon );
+			FormCompositionStep nextStep = composeNext( firstStepProvider, nextBlockProvider, new Form( form.charAt( formElementNumber - 1 ) ), stepLength, compositionSteps, lexicon );
 
 			if ( nextStep.getComposeBlocks() == null ) {
-				if ( formElementNumber != 0 ) {
+				if ( formElementNumber != 1 ) {
 					// there is no pre last step if we can't create second element
-					if ( formElementNumber != 1 ) {
+					if ( formElementNumber != 2 ) {
 						FormCompositionStep preLastCompositionStep = compositionSteps.get( formElementNumber - 2 );
 						preLastCompositionStep.addNextExclusion( lastCompositionStep.getComposeBlocks() );
 					}
@@ -85,6 +87,7 @@ public class CompositionComposer {
 				compositionSteps.add( nextStep );
 			}
 		}
+		compositionSteps.remove( 0 );
 		return compositionSteps;
 	}
 
