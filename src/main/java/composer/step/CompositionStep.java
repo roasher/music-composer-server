@@ -23,6 +23,9 @@ public class CompositionStep {
 		this.composeBlock = composeBlock;
 	}
 
+	public CompositionStep() {
+	}
+
 	public void addNextExclusion( ComposeBlock musicBlock ) {
 		this.nextMusicBlockExclusions.add( musicBlock );
 	}

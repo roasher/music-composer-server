@@ -73,8 +73,8 @@ public class FormBlockProvider {
 			double length ) {
 		List<CompositionStep> compositionSteps = new ArrayList<>();
 
-		Optional<CompositionStep> compositionStep = fetchLastCompositionStep( previousCompositionStep );
-		compositionSteps.add( compositionStep.orElse( new CompositionStep( null ) ) );
+		CompositionStep compositionStep = fetchLastCompositionStep( previousCompositionStep );
+		compositionSteps.add( compositionStep );
 		double currentLength = 0;
 
 		for ( int step = 1; step < length / lexicon.getMinRhythmValue() + 1; step++ ) {
@@ -95,11 +95,8 @@ public class FormBlockProvider {
 				}
 			} else {
 				if ( step != 1 ) {
-					// there is no pre last step if we can't create second element
-					if ( step != 2 ) {
-						CompositionStep preLastCompositionStep = compositionSteps.get( step - 2 );
-						preLastCompositionStep.addNextExclusion( lastCompositionStep.getComposeBlock() );
-					}
+					CompositionStep preLastCompositionStep = compositionSteps.get( step - 2 );
+					preLastCompositionStep.addNextExclusion( lastCompositionStep.getComposeBlock() );
 					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
 					if ( compositionSteps.get( step - 1 ).getComposeBlock() != null ) {
 						currentLength -= compositionSteps.get( step - 1 ).getComposeBlock().getRhythmValue();
@@ -124,14 +121,14 @@ public class FormBlockProvider {
 	 * @param formCompositionStep
 	 * @return
 	 */
-	public Optional<CompositionStep> fetchLastCompositionStep( FormCompositionStep formCompositionStep ) {
-		CompositionStep compositionStep = null;
+	public CompositionStep fetchLastCompositionStep( FormCompositionStep formCompositionStep ) {
+		CompositionStep compositionStep = new CompositionStep();
+		List<ComposeBlock> exclusions = CollectionUtils.getListOfFirsts( formCompositionStep.getNextMusicBlockExclusions() );
+		compositionStep.setNextMusicBlockExclusions( exclusions );
 		if ( formCompositionStep.getComposeBlocks() != null ) {
-			List<ComposeBlock> exclusions = CollectionUtils.getListOfFirsts( formCompositionStep.getNextMusicBlockExclusions() );
 			List<ComposeBlock> composeBlocks = formCompositionStep.getComposeBlocks();
-			compositionStep = new CompositionStep( composeBlocks.get( composeBlocks.size() - 1 ) );
-			compositionStep.setNextMusicBlockExclusions( exclusions );
+			compositionStep.setComposeBlock( composeBlocks.get( composeBlocks.size() - 1 ) );
 		}
-		return Optional.ofNullable( compositionStep );
+		return compositionStep;
 	}
 }

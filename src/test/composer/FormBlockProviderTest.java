@@ -17,6 +17,7 @@ import utils.CompositionLoader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 
 		List<ComposeBlock> formElement = formBlockProvider.getFormElement( new RandomFirstBlockProvider(), new SimpleNextBlockProvider(), new Form( 'A' ), JMC.WHOLE_NOTE,
-				Collections.<FormCompositionStep>emptyList(), lexiconFromFirst );
+				Arrays.asList( new FormCompositionStep(  ) ), lexiconFromFirst );
 
 		List<ComposeBlock> composeBlockList = new ArrayList<>();
 		composeBlockList.add( lexiconFromFirst.get( 0 ) );

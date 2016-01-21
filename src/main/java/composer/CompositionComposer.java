@@ -62,19 +62,16 @@ public class CompositionComposer {
 		List<FormCompositionStep> compositionSteps = new ArrayList<>();
 		compositionSteps.add( new FormCompositionStep(  ) );
 
-		for ( int formElementNumber = 1; formElementNumber < form.length(); formElementNumber++ ) {
+		double stepLength = compositionLength / form.length();
+		for ( int formElementNumber = 1; formElementNumber < form.length() + 1; formElementNumber++ ) {
 
 			FormCompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
-			double stepLength = compositionLength / form.length();
 			FormCompositionStep nextStep = composeNext( firstStepProvider, nextBlockProvider, new Form( form.charAt( formElementNumber - 1 ) ), stepLength, compositionSteps, lexicon );
 
 			if ( nextStep.getComposeBlocks() == null ) {
 				if ( formElementNumber != 1 ) {
-					// there is no pre last step if we can't create second element
-					if ( formElementNumber != 2 ) {
-						FormCompositionStep preLastCompositionStep = compositionSteps.get( formElementNumber - 2 );
-						preLastCompositionStep.addNextExclusion( lastCompositionStep.getComposeBlocks() );
-					}
+					FormCompositionStep preLastCompositionStep = compositionSteps.get( formElementNumber - 2 );
+					preLastCompositionStep.addNextExclusion( lastCompositionStep.getComposeBlocks() );
 					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
 					compositionSteps.remove( formElementNumber - 1 );
 					formElementNumber = formElementNumber - 2;
