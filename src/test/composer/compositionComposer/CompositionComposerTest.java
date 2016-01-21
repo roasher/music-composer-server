@@ -64,7 +64,7 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 	}
 
 	@Test
-//    @Ignore
+    @Ignore
 	public void getRealPieceTest1() throws IOException {
 //		List< Composition > compositionList = compositionLoader.getCompositions(
 //		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ),
