@@ -17,7 +17,7 @@ public class RandomFirstBlockProvider implements FirstBlockProvider {
 	 * @return
 	 */
 	@Override
-	public ComposeBlock getNextBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
+	public ComposeBlock getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
 		List<ComposeBlock> allPossibleFirstBlocks = lexicon.getAllPossibleFirst();
 		allPossibleFirstBlocks.removeAll( exclusions );
 		if ( !allPossibleFirstBlocks.isEmpty() ) {

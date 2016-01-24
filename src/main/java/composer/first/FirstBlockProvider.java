@@ -10,6 +10,6 @@ import java.util.List;
  */
 public interface FirstBlockProvider {
 
-	public ComposeBlock getNextBlock( Lexicon lexicon, List<ComposeBlock> exclusions );
+	public ComposeBlock getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions );
 
 }

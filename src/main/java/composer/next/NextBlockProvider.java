@@ -1,5 +1,6 @@
 package composer.next;
 
+import composer.step.CompositionStep;
 import model.ComposeBlock;
 import model.Lexicon;
 
@@ -11,6 +12,6 @@ import java.util.List;
  */
 public interface NextBlockProvider {
 
-    ComposeBlock getNextBlock( Lexicon lexicon, ComposeBlock previousComposeBlock, List<ComposeBlock> exclusions );
+    ComposeBlock getNextBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps );
 
 }

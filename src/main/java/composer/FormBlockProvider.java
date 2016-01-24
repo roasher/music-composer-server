@@ -16,7 +16,6 @@ import utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Class provides form element
@@ -82,8 +81,8 @@ public class FormBlockProvider {
 			CompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
 
 			CompositionStep nextStep = lastCompositionStep.getComposeBlock() != null ?
-					new CompositionStep( nextBlockProvider.getNextBlock( lexicon, lastCompositionStep.getComposeBlock(), lastCompositionStep.getNextMusicBlockExclusions() ) ) :
-					new CompositionStep( firstBlockProvider.getNextBlock( lexicon, lastCompositionStep.getNextMusicBlockExclusions() ) );
+					new CompositionStep( nextBlockProvider.getNextBlock( lexicon, compositionSteps ) ) :
+					new CompositionStep( firstBlockProvider.getFirstBlock( lexicon, lastCompositionStep.getNextMusicBlockExclusions() ) );
 
 			if ( nextStep.getComposeBlock() != null && currentLength + nextStep.getComposeBlock().getRhythmValue() <= length ) {
 				currentLength += nextStep.getComposeBlock().getRhythmValue();

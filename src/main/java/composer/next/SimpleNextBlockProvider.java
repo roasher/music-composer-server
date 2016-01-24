@@ -1,5 +1,6 @@
 package composer.next;
 
+import composer.step.CompositionStep;
 import model.ComposeBlock;
 import model.Lexicon;
 
@@ -15,9 +16,10 @@ public class SimpleNextBlockProvider implements NextBlockProvider {
 	 * Returns one of the possible next currentBlocks randomly
 	 */
 	@Override
-	public ComposeBlock getNextBlock( Lexicon lexicon, ComposeBlock previousComposeBlock, List<ComposeBlock> exclusions ) {
-		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( previousComposeBlock.getPossibleNextComposeBlocks() );
-		possibleNextComposeBlocks.removeAll( exclusions );
+	public ComposeBlock getNextBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps ) {
+		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
+		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getComposeBlock().getPossibleNextComposeBlocks() );
+		possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions());
 		if ( !possibleNextComposeBlocks.isEmpty() ) {
 			int randomNumber = ( int ) ( Math.random() * ( possibleNextComposeBlocks.size() - 1 ) );
 			//int randomNumber = 0;
