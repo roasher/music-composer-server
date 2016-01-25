@@ -9,9 +9,8 @@ import persistance.jpa.BlockMovement;
 @Component
 public class BlockMovementFactory extends AbstractFactory<BlockMovement> {
 
-    public BlockMovement getInstance( int topVoiceMovement, int bottomVoiceMovement ) {
+    public BlockMovement getInstance( int bottomVoiceMovement ) {
         BlockMovement blockMovement = new BlockMovement();
-        blockMovement.topVoiceMovement = topVoiceMovement;
         blockMovement.bottomVoiceMovement = bottomVoiceMovement;
         return getUniqueInstance( blockMovement );
     }

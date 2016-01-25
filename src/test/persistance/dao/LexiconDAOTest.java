@@ -89,8 +89,8 @@ public class LexiconDAOTest extends AbstractSpringTest {
 		compositionInfo.setTitle( "TEST_TITLE" );
 		compositionInfo.setTempo( 4.0 );
 
-		BlockMovement blockMovement1 = new BlockMovement( 10, 20 );
-		BlockMovement blockMovement2 = new BlockMovement( 11, 22 );
+		BlockMovement blockMovement1 = new BlockMovement( 20 );
+		BlockMovement blockMovement2 = new BlockMovement( 22 );
 
 		ComposeBlock composeBlock0 = new ComposeBlock( 0, compositionInfo, Arrays.asList( melody1, melody2 ), blockMovement1 );
 		ComposeBlock composeBlock1 = new ComposeBlock( 0, compositionInfo, Arrays.asList( melody1, melody3 ), blockMovement1 );

@@ -35,7 +35,6 @@ public class MusicBlockTest {
 		MusicBlock musicBlock2 = new MusicBlock( melodyList2, null );
 
 		musicBlock1.setNext( musicBlock2 );
-		assertTrue( musicBlock1.getBlockMovementFromThisToNext().getTopVoiceMelodyMovement() == 2 );
 		assertTrue( musicBlock1.getBlockMovementFromThisToNext().getBottomVoiceMelodyMovement() == 0 );
 	}
 }

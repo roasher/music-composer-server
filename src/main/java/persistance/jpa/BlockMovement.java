@@ -11,8 +11,6 @@ import javax.persistence.SequenceGenerator;
 @SequenceGenerator( name="SEQ",sequenceName="BLOCK_MOVEMENT_SEQ", initialValue = 1, allocationSize = 1 )
 public class BlockMovement extends AbstractPersistanceModel {
 
-    @Column( name = "TOP_VOICE_MOVEMENT" )
-    public int topVoiceMovement;
     @Column( name = "BOTTOM_VOICE_MOVEMENT" )
     public int bottomVoiceMovement;
 
@@ -25,16 +23,12 @@ public class BlockMovement extends AbstractPersistanceModel {
 
         BlockMovement that = (BlockMovement) o;
 
-        if (topVoiceMovement != that.topVoiceMovement)
-            return false;
         return bottomVoiceMovement == that.bottomVoiceMovement;
 
     }
 
     @Override
     public int hashCode() {
-        int result = topVoiceMovement;
-        result = 31 * result + bottomVoiceMovement;
-        return result;
+        return bottomVoiceMovement;
     }
 }

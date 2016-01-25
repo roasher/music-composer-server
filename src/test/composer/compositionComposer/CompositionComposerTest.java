@@ -58,19 +58,19 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 				new ComposeBlock( 0, null, Arrays.asList(
 						new Melody( new Rest( QUARTER_NOTE) ),
 						new Melody( new Note( C4, QUARTER_NOTE ) )
-				), new BlockMovement( 0, 0 ) ),
+				), new BlockMovement( 0 ) ),
 				new ComposeBlock( 0, null, Arrays.asList(
 						new Melody( new Rest( EIGHTH_NOTE) ),
 						new Melody( new Note( C4, EIGHTH_NOTE ) )
-				), new BlockMovement( 0, 2 ) ),
+				), new BlockMovement( 2 ) ),
 				new ComposeBlock( 0, null, Arrays.asList(
 						new Melody( new Note( D5, EIGHTH_NOTE), new Note( E5, EIGHTH_NOTE), new Note( F5, EIGHTH_NOTE), new Note( E5, EIGHTH_NOTE) ),
 						new Melody( new Note( C4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE), new Note( D4, EIGHTH_NOTE), new Note( E4, EIGHTH_NOTE) )
-				), new BlockMovement( 0, 0 ) ),
+				), new BlockMovement( 0 ) ),
 				new ComposeBlock( 0, null, Arrays.asList(
 						new Melody( new Rest( QUARTER_NOTE) ),
 						new Melody( new Note( C4, QUARTER_NOTE ) )
-				), new BlockMovement( 0, 0 ) )
+				), new BlockMovement( 0 ) )
 		);
 		Composition composition = compositionComposer.gatherComposition( composeBlocks );
 		assertEquals( 2, composition.getPartArray().length );

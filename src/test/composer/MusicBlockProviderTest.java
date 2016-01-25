@@ -59,7 +59,7 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 
 		class MockFactory {
 			private List<Integer> startIntervalPattern = Collections.EMPTY_LIST;
-			private BlockMovement blockMovement = new BlockMovement( 0, 0 );
+			private BlockMovement blockMovement = new BlockMovement( 0 );
 
 			private MusicBlock getOrigin( double preRhythmValue, double startTime ) {
 				MusicBlock preFirst = mock( MusicBlock.class );

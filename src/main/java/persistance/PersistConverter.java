@@ -105,7 +105,7 @@ public class PersistConverter {
 	public BlockMovement convertBlockMovement( model.BlockMovement blockMovement ) {
 		BlockMovement persistBlockMovement = null;
 		if ( blockMovement != null ) {
-			persistBlockMovement = blockMovementFactory.getInstance( blockMovement.getTopVoiceMelodyMovement(), blockMovement.getBottomVoiceMelodyMovement() );
+			persistBlockMovement = blockMovementFactory.getInstance( blockMovement.getBottomVoiceMelodyMovement() );
 		}
 		return persistBlockMovement;
 	}
@@ -113,7 +113,7 @@ public class PersistConverter {
 	public model.BlockMovement convertBlockMovement( BlockMovement persitanceBlockMovement ) {
 		model.BlockMovement blockMovement = null;
 		if ( persitanceBlockMovement != null ) {
-			blockMovement = new model.BlockMovement( persitanceBlockMovement.topVoiceMovement, persitanceBlockMovement.bottomVoiceMovement );
+			blockMovement = new model.BlockMovement( persitanceBlockMovement.bottomVoiceMovement );
 		}
 		return blockMovement;
 	}

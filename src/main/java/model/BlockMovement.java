@@ -18,10 +18,9 @@ import java.util.List;
  */
 public class BlockMovement implements Serializable {
 
-    private int topVoiceMelodyMovement;
     private int bottomVoiceMelodyMovement;
 
-	public BlockMovement( int topVoiceMelodyMovement, int bottomVoiceMelodyMovement ) { this.topVoiceMelodyMovement = topVoiceMelodyMovement; this.bottomVoiceMelodyMovement = bottomVoiceMelodyMovement; }
+	public BlockMovement( int bottomVoiceMelodyMovement ) { this.bottomVoiceMelodyMovement = bottomVoiceMelodyMovement; }
 
     public BlockMovement( MusicBlock firstMusicBlock, MusicBlock secondMusicBlock ) {
 
@@ -50,19 +49,15 @@ public class BlockMovement implements Serializable {
 			}
 		}
 
-        topVoiceMelodyMovement = secondMusicBlockTopNotePitch - firstMusicBlockTopNotePitch ;
         bottomVoiceMelodyMovement = secondMusicBlockBottomNotePitch - firstMusicBlockBottomNotePitch;
     }
-
-	public int getTopVoiceMelodyMovement() {
-		return topVoiceMelodyMovement;
-	}
 
 	public int getBottomVoiceMelodyMovement() {
 		return bottomVoiceMelodyMovement;
 	}
 
-	@Override public boolean equals( Object o ) {
+	@Override
+	public boolean equals( Object o ) {
 		if ( this == o )
 			return true;
 		if ( !( o instanceof BlockMovement ) )
@@ -70,15 +65,12 @@ public class BlockMovement implements Serializable {
 
 		BlockMovement that = ( BlockMovement ) o;
 
-		if ( topVoiceMelodyMovement != that.topVoiceMelodyMovement )
-			return false;
 		return bottomVoiceMelodyMovement == that.bottomVoiceMelodyMovement;
 
 	}
 
-	@Override public int hashCode() {
-		int result = topVoiceMelodyMovement;
-		result = 31 * result + bottomVoiceMelodyMovement;
-		return result;
+	@Override
+	public int hashCode() {
+		return bottomVoiceMelodyMovement;
 	}
 }
