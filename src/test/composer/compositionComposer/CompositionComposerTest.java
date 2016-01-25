@@ -58,15 +58,15 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 				new ComposeBlock( 0, null, Arrays.asList(
 						new Melody( new Rest( QUARTER_NOTE) ),
 						new Melody( new Note( C4, QUARTER_NOTE ) )
-				), new BlockMovement( 0 ) ),
+				), new BlockMovement( -256 ) ),
 				new ComposeBlock( 0, null, Arrays.asList(
 						new Melody( new Rest( EIGHTH_NOTE) ),
 						new Melody( new Note( C4, EIGHTH_NOTE ) )
-				), new BlockMovement( 2 ) ),
+				), new BlockMovement( 0 ) ),
 				new ComposeBlock( 0, null, Arrays.asList(
 						new Melody( new Note( D5, EIGHTH_NOTE), new Note( E5, EIGHTH_NOTE), new Note( F5, EIGHTH_NOTE), new Note( E5, EIGHTH_NOTE) ),
 						new Melody( new Note( C4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE), new Note( D4, EIGHTH_NOTE), new Note( E4, EIGHTH_NOTE) )
-				), new BlockMovement( 0 ) ),
+				), new BlockMovement( 2 ) ),
 				new ComposeBlock( 0, null, Arrays.asList(
 						new Melody( new Rest( QUARTER_NOTE) ),
 						new Melody( new Note( C4, QUARTER_NOTE ) )
@@ -77,15 +77,15 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 
 		assertEquals( 6, composition.getPart( 0 ).getPhrase( 0 ).getNoteArray().length );
 		assertEquals( new Rest( QUARTER_NOTE + EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[0] );
-		assertEquals( new Note( D5 + 2, EIGHTH_NOTE), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[1] );
-		assertEquals( new Note( E5 + 2, EIGHTH_NOTE), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[2] );
-		assertEquals( new Note( F5 + 2, EIGHTH_NOTE), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[3] );
-		assertEquals( new Note( E5 + 2, EIGHTH_NOTE), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[4] );
-		assertEquals( new Rest( QUARTER_NOTE), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[5] );
+		assertEquals( new Note( D5 + 2, EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[1] );
+		assertEquals( new Note( E5 + 2, EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[2] );
+		assertEquals( new Note( F5 + 2, EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[3] );
+		assertEquals( new Note( E5 + 2, EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[4] );
+		assertEquals( new Rest( QUARTER_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[5] );
 
 		assertEquals( 4, composition.getPart( 1 ).getPhrase( 0 ).getNoteArray().length );
 		assertEquals( new Note( C4, QUARTER_NOTE + EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[0] );
-		assertEquals( new Note( C4 + 2, EIGHTH_NOTE), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[1] );
+		assertEquals( new Note( C4 + 2, EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[1] );
 		assertEquals( new Note( D4 + 2, EIGHTH_NOTE + EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[2] );
 		assertEquals( new Note( E4 + 2, EIGHTH_NOTE + QUARTER_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[3] );
 
