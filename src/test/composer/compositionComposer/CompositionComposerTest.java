@@ -7,6 +7,8 @@ import decomposer.CompositionDecomposer;
 import helper.AbstractSpringComposerTest;
 import jm.JMC;
 import jm.music.data.Note;
+import jm.music.data.Part;
+import jm.music.data.Phrase;
 import jm.music.data.Rest;
 import model.BlockMovement;
 import model.ComposeBlock;
@@ -20,11 +22,14 @@ import persistance.dao.LexiconDAO;
 import utils.CompositionLoader;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static jm.JMC.*;
+import static org.junit.Assert.fail;
 
 /**
  * Created by pyurkin on 15.12.14.
@@ -73,21 +78,33 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 				), new BlockMovement( 0 ) )
 		);
 		Composition composition = compositionComposer.gatherComposition( composeBlocks );
-		assertEquals( 2, composition.getPartArray().length );
+		assertEquals( 2, composition.getPartList().size() );
 
-		assertEquals( 6, composition.getPart( 0 ).getPhrase( 0 ).getNoteArray().length );
-		assertEquals( new Rest( QUARTER_NOTE + EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[0] );
-		assertEquals( new Note( D5 + 2, EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[1] );
-		assertEquals( new Note( E5 + 2, EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[2] );
-		assertEquals( new Note( F5 + 2, EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[3] );
-		assertEquals( new Note( E5 + 2, EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[4] );
-		assertEquals( new Rest( QUARTER_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[5] );
+		List<Note> firstListOfNotes = getListOfNotes( composition.getPart( 0 ) );
+		assertEquals( 6, firstListOfNotes.size() );
+		assertEquals( new Rest( QUARTER_NOTE + EIGHTH_NOTE ), firstListOfNotes.get( 0 ) );
+		assertEquals( new Note( D5 + 2, EIGHTH_NOTE ), firstListOfNotes.get( 1 ) );
+		assertEquals( new Note( E5 + 2, EIGHTH_NOTE ), firstListOfNotes.get( 2 ) );
+		assertEquals( new Note( F5 + 2, EIGHTH_NOTE ), firstListOfNotes.get( 3 ) );
+		assertEquals( new Note( E5 + 2, EIGHTH_NOTE ), firstListOfNotes.get( 4 ) );
+		assertEquals( new Rest( QUARTER_NOTE ), firstListOfNotes.get( 5 ) );
 
-		assertEquals( 4, composition.getPart( 1 ).getPhrase( 0 ).getNoteArray().length );
-		assertEquals( new Note( C4, QUARTER_NOTE + EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[0] );
-		assertEquals( new Note( C4 + 2, EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[1] );
-		assertEquals( new Note( D4 + 2, EIGHTH_NOTE + EIGHTH_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[2] );
-		assertEquals( new Note( E4 + 2, EIGHTH_NOTE + QUARTER_NOTE ), composition.getPart( 0 ).getPhrase( 0 ).getNoteArray()[3] );
+		List<Note> secondListOfNotes = getListOfNotes( composition.getPart( 1 ) );
+		assertEquals( 5, secondListOfNotes.size() );
+		assertEquals( new Note( C4, QUARTER_NOTE + EIGHTH_NOTE ), secondListOfNotes.get( 0 ) );
+		assertEquals( new Note( C4 + 2, EIGHTH_NOTE ), secondListOfNotes.get( 1 ) );
+		assertEquals( new Note( D4 + 2, EIGHTH_NOTE ), secondListOfNotes.get( 2 ) );
+		assertEquals( new Note( D4 + 2, EIGHTH_NOTE ), secondListOfNotes.get( 3 ) );
+		assertEquals( new Note( E4 + 2, EIGHTH_NOTE + QUARTER_NOTE ), secondListOfNotes.get( 4 ) );
 
+	}
+
+	private List<Note> getListOfNotes( Part part ) {
+		List<Note> notes = new ArrayList<>();
+		for ( Object o : part.getPhraseList() ) {
+			Phrase phrase = (Phrase) o;
+			phrase.getNoteList().forEach( o1 -> notes.add( ( Note ) o1 ) );
+		}
+		return notes;
 	}
 }

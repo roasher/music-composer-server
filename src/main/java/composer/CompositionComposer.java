@@ -3,6 +3,7 @@ package composer;
 import composer.first.FirstBlockProvider;
 import composer.next.NextBlockProvider;
 import composer.step.FormCompositionStep;
+import jm.music.data.Note;
 import jm.music.data.Part;
 import model.ComposeBlock;
 import model.Lexicon;
@@ -13,10 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class handles composition of new piece using lexicon
@@ -37,7 +38,8 @@ public class CompositionComposer {
 	 * @param compositionLength
 	 * @return
 	 */
-	public Composition compose( FirstBlockProvider firstStepProvider, NextBlockProvider nextBlockProvider, Lexicon lexicon, String form, double compositionLength ) {
+	public Composition compose( FirstBlockProvider firstStepProvider, NextBlockProvider nextBlockProvider, Lexicon lexicon, String form,
+			double compositionLength ) {
 		List<FormCompositionStep> compositionSteps = composeSteps( firstStepProvider, nextBlockProvider, lexicon, form, compositionLength );
 		List<ComposeBlock> composeBlocks = new ArrayList<>();
 		for ( FormCompositionStep compositionStep : compositionSteps ) {
@@ -60,15 +62,17 @@ public class CompositionComposer {
 	 * @param compositionLength
 	 * @return
 	 */
-	public List<FormCompositionStep> composeSteps( FirstBlockProvider firstStepProvider, NextBlockProvider nextBlockProvider, Lexicon lexicon, String form, double compositionLength ) {
+	public List<FormCompositionStep> composeSteps( FirstBlockProvider firstStepProvider, NextBlockProvider nextBlockProvider, Lexicon lexicon, String form,
+			double compositionLength ) {
 		List<FormCompositionStep> compositionSteps = new ArrayList<>();
-		compositionSteps.add( new FormCompositionStep(  ) );
+		compositionSteps.add( new FormCompositionStep() );
 
 		double stepLength = compositionLength / form.length();
 		for ( int formElementNumber = 1; formElementNumber < form.length() + 1; formElementNumber++ ) {
 
 			FormCompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
-			FormCompositionStep nextStep = composeNext( firstStepProvider, nextBlockProvider, new Form( form.charAt( formElementNumber - 1 ) ), stepLength, compositionSteps, lexicon );
+			FormCompositionStep nextStep = composeNext( firstStepProvider, nextBlockProvider, new Form( form.charAt( formElementNumber - 1 ) ), stepLength,
+					compositionSteps, lexicon );
 
 			if ( nextStep.getComposeBlocks() == null ) {
 				if ( formElementNumber != 1 ) {
@@ -90,51 +94,46 @@ public class CompositionComposer {
 		return compositionSteps;
 	}
 
-	public FormCompositionStep composeNext( FirstBlockProvider firstBlockProvider, NextBlockProvider nextBlockProvider, Form form, double length, List<FormCompositionStep> previousSteps,
-			Lexicon lexicon ) {
+	public FormCompositionStep composeNext( FirstBlockProvider firstBlockProvider, NextBlockProvider nextBlockProvider, Form form, double length,
+			List<FormCompositionStep> previousSteps, Lexicon lexicon ) {
 		List<ComposeBlock> musicBlock = formBlockProvider.getFormElement( firstBlockProvider, nextBlockProvider, form, length, previousSteps, lexicon );
 		return new FormCompositionStep( musicBlock, form );
 	}
 
 	/**
 	 * Returns composition, build on input compose blocks
-	 * @param composeBlockList
+	 *
+	 * @param composeBlocks
 	 * @return
 	 */
-	public Composition gatherComposition( List<ComposeBlock> composeBlockList ) {
+	public Composition gatherComposition( List<ComposeBlock> composeBlocks ) {
 		List<Part> parts = new ArrayList<>();
-		for ( int partNumber = 0; partNumber < composeBlockList.get( 0 ).getMelodyList().size(); partNumber++ ) {
+		for ( int partNumber = 0; partNumber < composeBlocks.get( 0 ).getMelodyList().size(); partNumber++ ) {
 			parts.add( new Part() );
 		}
-		for ( ComposeBlock composeBlock : composeBlockList ) {
-			logger.info( composeBlock.getCompositionInfo().getTitle() );
+		for ( int composeBlockNumber = 0; composeBlockNumber < composeBlocks.size(); composeBlockNumber++ ) {
+			ComposeBlock composeBlock = composeBlocks.get( composeBlockNumber );
+			ComposeBlock previousComposeBlock =	composeBlockNumber != 0 ? composeBlocks.get( composeBlockNumber - 1 ) : null;
+
+			if ( composeBlock.getCompositionInfo() != null ) {
+				logger.info( composeBlock.getCompositionInfo().getTitle() );
+			}
+
 			for ( int partNumber = 0; partNumber < parts.size(); partNumber++ ) {
-				int melodiesAmount = parts.get( partNumber ).size();
-				Melody melody = composeBlock.getMelodyList().get( partNumber );
-				Melody newMelody = null;
-				//				if ( melodiesAmount == 0 ) {
-				// First melody in partNumber part
-				newMelody = new Melody( melody.getNoteArray() );
-				//				} else {
-				// TODO Need to clone all music blocks before gathering composition if we want to change rhythm values of some
-				//					// Need to bind first note of melody with previous if it has same pitch
-				//					Note newPhraseFirstNote = melody.getNoteArray()[0];
-				//					Phrase previousPhrase = parts.get( partNumber ).getPhrase( melodiesAmount - 1 );
-				//					Note previousPhraseLastNote = previousPhrase.convertNote( previousPhrase.getNoteArray().length - 1 );
-				//					if ( newPhraseFirstNote.getPitch() == previousPhraseLastNote.getPitch() ) {
-				//						previousPhraseLastNote.setRhythmValue( previousPhraseLastNote.getRhythmValue() + newPhraseFirstNote.getRhythmValue(), true );
-				//						Note[] newNoteArray = Arrays.copyOfRange( melody.getNoteArray(), 1, melody.getNoteArray().length );
-				//						if ( newNoteArray.length == 0 ) {
-				//							continue;
-				//						}
-				//						newMelody = new Melody( newNoteArray );
-				//					} else {
-				//						newMelody = new Melody( melody.getNoteArray() );
-				//					}
-				//				}
-				parts.get( partNumber ).add( newMelody );
+				Melody melodyClone = composeBlock.getMelodyList().get( partNumber ).clone();
+				Melody previousMelody = previousComposeBlock != null ? previousComposeBlock.getMelodyList().get( partNumber ) : null;
+				if ( previousMelody != null  ) {
+					Note previousNote = ( Note ) previousMelody.getNoteList().get( previousMelody.getNoteList().size() - 1 );
+					Note firstNote = ( Note ) melodyClone.getNoteList().get( 0 );
+					if ( previousNote.samePitch( firstNote ) ) {
+						previousNote.setRhythmValue( previousNote.getRhythmValue() + firstNote.getRhythmValue() );
+						melodyClone.getNoteList().remove( 0 );
+					}
+				}
+				parts.get( partNumber ).add( melodyClone );
 			}
 		}
+
 		Composition composition = new Composition( parts );
 		return composition;
 	}
