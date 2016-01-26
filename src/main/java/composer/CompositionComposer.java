@@ -8,6 +8,7 @@ import jm.music.data.Part;
 import model.ComposeBlock;
 import model.Lexicon;
 import model.composition.Composition;
+import model.composition.CompositionInfo;
 import model.melody.Form;
 import model.melody.Melody;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Vector;
 
 /**
  * Class handles composition of new piece using lexicon
@@ -109,32 +111,56 @@ public class CompositionComposer {
 	public Composition gatherComposition( List<ComposeBlock> composeBlocks ) {
 		List<Part> parts = new ArrayList<>();
 		for ( int partNumber = 0; partNumber < composeBlocks.get( 0 ).getMelodyList().size(); partNumber++ ) {
-			parts.add( new Part() );
+			Part part = new Part();
+			part.add( composeBlocks.get( 0 ).getMelodyList().get( partNumber ) );
+			parts.add( part );
 		}
-		for ( int composeBlockNumber = 0; composeBlockNumber < composeBlocks.size(); composeBlockNumber++ ) {
+		// transposing
+		for ( int composeBlockNumber = 1; composeBlockNumber < composeBlocks.size(); composeBlockNumber++ ) {
+
+			ComposeBlock previousComposeBlock = composeBlocks.get( composeBlockNumber - 1 );
 			ComposeBlock composeBlock = composeBlocks.get( composeBlockNumber );
-			ComposeBlock previousComposeBlock =	composeBlockNumber != 0 ? composeBlocks.get( composeBlockNumber - 1 ) : null;
 
-			if ( composeBlock.getCompositionInfo() != null ) {
-				logger.info( composeBlock.getCompositionInfo().getTitle() );
-			}
+			Optional.ofNullable( composeBlock.getCompositionInfo() ).ifPresent( compositionInfo -> logger.info( compositionInfo.getTitle() ) );
 
+			int transposePitch = getTransposePitch( previousComposeBlock, composeBlock );
+			composeBlocks.set( composeBlockNumber, composeBlock.transposeClone( transposePitch ) );
+		}
+		// gluing
+		for ( int composeBlockNumber = 1; composeBlockNumber < composeBlocks.size(); composeBlockNumber++ ) {
 			for ( int partNumber = 0; partNumber < parts.size(); partNumber++ ) {
-				Melody melodyClone = composeBlock.getMelodyList().get( partNumber ).clone();
-				Melody previousMelody = previousComposeBlock != null ? previousComposeBlock.getMelodyList().get( partNumber ) : null;
-				if ( previousMelody != null  ) {
-					Note previousNote = ( Note ) previousMelody.getNoteList().get( previousMelody.getNoteList().size() - 1 );
-					Note firstNote = ( Note ) melodyClone.getNoteList().get( 0 );
-					if ( previousNote.samePitch( firstNote ) ) {
-						previousNote.setRhythmValue( previousNote.getRhythmValue() + firstNote.getRhythmValue() );
-						melodyClone.getNoteList().remove( 0 );
-					}
+				Melody melody = composeBlocks.get( composeBlockNumber ).getMelodyList().get( partNumber );
+				Melody previousMelody = ( Melody ) parts.get( partNumber ).getPhraseList().get( parts.get( partNumber ).getPhraseList().size() - 1 );
+
+				Note previousNote = ( Note ) previousMelody.getNoteList().get( previousMelody.getNoteList().size() - 1 );
+				Note firstNote = ( Note ) melody.getNoteList().get( 0 );
+
+				if ( previousNote.samePitch( firstNote ) ) {
+					previousNote.setRhythmValue( previousNote.getRhythmValue() + firstNote.getRhythmValue() );
+					previousNote.setDuration( previousNote.getDuration() + firstNote.getDuration() );
+					melody.getNoteList().remove( 0 );
 				}
-				parts.get( partNumber ).add( melodyClone );
+
+				if ( !melody.getNoteList().isEmpty() ) {
+					parts.get( partNumber ).add( melody );
+				}
 			}
 		}
 
 		Composition composition = new Composition( parts );
 		return composition;
+	}
+
+	private int getTransposePitch( ComposeBlock firstComposeBlock, ComposeBlock secondComposeBlock ) {
+		for ( int melodyNumber = 0; melodyNumber < firstComposeBlock.getMelodyList().size(); melodyNumber++ ) {
+			Note lastNoteOfFirst = firstComposeBlock.getMelodyList().get( melodyNumber )
+					.getNote( firstComposeBlock.getMelodyList().get( melodyNumber ).size() - 1 );
+			Note firstNoteOfSecond = secondComposeBlock.getMelodyList().get( melodyNumber ).getNote( 0 );
+			if ( lastNoteOfFirst.getPitch() != Note.REST && firstNoteOfSecond.getPitch() != Note.REST ) {
+				return lastNoteOfFirst.getPitch() + secondComposeBlock.getBlockMovementFromPreviousToThis().getBottomVoiceMelodyMovement() - firstNoteOfSecond
+						.getPitch();
+			}
+		}
+		return 0;
 	}
 }

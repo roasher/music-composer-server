@@ -13,7 +13,7 @@ import java.util.List;
  * Melodies considered as simple single-voice note moves
  * Created by Pavel Yurkin on 26.07.14.
  */
-public class Melody extends Phrase implements Cloneable {
+public class Melody extends Phrase {
 
     private PlaceInTheComposition placeInTheComposition;
 	private Form form = new Form();
@@ -88,11 +88,15 @@ public class Melody extends Phrase implements Cloneable {
         return true;
     }
 
-	@Override
-	public Melody clone() {
+	/**
+	 * Returns transposed clone of melody
+	 * @param transposePitch
+	 * @return
+	 */
+	public Melody transposeClone( int transposePitch ) {
 		List<Note> notes = new ArrayList<>( this.getNoteList().size() );
 		for ( Note note : this.getNoteArray() ) {
-			notes.add( new Note( note.getPitch(), note.getRhythmValue(), note.getDynamic(), note.getPan() ) );
+			notes.add( new Note( note.getPitch() == Note.REST ? Note.REST : note.getPitch() + transposePitch, note.getRhythmValue(), note.getDynamic(), note.getPan() ) );
 		}
 		Melody newMelody = new Melody( notes );
 		return newMelody;

@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static jm.JMC.*;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -61,8 +62,8 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 	public void gatherCompositionTest() {
 		List<ComposeBlock> composeBlocks = Arrays.asList(
 				new ComposeBlock( 0, null, Arrays.asList(
-						new Melody( new Rest( QUARTER_NOTE) ),
-						new Melody( new Note( C4, QUARTER_NOTE ) )
+						new Melody( new Rest( QUARTER_NOTE ) ),
+						new Melody( new Note( C3, QUARTER_NOTE ) )
 				), new BlockMovement( -256 ) ),
 				new ComposeBlock( 0, null, Arrays.asList(
 						new Melody( new Rest( EIGHTH_NOTE) ),
@@ -74,7 +75,7 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 				), new BlockMovement( 2 ) ),
 				new ComposeBlock( 0, null, Arrays.asList(
 						new Melody( new Rest( QUARTER_NOTE) ),
-						new Melody( new Note( C4, QUARTER_NOTE ) )
+						new Melody( new Note( B5, QUARTER_NOTE ) )
 				), new BlockMovement( 0 ) )
 		);
 		Composition composition = compositionComposer.gatherComposition( composeBlocks );
@@ -82,20 +83,20 @@ public class CompositionComposerTest extends AbstractSpringComposerTest {
 
 		List<Note> firstListOfNotes = getListOfNotes( composition.getPart( 0 ) );
 		assertEquals( 6, firstListOfNotes.size() );
-		assertEquals( new Rest( QUARTER_NOTE + EIGHTH_NOTE ), firstListOfNotes.get( 0 ) );
-		assertEquals( new Note( D5 + 2, EIGHTH_NOTE ), firstListOfNotes.get( 1 ) );
-		assertEquals( new Note( E5 + 2, EIGHTH_NOTE ), firstListOfNotes.get( 2 ) );
-		assertEquals( new Note( F5 + 2, EIGHTH_NOTE ), firstListOfNotes.get( 3 ) );
-		assertEquals( new Note( E5 + 2, EIGHTH_NOTE ), firstListOfNotes.get( 4 ) );
-		assertEquals( new Rest( QUARTER_NOTE ), firstListOfNotes.get( 5 ) );
+		assertTrue( new Rest( QUARTER_NOTE + EIGHTH_NOTE ).equals( firstListOfNotes.get( 0 ) ) );
+		assertTrue( new Note( D5 - ( C4 - C3 ) + 2, EIGHTH_NOTE ).equals( firstListOfNotes.get( 1 ) ) );
+		assertTrue( new Note( E5 - ( C4 - C3 ) + 2, EIGHTH_NOTE ).equals( firstListOfNotes.get( 2 ) ) );
+		assertTrue( new Note( F5 - ( C4 - C3 ) + 2, EIGHTH_NOTE ).equals( firstListOfNotes.get( 3 ) ) );
+		assertTrue( new Note( E5 - ( C4 - C3 ) + 2, EIGHTH_NOTE ).equals( firstListOfNotes.get( 4 ) ) );
+		assertTrue( new Rest( QUARTER_NOTE ).equals( firstListOfNotes.get( 5 ) ) );
 
 		List<Note> secondListOfNotes = getListOfNotes( composition.getPart( 1 ) );
 		assertEquals( 5, secondListOfNotes.size() );
-		assertEquals( new Note( C4, QUARTER_NOTE + EIGHTH_NOTE ), secondListOfNotes.get( 0 ) );
-		assertEquals( new Note( C4 + 2, EIGHTH_NOTE ), secondListOfNotes.get( 1 ) );
-		assertEquals( new Note( D4 + 2, EIGHTH_NOTE ), secondListOfNotes.get( 2 ) );
-		assertEquals( new Note( D4 + 2, EIGHTH_NOTE ), secondListOfNotes.get( 3 ) );
-		assertEquals( new Note( E4 + 2, EIGHTH_NOTE + QUARTER_NOTE ), secondListOfNotes.get( 4 ) );
+		assertTrue( new Note( C3, QUARTER_NOTE + EIGHTH_NOTE ).equals( secondListOfNotes.get( 0 ) ) );
+		assertTrue( new Note( C4 - ( C4 - C3 ) + 2, EIGHTH_NOTE ).equals( secondListOfNotes.get( 1 ) ) );
+		assertTrue( new Note( D4 - ( C4 - C3 ) + 2, EIGHTH_NOTE ).equals( secondListOfNotes.get( 2 ) ) );
+		assertTrue( new Note( D4 - ( C4 - C3 ) + 2, EIGHTH_NOTE ).equals( secondListOfNotes.get( 3 ) ) );
+		assertTrue( new Note( E4 - ( C4 - C3 ) + 2, EIGHTH_NOTE + QUARTER_NOTE ).equals( secondListOfNotes.get( 4 ) ) );
 
 	}
 

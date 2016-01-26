@@ -6,6 +6,7 @@ import sun.plugin.com.event.COMEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static utils.ModelUtils.*;
 
@@ -121,62 +122,12 @@ public class ComposeBlock {
 		return isEqualRhythmValues && isEqualStartTimes && isEqualCompositionInfos && isEqualMelodyList && isEqualStartIntervalPattern && isEqualsBlockMovements;
 	}
 
-	public void setPossibleNextComposeBlocks( List<ComposeBlock> possibleNextComposeBlocks ) {
-		this.possibleNextComposeBlocks = possibleNextComposeBlocks;
-	}
-
-	public void setPossiblePreviousComposeBlocks( List<ComposeBlock> possiblePreviousComposeBlocks ) {
-		this.possiblePreviousComposeBlocks = possiblePreviousComposeBlocks;
-	}
-
-	public double getRhythmValue() {
-		return rhythmValue;
-	}
-
-	public double getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime( double startTime ) {
-		this.startTime = startTime;
-	}
-
-	public CompositionInfo getCompositionInfo() {
-		return compositionInfo;
-	}
-
-	public List<Melody> getMelodyList() {
-		return melodyList;
-	}
-
-	public List<Integer> getStartIntervalPattern() {
-		return startIntervalPattern;
-	}
-
-	public BlockMovement getBlockMovementFromPreviousToThis() {
-		return blockMovementFromPreviousToThis;
-	}
-
-	public List<ComposeBlock> getPossibleNextComposeBlocks() {
-        return possibleNextComposeBlocks;
-    }
-
-    public List<ComposeBlock> getPossiblePreviousComposeBlocks() {
-        return possiblePreviousComposeBlocks;
-    }
-
-	public ComposeBlock getNext( int number ) {
-		if ( this.possibleNextComposeBlocks.size() > number ) {
-			return this.possibleNextComposeBlocks.get( number );
-		}
-		return null;
-	}
-
-	public ComposeBlock getPrevious( int number ) {
-		if ( this.possiblePreviousComposeBlocks.size() > number ) {
-			return this.possiblePreviousComposeBlocks.get( number );
-		}
-		return null;
+	// TODO implement composition info and block movement cloning
+	public ComposeBlock transposeClone( int transposePitch ) {
+		List<Melody> cloneMelodies = new ArrayList<>();
+		this.melodyList.forEach( melody -> cloneMelodies.add( melody.transposeClone( transposePitch ) ) );
+		ComposeBlock clone = new ComposeBlock( this.startTime, this.compositionInfo, cloneMelodies, this.blockMovementFromPreviousToThis );
+		return clone;
 	}
 
 	@Override
@@ -237,4 +188,61 @@ public class ComposeBlock {
 		return true;
 	}
 
+	public void setPossibleNextComposeBlocks( List<ComposeBlock> possibleNextComposeBlocks ) {
+		this.possibleNextComposeBlocks = possibleNextComposeBlocks;
+	}
+
+	public void setPossiblePreviousComposeBlocks( List<ComposeBlock> possiblePreviousComposeBlocks ) {
+		this.possiblePreviousComposeBlocks = possiblePreviousComposeBlocks;
+	}
+
+	public double getRhythmValue() {
+		return rhythmValue;
+	}
+
+	public double getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime( double startTime ) {
+		this.startTime = startTime;
+	}
+
+	public CompositionInfo getCompositionInfo() {
+		return compositionInfo;
+	}
+
+	public List<Melody> getMelodyList() {
+		return melodyList;
+	}
+
+	public List<Integer> getStartIntervalPattern() {
+		return startIntervalPattern;
+	}
+
+	public BlockMovement getBlockMovementFromPreviousToThis() {
+		return blockMovementFromPreviousToThis;
+	}
+
+	public List<ComposeBlock> getPossibleNextComposeBlocks() {
+		return possibleNextComposeBlocks;
+	}
+
+	public List<ComposeBlock> getPossiblePreviousComposeBlocks() {
+		return possiblePreviousComposeBlocks;
+	}
+
+	public ComposeBlock getNext( int number ) {
+		if ( this.possibleNextComposeBlocks.size() > number ) {
+			return this.possibleNextComposeBlocks.get( number );
+		}
+		return null;
+	}
+
+	public ComposeBlock getPrevious( int number ) {
+		if ( this.possiblePreviousComposeBlocks.size() > number ) {
+			return this.possiblePreviousComposeBlocks.get( number );
+		}
+		return null;
+	}
 }
