@@ -249,4 +249,8 @@ public class CompositionDecomposer {
 		}
 		return union;
 	}
+
+	public void setLexiconDAO( LexiconDAO lexiconDAO ) {
+		this.lexiconDAO = lexiconDAO;
+	}
 }
