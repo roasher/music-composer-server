@@ -5,6 +5,7 @@ import composer.first.RandomFirstBlockProvider;
 import composer.next.SimpleNextBlockProvider;
 import decomposer.CompositionDecomposer;
 import helper.AbstractSpringComposerTest;
+import helper.AbstractSpringTest;
 import jm.JMC;
 import jm.music.data.Note;
 import jm.music.data.Part;
@@ -35,7 +36,7 @@ import static org.junit.Assert.fail;
 /**
  * Created by pyurkin on 15.12.14.
  */
-public class CompositionComposerTest extends AbstractSpringComposerTest {
+public class CompositionComposerTest extends AbstractSpringTest {
 
 	@Autowired
 	private CompositionDecomposer compositionDecomposer;
