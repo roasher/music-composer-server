@@ -121,13 +121,10 @@ public class FormBlockProvider {
 	 * @return
 	 */
 	public CompositionStep fetchLastCompositionStep( FormCompositionStep formCompositionStep ) {
-		CompositionStep compositionStep = new CompositionStep();
 		List<ComposeBlock> exclusions = CollectionUtils.getListOfFirsts( formCompositionStep.getNextMusicBlockExclusions() );
+		List<ComposeBlock> composeBlocks = formCompositionStep.getComposeBlocks();
+		CompositionStep compositionStep = new CompositionStep( composeBlocks != null ? composeBlocks.get( composeBlocks.size() - 1 ) : null );
 		compositionStep.setNextMusicBlockExclusions( exclusions );
-		if ( formCompositionStep.getComposeBlocks() != null ) {
-			List<ComposeBlock> composeBlocks = formCompositionStep.getComposeBlocks();
-			compositionStep.setComposeBlock( composeBlocks.get( composeBlocks.size() - 1 ) );
-		}
 		return compositionStep;
 	}
 }

@@ -35,7 +35,7 @@ public class PersistConverter {
 
 	public Lexicon convertPersistComposeBlockList( List<ComposeBlock> persistanceComposeBlocks ) {
 		// persitance block can have id seq with gaps or start not with 0
-		Map<ComposeBlock, Integer> remap = new HashMap<>(  );
+		Map<ComposeBlock, Integer> remap = new HashMap<>();
 		int id = 0;
 		for ( ComposeBlock persistanceComposeBlock : persistanceComposeBlocks ) {
 			remap.put( persistanceComposeBlock, id++ );
@@ -48,8 +48,7 @@ public class PersistConverter {
 			ComposeBlock persistanceComposeBlock = persistanceComposeBlocks.get( persistanceComposeBlockNumber );
 			model.ComposeBlock composeBlock = convertComposeBlock( persistanceComposeBlock );
 			composeBlocks.add( composeBlock );
-			List<Integer> possibleNextToCurrent = persistanceComposeBlock.possibleNextComposeBlocks.stream().map( composeBlock1 -> remap.get( composeBlock1 ) )
-					.collect( Collectors.toList() );
+			List<Integer> possibleNextToCurrent = persistanceComposeBlock.possibleNextComposeBlocks.stream().map( remap::get ).collect( Collectors.toList() );
 			possibleNexts.put( persistanceComposeBlockNumber, possibleNextToCurrent );
 		}
 
@@ -92,8 +91,9 @@ public class PersistConverter {
 	}
 
 	public model.ComposeBlock convertComposeBlock( ComposeBlock persistanceComposeBlock ) {
-		model.ComposeBlock musicBlock = new model.ComposeBlock( persistanceComposeBlock.startTime, convertCompositionInfo( persistanceComposeBlock.compositionInfo ),
-				convertMelodyList( persistanceComposeBlock.melodies ), convertBlockMovement( persistanceComposeBlock.blockMovementFromPreviousToThis ) );
+		model.ComposeBlock musicBlock = new model.ComposeBlock( persistanceComposeBlock.startTime,
+				convertCompositionInfo( persistanceComposeBlock.compositionInfo ), convertMelodyList( persistanceComposeBlock.melodies ),
+				convertBlockMovement( persistanceComposeBlock.blockMovementFromPreviousToThis ) );
 		return musicBlock;
 	}
 
@@ -115,7 +115,7 @@ public class PersistConverter {
 		model.BlockMovement blockMovement = null;
 		if ( persitanceBlockMovement != null ) {
 			List<Integer> voiceMovements = new ArrayList<>();
-			for ( String str : StringUtils.split( persitanceBlockMovement.voiceMovements, "," ) ){
+			for ( String str : StringUtils.split( persitanceBlockMovement.voiceMovements, "," ) ) {
 				voiceMovements.add( Integer.valueOf( str ) );
 			}
 			blockMovement = new model.BlockMovement( voiceMovements );
@@ -154,7 +154,8 @@ public class PersistConverter {
 
 	public CompositionInfo convertCompositionInfo( model.composition.CompositionInfo compositionInfo ) {
 		if ( compositionInfo != null ) {
-			CompositionInfo persistanceCompositionInfo = compositionInfoFactory.getInstance( compositionInfo.getAuthor(), compositionInfo.getTitle(), compositionInfo.getTempo() );
+			CompositionInfo persistanceCompositionInfo = compositionInfoFactory
+					.getInstance( compositionInfo.getAuthor(), compositionInfo.getTitle(), compositionInfo.getTempo() );
 			return persistanceCompositionInfo;
 		} else {
 			return null;
