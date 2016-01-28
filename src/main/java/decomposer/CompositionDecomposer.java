@@ -200,6 +200,7 @@ public class CompositionDecomposer {
 	 */
 	private Lexicon union( Lexicon firstLexicon, Lexicon secondLexicon ) {
 		if ( secondLexicon.getComposeBlockList().isEmpty() ) return firstLexicon;
+		if ( firstLexicon.getComposeBlockList().isEmpty() ) return secondLexicon;
 		Map<Integer, List<Integer>> unionMap = unionMaps( firstLexicon.getPossibleNextMusicBlockNumbers(), secondLexicon.getPossibleNextMusicBlockNumbers() );
 		// adding the possible next/previous
 		List<ComposeBlock> firstComposeBlocks = firstLexicon.getComposeBlockList();
