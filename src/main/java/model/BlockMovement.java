@@ -1,59 +1,48 @@
 package model;
 
+import jm.music.data.Note;
 import model.melody.Melody;
-import model.melody.MelodyMovement;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Class represents movement from one musical block to another
- * As for now comes in two flavors : top voice movement and bottom voice movement
- * We are not saving multiple movements because one instrument can do chord, nevertheless, top( melody ) and bottom( bass )
- * are considered as most important ones
- * Always subtracting first from second ( deltaMovement = second - first )
  * Created by Pavel Yurkin on 20.07.14.
  */
 public class BlockMovement implements Serializable {
 
-    private int bottomVoiceMelodyMovement;
+	private List<Integer> voiceMovements = new ArrayList<>();
 
-	public BlockMovement( int bottomVoiceMelodyMovement ) { this.bottomVoiceMelodyMovement = bottomVoiceMelodyMovement; }
+	public BlockMovement( List<Integer> movements ) {
+		this.voiceMovements = movements;
+	}
 
-    public BlockMovement( MusicBlock firstMusicBlock, MusicBlock secondMusicBlock ) {
+	public BlockMovement( Integer... movements ) {
+		this( Arrays.asList( movements ) );
+	}
 
-		int firstMusicBlockTopNotePitch = Integer.MIN_VALUE;
-		int firstMusicBlockBottomNotePitch = Integer.MAX_VALUE;
+	public BlockMovement( List<Melody> firstMelodies, List<Melody> secondMelodies ) {
 
-		for ( Melody melody : firstMusicBlock.getMelodyList() ) {
-			int noteNumber = melody.size();
-			if ( melody.getNote( noteNumber - 1 ).getPitch() > firstMusicBlockTopNotePitch ) {
-				firstMusicBlockTopNotePitch = melody.getNote( noteNumber - 1 ).getPitch();
-			}
-			if ( melody.getNote( noteNumber - 1 ).getPitch() < firstMusicBlockBottomNotePitch ) {
-				firstMusicBlockBottomNotePitch = melody.getNote( noteNumber - 1 ).getPitch();
-			}
+		if ( firstMelodies.size() != secondMelodies.size() ) {
+			throw new RuntimeException( "Can't create BlockMovement from different amount of input melody collections" );
 		}
 
-		int secondMusicBlockTopNotePitch = Integer.MIN_VALUE;
-		int secondMusicBlockBottomNotePitch = Integer.MAX_VALUE;
-
-		for ( Melody melody : secondMusicBlock.getMelodyList() ) {
-			if ( melody.getNote( 0 ).getPitch() > secondMusicBlockTopNotePitch ) {
-				secondMusicBlockTopNotePitch = melody.getNote( 0 ).getPitch();
-			}
-			if ( melody.getNote( 0 ).getPitch() < secondMusicBlockBottomNotePitch ) {
-				secondMusicBlockBottomNotePitch = melody.getNote( 0 ).getPitch();
-			}
+		for ( int melodyNumber = 0; melodyNumber < firstMelodies.size(); melodyNumber++ ) {
+			Vector firstMelodyNoteList = firstMelodies.get( melodyNumber ).getNoteList();
+			Note lastNoteFromFirstMelody = ( Note ) firstMelodyNoteList.get( firstMelodyNoteList.size() - 1 );
+			Vector secondMelodyNoteList = secondMelodies.get( melodyNumber ).getNoteList();
+			Note firstNoteFromSecondMelody = ( Note ) secondMelodyNoteList.get( 0 );
+			voiceMovements.add( firstNoteFromSecondMelody.getPitch() - lastNoteFromFirstMelody.getPitch() );
 		}
 
-        bottomVoiceMelodyMovement = secondMusicBlockBottomNotePitch - firstMusicBlockBottomNotePitch;
     }
 
-	public int getBottomVoiceMelodyMovement() {
-		return bottomVoiceMelodyMovement;
+	public List<Integer> getVoiceMovements() {
+		return voiceMovements;
 	}
 
 	@Override
@@ -65,12 +54,14 @@ public class BlockMovement implements Serializable {
 
 		BlockMovement that = ( BlockMovement ) o;
 
-		return bottomVoiceMelodyMovement == that.bottomVoiceMelodyMovement;
+		if ( !voiceMovements.equals( that.voiceMovements ) )
+			return false;
 
+		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		return bottomVoiceMelodyMovement;
+		return voiceMovements.hashCode();
 	}
 }

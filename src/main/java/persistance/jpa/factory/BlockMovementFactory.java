@@ -1,7 +1,10 @@
 package persistance.jpa.factory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import persistance.jpa.BlockMovement;
+
+import java.util.List;
 
 /**
  * Created by Wish on 03.07.2015.
@@ -9,9 +12,9 @@ import persistance.jpa.BlockMovement;
 @Component
 public class BlockMovementFactory extends AbstractFactory<BlockMovement> {
 
-    public BlockMovement getInstance( int bottomVoiceMovement ) {
+    public BlockMovement getInstance( List<Integer> voiceMovements ) {
         BlockMovement blockMovement = new BlockMovement();
-        blockMovement.bottomVoiceMovement = bottomVoiceMovement;
+        blockMovement.voiceMovements = StringUtils.join( voiceMovements , "," );
         return getUniqueInstance( blockMovement );
     }
 

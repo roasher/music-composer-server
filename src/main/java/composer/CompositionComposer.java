@@ -157,8 +157,8 @@ public class CompositionComposer {
 					.getNote( firstComposeBlock.getMelodyList().get( melodyNumber ).size() - 1 );
 			Note firstNoteOfSecond = secondComposeBlock.getMelodyList().get( melodyNumber ).getNote( 0 );
 			if ( lastNoteOfFirst.getPitch() != Note.REST && firstNoteOfSecond.getPitch() != Note.REST ) {
-				return lastNoteOfFirst.getPitch() + secondComposeBlock.getBlockMovementFromPreviousToThis().getBottomVoiceMelodyMovement() - firstNoteOfSecond
-						.getPitch();
+				return lastNoteOfFirst.getPitch() + secondComposeBlock.getBlockMovementFromPreviousToThis().getVoiceMovements().get( melodyNumber )
+						- firstNoteOfSecond.getPitch();
 			}
 		}
 		return 0;

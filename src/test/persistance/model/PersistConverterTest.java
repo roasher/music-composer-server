@@ -62,15 +62,15 @@ public class PersistConverterTest extends AbstractSpringTest {
 				0,
 				null,
 				Arrays.asList(
-					new Melody[] {
-							melodyFactory.getInstance( Arrays.asList(
-									noteFactory.getInstance(C4, WHOLE_NOTE, 0, 0),
-									noteFactory.getInstance(D4, HALF_NOTE, 0, 0),
-									noteFactory.getInstance(E4, EIGHTH_NOTE, 0, 0),
-									noteFactory.getInstance(DS4, EIGHTH_NOTE, 0, 0) ), 'A' ),
-							melodyFactory.getInstance( Arrays.asList(
-									noteFactory.getInstance( B4, WHOLE_NOTE, 0, 0 ),
-									noteFactory.getInstance( A4, DOTTED_HALF_NOTE, 0, 0 ) ), 'B' ) } ),
+						melodyFactory.getInstance( Arrays.asList(
+								noteFactory.getInstance(C4, WHOLE_NOTE, 0, 0),
+								noteFactory.getInstance(D4, HALF_NOTE, 0, 0),
+								noteFactory.getInstance(E4, EIGHTH_NOTE, 0, 0),
+								noteFactory.getInstance(DS4, EIGHTH_NOTE, 0, 0) ), 'A' ),
+						melodyFactory.getInstance( Arrays.asList(
+								noteFactory.getInstance( B4, WHOLE_NOTE, 0, 0 ),
+								noteFactory.getInstance( A4, DOTTED_HALF_NOTE, 0, 0 ) ), 'B' )
+				),
 				null
 				);
 
@@ -79,14 +79,14 @@ public class PersistConverterTest extends AbstractSpringTest {
 				0,
 				null,
 				Arrays.asList(
-						new Melody[] {
-								melodyFactory.getInstance( Arrays.asList(
-										noteFactory.getInstance( C4, DOTTED_HALF_NOTE, 0, 0 ) ), 'C' ),
-								melodyFactory.getInstance( Arrays.asList(
-										noteFactory.getInstance(G4, QUARTER_NOTE, 0, 0),
-										noteFactory.getInstance(GS4, QUARTER_NOTE, 0, 0),
-										noteFactory.getInstance(A4, QUARTER_NOTE, 0, 0) ), 'D' ) } ),
-				blockMovementFactory.getInstance( C4-DS4 )
+						melodyFactory.getInstance( Arrays.asList(
+								noteFactory.getInstance( C4, DOTTED_HALF_NOTE, 0, 0 ) ), 'C' ),
+						melodyFactory.getInstance( Arrays.asList(
+								noteFactory.getInstance(G4, QUARTER_NOTE, 0, 0),
+								noteFactory.getInstance(GS4, QUARTER_NOTE, 0, 0),
+								noteFactory.getInstance(A4, QUARTER_NOTE, 0, 0) ), 'D' )
+				),
+				blockMovementFactory.getInstance( Arrays.asList( C4-DS4, G4-A4 ) )
 		);
 
 		ComposeBlock composeBlock2 = new ComposeBlock(
@@ -94,13 +94,13 @@ public class PersistConverterTest extends AbstractSpringTest {
 				0,
 				null,
 				Arrays.asList(
-						new Melody[] {
-								melodyFactory.getInstance( Arrays.asList(
-										noteFactory.getInstance( B4, EIGHTH_NOTE, 0, 0 ) ), 'A' ),
-								melodyFactory.getInstance( Arrays.asList(
-										noteFactory.getInstance( B4, SIXTEENTH_NOTE, 0, 0 ),
-										noteFactory.getInstance( B4, SIXTEENTH_NOTE, 0, 0 ) ), 'B' ) } ),
-				blockMovementFactory.getInstance( B4-C4)
+						melodyFactory.getInstance( Arrays.asList(
+								noteFactory.getInstance( B4, EIGHTH_NOTE, 0, 0 ) ), 'A' ),
+						melodyFactory.getInstance( Arrays.asList(
+								noteFactory.getInstance( B4, SIXTEENTH_NOTE, 0, 0 ),
+								noteFactory.getInstance( B4, SIXTEENTH_NOTE, 0, 0 ) ), 'B' )
+				),
+				blockMovementFactory.getInstance( Arrays.asList( B4-C4, B4-A4 ) )
 		);
 
 		ComposeBlock composeBlock3 = new ComposeBlock(
@@ -108,14 +108,14 @@ public class PersistConverterTest extends AbstractSpringTest {
 				0,
 				null,
 				Arrays.asList(
-						new Melody[] {
-								melodyFactory.getInstance( Arrays.asList(
-										noteFactory.getInstance( CS4, WHOLE_NOTE, 0, 0 ) ), 'C' ),
-								melodyFactory.getInstance( Arrays.asList(
-										noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ),
-										noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ),
-										noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ) ), 'D' ) } ),
-				blockMovementFactory.getInstance( C3-B4 )
+						melodyFactory.getInstance( Arrays.asList(
+								noteFactory.getInstance( CS4, WHOLE_NOTE, 0, 0 ) ), 'C' ),
+						melodyFactory.getInstance( Arrays.asList(
+								noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ),
+								noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ),
+								noteFactory.getInstance( C3, HALF_NOTE_TRIPLET, 0, 0 ) ), 'D' )
+				),
+				blockMovementFactory.getInstance( Arrays.asList( CS4-B4, C3-B4 ) )
 		);
 
 		ComposeBlock composeBlock4 = new ComposeBlock(
@@ -123,14 +123,13 @@ public class PersistConverterTest extends AbstractSpringTest {
 				0,
 				null,
 				Arrays.asList(
-						new Melody[] {
-								melodyFactory.getInstance( Arrays.asList(
-										noteFactory.getInstance( E4, DOTTED_EIGHTH_NOTE, 0, 0 ) ), 'A' ),
-								melodyFactory.getInstance( Arrays.asList(
-										noteFactory.getInstance( G4, SIXTEENTH_NOTE, 0, 0 ),
-										noteFactory.getInstance( F4, SIXTEENTH_NOTE, 0, 0 ),
-										noteFactory.getInstance( E4, SIXTEENTH_NOTE, 0, 0 ) ), 'B' ) } ),
-				blockMovementFactory.getInstance( E4-C3)
+						melodyFactory.getInstance( Arrays.asList(
+								noteFactory.getInstance( E4, DOTTED_EIGHTH_NOTE, 0, 0 ) ), 'A' ),
+						melodyFactory.getInstance( Arrays.asList(
+								noteFactory.getInstance( G4, SIXTEENTH_NOTE, 0, 0 ),
+								noteFactory.getInstance( F4, SIXTEENTH_NOTE, 0, 0 ),
+								noteFactory.getInstance( E4, SIXTEENTH_NOTE, 0, 0 ) ), 'B' ) ),
+				blockMovementFactory.getInstance( Arrays.asList( E4-CS4, G4-C3 ) )
 		);
 
 		composeBlock0.possibleNextComposeBlocks.add( composeBlock1 );

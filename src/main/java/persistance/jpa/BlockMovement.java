@@ -11,24 +11,24 @@ import javax.persistence.SequenceGenerator;
 @SequenceGenerator( name="SEQ",sequenceName="BLOCK_MOVEMENT_SEQ", initialValue = 1, allocationSize = 1 )
 public class BlockMovement extends AbstractPersistanceModel {
 
-    @Column( name = "BOTTOM_VOICE_MOVEMENT" )
-    public int bottomVoiceMovement;
+    @Column( name = "VOICE_MOVEMENTS" )
+    public String voiceMovements;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o)
+    public boolean equals( Object o ) {
+        if ( this == o )
             return true;
-        if (!(o instanceof BlockMovement))
+        if ( !( o instanceof BlockMovement ) )
             return false;
 
-        BlockMovement that = (BlockMovement) o;
+        BlockMovement that = ( BlockMovement ) o;
 
-        return bottomVoiceMovement == that.bottomVoiceMovement;
+        return voiceMovements.equals( that.voiceMovements );
 
     }
 
     @Override
     public int hashCode() {
-        return bottomVoiceMovement;
+        return voiceMovements.hashCode();
     }
 }

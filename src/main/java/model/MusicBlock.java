@@ -188,7 +188,7 @@ public class MusicBlock implements Serializable {
 		this.previous = previous;
 		if ( previous != null ) {
 			// Setting movement from previous MusicBlock to this MusicBlock
-			this.blockMovementFromPreviousToThis = new BlockMovement( previous, this );
+			this.blockMovementFromPreviousToThis = new BlockMovement( previous.getMelodyList(), this.getMelodyList() );
 		}
 	}
 
@@ -200,7 +200,7 @@ public class MusicBlock implements Serializable {
 		this.next = next;
 		if ( next != null ) {
 		// Setting movement from this MusicBlock to the next MusicBlock
-		this.blockMovementFromThisToNext = new BlockMovement( this, next );
+		this.blockMovementFromThisToNext = new BlockMovement( this.getMelodyList(), next.getMelodyList() );
 		}
 	}
 

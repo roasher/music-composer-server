@@ -1,6 +1,7 @@
 package persistance;
 
 import model.Lexicon;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import persistance.jpa.*;
@@ -105,7 +106,7 @@ public class PersistConverter {
 	public BlockMovement convertBlockMovement( model.BlockMovement blockMovement ) {
 		BlockMovement persistBlockMovement = null;
 		if ( blockMovement != null ) {
-			persistBlockMovement = blockMovementFactory.getInstance( blockMovement.getBottomVoiceMelodyMovement() );
+			persistBlockMovement = blockMovementFactory.getInstance( blockMovement.getVoiceMovements() );
 		}
 		return persistBlockMovement;
 	}
@@ -113,7 +114,11 @@ public class PersistConverter {
 	public model.BlockMovement convertBlockMovement( BlockMovement persitanceBlockMovement ) {
 		model.BlockMovement blockMovement = null;
 		if ( persitanceBlockMovement != null ) {
-			blockMovement = new model.BlockMovement( persitanceBlockMovement.bottomVoiceMovement );
+			List<Integer> voiceMovements = new ArrayList<>();
+			for ( String str : StringUtils.split( persitanceBlockMovement.voiceMovements, "," ) ){
+				voiceMovements.add( Integer.valueOf( str ) );
+			}
+			blockMovement = new model.BlockMovement( voiceMovements );
 		}
 		return blockMovement;
 	}
