@@ -3,12 +3,15 @@ package composer.first;
 import composer.next.NextBlockProvider;
 import model.ComposeBlock;
 import model.Lexicon;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Wish on 22.12.2015.
  */
+@Component
 public class RandomFirstBlockProvider implements FirstBlockProvider {
 
 	/**
@@ -17,15 +20,15 @@ public class RandomFirstBlockProvider implements FirstBlockProvider {
 	 * @return
 	 */
 	@Override
-	public ComposeBlock getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
+	public Optional<ComposeBlock> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
 		List<ComposeBlock> allPossibleFirstBlocks = lexicon.getAllPossibleFirst();
 		allPossibleFirstBlocks.removeAll( exclusions );
 		if ( !allPossibleFirstBlocks.isEmpty() ) {
 			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );
 			//int randomNumber = 0;
-			return allPossibleFirstBlocks.get( randomNumber );
+			return Optional.of( allPossibleFirstBlocks.get( randomNumber ) );
 		} else {
-			return null;
+			return Optional.empty();
 		}
 	}
 

@@ -29,6 +29,11 @@
         <property name="rhythmEqualityTest" ref="rhythmEqualityTestWrapper"/>
     </bean>
 
+    <bean id="simpleComposeBlockProvider" class="composer.ComposeBlockProvider">
+        <property name="firstBlockProvider" ref="randomFirstBlockProvider"/>
+        <property name="nextBlockProvider" ref="simpleNextBlockProvider"/>
+    </bean>
+
     <context:component-scan base-package="model,decomposer,utils,composer,persistance"/>
     <tx:annotation-driven/>
 

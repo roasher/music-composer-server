@@ -13,6 +13,7 @@ import model.composition.Composition;
 import model.melody.Form;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import utils.CompositionLoader;
 
 import java.io.File;
@@ -34,14 +35,17 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 	private CompositionDecomposer compositionDecomposer;
 	@Autowired
 	private FormBlockProvider formBlockProvider;
+	@Autowired
+	@Qualifier( "simpleComposeBlockProvider" )
+	private ComposeBlockProvider composeBlockProvider;
 
 	@Test
 	public void formBlockProviderTest() {
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 
-		List<ComposeBlock> formElement = formBlockProvider.getFormElement( new RandomFirstBlockProvider(), new SimpleNextBlockProvider(), new Form( 'A' ), JMC.WHOLE_NOTE,
-				Arrays.asList( new FormCompositionStep(  ) ), lexiconFromFirst );
+		List<ComposeBlock> formElement = formBlockProvider
+				.getFormElement( composeBlockProvider, new Form( 'A' ), JMC.WHOLE_NOTE, Arrays.asList( new FormCompositionStep() ), lexiconFromFirst );
 
 		List<ComposeBlock> composeBlockList = new ArrayList<>();
 		composeBlockList.add( lexiconFromFirst.get( 0 ) );

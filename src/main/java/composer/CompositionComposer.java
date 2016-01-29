@@ -40,9 +40,8 @@ public class CompositionComposer {
 	 * @param compositionLength
 	 * @return
 	 */
-	public Composition compose( FirstBlockProvider firstStepProvider, NextBlockProvider nextBlockProvider, Lexicon lexicon, String form,
-			double compositionLength ) {
-		List<FormCompositionStep> compositionSteps = composeSteps( firstStepProvider, nextBlockProvider, lexicon, form, compositionLength );
+	public Composition compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, String form, double compositionLength ) {
+		List<FormCompositionStep> compositionSteps = composeSteps( composeBlockProvider, lexicon, form, compositionLength );
 		List<ComposeBlock> composeBlocks = new ArrayList<>();
 		for ( FormCompositionStep compositionStep : compositionSteps ) {
 			for ( ComposeBlock composeBlock : compositionStep.getComposeBlocks() ) {
@@ -64,8 +63,7 @@ public class CompositionComposer {
 	 * @param compositionLength
 	 * @return
 	 */
-	public List<FormCompositionStep> composeSteps( FirstBlockProvider firstStepProvider, NextBlockProvider nextBlockProvider, Lexicon lexicon, String form,
-			double compositionLength ) {
+	public List<FormCompositionStep> composeSteps( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, String form, double compositionLength ) {
 		List<FormCompositionStep> compositionSteps = new ArrayList<>();
 		compositionSteps.add( new FormCompositionStep() );
 
@@ -73,8 +71,8 @@ public class CompositionComposer {
 		for ( int formElementNumber = 1; formElementNumber < form.length() + 1; formElementNumber++ ) {
 
 			FormCompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
-			FormCompositionStep nextStep = composeNext( firstStepProvider, nextBlockProvider, new Form( form.charAt( formElementNumber - 1 ) ), stepLength,
-					compositionSteps, lexicon );
+			FormCompositionStep nextStep = composeNext( composeBlockProvider, new Form( form.charAt( formElementNumber - 1 ) ), stepLength, compositionSteps,
+					lexicon );
 
 			if ( nextStep.getComposeBlocks() == null ) {
 				if ( formElementNumber != 1 ) {
@@ -96,9 +94,9 @@ public class CompositionComposer {
 		return compositionSteps;
 	}
 
-	public FormCompositionStep composeNext( FirstBlockProvider firstBlockProvider, NextBlockProvider nextBlockProvider, Form form, double length,
-			List<FormCompositionStep> previousSteps, Lexicon lexicon ) {
-		List<ComposeBlock> musicBlock = formBlockProvider.getFormElement( firstBlockProvider, nextBlockProvider, form, length, previousSteps, lexicon );
+	public FormCompositionStep composeNext( ComposeBlockProvider composeBlockProvider, Form form, double length, List<FormCompositionStep> previousSteps,
+			Lexicon lexicon ) {
+		List<ComposeBlock> musicBlock = formBlockProvider.getFormElement( composeBlockProvider, form, length, previousSteps, lexicon );
 		return new FormCompositionStep( musicBlock, form );
 	}
 
@@ -115,19 +113,10 @@ public class CompositionComposer {
 			part.add( composeBlocks.get( 0 ).getMelodyList().get( partNumber ) );
 			parts.add( part );
 		}
-		// transposing
-		for ( int composeBlockNumber = 1; composeBlockNumber < composeBlocks.size(); composeBlockNumber++ ) {
-
-			ComposeBlock previousComposeBlock = composeBlocks.get( composeBlockNumber - 1 );
-			ComposeBlock composeBlock = composeBlocks.get( composeBlockNumber );
-
-			Optional.ofNullable( composeBlock.getCompositionInfo() ).ifPresent( compositionInfo -> logger.info( compositionInfo.getTitle() ) );
-
-			int transposePitch = getTransposePitch( previousComposeBlock, composeBlock );
-			composeBlocks.set( composeBlockNumber, composeBlock.transposeClone( transposePitch ) );
-		}
 		// gluing
 		for ( int composeBlockNumber = 1; composeBlockNumber < composeBlocks.size(); composeBlockNumber++ ) {
+			Optional.ofNullable( composeBlocks.get( composeBlockNumber ).getCompositionInfo() )
+					.ifPresent( compositionInfo -> logger.info( compositionInfo.getTitle() ) );
 			for ( int partNumber = 0; partNumber < parts.size(); partNumber++ ) {
 				Melody melody = composeBlocks.get( composeBlockNumber ).getMelodyList().get( partNumber );
 				Melody previousMelody = ( Melody ) parts.get( partNumber ).getPhraseList().get( parts.get( partNumber ).getPhraseList().size() - 1 );
@@ -151,16 +140,4 @@ public class CompositionComposer {
 		return composition;
 	}
 
-	private int getTransposePitch( ComposeBlock firstComposeBlock, ComposeBlock secondComposeBlock ) {
-		for ( int melodyNumber = 0; melodyNumber < firstComposeBlock.getMelodyList().size(); melodyNumber++ ) {
-			Note lastNoteOfFirst = firstComposeBlock.getMelodyList().get( melodyNumber )
-					.getNote( firstComposeBlock.getMelodyList().get( melodyNumber ).size() - 1 );
-			Note firstNoteOfSecond = secondComposeBlock.getMelodyList().get( melodyNumber ).getNote( 0 );
-			if ( lastNoteOfFirst.getPitch() != Note.REST && firstNoteOfSecond.getPitch() != Note.REST ) {
-				return lastNoteOfFirst.getPitch() + secondComposeBlock.getBlockMovementFromPreviousToThis().getVoiceMovements().get( melodyNumber )
-						- firstNoteOfSecond.getPitch();
-			}
-		}
-		return 0;
-	}
 }

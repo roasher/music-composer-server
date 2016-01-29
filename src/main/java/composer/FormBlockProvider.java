@@ -5,6 +5,7 @@ import composer.next.NextBlockProvider;
 import composer.step.CompositionStep;
 import composer.step.FormCompositionStep;
 import decomposer.form.analyzer.MusicBlockFormEqualityAnalyser;
+import jm.music.data.Note;
 import model.ComposeBlock;
 import model.Lexicon;
 import model.melody.Form;
@@ -16,6 +17,7 @@ import utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class provides form element
@@ -34,20 +36,23 @@ public class FormBlockProvider {
 
 	/**
 	 * Generates new form block considering previously generated blocks and it's form.
-	 * @param form - form, from part of witch new Block is going to be generated
+	 *
+	 * @param form          - form, from part of witch new Block is going to be generated
 	 * @param length
 	 * @param previousSteps
 	 * @param lexicon
 	 * @return
 	 */
-	public List<ComposeBlock> getFormElement( FirstBlockProvider firstBlockProvider, NextBlockProvider nextBlockProvider, Form form, double length, List<FormCompositionStep> previousSteps, Lexicon lexicon ) {
+	public List<ComposeBlock> getFormElement( ComposeBlockProvider composeBlockProvider, Form form, double length, List<FormCompositionStep> previousSteps,
+			Lexicon lexicon ) {
 		logger.info( "Composing new form element : {}, length : {}", form.getValue(), length );
-		List<ComposeBlock> composeBlock = composeBlock( firstBlockProvider, nextBlockProvider, previousSteps.get( previousSteps.size() - 1 ), lexicon, length );
+		List<ComposeBlock> composeBlock = composeBlock( composeBlockProvider, previousSteps.get( previousSteps.size() - 1 ), lexicon, length );
 		return composeBlock;
 	}
 
-	public List<ComposeBlock> composeBlock( FirstBlockProvider firstBlockProvider, NextBlockProvider nextBlockProvider, FormCompositionStep previousCompositionStep, Lexicon lexicon, double length ) {
-		List<CompositionStep> compositionSteps = composeSteps( firstBlockProvider, nextBlockProvider, previousCompositionStep, lexicon, length );
+	public List<ComposeBlock> composeBlock( ComposeBlockProvider composeBlockProvider, FormCompositionStep previousCompositionStep, Lexicon lexicon,
+			double length ) {
+		List<CompositionStep> compositionSteps = composeSteps( composeBlockProvider, previousCompositionStep, lexicon, length );
 		if ( compositionSteps != null ) {
 			List<ComposeBlock> composeBlocks = new ArrayList<>();
 			for ( CompositionStep compositionStep : compositionSteps ) {
@@ -65,10 +70,9 @@ public class FormBlockProvider {
 	 * @param previousCompositionStep - compose block prior to that are going to be composed
 	 * @param lexicon
 	 * @param length
-	 * @return
-	 * TODO refactor
+	 * @return TODO refactor
 	 */
-	public List<CompositionStep> composeSteps( FirstBlockProvider firstBlockProvider, NextBlockProvider nextBlockProvider, FormCompositionStep previousCompositionStep, Lexicon lexicon,
+	public List<CompositionStep> composeSteps( ComposeBlockProvider composeBlockProvider, FormCompositionStep previousCompositionStep, Lexicon lexicon,
 			double length ) {
 		List<CompositionStep> compositionSteps = new ArrayList<>();
 
@@ -79,10 +83,13 @@ public class FormBlockProvider {
 		for ( int step = 1; step < length / lexicon.getMinRhythmValue() + 1; step++ ) {
 			logger.debug( "Current state {}", step );
 			CompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
+			Optional<ComposeBlock> lastStepComposeBlock = Optional.ofNullable( lastCompositionStep.getComposeBlock() );
 
-			CompositionStep nextStep = lastCompositionStep.getComposeBlock() != null ?
-					new CompositionStep( nextBlockProvider.getNextBlock( lexicon, compositionSteps ) ) :
-					new CompositionStep( firstBlockProvider.getFirstBlock( lexicon, lastCompositionStep.getNextMusicBlockExclusions() ) );
+			Optional<ComposeBlock> nextComposeBlock = composeBlockProvider.getNextComposeBlock( lexicon, compositionSteps );
+			CompositionStep nextStep = new CompositionStep(
+//					transpose( nextComposeBlock, lastStepComposeBlock )
+					nextComposeBlock.orElse( null )
+			);
 
 			if ( nextStep.getComposeBlock() != null && currentLength + nextStep.getComposeBlock().getRhythmValue() <= length ) {
 				currentLength += nextStep.getComposeBlock().getRhythmValue();
@@ -95,7 +102,7 @@ public class FormBlockProvider {
 			} else {
 				if ( step != 1 ) {
 					CompositionStep preLastCompositionStep = compositionSteps.get( step - 2 );
-					preLastCompositionStep.addNextExclusion( lastCompositionStep.getComposeBlock() );
+					preLastCompositionStep.addNextExclusion( lastStepComposeBlock.get() );
 					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
 					if ( compositionSteps.get( step - 1 ).getComposeBlock() != null ) {
 						currentLength -= compositionSteps.get( step - 1 ).getComposeBlock().getRhythmValue();
@@ -109,7 +116,7 @@ public class FormBlockProvider {
 				}
 			}
 		}
-//		throw new RuntimeException( "Can't create new block" );
+		//		throw new RuntimeException( "Can't create new block" );
 		return null;
 	}
 
@@ -117,6 +124,7 @@ public class FormBlockProvider {
 	 * Fetches CompositionStep from FormCompositionStep:
 	 * last Compose Block of input = Compose Block for output
 	 * List of first Compose Blocks of exclusions of input = output exclusion
+	 *
 	 * @param formCompositionStep
 	 * @return
 	 */
@@ -126,5 +134,30 @@ public class FormBlockProvider {
 		CompositionStep compositionStep = new CompositionStep( composeBlocks != null ? composeBlocks.get( composeBlocks.size() - 1 ) : null );
 		compositionStep.setNextMusicBlockExclusions( exclusions );
 		return compositionStep;
+	}
+
+	/**
+	 * Transposes input compose block and
+	 *
+	 * @param composeBlock
+	 * @param previousComposeBlock
+	 * @return
+	 */
+	public ComposeBlock transpose( Optional<ComposeBlock> composeBlock, Optional<ComposeBlock> previousComposeBlock ) {
+		if ( !composeBlock.isPresent() ) return null;
+		return composeBlock.get().transposeClone( previousComposeBlock.isPresent() ? getTransposePitch( previousComposeBlock.get(), composeBlock.get() ) : 0 );
+	}
+
+	private int getTransposePitch( ComposeBlock firstComposeBlock, ComposeBlock secondComposeBlock ) {
+		for ( int melodyNumber = 0; melodyNumber < firstComposeBlock.getMelodyList().size(); melodyNumber++ ) {
+			Note lastNoteOfFirst = firstComposeBlock.getMelodyList().get( melodyNumber )
+					.getNote( firstComposeBlock.getMelodyList().get( melodyNumber ).size() - 1 );
+			Note firstNoteOfSecond = secondComposeBlock.getMelodyList().get( melodyNumber ).getNote( 0 );
+			if ( lastNoteOfFirst.getPitch() != Note.REST && firstNoteOfSecond.getPitch() != Note.REST ) {
+				return lastNoteOfFirst.getPitch() + secondComposeBlock.getBlockMovementFromPreviousToThis().getVoiceMovements().get( melodyNumber )
+						- firstNoteOfSecond.getPitch();
+			}
+		}
+		return 0;
 	}
 }

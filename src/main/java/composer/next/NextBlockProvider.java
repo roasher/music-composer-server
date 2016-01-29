@@ -3,8 +3,10 @@ package composer.next;
 import composer.step.CompositionStep;
 import model.ComposeBlock;
 import model.Lexicon;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Wish on 22.12.2015.
@@ -12,6 +14,6 @@ import java.util.List;
  */
 public interface NextBlockProvider {
 
-    ComposeBlock getNextBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps );
+    Optional<ComposeBlock> getNextBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps );
 
 }
