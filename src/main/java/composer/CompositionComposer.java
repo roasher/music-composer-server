@@ -1,14 +1,12 @@
 package composer;
 
-import composer.first.FirstBlockProvider;
-import composer.next.NextBlockProvider;
+import composer.step.CompositionStep;
 import composer.step.FormCompositionStep;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import model.ComposeBlock;
 import model.Lexicon;
 import model.composition.Composition;
-import model.composition.CompositionInfo;
 import model.melody.Form;
 import model.melody.Melody;
 import org.slf4j.Logger;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Vector;
 
 /**
  * Class handles composition of new piece using lexicon
@@ -44,7 +41,7 @@ public class CompositionComposer {
 		List<FormCompositionStep> compositionSteps = composeSteps( composeBlockProvider, lexicon, form, compositionLength );
 		List<ComposeBlock> composeBlocks = new ArrayList<>();
 		for ( FormCompositionStep compositionStep : compositionSteps ) {
-			for ( ComposeBlock composeBlock : compositionStep.getComposeBlocks() ) {
+			for ( ComposeBlock composeBlock : compositionStep.getTrasposedComposeBlocks() ) {
 				composeBlocks.add( composeBlock );
 			}
 		}
@@ -71,13 +68,15 @@ public class CompositionComposer {
 		for ( int formElementNumber = 1; formElementNumber < form.length() + 1; formElementNumber++ ) {
 
 			FormCompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
-			FormCompositionStep nextStep = composeNext( composeBlockProvider, new Form( form.charAt( formElementNumber - 1 ) ), stepLength, compositionSteps,
-					lexicon );
+			Form form1 = new Form( form.charAt( formElementNumber - 1 ) );
+			Optional<FormCompositionStep> nextStep = formBlockProvider.getFormElement( composeBlockProvider, form1, stepLength, compositionSteps, lexicon );
 
-			if ( nextStep.getComposeBlocks() == null ) {
+			if ( nextStep.isPresent() ) {
+				compositionSteps.add( nextStep.get() );
+			} else {
 				if ( formElementNumber != 1 ) {
 					FormCompositionStep preLastCompositionStep = compositionSteps.get( formElementNumber - 2 );
-					preLastCompositionStep.addNextExclusion( lastCompositionStep.getComposeBlocks() );
+					preLastCompositionStep.addNextExclusion( lastCompositionStep.getOriginComposeBlocks() );
 					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
 					compositionSteps.remove( formElementNumber - 1 );
 					formElementNumber = formElementNumber - 2;
@@ -86,18 +85,10 @@ public class CompositionComposer {
 					logger.warn( "There is no possible ways to compose new piece considering such parameters" );
 					break;
 				}
-			} else {
-				compositionSteps.add( nextStep );
 			}
 		}
 		compositionSteps.remove( 0 );
 		return compositionSteps;
-	}
-
-	public FormCompositionStep composeNext( ComposeBlockProvider composeBlockProvider, Form form, double length, List<FormCompositionStep> previousSteps,
-			Lexicon lexicon ) {
-		List<ComposeBlock> musicBlock = formBlockProvider.getFormElement( composeBlockProvider, form, length, previousSteps, lexicon );
-		return new FormCompositionStep( musicBlock, form );
 	}
 
 	/**

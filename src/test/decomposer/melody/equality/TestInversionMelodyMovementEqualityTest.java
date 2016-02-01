@@ -21,18 +21,16 @@ public class TestInversionMelodyMovementEqualityTest {
 	@Test
 	public void testCase1() {
 		Melody testMelody1 = new Melody(
-		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
 			new Note( CS4, EIGHTH_NOTE ),
-			new Note( D4, EIGHTH_NOTE ) }
+			new Note( D4, EIGHTH_NOTE )
 		);
 		Melody testMelody2 = new Melody(
-		  new Note[] {
 			new Note( E4, SIXTEENTH_NOTE ),
 			new Note( DS4, SIXTEENTH_NOTE ),
 			new Note( F4, SIXTEENTH_NOTE ),
-			new Note( E4, SIXTEENTH_NOTE ) }
+			new Note( E4, SIXTEENTH_NOTE )
 		);
 
 		inversionMelodyMovementEqualityTest.setMaxNumberOfInvertedIntervals( 3 );
@@ -43,20 +41,18 @@ public class TestInversionMelodyMovementEqualityTest {
 	@Test
 	public void testCase2() {
 		Melody testMelody1 = new Melody(
-		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
 			new Note( CS4, EIGHTH_NOTE ),
 			new Note( D4, EIGHTH_NOTE ),
-			new Note( D5, EIGHTH_NOTE ) }
+			new Note( D5, EIGHTH_NOTE )
 		);
 		Melody testMelody2 = new Melody(
-		  new Note[] {
 			new Note( E4, SIXTEENTH_NOTE ),
 			new Note( DS4, SIXTEENTH_NOTE ),
 			new Note( F4, SIXTEENTH_NOTE ),
 			new Note( E4, SIXTEENTH_NOTE ),
-			new Note( E3, SIXTEENTH_NOTE ) }
+			new Note( E3, SIXTEENTH_NOTE )
 		);
 
 		inversionMelodyMovementEqualityTest.setMaxNumberOfInvertedIntervals( 3 );
@@ -69,16 +65,14 @@ public class TestInversionMelodyMovementEqualityTest {
 	@Test
 	public void testCase3() {
 		Melody testMelody1 = new Melody(
-		  new Note[] {
 			new Note( D4, EIGHTH_NOTE ),
 			new Note( EF4, DOTTED_EIGHTH_NOTE ),
-			new Note( CS4, EIGHTH_NOTE ) }
+			new Note( CS4, EIGHTH_NOTE )
 		);
 		Melody testMelody2 = new Melody(
-		  new Note[] {
 			new Note( E4, SIXTEENTH_NOTE ),
 			new Note( DS4, SIXTEENTH_NOTE ),
-			new Note( F4, SIXTEENTH_NOTE ) }
+			new Note( F4, SIXTEENTH_NOTE )
 		);
 
 		inversionMelodyMovementEqualityTest.setMaxNumberOfInvertedIntervals( 3 );

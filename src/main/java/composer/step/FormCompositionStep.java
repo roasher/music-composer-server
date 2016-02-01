@@ -3,7 +3,6 @@ package composer.step;
 import model.ComposeBlock;
 import model.melody.Form;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,34 +15,40 @@ import java.util.Set;
  */
 public class FormCompositionStep {
 
-	private List<ComposeBlock> composeBlocks;
+	private List<ComposeBlock> originComposeBlocks;
+	private List<ComposeBlock> trasposedComposeBlocks;
 	private Form form;
 	/**
 	 * Valid Music Blocks which can come next to this, but their usage leads to dead end in future cause of small lexicon.
 	 */
 	private Set<List<ComposeBlock>> nextMusicBlockExclusions = new HashSet<>(  );
 
-	public FormCompositionStep( List<ComposeBlock> composeBlocks, Form form ) {
-		this.composeBlocks = composeBlocks;
+	public FormCompositionStep( List<ComposeBlock> originComposeBlocks, List<ComposeBlock> trasposedComposeBlocks, Form form ) {
+		this.originComposeBlocks = originComposeBlocks;
+		this.trasposedComposeBlocks = trasposedComposeBlocks;
 		this.form = form;
 	}
 
-	public FormCompositionStep( List<ComposeBlock> composeBlocks ) {
-		this.composeBlocks = composeBlocks;
+	public FormCompositionStep() {}
+
+	public List<ComposeBlock> getTrasposedComposeBlocks() {
+		return trasposedComposeBlocks;
 	}
 
-	public FormCompositionStep() {}
+	public void setTrasposedComposeBlocks( List<ComposeBlock> trasposedComposeBlocks ) {
+		this.trasposedComposeBlocks = trasposedComposeBlocks;
+	}
 
 	public void addNextExclusion( List<ComposeBlock> musicBlocks ) {
 		this.nextMusicBlockExclusions.add( musicBlocks );
 	}
 
-	public List<ComposeBlock> getComposeBlocks() {
-		return composeBlocks;
+	public List<ComposeBlock> getOriginComposeBlocks() {
+		return originComposeBlocks;
 	}
 
-	public void setComposeBlocks( List<ComposeBlock> composeBlocks ) {
-		this.composeBlocks = composeBlocks;
+	public void setOriginComposeBlocks( List<ComposeBlock> originComposeBlocks ) {
+		this.originComposeBlocks = originComposeBlocks;
 	}
 
 	public Form getForm() {
