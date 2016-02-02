@@ -14,6 +14,6 @@ import java.util.Optional;
  */
 public interface NextBlockProvider {
 
-    Optional<ComposeBlock> getNextBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps );
+    Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps );
 
 }

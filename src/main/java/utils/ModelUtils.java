@@ -3,6 +3,7 @@ package utils;
 import jm.constants.Pitches;
 import jm.music.data.Note;
 import jm.music.data.Score;
+import model.ComposeBlock;
 import model.melody.Melody;
 import model.composition.CompositionInfo;
 import model.composition.Meter;
@@ -11,6 +12,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class aggregates useful utilities upon Model objects
@@ -154,5 +156,24 @@ public class ModelUtils {
 		return "";
 	}
 
+	/**
+	 * Returns pitch on which second compose block should be transposed according to first
+	 * @param firstComposeBlock
+	 * @param secondComposeBlock
+	 * @return
+	 */
+	public static int getTransposePitch( Optional<ComposeBlock> firstComposeBlock, ComposeBlock secondComposeBlock ) {
+		if ( !firstComposeBlock.isPresent() ) return 0;
+		for ( int melodyNumber = 0; melodyNumber < firstComposeBlock.get().getMelodyList().size(); melodyNumber++ ) {
+			Note lastNoteOfFirst = firstComposeBlock.get().getMelodyList().get( melodyNumber )
+					.getNote( firstComposeBlock.get().getMelodyList().get( melodyNumber ).size() - 1 );
+			Note firstNoteOfSecond = secondComposeBlock.getMelodyList().get( melodyNumber ).getNote( 0 );
+			if ( lastNoteOfFirst.getPitch() != Note.REST && firstNoteOfSecond.getPitch() != Note.REST ) {
+				return lastNoteOfFirst.getPitch() + secondComposeBlock.getBlockMovementFromPreviousToThis().getVoiceMovements().get( melodyNumber )
+						- firstNoteOfSecond.getPitch();
+			}
+		}
+		return 0;
+	}
 
 }

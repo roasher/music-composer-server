@@ -12,12 +12,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import utils.CollectionUtils;
+import utils.ModelUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static utils.ModelUtils.getTransposePitch;
 
 /**
  * Class provides form element
@@ -129,23 +132,4 @@ public class FormBlockProvider {
 		return compositionStep;
 	}
 
-	/**
-	 * Returns pitch on which second compose block should be transposed according to first
-	 * @param firstComposeBlock
-	 * @param secondComposeBlock
-	 * @return
-	 */
-	public int getTransposePitch( Optional<ComposeBlock> firstComposeBlock, ComposeBlock secondComposeBlock ) {
-		if ( !firstComposeBlock.isPresent() ) return 0;
-		for ( int melodyNumber = 0; melodyNumber < firstComposeBlock.get().getMelodyList().size(); melodyNumber++ ) {
-			Note lastNoteOfFirst = firstComposeBlock.get().getMelodyList().get( melodyNumber )
-					.getNote( firstComposeBlock.get().getMelodyList().get( melodyNumber ).size() - 1 );
-			Note firstNoteOfSecond = secondComposeBlock.getMelodyList().get( melodyNumber ).getNote( 0 );
-			if ( lastNoteOfFirst.getPitch() != Note.REST && firstNoteOfSecond.getPitch() != Note.REST ) {
-				return lastNoteOfFirst.getPitch() + secondComposeBlock.getBlockMovementFromPreviousToThis().getVoiceMovements().get( melodyNumber )
-						- firstNoteOfSecond.getPitch();
-			}
-		}
-		return 0;
-	}
 }

@@ -2,6 +2,10 @@ import composer.ComposeBlockProvider;
 import composer.CompositionComposer;
 import composer.first.FirstBlockProvider;
 import composer.next.NextBlockProvider;
+import composer.next.filter.ComposeBlockFilter;
+import composer.next.filter.ComposeBlockRangeFilter;
+import composer.next.filter.ComposeBlockRestFilter;
+import composer.next.filter.ComposeBlockVarietyFilter;
 import composer.step.CompositionStep;
 import decomposer.CompositionDecomposer;
 import jm.JMC;
@@ -9,7 +13,6 @@ import jm.util.Write;
 import model.ComposeBlock;
 import model.Lexicon;
 import model.composition.Composition;
-import model.composition.CompositionInfo;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import persistance.dao.LexiconDAO_stub;
@@ -20,8 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import static jm.JMC.*;
 
 /**
  * Created by night wish on 24.01.2016.
@@ -39,15 +42,15 @@ public class Controller {
 	}
 
 	public void getRealPieceTest() throws IOException {
-//				List< Composition > compositionList = compositionLoader.getCompositions(
-//				  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ),
-//				  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.biosphere(midi).mid" ),
-//				  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ),
-//				  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\Метания беспокойного разума.mid" )
-//				);
+		//				List< Composition > compositionList = compositionLoader.getCompositions(
+		//				  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ),
+		//				  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.biosphere(midi).mid" ),
+		//				  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ),
+		//				  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\Метания беспокойного разума.mid" )
+		//				);
 
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "C:\\Users\\wish\\Documents\\testBach" ) );
-//		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "C:\\Users\\wish\\Documents\\Bach chorals" ) );
+		//		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "C:\\Users\\wish\\Documents\\Bach chorals" ) );
 
 		compositionDecomposer.setLexiconDAO( applicationContext.getBean( LexiconDAO_stub.class ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
@@ -56,36 +59,28 @@ public class Controller {
 		FirstBlockProvider firstStepProvider = new FirstBlockProvider() {
 			@Override
 			public Optional<ComposeBlock> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
-				ComposeBlock composeBlock1 = lexicon.getComposeBlockList().stream().filter( composeBlock -> !exclusions.contains( composeBlock ) ).findFirst().get();
+				ComposeBlock composeBlock1 = lexicon.getComposeBlockList().stream().filter( composeBlock -> !exclusions.contains( composeBlock ) ).findFirst()
+						.get();
 				return Optional.ofNullable( composeBlock1 );
 			}
 		};
 
 		NextBlockProvider nextBlockProvider = new NextBlockProvider() {
 			@Override
-			public Optional<ComposeBlock> getNextBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps ) {
+			public Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps ) {
 				CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
 				List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getOriginComposeBlock().getPossibleNextComposeBlocks() );
 				possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions() );
-				for ( int possibleNextNumber = possibleNextComposeBlocks.size() - 1; possibleNextNumber > 0; possibleNextNumber-- ) {
-					ComposeBlock composeBlock = possibleNextComposeBlocks.get( possibleNextNumber );
-					if ( previousCompositionSteps.size() > 6 ) {
-						Set<CompositionInfo> compositionInfos = previousCompositionSteps.stream().skip( previousCompositionSteps.size() - 6 )
-								.map( compositionStep -> compositionStep.getOriginComposeBlock().getCompositionInfo() ).collect( Collectors.toSet() );
-						if ( compositionInfos.size() != 1 ) {
-							return Optional.of( composeBlock );
-						} else {
-							continue;
-						}
-					} else {
-						return Optional.of( composeBlock );
-					}
-				}
-				return Optional.empty();
+
+				ComposeBlockFilter composeBlockFilter = new ComposeBlockVarietyFilter( 6 );
+				Optional<ComposeBlock> lastOfPossibles = composeBlockFilter.filter( possibleNextComposeBlocks, previousCompositionSteps ).stream()
+						.reduce( ( composeBlock1, composeBlock2 ) -> composeBlock2 );
+				return lastOfPossibles;
 			}
 		};
 
-		Composition composition = compositionComposer.compose( new ComposeBlockProvider( firstStepProvider, nextBlockProvider ), lexicon, "ABCD", 16 * JMC.WHOLE_NOTE );
+		Composition composition = compositionComposer
+				.compose( new ComposeBlockProvider( firstStepProvider, nextBlockProvider ), lexicon, "ABCD", 16 * JMC.WHOLE_NOTE );
 		//		assertEquals( 16., composition.getEndTime(), 0 );
 
 		//		View.notate( composition );

@@ -32,7 +32,7 @@ public class ComposeBlockProvider {
 	public Optional<ComposeBlock> getNextComposeBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps ) {
 		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
 		return lastCompositionStep.getOriginComposeBlock() != null ?
-				nextBlockProvider.getNextBlock( lexicon, previousCompositionSteps ) :
+				nextBlockProvider.getNextBlock( previousCompositionSteps ) :
 				firstBlockProvider.getFirstBlock( lexicon, lastCompositionStep.getNextMusicBlockExclusions() );
 	}
 

@@ -19,7 +19,7 @@ public class SimpleNextBlockProvider implements NextBlockProvider {
 	 * Returns one of the possible next currentBlocks randomly
 	 */
 	@Override
-	public Optional<ComposeBlock> getNextBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps ) {
+	public Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps ) {
 		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
 		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getOriginComposeBlock().getPossibleNextComposeBlocks() );
 		possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions());
