@@ -72,9 +72,9 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 						new Melody( new Rest( QUARTER_NOTE ) ) ),
 						new BlockMovement( 0, -256 ) ) );
 
-		assertEquals( C3 - C4, formBlockProvider.getTransposePitch( composeBlocks.get( 0 ), composeBlocks.get( 1 ) ) );
-		assertEquals( C4 - C4 + 2, formBlockProvider.getTransposePitch( composeBlocks.get( 1 ), composeBlocks.get( 2 ) ) );
-		assertEquals( E5 - B5, formBlockProvider.getTransposePitch( composeBlocks.get( 2 ), composeBlocks.get( 3 ) ) );
+		assertEquals( C3 - C4, formBlockProvider.getTransposePitch( Optional.of( composeBlocks.get( 0 ) ), composeBlocks.get( 1 ) ) );
+		assertEquals( C4 - C4 + 2, formBlockProvider.getTransposePitch( Optional.of( composeBlocks.get( 1 ) ), composeBlocks.get( 2 ) ) );
+		assertEquals( E5 - B5, formBlockProvider.getTransposePitch( Optional.of( composeBlocks.get( 2 ) ), composeBlocks.get( 3 ) ) );
 
 	}
 }
