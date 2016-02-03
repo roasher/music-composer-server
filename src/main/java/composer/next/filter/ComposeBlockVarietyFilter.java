@@ -43,12 +43,11 @@ public class ComposeBlockVarietyFilter implements ComposeBlockFilter {
 				new ArrayList<>( possibleNextComposeBlocks );
 		List<ComposeBlock> out = new ArrayList<>();
 		for ( ComposeBlock possibleNext : filteredPreviously ) {
-			// TODO Refactor as for now there is no need in possibleNext inside cycle - we need to take condition out
 			if ( previousCompositionSteps.size() > possibleBlockNumberFromSameCompositionOneByOne ) {
 				Set<CompositionInfo> compositionInfos = previousCompositionSteps.stream()
 						.skip( previousCompositionSteps.size() - possibleBlockNumberFromSameCompositionOneByOne )
 						.map( compositionStep -> compositionStep.getOriginComposeBlock().getCompositionInfo() ).collect( Collectors.toSet() );
-				if ( compositionInfos.size() != 1 ) {
+				if ( compositionInfos.size() != 1 || !compositionInfos.contains( possibleNext.getCompositionInfo() ) ) {
 					out.add( possibleNext );
 				}
 			} else {

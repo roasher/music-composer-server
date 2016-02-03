@@ -10,6 +10,13 @@ public class CompositionInfo {
     private double tempo;
     private Meter metre;
 
+	public CompositionInfo() {
+	}
+
+	public CompositionInfo( String title ) {
+		this.title = title;
+	}
+
 	@Override
 	public boolean equals( Object o ) {
 		if ( this == o ) {
