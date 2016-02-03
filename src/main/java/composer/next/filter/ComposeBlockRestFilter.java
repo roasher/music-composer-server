@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 
 /**
  * Created by wish on 02.02.2016.
- * Filter declines all blocks that are rests and their rhythmvalue is longer than x
+ * Filter declines all blocks that are rests and their rhythm value is longer than x
  */
 @Component
 public class ComposeBlockRestFilter implements ComposeBlockFilter {
@@ -40,7 +40,7 @@ public class ComposeBlockRestFilter implements ComposeBlockFilter {
 		for ( ComposeBlock composeBlock : filteredPrevously ) {
 			boolean hasNonRestInIt = composeBlock.getMelodyList().stream().flatMap( melody -> melody.getNoteList().stream() )
 					.filter( note -> !( ( Note ) note ).isRest() ).findAny().isPresent();
-			if ( !hasNonRestInIt && composeBlock.getRhythmValue() >= maxRestRhythmValue ) {
+			if ( hasNonRestInIt || composeBlock.getRhythmValue() <= maxRestRhythmValue ) {
 				out.add( composeBlock );
 			}
 		}
