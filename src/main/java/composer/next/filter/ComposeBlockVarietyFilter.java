@@ -27,7 +27,7 @@ public class ComposeBlockVarietyFilter implements ComposeBlockFilter {
 	public ComposeBlockVarietyFilter() {
 	}
 
-	public ComposeBlockVarietyFilter( ComposeBlockFilter composeBlockFilter, int possibleBlockNumberFromSameCompositionOneByOne ) {
+	public ComposeBlockVarietyFilter( int possibleBlockNumberFromSameCompositionOneByOne, ComposeBlockFilter composeBlockFilter ) {
 		this.composeBlockFilter = composeBlockFilter;
 		this.possibleBlockNumberFromSameCompositionOneByOne = possibleBlockNumberFromSameCompositionOneByOne;
 	}

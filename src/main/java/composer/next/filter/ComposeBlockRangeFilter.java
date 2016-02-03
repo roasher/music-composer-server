@@ -26,7 +26,7 @@ public class ComposeBlockRangeFilter implements ComposeBlockFilter {
 	public ComposeBlockRangeFilter() {
 	}
 
-	public ComposeBlockRangeFilter( ComposeBlockFilter composeBlockFilter, int lowestNotePitch, int highestNotePitch ) {
+	public ComposeBlockRangeFilter( int lowestNotePitch, int highestNotePitch, ComposeBlockFilter composeBlockFilter ) {
 		this.composeBlockFilter = composeBlockFilter;
 		this.lowestNotePitch = lowestNotePitch;
 		this.highestNotePitch = highestNotePitch;

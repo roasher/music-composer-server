@@ -22,7 +22,7 @@ public class ComposeBlockRestFilter implements ComposeBlockFilter {
 	public ComposeBlockRestFilter() {
 	}
 
-	public ComposeBlockRestFilter( ComposeBlockFilter composeBlockFilter, double maxRestRhythmValue ) {
+	public ComposeBlockRestFilter( double maxRestRhythmValue, ComposeBlockFilter composeBlockFilter ) {
 		this.composeBlockFilter = composeBlockFilter;
 		this.maxRestRhythmValue = maxRestRhythmValue;
 	}
