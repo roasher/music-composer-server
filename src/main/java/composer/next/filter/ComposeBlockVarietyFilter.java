@@ -19,16 +19,15 @@ import java.util.stream.Collectors;
  * x + 1 blocks from same composition in the result
  */
 @Component
-public class ComposeBlockVarietyFilter implements ComposeBlockFilter {
+public class ComposeBlockVarietyFilter extends AbstractComposeBlockFilter {
 
-	private ComposeBlockFilter composeBlockFilter;
 	private int possibleBlockNumberFromSameCompositionOneByOne;
 
 	public ComposeBlockVarietyFilter() {
 	}
 
 	public ComposeBlockVarietyFilter( int possibleBlockNumberFromSameCompositionOneByOne, ComposeBlockFilter composeBlockFilter ) {
-		this.composeBlockFilter = composeBlockFilter;
+		super( composeBlockFilter );
 		this.possibleBlockNumberFromSameCompositionOneByOne = possibleBlockNumberFromSameCompositionOneByOne;
 	}
 
@@ -37,12 +36,9 @@ public class ComposeBlockVarietyFilter implements ComposeBlockFilter {
 	}
 
 	@Override
-	public List<ComposeBlock> filter( List<ComposeBlock> possibleNextComposeBlocks, List<CompositionStep> previousCompositionSteps ) {
-		List<ComposeBlock> filteredPreviously = composeBlockFilter != null ?
-				composeBlockFilter.filter( possibleNextComposeBlocks, previousCompositionSteps ) :
-				new ArrayList<>( possibleNextComposeBlocks );
+	public List<ComposeBlock> filterIt( List<ComposeBlock> possibleNextComposeBlocks, List<CompositionStep> previousCompositionSteps ) {
 		List<ComposeBlock> out = new ArrayList<>();
-		for ( ComposeBlock possibleNext : filteredPreviously ) {
+		for ( ComposeBlock possibleNext : possibleNextComposeBlocks ) {
 			if ( previousCompositionSteps.size() > possibleBlockNumberFromSameCompositionOneByOne ) {
 				Set<CompositionInfo> compositionInfos = previousCompositionSteps.stream()
 						.skip( previousCompositionSteps.size() - possibleBlockNumberFromSameCompositionOneByOne )

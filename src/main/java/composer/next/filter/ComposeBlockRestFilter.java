@@ -14,16 +14,15 @@ import java.util.stream.IntStream;
  * Filter declines all blocks that are rests and their rhythm value is longer than x
  */
 @Component
-public class ComposeBlockRestFilter implements ComposeBlockFilter {
+public class ComposeBlockRestFilter extends AbstractComposeBlockFilter {
 
-	private ComposeBlockFilter composeBlockFilter;
 	private double maxRestRhythmValue;
 
 	public ComposeBlockRestFilter() {
 	}
 
 	public ComposeBlockRestFilter( double maxRestRhythmValue, ComposeBlockFilter composeBlockFilter ) {
-		this.composeBlockFilter = composeBlockFilter;
+		super( composeBlockFilter );
 		this.maxRestRhythmValue = maxRestRhythmValue;
 	}
 
@@ -32,12 +31,9 @@ public class ComposeBlockRestFilter implements ComposeBlockFilter {
 	}
 
 	@Override
-	public List<ComposeBlock> filter( List<ComposeBlock> possibleNextComposeBlocks, List<CompositionStep> previousCompositionSteps ) {
-		List<ComposeBlock> filteredPrevously = composeBlockFilter != null ?
-				composeBlockFilter.filter( possibleNextComposeBlocks, previousCompositionSteps ) :
-				new ArrayList<>( possibleNextComposeBlocks );
+	public List<ComposeBlock> filterIt( List<ComposeBlock> possibleNextComposeBlocks, List<CompositionStep> previousCompositionSteps ) {
 		List<ComposeBlock> out = new ArrayList<>();
-		for ( ComposeBlock composeBlock : filteredPrevously ) {
+		for ( ComposeBlock composeBlock : possibleNextComposeBlocks ) {
 			boolean hasNonRestInIt = composeBlock.getMelodyList().stream().flatMap( melody -> melody.getNoteList().stream() )
 					.filter( note -> !( ( Note ) note ).isRest() ).findAny().isPresent();
 			if ( hasNonRestInIt || composeBlock.getRhythmValue() <= maxRestRhythmValue ) {

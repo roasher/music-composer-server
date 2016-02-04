@@ -2,6 +2,7 @@ package composer.next.filter;
 
 import composer.step.CompositionStep;
 import jm.music.data.Note;
+import jm.music.data.Rest;
 import model.BlockMovement;
 import model.ComposeBlock;
 import model.melody.Melody;
@@ -42,10 +43,12 @@ public class RangeFilterTest {
 		Melody melody0 = new Melody(
 				new Note( highPitch, Note.DEFAULT_RHYTHM_VALUE ),
 				getRandomNote( lowPitch, highPitch ),
+				new Rest( Note.DEFAULT_RHYTHM_VALUE),
 				getRandomNote( lowPitch, highPitch ) );
 		Melody melody1 = new Melody(
 				new Note( lowPitch, Note.DEFAULT_RHYTHM_VALUE ),
 				getRandomNote( lowPitch, highPitch ),
+				new Rest( Note.DEFAULT_RHYTHM_VALUE),
 				getRandomNote( lowPitch, highPitch ) );
 		return new ComposeBlock( id, null, Arrays.asList( melody0, melody1 ), new BlockMovement( highMovement, lowMovement ) );
 	}

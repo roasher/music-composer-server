@@ -17,9 +17,8 @@ import java.util.stream.IntStream;
  * Filter declines all compose blocks that will go out of range after transposing
  */
 @Component
-public class ComposeBlockRangeFilter implements ComposeBlockFilter {
+public class ComposeBlockRangeFilter extends AbstractComposeBlockFilter {
 
-	private ComposeBlockFilter composeBlockFilter;
 	private int lowestNotePitch;
 	private int highestNotePitch;
 
@@ -27,7 +26,7 @@ public class ComposeBlockRangeFilter implements ComposeBlockFilter {
 	}
 
 	public ComposeBlockRangeFilter( int lowestNotePitch, int highestNotePitch, ComposeBlockFilter composeBlockFilter ) {
-		this.composeBlockFilter = composeBlockFilter;
+		super( composeBlockFilter );
 		this.lowestNotePitch = lowestNotePitch;
 		this.highestNotePitch = highestNotePitch;
 	}
@@ -38,19 +37,16 @@ public class ComposeBlockRangeFilter implements ComposeBlockFilter {
 	}
 
 	@Override
-	public List<ComposeBlock> filter( List<ComposeBlock> possibleNextComposeBlocks, List<CompositionStep> previousCompositionSteps ) {
-		List<ComposeBlock> filteredPrevously = composeBlockFilter != null ?
-				composeBlockFilter.filter( possibleNextComposeBlocks, previousCompositionSteps ) :
-				new ArrayList<>( possibleNextComposeBlocks );
+	public List<ComposeBlock> filterIt( List<ComposeBlock> possibleNextComposeBlocks, List<CompositionStep> previousCompositionSteps ) {
 		List<ComposeBlock> out = new ArrayList<>();
 		ComposeBlock lastTrasposedComposeBlock = previousCompositionSteps.get( previousCompositionSteps.size() - 1 ).getTransposeComposeBlock();
-		for ( ComposeBlock possibleNext : filteredPrevously ) {
+		for ( ComposeBlock possibleNext : possibleNextComposeBlocks ) {
 			int trasposePitch = ModelUtils.getTransposePitch( Optional.of( lastTrasposedComposeBlock ), possibleNext );
 			ComposeBlock trasposedBlock = possibleNext.transposeClone( trasposePitch );
 			OptionalInt max = trasposedBlock.getMelodyList().stream().flatMap( melody -> melody.getNoteList().stream() )
-					.mapToInt( value -> ( ( Note ) value ).getPitch() ).max();
+					.mapToInt( value -> ( ( Note ) value ).getPitch() ).filter( value -> value != Note.REST ).max();
 			OptionalInt min = trasposedBlock.getMelodyList().stream().flatMap( melody -> melody.getNoteList().stream() )
-					.mapToInt( value -> ( ( Note ) value ).getPitch() ).min();
+					.mapToInt( value -> ( ( Note ) value ).getPitch() ).filter( value -> value != Note.REST ).min();
 			if ( max.getAsInt() <= highestNotePitch && min.getAsInt() >= lowestNotePitch ) {
 				out.add( possibleNext );
 			}
