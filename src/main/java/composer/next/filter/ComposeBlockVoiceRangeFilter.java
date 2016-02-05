@@ -7,10 +7,8 @@ import model.melody.Melody;
 import org.springframework.stereotype.Component;
 import utils.ModelUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by wish on 03.02.2016.
@@ -54,9 +52,9 @@ public class ComposeBlockVoiceRangeFilter extends AbstractComposeBlockFilter {
 			ComposeBlock trasposedBlock = possibleNext.transposeClone( trasposePitch );
 			for ( int melodyNumber = 0; melodyNumber < trasposedBlock.getMelodyList().size(); melodyNumber++ ) {
 				Melody melody = trasposedBlock.getMelodyList().get( melodyNumber );
-				OptionalInt max = melody.getNoteList().stream().mapToInt( value -> ( ( Note ) value ).getPitch() ).filter( value -> value != Note.REST ).max();
-				OptionalInt min = melody.getNoteList().stream().mapToInt( value -> ( ( Note ) value ).getPitch() ).filter( value -> value != Note.REST ).min();
-				if ( max.getAsInt() > melodyRange.get( melodyNumber ).highPitch || min.getAsInt() < melodyRange.get( melodyNumber ).lowPitch ) {
+				List<Integer> pitches = melody.getNoteList().stream().mapToInt( value -> ( ( Note ) value ).getPitch() ).filter( value -> value != Note.REST )
+						.boxed().collect( Collectors.toList() );
+				if ( pitches.size() != 0 && ( Collections.max( pitches ) > melodyRange.get( melodyNumber ).highPitch || Collections.min( pitches ) < melodyRange.get( melodyNumber ).lowPitch ) ) {
 					continue nextBlock;
 				}
 			}

@@ -27,7 +27,8 @@ public class VoiceRangeFilterTest {
 				getTestComposeBlock( 1, Arrays.asList( B2, C3, REST ), Arrays.asList( B3, REST, REST  ), B2 - C3, B3 - C4 ),
 				getTestComposeBlock( 2, Arrays.asList( C3, B2 ), Arrays.asList( A2, A2 ), C3 - C3, A2 - C4 ),
 				getTestComposeBlock( 3, Arrays.asList( G3, GS3, REST ), Arrays.asList( REST, REST, REST ), G3 - C3, REST ),
-				getTestComposeBlock( 4, Arrays.asList( G3, E3 ), Arrays.asList( D3, C3 ), G3 - C3, D3 - C4 ) );
+				getTestComposeBlock( 4, Arrays.asList( G3, E3 ), Arrays.asList( D3, C3 ), G3 - C3, D3 - C4 ),
+				getTestComposeBlock( 5, Arrays.asList( REST, REST ), Arrays.asList( REST, REST ), G3 - C3, D3 - C4 ) );
 		ComposeBlock firstComposeBlock = new ComposeBlock( 0, null, Arrays.asList(
 				new Melody( new Note( C3, Note.DEFAULT_RHYTHM_VALUE ) ),
 				new Melody( new Note( C4, Note.DEFAULT_RHYTHM_VALUE ) ) ), null );
@@ -39,9 +40,10 @@ public class VoiceRangeFilterTest {
 
 		List<CompositionStep> mockComposeSteps = Arrays.asList( new CompositionStep( firstComposeBlock, firstComposeBlock ) );
 		List<ComposeBlock> filtered0 = composeBlockVoiceRangeFilter.filter( composeBlocks, mockComposeSteps );
-		assertEquals( 2, filtered0.size() );
+		assertEquals( 3, filtered0.size() );
 		assertEquals( 0, filtered0.get( 0 ).getStartTime(), 0 );
 		assertEquals( 4, filtered0.get( 1 ).getStartTime(), 0 );
+		assertEquals( 5, filtered0.get( 2 ).getStartTime(), 0 );
 	}
 
 	private ComposeBlock getTestComposeBlock( int id, List<Integer> firstNotePitches, List<Integer> secondNotePitches, int firstMovement, int secondMovement ) {

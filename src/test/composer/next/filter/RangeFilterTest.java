@@ -21,12 +21,14 @@ public class RangeFilterTest {
 
 	@Test
 	public void test() {
+		Melody restMelody = new Melody( new Note( REST, Note.DEFAULT_RHYTHM_VALUE ) );
 		List<ComposeBlock> composeBlocks = Arrays.asList(
 				getMockComposeBlock( 0, C3, C4, 0, 0 ),
 				getMockComposeBlock( 1, B2, B3, B2 - C3, B3 - C4 ),
 				getMockComposeBlock( 2, D3, D4, D3 - C3, D4 - C4 ),
 				getMockComposeBlock( 3, E3, B4, E3 - C3, B4 - C4 ),
-				getMockComposeBlock( 4, E3, B3, E3 - C3, B3 - C4 ) );
+				getMockComposeBlock( 4, E3, B3, E3 - C3, B3 - C4 ),
+				new ComposeBlock( 5, null, Arrays.asList( restMelody, restMelody ), new BlockMovement( Note.REST, Note.REST ) ) );
 		ComposeBlock firstComposeBlock = new ComposeBlock( 0, null, Arrays.asList(
 				new Melody( new Note( C4, Note.DEFAULT_RHYTHM_VALUE ) ),
 				new Melody( new Note( C3, Note.DEFAULT_RHYTHM_VALUE ) ) ), null );
@@ -34,9 +36,10 @@ public class RangeFilterTest {
 
 		ComposeBlockRangeFilter ComposeBlockRangeFilter0 = new ComposeBlockRangeFilter( C3, C4 );
 		List<ComposeBlock> filtered0 = ComposeBlockRangeFilter0.filter( composeBlocks, mockComposeSteps );
-		assertEquals( 2, filtered0.size() );
+		assertEquals( 3, filtered0.size() );
 		assertEquals( 0, filtered0.get( 0 ).getStartTime(), 0 );
 		assertEquals( 4, filtered0.get( 1 ).getStartTime(), 0 );
+		assertEquals( 5, filtered0.get( 2 ).getStartTime(), 0 );
 	}
 
 	private ComposeBlock getMockComposeBlock( int id, int lowPitch, int highPitch, int lowMovement, int highMovement ) {

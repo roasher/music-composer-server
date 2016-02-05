@@ -6,10 +6,8 @@ import model.ComposeBlock;
 import org.springframework.stereotype.Component;
 import utils.ModelUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -43,11 +41,9 @@ public class ComposeBlockRangeFilter extends AbstractComposeBlockFilter {
 		for ( ComposeBlock possibleNext : possibleNextComposeBlocks ) {
 			int trasposePitch = ModelUtils.getTransposePitch( Optional.of( lastTrasposedComposeBlock ), possibleNext );
 			ComposeBlock trasposedBlock = possibleNext.transposeClone( trasposePitch );
-			OptionalInt max = trasposedBlock.getMelodyList().stream().flatMap( melody -> melody.getNoteList().stream() )
-					.mapToInt( value -> ( ( Note ) value ).getPitch() ).filter( value -> value != Note.REST ).max();
-			OptionalInt min = trasposedBlock.getMelodyList().stream().flatMap( melody -> melody.getNoteList().stream() )
-					.mapToInt( value -> ( ( Note ) value ).getPitch() ).filter( value -> value != Note.REST ).min();
-			if ( max.getAsInt() <= highestNotePitch && min.getAsInt() >= lowestNotePitch ) {
+			List<Integer> pitches = trasposedBlock.getMelodyList().stream().flatMap( melody -> melody.getNoteList().stream() )
+					.mapToInt( value -> ( ( Note ) value ).getPitch() ).filter( value -> value != Note.REST ).boxed().collect( Collectors.toList() );
+			if ( pitches.size() == 0 || ( Collections.max( pitches ) <= highestNotePitch && Collections.min( pitches ) >= lowestNotePitch ) ) {
 				out.add( possibleNext );
 			}
 		}
