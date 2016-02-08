@@ -2,10 +2,7 @@ import composer.ComposeBlockProvider;
 import composer.CompositionComposer;
 import composer.first.FirstBlockProvider;
 import composer.next.NextBlockProvider;
-import composer.next.filter.ComposeBlockFilter;
-import composer.next.filter.ComposeBlockRangeFilter;
-import composer.next.filter.ComposeBlockRestFilter;
-import composer.next.filter.ComposeBlockVarietyFilter;
+import composer.next.filter.*;
 import composer.step.CompositionStep;
 import decomposer.CompositionDecomposer;
 import jm.JMC;
@@ -21,6 +18,7 @@ import utils.CompositionLoader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +70,14 @@ public class Controller {
 				List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getOriginComposeBlock().getPossibleNextComposeBlocks() );
 				possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions() );
 
-				ComposeBlockFilter composeBlockFilter = new ComposeBlockVarietyFilter( 6 );
+				ComposeBlockFilter composeBlockFilter = new ComposeBlockVarietyFilter( 6,
+						new ComposeBlockRestFilter( QUARTER_NOTE,
+								new ComposeBlockVoiceRangeFilter( Arrays.asList(
+										new ComposeBlockVoiceRangeFilter.Range( C4, C6 ),
+										new ComposeBlockVoiceRangeFilter.Range( F3, F5 ),
+										new ComposeBlockVoiceRangeFilter.Range( A2, A4 ),
+										new ComposeBlockVoiceRangeFilter.Range( F2, F4 )
+								) ) ) );
 				Optional<ComposeBlock> lastOfPossibles = composeBlockFilter.filter( possibleNextComposeBlocks, previousCompositionSteps ).stream()
 						.reduce( ( composeBlock1, composeBlock2 ) -> composeBlock2 );
 				return lastOfPossibles;
@@ -80,7 +85,7 @@ public class Controller {
 		};
 
 		Composition composition = compositionComposer
-				.compose( new ComposeBlockProvider( firstStepProvider, nextBlockProvider ), lexicon, "ABCD", 16 * JMC.WHOLE_NOTE );
+				.compose( new ComposeBlockProvider( firstStepProvider, nextBlockProvider ), lexicon, "ABCD", 32 * JMC.WHOLE_NOTE );
 		//		assertEquals( 16., composition.getEndTime(), 0 );
 
 		//		View.notate( composition );
