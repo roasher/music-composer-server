@@ -12,6 +12,8 @@ import model.Lexicon;
 import model.composition.Composition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import persistance.dao.LexiconDAO;
+import persistance.dao.LexiconDAO_database;
 import persistance.dao.LexiconDAO_stub;
 import utils.CompositionLoader;
 
@@ -50,9 +52,8 @@ public class Controller {
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "C:\\Users\\wish\\Documents\\testBach" ) );
 		//		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "C:\\Users\\wish\\Documents\\Bach chorals" ) );
 
-		compositionDecomposer.setLexiconDAO( applicationContext.getBean( LexiconDAO_stub.class ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
-		//		lexiconDAO.persist( lexicon );
+//		compositionDecomposer.getLexiconDAO().persist( lexicon );
 
 		FirstBlockProvider firstStepProvider = new FirstBlockProvider() {
 			@Override

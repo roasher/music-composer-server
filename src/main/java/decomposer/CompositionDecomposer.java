@@ -254,4 +254,8 @@ public class CompositionDecomposer {
 	public void setLexiconDAO( LexiconDAO lexiconDAO ) {
 		this.lexiconDAO = lexiconDAO;
 	}
+
+	public LexiconDAO getLexiconDAO() {
+		return lexiconDAO;
+	}
 }
