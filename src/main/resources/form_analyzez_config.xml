@@ -27,7 +27,7 @@
         <property name="equalityTestPassThreshold" value="0.6"/>
     </bean>
     
-    <bean id="formAnalyzer" class="decomposer.form.analyzer.MusicBlockFormEqualityAnalyser">
+    <bean id="formAnalyzer" class="decomposer.form.analyzer.FormEqualityAnalyser">
         <property name="instrumentEqualityPassThreshold" value="1.0"/>
     </bean>
 
