@@ -32,14 +32,7 @@ public class FormEqualityAnalyser {
 			return false;
 		}
 
-		int numberOfEqualInstrumentParts = 0;
-		for ( int instrumentPartNumber = 0; instrumentPartNumber < firstMusicBlockInstrumentParts.size(); instrumentPartNumber ++ ) {
-			if ( formEqualityAnalyzer.isEqual( firstMusicBlockInstrumentParts.get( instrumentPartNumber ), secondMusicBlockInstrumentParts.get( instrumentPartNumber ) ) ) {
-				numberOfEqualInstrumentParts++;
-			}
-		}
-
-		double successTestPersentage = numberOfEqualInstrumentParts * 1. / firstMusicBlockInstrumentParts.size();
+		double successTestPersentage = getEqualityMetric( firstMusicBlockInstrumentParts, secondMusicBlockInstrumentParts );
 		if ( successTestPersentage >= instrumentEqualityPassThreshold ) {
 			logger.info( "Music Blocks considered form - equal" );
 			return true;
@@ -47,6 +40,20 @@ public class FormEqualityAnalyser {
 			logger.info( "Successfull tests persentage {} lower than the threshold {}. Music Blocks considered non equal", successTestPersentage, instrumentEqualityPassThreshold );
 			return false;
 		}
+	}
+
+	public double getEqualityMetric( List<Melody> firstMusicBlockInstrumentParts, List<Melody> secondMusicBlockInstrumentParts ) {
+		if ( firstMusicBlockInstrumentParts.size() != secondMusicBlockInstrumentParts.size() ) {
+			throw new RuntimeException( "Input collections of melodies has different sizes" );
+		}
+		int numberOfEqualInstrumentParts = 0;
+		for ( int instrumentPartNumber = 0; instrumentPartNumber < firstMusicBlockInstrumentParts.size(); instrumentPartNumber ++ ) {
+			if ( formEqualityAnalyzer.isEqual( firstMusicBlockInstrumentParts.get( instrumentPartNumber ), secondMusicBlockInstrumentParts.get( instrumentPartNumber ) ) ) {
+				numberOfEqualInstrumentParts++;
+			}
+		}
+
+		return numberOfEqualInstrumentParts * 1. / firstMusicBlockInstrumentParts.size();
 	}
 
 	public double getInstrumentEqualityPassThreshold() {
