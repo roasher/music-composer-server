@@ -84,6 +84,7 @@ public class Utils {
 	 * @param notes - note array
 	 * @param time
 	 * @return
+	 * TODO refactor using binary search
 	 */
 	public static int getNoteNumber( Note[] notes, double time ) {
 		double startTime = 0;
