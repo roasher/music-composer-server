@@ -2,12 +2,16 @@ package composer.next;
 
 import composer.next.filter.ComposeBlockFilter;
 import composer.step.CompositionStep;
+import composer.step.FormCompositionStep;
 import decomposer.form.analyzer.FormEqualityAnalyser;
 import model.ComposeBlock;
+import model.melody.Melody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import utils.ModelUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by wish on 16.02.2016.
@@ -21,18 +25,19 @@ public class FormNextBlockProvider implements NextBlockProvider {
 	private ComposeBlockFilter composeBlockFilter;
 
 	@Override
-	public Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps ) {
+	public Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> similarFormSteps,
+			List<FormCompositionStep> differentFormSteps ) {
+
 		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
 		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getOriginComposeBlock().getPossibleNextComposeBlocks() );
 		possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions() );
-		// TODO etalons diffs and previouslyComposedRhythmValue
-		Optional<List<ComposeBlock>> etalons = null;
-		Optional<List<ComposeBlock>> differents = null;
-		double previouslyComposedRhythmValue = 0;
 
-		Optional<ComposeBlock> lastOfPossibles = composeBlockFilter.filter( possibleNextComposeBlocks, previousCompositionSteps )
-				.stream()
-				.sorted( getComposeBlockComparator( etalons, differents, 0 ) )
+		List<ComposeBlock> filteredBlocks =
+				composeBlockFilter != null ? composeBlockFilter.filter( possibleNextComposeBlocks, previousCompositionSteps ) : possibleNextComposeBlocks;
+		double previouslyComposedRhythmValue = previousCompositionSteps.stream().skip( 1 ).mapToDouble( value -> value.getOriginComposeBlock().getRhythmValue() ).sum();
+
+		Optional<ComposeBlock> lastOfPossibles = filteredBlocks.stream()
+				.sorted( getComposeBlockComparator( similarFormSteps, differentFormSteps, previouslyComposedRhythmValue ) )
 				.reduce( ( composeBlock1, composeBlock2 ) -> composeBlock2 );
 
 		return lastOfPossibles;
@@ -40,36 +45,43 @@ public class FormNextBlockProvider implements NextBlockProvider {
 
 	/**
 	 * Comparator that finds out which of compose blocks better suites to add in composition in terms of form
-	 * @param etalons - whole pieces of needed form
-	 * @param differents - whole pieces of NOT desired form
+	 *
+	 * @param similars                      - whole pieces of needed form
+	 * @param differents                    - whole pieces of NOT desired form
 	 * @param previouslyComposedRhythmValue - amount of time that was already
 	 * @return
 	 */
-	private Comparator<ComposeBlock> getComposeBlockComparator( Optional<List<ComposeBlock>> etalons, Optional<List<ComposeBlock>> differents, double previouslyComposedRhythmValue ) {
-		// TODO implementation
+	private Comparator<ComposeBlock> getComposeBlockComparator( List<FormCompositionStep> similars, List<FormCompositionStep> differents,
+			double previouslyComposedRhythmValue ) {
 		return ( firstComposeBlock, secondComposeBlock ) -> {
-			double firstEqualEtalons = getEqualityMetrics( firstComposeBlock, etalons );
-			double firstEqualDifferents = getEqualityMetrics( firstComposeBlock, differents );
-			double secondEqualEtalons = getEqualityMetrics( secondComposeBlock, etalons );
-			double secondEqualDifferents = getEqualityMetrics( secondComposeBlock, differents );
-			return (int) ( ( firstEqualEtalons - firstEqualDifferents ) - ( secondEqualEtalons - secondEqualDifferents ) );
+			double firstEqualEtalons = getEqualityMetrics( firstComposeBlock, previouslyComposedRhythmValue, similars );
+			double firstEqualDifferents = getEqualityMetrics( firstComposeBlock, previouslyComposedRhythmValue, differents );
+			double secondEqualEtalons = getEqualityMetrics( secondComposeBlock, previouslyComposedRhythmValue, similars );
+			double secondEqualDifferents = getEqualityMetrics( secondComposeBlock, previouslyComposedRhythmValue, differents );
+			return ( int ) ( ( firstEqualEtalons - firstEqualDifferents ) - ( secondEqualEtalons - secondEqualDifferents ) );
 		};
 	}
 
 	/**
-	 * Returns average of equality metrics between composeBlock and list of composeBlocksToCompareWith
+	 * Returns average of equality metrics between composeBlock and list of stepsToCompareWith
+	 * Actual comparison take place between composeBlock and trimmed blocks inside composition step.
+	 * Blocks from composition steps trimmed from startTime to startTime + composeBlock rythm value
+	 *
 	 * @param composeBlock
-	 * @param composeBlocksToCompareWith
+	 * @param startTime
+	 * @param stepsToCompareWith
 	 * @return
 	 */
-	private double getEqualityMetrics( ComposeBlock composeBlock, Optional<List<ComposeBlock>> composeBlocksToCompareWith ) {
-		double firstMetric = 0;
-		if ( composeBlocksToCompareWith.isPresent() ) {
-			OptionalDouble average = composeBlocksToCompareWith.get().stream()
-					.mapToDouble( value -> formEqualityAnalyser.getEqualityMetric( value.getMelodyList(), composeBlock.getMelodyList() ) ).average();
-			firstMetric += average.orElse( 0 );
-		}
-		return firstMetric;
+	private double getEqualityMetrics( ComposeBlock composeBlock, double startTime, List<FormCompositionStep> stepsToCompareWith ) {
+		List<List<Melody>> trimmedCollectionOfMelodies = stepsToCompareWith.stream().map( formCompositionStep -> ModelUtils
+				.trimToTime( ( new ComposeBlock( formCompositionStep.getTrasposedComposeBlocks() ) ).getMelodyList(), startTime,
+						startTime + composeBlock.getRhythmValue() ) ).collect( Collectors.toList() );
+		OptionalDouble average = trimmedCollectionOfMelodies.stream()
+				.mapToDouble( value -> formEqualityAnalyser.getEqualityMetric( value, composeBlock.getMelodyList() ) ).average();
+		return average.orElse( 0 );
 	}
 
+	public void setComposeBlockFilter( ComposeBlockFilter composeBlockFilter ) {
+		this.composeBlockFilter = composeBlockFilter;
+	}
 }

@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import utils.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static utils.ModelUtils.getTransposePitch;
@@ -59,22 +56,29 @@ public class FormBlockProvider {
 	 * @param lexicon
 	 * @param length
 	 * @param form
-	 * @return
-	 *
-	 * TODO tests
+	 * @return TODO tests
 	 */
 	public List<CompositionStep> composeSteps( ComposeBlockProvider composeBlockProvider, List<FormCompositionStep> previousSteps, Lexicon lexicon,
 			double length, Form form ) {
-		List<CompositionStep> compositionSteps = new ArrayList<>();
 
-		CompositionStep compositionStep = fetchLastCompositionStep( previousSteps.get( previousSteps.size() - 1 ) );
-		compositionSteps.add( compositionStep );
+		//TODO refactor this
+		List<FormCompositionStep> similarFormSteps = previousSteps.stream().skip( 1 )
+				.filter( formCompositionStep -> formCompositionStep.getForm() != null && formCompositionStep.getForm().equals( form ) )
+				.collect( Collectors.toList() );
+		List<FormCompositionStep> differentFormSteps = previousSteps.stream().skip( 1 )
+				.filter( formCompositionStep -> formCompositionStep.getForm() != null && !formCompositionStep.getForm().equals( form ) )
+				.collect( Collectors.toList() );
+
+		List<CompositionStep> compositionSteps = new ArrayList<>();
+		compositionSteps.add( fetchLastCompositionStep( previousSteps.get( previousSteps.size() - 1 ) ) );
 		double currentLength = 0;
+
 		for ( int step = 1; step < length / lexicon.getMinRhythmValue() + 1; step++ ) {
 			logger.debug( "Current state {}", step );
 			CompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
 			Optional<ComposeBlock> lastStepOriginComposeBlock = Optional.ofNullable( lastCompositionStep.getOriginComposeBlock() );
-			Optional<ComposeBlock> nextComposeBlock = composeBlockProvider.getNextComposeBlock( lexicon, compositionSteps );
+			Optional<ComposeBlock> nextComposeBlock = composeBlockProvider.getNextComposeBlock( lexicon, compositionSteps, similarFormSteps,
+					differentFormSteps );
 
 			if ( nextComposeBlock.isPresent() && currentLength + nextComposeBlock.get().getRhythmValue() <= length ) {
 				Optional<ComposeBlock> lastCompositionStepTransposeComposeBlock = Optional.ofNullable( lastCompositionStep.getTransposeComposeBlock() );
@@ -87,7 +91,7 @@ public class FormBlockProvider {
 					List<ComposeBlock> transposedComposeBlocks = compositionSteps.stream().skip( 1 ).map( CompositionStep::getTransposeComposeBlock )
 							.collect( Collectors.toList() );
 					ComposeBlock composeBlock = new ComposeBlock( transposedComposeBlocks );
-					boolean formCheckPassed = isFormCheckPassed( previousSteps, composeBlock, form );
+					boolean formCheckPassed = isFormCheckPassed( composeBlock, similarFormSteps, differentFormSteps );
 
 					if ( !formCheckPassed ) {
 						logger.debug( "ComposeBlock check failed in terms of form" );
@@ -127,32 +131,25 @@ public class FormBlockProvider {
 
 	/**
 	 * Checks if new compose block can be used in composition in terms of form
-	 * @param previousSteps
+	 *
 	 * @param composeBlock
-	 * @param form
+	 * @param similarFormSteps
+	 * @param differentFormSteps
 	 * @return
 	 */
-	private boolean isFormCheckPassed( List<FormCompositionStep> previousSteps, ComposeBlock composeBlock, Form form ) {
-		// Skipping first step because it is a mock out of form comparison
-		List<FormCompositionStep> previousCompositionSteps = previousSteps.stream().skip( 1 ).collect( Collectors.toList());
-		List<FormCompositionStep> previouslyComposedStepsOfThisForm = previousCompositionSteps.stream()
-				.filter( formCompositionStep -> formCompositionStep.getForm() != null && formCompositionStep.getForm().equals( form ) )
-				.collect( Collectors.toList() );
-		if ( previouslyComposedStepsOfThisForm.isEmpty() ) {
-			// checking that new composed piece is NOT form equals to any of previously composed
-			for ( FormCompositionStep previousStep : previousCompositionSteps ) {
-				ComposeBlock previousComposeBlock = new ComposeBlock( previousStep.getTrasposedComposeBlocks() );
-				if ( formEqualityAnalyser.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() ) ) {
-					return false;
-				}
+	private boolean isFormCheckPassed( ComposeBlock composeBlock, List<FormCompositionStep> similarFormSteps, List<FormCompositionStep> differentFormSteps ) {
+		// checking that new composeBlock is different to differentFormSteps
+		for ( FormCompositionStep differentStep : differentFormSteps ) {
+			ComposeBlock previousComposeBlock = new ComposeBlock( differentStep.getTrasposedComposeBlocks() );
+			if ( formEqualityAnalyser.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() ) ) {
+				return false;
 			}
-		} else {
-			// checking that all previouslyComposedStepsOfThisForm IS form equals to new composed block
-			for ( FormCompositionStep formCompositionStep : previouslyComposedStepsOfThisForm ) {
-				ComposeBlock previousComposeBlock = new ComposeBlock( formCompositionStep.getTrasposedComposeBlocks() );
-				if ( !formEqualityAnalyser.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() ) ) {
-					return false;
-				}
+		}
+		// checking that new composeBlock is similar to similarFormSteps
+		for ( FormCompositionStep similarStep : similarFormSteps ) {
+			ComposeBlock previousComposeBlock = new ComposeBlock( similarStep.getTrasposedComposeBlocks() );
+			if ( !formEqualityAnalyser.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() ) ) {
+				return false;
 			}
 		}
 		return true;
