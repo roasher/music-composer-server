@@ -21,10 +21,10 @@ public abstract class AbstractComposeBlockFilter implements ComposeBlockFilter {
 	}
 
 	public List<ComposeBlock> filter( List<ComposeBlock> possibleNextComposeBlocks, List<CompositionStep> previousCompositionSteps ) {
-		List<ComposeBlock> filteredPrevously = composeBlockFilter != null ?
+		List<ComposeBlock> filteredPreviously = composeBlockFilter != null ?
 				composeBlockFilter.filter( possibleNextComposeBlocks, previousCompositionSteps ) :
 				new ArrayList<>( possibleNextComposeBlocks );
-		return filterIt( filteredPrevously, previousCompositionSteps );
+		return filterIt( filteredPreviously, previousCompositionSteps );
 	}
 
 	public abstract List<ComposeBlock> filterIt( List<ComposeBlock> possibleNextComposeBlocks, List<CompositionStep> previousCompositionSteps );
