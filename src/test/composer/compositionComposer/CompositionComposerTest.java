@@ -2,10 +2,7 @@ package composer.compositionComposer;
 
 import composer.ComposeBlockProvider;
 import composer.CompositionComposer;
-import composer.first.RandomFirstBlockProvider;
-import composer.next.SimpleNextBlockProvider;
 import decomposer.CompositionDecomposer;
-import helper.AbstractSpringComposerTest;
 import helper.AbstractSpringTest;
 import jm.JMC;
 import jm.music.data.Note;
@@ -27,7 +24,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static jm.JMC.*;
