@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Class aggregates useful utilities upon Model objects
@@ -176,4 +177,32 @@ public class ModelUtils {
 		return 0;
 	}
 
+	public static List<Melody> trimToTime( List<Melody> melodies, double startTime, double endTime ) {
+		return melodies.stream().map( melody -> trimToTime( melody, startTime, endTime ) ).collect( Collectors.toList() );
+	}
+
+	/**
+	 * TODO stress tests
+	 * @param melody
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	public static Melody trimToTime( Melody melody, double startTime, double endTime ) {
+		double noteStartTime = 0;
+		Melody out = new Melody(  );
+		for ( int noteNumber = 0; noteNumber < melody.getNoteList().size(); noteNumber++ ) {
+			Note currentNote = ( Note ) melody.getNote( noteNumber );
+			if ( noteStartTime < startTime && noteStartTime + currentNote.getRhythmValue() > startTime ) {
+				out.add( new Note( currentNote.getPitch(), noteStartTime + currentNote.getRhythmValue() - startTime ) );
+			} else if ( noteStartTime > startTime && noteStartTime + currentNote.getRhythmValue() < endTime ) {
+				out.add( currentNote );
+			} else if ( noteStartTime < endTime && noteStartTime + currentNote.getRhythmValue() > endTime ) {
+				out.add( new Note( currentNote.getPitch(), endTime - noteStartTime ) );
+				return out;
+			}
+			noteStartTime += currentNote.getRhythmValue();
+		}
+		return null;
+	}
 }
