@@ -1,9 +1,8 @@
 package composer.next;
 
 import composer.step.CompositionStep;
+import composer.step.FormCompositionStep;
 import model.ComposeBlock;
-import model.Lexicon;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +13,7 @@ import java.util.Optional;
  */
 public interface NextBlockProvider {
 
-    Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps );
+    Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> similarFormSteps,
+            List<FormCompositionStep> differentFormSteps );
 
 }
