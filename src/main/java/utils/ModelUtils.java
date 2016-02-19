@@ -116,7 +116,7 @@ public class ModelUtils {
 	 */
 	public static double sumAllRhytmValues( Melody melody ) {
 		double rhytmSum = 0;
-		for ( Note currentNote : melody.getNoteArray() ) {
+		for ( Note currentNote : ( List<Note> ) melody.getNoteList() ) {
 			rhytmSum += currentNote.getRhythmValue();
 		}
 		return rhytmSum;
@@ -134,7 +134,7 @@ public class ModelUtils {
 	public static double getMinRhythmValue( List< Melody > melodyList ) {
 		double minRhythmValue = Double.MAX_VALUE;
 		for ( Melody melody : melodyList ) {
-			for ( Note note : melody.getNoteArray() ) {
+			for ( Note note : ( List<Note> ) melody.getNoteList() ) {
 				if ( note.getRhythmValue() < minRhythmValue ) {
 					minRhythmValue = note.getRhythmValue();
 				}

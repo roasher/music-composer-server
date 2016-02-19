@@ -65,7 +65,7 @@ public class ComposeBlock {
 			double rhythmValue = 0;
 			for ( ComposeBlock currentComposeBlock : composeBlockList ) {
 				for ( int melodyNumber = 0; melodyNumber < currentComposeBlock.getMelodyList().size(); melodyNumber ++ ) {
-					melodyList.get( melodyNumber ).addNoteList( currentComposeBlock.getMelodyList().get( melodyNumber ).getNoteArray() );
+					melodyList.get( melodyNumber ).addNoteList( currentComposeBlock.getMelodyList().get( melodyNumber ).getNoteList(), true );
 				}
 				rhythmValue += currentComposeBlock.getRhythmValue();
 			}

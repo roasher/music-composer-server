@@ -22,7 +22,7 @@ public class DifferentNumberOfNotesRequired implements EqualityTest {
 
     @Override
     public boolean test( Melody firstMelody, Melody secondMelody ) {
-        if ( firstMelody.getNoteArray().length == secondMelody.getNoteArray().length ) {
+        if ( firstMelody.getNoteList().size() == secondMelody.getNoteList().size() ) {
             return false;
         } else {
             if ( this.equalityTest != null ) {

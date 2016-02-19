@@ -32,7 +32,7 @@ public class SignatureDecomposer {
      */
     private class TracedMelody extends Melody {
         private boolean hasEqual = false;
-        private TracedMelody( Note[] notes ) { super( notes );}
+        private TracedMelody( List<Note> notes ) { super( notes ); }
 
         @Override
         public boolean equals( Object signature ) {
@@ -52,18 +52,18 @@ public class SignatureDecomposer {
 
         // In the import composition will be only one phase that includes all the notes played by instrument
         Phrase currentPhrase = currentPart.getPhrase( 0 );
-        Note[] notes = currentPhrase.getNoteArray();
+        List<Note> notes = currentPhrase.getNoteList();
 
         Set<TracedMelody> signatures = new HashSet<>();
         for ( int signatureLength = minSignatureLength; signatureLength <= maxSignatureLength; signatureLength++ ) {
-            for ( int startIndex = 0, endIndex = signatureLength; endIndex < notes.length; startIndex++, endIndex++ ) {
+            for ( int startIndex = 0, endIndex = signatureLength; endIndex < notes.size(); startIndex++, endIndex++ ) {
                 PlaceInTheComposition placeInTheComposition = new PlaceInTheComposition(
                         composition.getCompositionInfo(),
                         // first start time
                         currentPhrase.getNoteStartTime( startIndex ),
                         // last note end time
-                        currentPhrase.getNoteStartTime( endIndex ) + notes[ endIndex ].getRhythmValue() );
-                Note[] signatureNotes = Arrays.copyOfRange( notes, startIndex, endIndex );
+                        currentPhrase.getNoteStartTime( endIndex ) + notes.get( endIndex ).getRhythmValue() );
+                List<Note> signatureNotes = notes.subList( startIndex, endIndex );
                 TracedMelody newSignature = new TracedMelody( signatureNotes );
                 newSignature.setPlaceInTheComposition( placeInTheComposition );
                 signatures.add( newSignature );

@@ -70,8 +70,8 @@ public class CompositionLoaderTest extends AbstractSpringTest {
 		assertEquals( firstPhrase.size(), secondPhrase.size() );
 //		Calendar calendar = Calendar.getInstance();
 		for ( int currentNoteNumber = 0; currentNoteNumber < firstPhrase.size(); currentNoteNumber++ ) {
-			Note firstNote = firstPhrase.getNoteArray()[ currentNoteNumber ];
-			Note secondNote = secondPhrase.getNoteArray()[ currentNoteNumber ];
+			Note firstNote = firstPhrase.getNote( currentNoteNumber );
+			Note secondNote = secondPhrase.getNote( currentNoteNumber );
 			assertEquals( firstNote.getPitch(), secondNote.getPitch() );
 
 			double time = firstNote.getMyPhrase().getNoteStartTime( currentNoteNumber );

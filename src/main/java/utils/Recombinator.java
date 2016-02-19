@@ -52,7 +52,7 @@ public class Recombinator {
 		for ( double edge : edgeArray ) {
 			List< Melody > melodyBlock = new ArrayList<>(  );
 			for ( Melody melody : inputMelodyBlock ) {
-				int noteNumber = Utils.getNoteNumber( melody.getNoteArray(), edge );
+				int noteNumber = Utils.getNoteNumber( melody.getNoteList(), edge );
 				Note notePlayingAtThisMoment = melody.getNote( noteNumber );
 
 				Melody newMelody = new Melody( new Note[]{ new Note( notePlayingAtThisMoment.getPitch(), edge - prevoiusEdge ) } );

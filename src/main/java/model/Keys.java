@@ -47,7 +47,7 @@ public class Keys {
 		allKeys.add( C_FLAT_MAJOR );
 	};
 
-	public static List< Key > getPossibleKeys( Note[] notes, int maxNumberOfNotesOutOfKey ) {
+	public static List< Key > getPossibleKeys( List<Note> notes, int maxNumberOfNotesOutOfKey ) {
 		List< Key > possibleKeys = new ArrayList<>();
 		for ( Key key : allKeys ) {
 			int numberOfNotesOutOfKey = 0;

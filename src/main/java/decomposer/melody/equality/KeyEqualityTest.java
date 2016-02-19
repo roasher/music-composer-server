@@ -16,8 +16,8 @@ public class KeyEqualityTest implements EqualityTest {
 
 	@Override
 	public boolean test( Melody firstMelody, Melody secondMelody ) {
-		List< Key > firstMelodyPossibleKeys = getPossibleKeys( firstMelody.getNoteArray(), maxNumberOfNotesOutOfKey );
-		List< Key > secondMelodyPossibleKeys = getPossibleKeys( secondMelody.getNoteArray(), maxNumberOfNotesOutOfKey );
+		List< Key > firstMelodyPossibleKeys = getPossibleKeys( firstMelody.getNoteList(), maxNumberOfNotesOutOfKey );
+		List< Key > secondMelodyPossibleKeys = getPossibleKeys( secondMelody.getNoteList(), maxNumberOfNotesOutOfKey );
 
 		for ( Key key : firstMelodyPossibleKeys ) {
 			if ( secondMelodyPossibleKeys.contains( key ) ) {

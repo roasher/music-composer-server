@@ -11,8 +11,8 @@ import model.melody.MelodyMovement;
 public abstract class AbstractMelodyMovementEqualityTest implements EqualityTest {
 
     public boolean test( Melody firstMelody, Melody secondMelody ) {
-        MelodyMovement firstMelodyMovement = new MelodyMovement( firstMelody.getNoteArray() );
-        MelodyMovement secondMelodyMovement = new MelodyMovement( secondMelody.getNoteArray() );
+        MelodyMovement firstMelodyMovement = new MelodyMovement( firstMelody.getNoteList() );
+        MelodyMovement secondMelodyMovement = new MelodyMovement( secondMelody.getNoteList() );
         // Test on equality to save some time
         if ( firstMelodyMovement.equals( secondMelodyMovement ) ) {
             return true;

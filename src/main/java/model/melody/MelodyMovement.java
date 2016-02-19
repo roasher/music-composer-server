@@ -3,6 +3,7 @@ package model.melody;
 import jm.music.data.Note;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,16 +15,20 @@ public class MelodyMovement {
     private List< Integer > pitchIntervals = new ArrayList< Integer >();
 
     public MelodyMovement( Note[] noteArray ) {
-        for ( int noteNumber = 0; noteNumber < noteArray.length - 1; noteNumber ++ ) {
-            Note currentNote = noteArray[noteNumber];
-            Note nextNote = noteArray[noteNumber + 1];
-			int interval = nextNote.getPitch() - currentNote.getPitch();
-			// if one of the notes is rest
-			if ( interval > 1000 ) {
-				interval = Integer.MAX_VALUE;
-			} else if ( interval < -1000 ) {
-				interval = Integer.MIN_VALUE;
-			}
+        this( Arrays.asList( noteArray ) );
+    }
+
+    public MelodyMovement( List<Note> notes ) {
+        for ( int noteNumber = 0; noteNumber < notes.size() - 1; noteNumber ++ ) {
+            Note currentNote = notes.get( noteNumber );
+            Note nextNote = notes.get( noteNumber + 1 );
+            int interval = nextNote.getPitch() - currentNote.getPitch();
+            // if one of the notes is rest
+            if ( interval > 1000 ) {
+                interval = Integer.MAX_VALUE;
+            } else if ( interval < -1000 ) {
+                interval = Integer.MIN_VALUE;
+            }
             pitchIntervals.add( interval );
         }
     }

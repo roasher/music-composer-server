@@ -76,7 +76,7 @@ public class CompositionSlicer {
 			state.add( new Note( JMC.REST, phrase.getStartTime() ) );
 		}
 
-        for ( int noteNumber = 0; noteNumber < phrase.getNoteArray().length; noteNumber ++ ) {
+        for ( int noteNumber = 0; noteNumber < phrase.getNoteList().size(); noteNumber ++ ) {
             Note note = phrase.getNote( noteNumber );
             state.add( phrase.getNote( noteNumber ) );
         }
@@ -113,7 +113,7 @@ public class CompositionSlicer {
 				lastNoteEndTime = 0;
 			} else {
 				slice = slices.get( slices.size() - 1 );
-				for ( Note currentSliceNote : slice.getNoteArray() ) {
+				for ( Note currentSliceNote : ( List<Note> ) slice.getNoteList() ) {
 					lastNoteEndTime += currentSliceNote.getRhythmValue();
 				}
 				// fulfill slice check
@@ -149,7 +149,7 @@ public class CompositionSlicer {
 	public void checkSlicesOccupancy( List<Melody> slices, double timePeriod ) {
 		for ( Melody slice : slices ) {
 			BigDecimal rhythmValuesSum = BigDecimal.ZERO;
-			for ( Note sliceNote : slice.getNoteArray() ) {
+			for ( Note sliceNote : ( List<Note> ) slice.getNoteList() ) {
 				rhythmValuesSum = rhythmValuesSum.add( BigDecimal.valueOf( sliceNote.getRhythmValue() ) );
 			}
 			if ( rhythmValuesSum.round( MathContext.DECIMAL32 ).compareTo( BigDecimal.valueOf( timePeriod ) ) != 0 ) {

@@ -91,7 +91,7 @@ public class CompositionLoader {
 	private void roundAllRhythmValues( Composition composition ) {
 		for ( Part part : composition.getPartArray() ) {
 			for ( Phrase phrase : part.getPhraseArray() ) {
-				for ( Note note : phrase.getNoteArray() ) {
+				for ( Note note : ( List<Note> ) phrase.getNoteList() ) {
 					double newValue = rhythmValueHandler.roundRhythmValue( note.getRhythmValue() );
 					note.setRhythmValue( newValue );
 				}

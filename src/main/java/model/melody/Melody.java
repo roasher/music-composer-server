@@ -7,6 +7,7 @@ import utils.ModelUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Class represents Melody entity
@@ -71,14 +72,14 @@ public class Melody extends Phrase {
 			return false;
 		}
 
-        Note[] thisNoteArray = this.getNoteArray();
-        Note[] melodyNoteArray = melody.getNoteArray();
+        List<Note> thisNoteArray = this.getNoteList();
+        List<Note> melodyNoteArray = melody.getNoteList();
 
-        if ( thisNoteArray.length != melodyNoteArray.length ) return false;
+        if ( thisNoteArray.size() != melodyNoteArray.size() ) return false;
 
-        for ( int currentNoteNumber = 0; currentNoteNumber < thisNoteArray.length ; currentNoteNumber ++ ) {
-            Note currentNoteFromThis = thisNoteArray[ currentNoteNumber ];
-            Note currentNoteFromMelody = melodyNoteArray[ currentNoteNumber ];
+        for ( int currentNoteNumber = 0; currentNoteNumber < thisNoteArray.size() ; currentNoteNumber ++ ) {
+            Note currentNoteFromThis = thisNoteArray.get( currentNoteNumber );
+            Note currentNoteFromMelody = melodyNoteArray.get( currentNoteNumber );
             double rhythm1 = currentNoteFromMelody.getRhythmValue();
             double rhythm2 = currentNoteFromThis.getRhythmValue();
             if ( currentNoteFromMelody.getPitch() != currentNoteFromThis.getPitch() || rhythm1 != rhythm2 ) {
@@ -95,7 +96,7 @@ public class Melody extends Phrase {
 	 */
 	public Melody transposeClone( int transposePitch ) {
 		List<Note> notes = new ArrayList<>( this.getNoteList().size() );
-		for ( Note note : this.getNoteArray() ) {
+		for ( Note note : ( List<Note> ) this.getNoteList() ) {
 			notes.add( new Note( note.getPitch() == Note.REST ? Note.REST : note.getPitch() + transposePitch, note.getRhythmValue(), note.getDynamic(), note.getPan() ) );
 		}
 		Melody newMelody = new Melody( notes );
@@ -104,15 +105,15 @@ public class Melody extends Phrase {
 
 	@Override
     public int hashCode() {
-        Note[] notes = this.getNoteArray();
-        return notes[0].getPitch() - notes[ notes.length - 1 ].getPitch();
+        List<Note> notes = this.getNoteList();
+        return this.getNote( 0 ).getPitch() - this.getNote( notes.size() - 1 ).getPitch();
     }
 
 	@Override
 		 public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append( this.getStartTime() ).append( " " );
-		for ( Note note : this.getNoteArray() ) {
+		for ( Note note : ( List<Note> ) this.getNoteList() ) {
 			stringBuilder.append( String.format( "{%d %s|%.3f}", note.getPitch(), ModelUtils.getNoteNameByPitch( note.getPitch() ), note.getRhythmValue() ) );
 		}
 		stringBuilder.append(" ").append(this.getEndTime() );

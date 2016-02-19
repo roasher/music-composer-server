@@ -110,7 +110,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		sliceHalfNote.add( slice10 );
 
 		Phrase phrase = new Phrase();
-		for ( Note note : noteListToSlice.getNoteArray() ) {
+		for ( Note note : ( List<Note> ) noteListToSlice.getNoteList() ) {
 			phrase.add( note );
 		}
 		List<Melody> sliceToTest = compositionSlicer.slice( phrase, HALF_NOTE );
@@ -226,7 +226,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		sliceQuarterNote.add( slice101 );
 
 		Phrase phraseQuarter = new Phrase();
-		for ( Note note : noteListToSlice.getNoteArray() ) {
+		for ( Note note : ( List<Note> ) noteListToSlice.getNoteList() ) {
 			phraseQuarter.add( note );
 		}
 		List<Melody> sliceToTestQuarter = compositionSlicer.slice( phraseQuarter, QUARTER_NOTE );
@@ -273,13 +273,13 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		sliceWholefNote.add( sliceW9 );
 
 		Phrase phraseW = new Phrase();
-		for ( Note note : noteListToSlice.getNoteArray() ) {
+		for ( Note note : ( List<Note> ) noteListToSlice.getNoteList() ) {
 			phraseW.add( note );
 		}
 		List<Melody> sliceToTestW = compositionSlicer.slice( phraseW, WHOLE_NOTE );
 		assertTrue( Utils.listOfMelodiesAreEqual( sliceToTestW, sliceWholefNote ) );
 
-		phraseW.getNoteArray()[0].setRhythmValue( HALF_NOTE );
+		phraseW.getNote( 0 ).setRhythmValue( HALF_NOTE );
 		List<Melody> sliceToTestW1 = compositionSlicer.slice( phraseW, WHOLE_NOTE );
 		assertFalse( Utils.listOfMelodiesAreEqual( sliceToTestW1, sliceWholefNote ) );
 	}

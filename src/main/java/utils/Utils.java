@@ -86,16 +86,16 @@ public class Utils {
 	 * @return
 	 * TODO refactor using binary search
 	 */
-	public static int getNoteNumber( Note[] notes, double time ) {
+	public static int getNoteNumber( List<Note> notes, double time ) {
 		double startTime = 0;
-		for ( int currentNoteNumber = 0; currentNoteNumber < notes.length; currentNoteNumber ++ ) {
-			double rhythm = notes[ currentNoteNumber ].getRhythmValue();
+		for ( int currentNoteNumber = 0; currentNoteNumber < notes.size(); currentNoteNumber ++ ) {
+			double rhythm = notes.get( currentNoteNumber ).getRhythmValue();
 			if ( startTime < time && time <= startTime + rhythm ) {
 				return currentNoteNumber;
 			}
 			startTime += rhythm;
 		}
-		return notes.length + 1;
+		return notes.size() + 1;
 	}
 
 	public static int getDecimalPlaces( double value ) {
