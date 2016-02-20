@@ -203,6 +203,6 @@ public class ModelUtils {
 			}
 			noteStartTime += currentNote.getRhythmValue();
 		}
-		return null;
+		return out;
 	}
 }

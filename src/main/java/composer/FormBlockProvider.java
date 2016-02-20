@@ -120,6 +120,7 @@ public class FormBlockProvider {
 					}
 					compositionSteps.remove( step - 1 );
 					step = step - 2;
+					continue;
 				} else {
 					logger.warn( "There is no possible ways to compose new piece considering such parameters" );
 					break;

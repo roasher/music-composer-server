@@ -47,13 +47,13 @@ public class Controller {
 
 		ComposeBlockFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
 		FormNextBlockProvider formNextBlockProvider = applicationContext.getBean( FormNextBlockProvider.class );
-//		formNextBlockProvider.setComposeBlockFilter( bachChoralFilter );
+		formNextBlockProvider.setComposeBlockFilter( bachChoralFilter );
 
 		ComposeBlockProvider composeBlockProvider = applicationContext.getBean( ComposeBlockProvider.class );
 		composeBlockProvider.setNextBlockProvider( formNextBlockProvider );
 
 		Composition composition = compositionComposer
-				.compose( composeBlockProvider, lexicon, "ABCD", 16 * JMC.WHOLE_NOTE );
+				.compose( composeBlockProvider, lexicon, "AAAA", 16 * JMC.WHOLE_NOTE );
 		//		assertEquals( 16., composition.getEndTime(), 0 );
 
 		//		View.notate( composition );
