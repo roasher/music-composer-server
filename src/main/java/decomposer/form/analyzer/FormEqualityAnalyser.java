@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class FormEqualityAnalyser {
 			return false;
 		}
 
-		double successTestPersentage = getEqualityMetric( firstMusicBlockInstrumentParts, secondMusicBlockInstrumentParts );
+		double successTestPersentage = getAverageEqualityMetric( firstMusicBlockInstrumentParts, secondMusicBlockInstrumentParts );
 		if ( successTestPersentage >= instrumentEqualityPassThreshold ) {
 			logger.info( "Music Blocks considered form - equal" );
 			return true;
@@ -42,6 +43,12 @@ public class FormEqualityAnalyser {
 		}
 	}
 
+	/**
+	 * Returns numberOfEqualInstrumentParts devided by parts number
+	 * @param firstMusicBlockInstrumentParts
+	 * @param secondMusicBlockInstrumentParts
+	 * @return
+	 */
 	public double getEqualityMetric( List<Melody> firstMusicBlockInstrumentParts, List<Melody> secondMusicBlockInstrumentParts ) {
 		if ( firstMusicBlockInstrumentParts.size() != secondMusicBlockInstrumentParts.size() ) {
 			throw new RuntimeException( "Input collections of melodies has different sizes" );
@@ -54,6 +61,24 @@ public class FormEqualityAnalyser {
 		}
 
 		return numberOfEqualInstrumentParts * 1. / firstMusicBlockInstrumentParts.size();
+	}
+
+	/**
+	 * Returns average of equality metrics from each part
+	 * @param firstMusicBlockInstrumentParts
+	 * @param secondMusicBlockInstrumentParts
+	 * @return
+	 */
+	public double getAverageEqualityMetric( List<Melody> firstMusicBlockInstrumentParts, List<Melody> secondMusicBlockInstrumentParts ) {
+		if ( firstMusicBlockInstrumentParts.size() != secondMusicBlockInstrumentParts.size() ) {
+			throw new RuntimeException( "Input collections of melodies has different sizes" );
+		}
+		List<Double> equalityMetrics = new ArrayList<>(  );
+		for ( int instrumentPartNumber = 0; instrumentPartNumber < firstMusicBlockInstrumentParts.size(); instrumentPartNumber ++ ) {
+			equalityMetrics.add( formEqualityAnalyzer.getEqualityMetric( firstMusicBlockInstrumentParts.get( instrumentPartNumber ), secondMusicBlockInstrumentParts.get( instrumentPartNumber ) ) );
+		}
+
+		return equalityMetrics.stream().mapToDouble( Double::doubleValue ).average().getAsDouble();
 	}
 
 	public double getInstrumentEqualityPassThreshold() {
