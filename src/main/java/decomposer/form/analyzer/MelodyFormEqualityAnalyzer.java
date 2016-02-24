@@ -30,31 +30,7 @@ public class MelodyFormEqualityAnalyzer implements MelodyEqualityAnalyzer {
 
     public boolean isEqual( Melody firstMelody, Melody secondMelody ) {
 
-		EqualityTest[] testArray = new EqualityTest[] {
-		  intervalsEqualityTest,
-		  rhythmEqualityTest,
-		  keyEqualityTest
-		};
-		int numberOfTestsPassed = 0;
-		int numberOfTestsFailed = 0;
-
-		logger.debug( "Comparing {} with {}", firstMelody, secondMelody );
-		for ( int currentTestNumber = 0; currentTestNumber < testArray.length;  currentTestNumber ++ ) {
-			boolean testPassed = testArray[ currentTestNumber ].test( firstMelody, secondMelody );
-			if ( testPassed ) {
-				numberOfTestsPassed++;
-				logger.debug( "{} test succeed", testArray[ currentTestNumber ].getClass().getSimpleName() );
-			} else {
-				numberOfTestsFailed++;
-				logger.debug( "{} test failed", testArray[ currentTestNumber ].getClass().getSimpleName() );
-			}
-			if ( 1 - numberOfTestsFailed*1./testArray.length < equalityTestPassThreshold ) {
-				logger.debug( "Number of failed test is too high - {}. Aborting others", numberOfTestsFailed );
-				return false;
-			}
-		}
-
-        double positivePersentage = 1.0*numberOfTestsPassed/testArray.length;
+		double positivePersentage = getEqualityMetric( firstMelody, secondMelody );
         logger.debug( "Percent of positive tests = {}, pass threshold = {}", positivePersentage, this.equalityTestPassThreshold );
 
         if ( equalityTestPassThreshold <= positivePersentage ) {
@@ -65,6 +41,28 @@ public class MelodyFormEqualityAnalyzer implements MelodyEqualityAnalyzer {
             return false;
         }
     }
+
+	public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
+
+		EqualityTest[] testArray = new EqualityTest[] {
+				intervalsEqualityTest,
+				rhythmEqualityTest,
+				keyEqualityTest
+		};
+
+		int numberOfTestsPassed = 0;
+		logger.debug( "Comparing {} with {}", firstMelody, secondMelody );
+		for ( EqualityTest aTestArray : testArray ) {
+			boolean testPassed = aTestArray.test( firstMelody, secondMelody );
+			if ( testPassed ) {
+				numberOfTestsPassed++;
+				logger.debug( "{} test succeed", aTestArray.getClass().getSimpleName() );
+			} else {
+				logger.debug( "{} test failed", aTestArray.getClass().getSimpleName() );
+			}
+		}
+		return 1.0*numberOfTestsPassed/testArray.length;
+	}
 
 	public double getEqualityTestPassThreshold() {
 		return equalityTestPassThreshold;
