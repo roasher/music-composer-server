@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public interface NextBlockProvider {
 
-    Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> similarFormSteps,
-            List<FormCompositionStep> differentFormSteps );
+    Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> similarFormSteps, List<FormCompositionStep> differentFormSteps,
+            double length );
 
 }

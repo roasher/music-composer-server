@@ -33,11 +33,11 @@ public class ComposeBlockProvider {
 		this.nextBlockProvider = nextBlockProvider;
 	}
 
-	public Optional<ComposeBlock> getNextComposeBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps,
-			List<FormCompositionStep> similarFormSteps, List<FormCompositionStep> differentFormSteps ) {
+	public Optional<ComposeBlock> getNextComposeBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> similarFormSteps,
+			List<FormCompositionStep> differentFormSteps, double length ) {
 		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
 		return lastCompositionStep.getOriginComposeBlock() != null ?
-				nextBlockProvider.getNextBlock( previousCompositionSteps, similarFormSteps, differentFormSteps ) :
+				nextBlockProvider.getNextBlock( previousCompositionSteps, similarFormSteps, differentFormSteps, length ) :
 				firstBlockProvider.getFirstBlock( lexicon, lastCompositionStep.getNextMusicBlockExclusions() );
 	}
 

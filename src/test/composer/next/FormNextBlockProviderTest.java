@@ -11,8 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
@@ -72,7 +70,7 @@ public class FormNextBlockProviderTest extends AbstractSpringTest {
 			new FormCompositionStep( originComposeBlocks, originComposeBlocks, null	)
 		);
 
-		Optional<ComposeBlock> nextBlock = formNextBlockProvider.getNextBlock( previousCompositionSteps, similarFormSteps, Collections.emptyList() );
+		Optional<ComposeBlock> nextBlock = formNextBlockProvider.getNextBlock( previousCompositionSteps, similarFormSteps, Collections.emptyList(), WHOLE_NOTE );
 
 		assertEquals( composeBlock21, nextBlock.get() );
 	}

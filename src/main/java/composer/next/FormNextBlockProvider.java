@@ -26,17 +26,20 @@ public class FormNextBlockProvider implements NextBlockProvider {
 
 	@Override
 	public Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> similarFormSteps,
-			List<FormCompositionStep> differentFormSteps ) {
+			List<FormCompositionStep> differentFormSteps, double length ) {
 
 		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
 		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getOriginComposeBlock().getPossibleNextComposeBlocks() );
 		possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions() );
 
+		// User filters
 		List<ComposeBlock> filteredBlocks =
 				composeBlockFilter != null ? composeBlockFilter.filter( possibleNextComposeBlocks, previousCompositionSteps ) : possibleNextComposeBlocks;
+
 		double previouslyComposedRhythmValue = previousCompositionSteps.stream().skip( 1 ).mapToDouble( value -> value.getOriginComposeBlock().getRhythmValue() ).sum();
 
 		Optional<ComposeBlock> lastOfPossibles = filteredBlocks.stream()
+				.filter( composeBlock -> previouslyComposedRhythmValue + composeBlock.getRhythmValue() <= length )
 				.sorted( getComposeBlockComparator( similarFormSteps, differentFormSteps, previouslyComposedRhythmValue ) )
 				.reduce( ( composeBlock1, composeBlock2 ) -> composeBlock2 );
 

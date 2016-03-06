@@ -20,7 +20,7 @@ public class RandomNextBlockProvider implements NextBlockProvider {
 	 */
 	@Override
 	public Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> similarFormSteps,
-			List<FormCompositionStep> differentFormSteps ) {
+			List<FormCompositionStep> differentFormSteps, double length ) {
 		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
 		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getOriginComposeBlock().getPossibleNextComposeBlocks() );
 		possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions());
