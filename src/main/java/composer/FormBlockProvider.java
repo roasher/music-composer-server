@@ -38,10 +38,18 @@ public class FormBlockProvider {
 	 * @param lexicon
 	 * @return
 	 */
-	public Optional<FormCompositionStep> getFormElement( ComposeBlockProvider composeBlockProvider, Form form, double length,
-			List<FormCompositionStep> previousSteps, Lexicon lexicon ) {
+	public Optional<FormCompositionStep> getFormElement( ComposeBlockProvider composeBlockProvider, Form form, double length, List<FormCompositionStep> previousSteps,
+			Lexicon lexicon ) {
 		logger.info( "Composing form element : {}, length : {}", form.getValue(), length );
-		List<CompositionStep> compositionSteps = composeSteps( composeBlockProvider, previousSteps, lexicon, length, form );
+
+		List<FormCompositionStep> similarFormSteps = previousSteps.stream().skip( 1 )
+				.filter( formCompositionStep -> formCompositionStep.getForm() != null && formCompositionStep.getForm().equals( form ) ).collect( Collectors.toList() );
+		List<FormCompositionStep> differentFormSteps = previousSteps.stream().skip( 1 )
+				.filter( formCompositionStep -> formCompositionStep.getForm() != null && !formCompositionStep.getForm().equals( form ) ).collect( Collectors.toList() );
+
+		List<CompositionStep> compositionSteps = composeSteps( composeBlockProvider, lexicon, length, similarFormSteps, differentFormSteps,
+				fetchLastCompositionStep( previousSteps.get( previousSteps.size() - 1 ) ) );
+
 		return Optional.ofNullable( !compositionSteps.isEmpty() ?
 				new FormCompositionStep( compositionSteps.stream().map( CompositionStep::getOriginComposeBlock ).collect( Collectors.toList() ),
 						compositionSteps.stream().map( CompositionStep::getTransposeComposeBlock ).collect( Collectors.toList() ), form ) :
@@ -52,33 +60,25 @@ public class FormBlockProvider {
 	 * Returns composition step list filled with compose blocks that summary covers input length sharp
 	 *
 	 * @param composeBlockProvider
-	 * @param previousSteps
 	 * @param lexicon
 	 * @param length
-	 * @param form
+	 * @param similarFormSteps
+	 * @param differentFormSteps
+	 * @param preFirstCompositionStep
 	 * @return TODO tests
 	 */
-	public List<CompositionStep> composeSteps( ComposeBlockProvider composeBlockProvider, List<FormCompositionStep> previousSteps, Lexicon lexicon,
-			double length, Form form ) {
-
-		//TODO refactor this
-		List<FormCompositionStep> similarFormSteps = previousSteps.stream().skip( 1 )
-				.filter( formCompositionStep -> formCompositionStep.getForm() != null && formCompositionStep.getForm().equals( form ) )
-				.collect( Collectors.toList() );
-		List<FormCompositionStep> differentFormSteps = previousSteps.stream().skip( 1 )
-				.filter( formCompositionStep -> formCompositionStep.getForm() != null && !formCompositionStep.getForm().equals( form ) )
-				.collect( Collectors.toList() );
+	public List<CompositionStep> composeSteps( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, double length, List<FormCompositionStep> similarFormSteps,
+			List<FormCompositionStep> differentFormSteps, CompositionStep preFirstCompositionStep ) {
 
 		List<CompositionStep> compositionSteps = new ArrayList<>();
-		compositionSteps.add( fetchLastCompositionStep( previousSteps.get( previousSteps.size() - 1 ) ) );
+		compositionSteps.add( preFirstCompositionStep );
 		double currentLength = 0;
 
 		for ( int step = 1; step < length / lexicon.getMinRhythmValue() + 1; step++ ) {
 			logger.debug( "Current state {}", step );
 			CompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
 			Optional<ComposeBlock> lastStepOriginComposeBlock = Optional.ofNullable( lastCompositionStep.getOriginComposeBlock() );
-			Optional<ComposeBlock> nextComposeBlock = composeBlockProvider.getNextComposeBlock( lexicon, compositionSteps, similarFormSteps,
-					differentFormSteps );
+			Optional<ComposeBlock> nextComposeBlock = composeBlockProvider.getNextComposeBlock( lexicon, compositionSteps, similarFormSteps, differentFormSteps, length );
 
 			if ( nextComposeBlock.isPresent() && currentLength + nextComposeBlock.get().getRhythmValue() <= length ) {
 				Optional<ComposeBlock> lastCompositionStepTransposeComposeBlock = Optional.ofNullable( lastCompositionStep.getTransposeComposeBlock() );
