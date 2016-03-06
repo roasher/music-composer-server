@@ -58,7 +58,9 @@ public class FormNextBlockProvider implements NextBlockProvider {
 			double firstEqualDifferents = getEqualityMetrics( firstComposeBlock, previouslyComposedRhythmValue, differents );
 			double secondEqualEtalons = getEqualityMetrics( secondComposeBlock, previouslyComposedRhythmValue, similars );
 			double secondEqualDifferents = getEqualityMetrics( secondComposeBlock, previouslyComposedRhythmValue, differents );
-			return ( int ) ( ( firstEqualEtalons - firstEqualDifferents ) - ( secondEqualEtalons - secondEqualDifferents ) );
+
+			double combinedMetric = ( firstEqualEtalons - firstEqualDifferents ) - ( secondEqualEtalons - secondEqualDifferents );
+			return combinedMetric != 0 ? ( combinedMetric > 0 ? 1 : -1 ) : 0;
 		};
 	}
 
@@ -72,12 +74,12 @@ public class FormNextBlockProvider implements NextBlockProvider {
 	 * @param stepsToCompareWith
 	 * @return
 	 */
-	private double getEqualityMetrics( ComposeBlock composeBlock, double startTime, List<FormCompositionStep> stepsToCompareWith ) {
+	public double getEqualityMetrics( ComposeBlock composeBlock, double startTime, List<FormCompositionStep> stepsToCompareWith ) {
 		List<List<Melody>> trimmedCollectionOfMelodies = stepsToCompareWith.stream().map( formCompositionStep -> ModelUtils
 				.trimToTime( ( new ComposeBlock( formCompositionStep.getTrasposedComposeBlocks() ) ).getMelodyList(), startTime,
 						startTime + composeBlock.getRhythmValue() ) ).collect( Collectors.toList() );
 		OptionalDouble average = trimmedCollectionOfMelodies.stream()
-				.mapToDouble( value -> formEqualityAnalyser.getEqualityMetric( value, composeBlock.getMelodyList() ) ).average();
+				.mapToDouble( value -> formEqualityAnalyser.getAverageEqualityMetric( value, composeBlock.getMelodyList() ) ).average();
 		return average.orElse( 0 );
 	}
 

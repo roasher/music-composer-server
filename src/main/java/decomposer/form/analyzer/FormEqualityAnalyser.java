@@ -1,7 +1,6 @@
 package decomposer.form.analyzer;
 
 import model.melody.Melody;
-import model.MusicBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,8 @@ public class FormEqualityAnalyser {
 	 * @param secondMusicBlockInstrumentParts
 	 * @return
 	 */
-	public double getEqualityMetric( List<Melody> firstMusicBlockInstrumentParts, List<Melody> secondMusicBlockInstrumentParts ) {
+	@Deprecated
+	private double getEqualityMetric( List<Melody> firstMusicBlockInstrumentParts, List<Melody> secondMusicBlockInstrumentParts ) {
 		if ( firstMusicBlockInstrumentParts.size() != secondMusicBlockInstrumentParts.size() ) {
 			throw new RuntimeException( "Input collections of melodies has different sizes" );
 		}
