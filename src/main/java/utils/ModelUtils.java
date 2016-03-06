@@ -182,7 +182,6 @@ public class ModelUtils {
 	}
 
 	/**
-	 * TODO stress tests
 	 * @param melody
 	 * @param startTime
 	 * @param endTime
