@@ -61,6 +61,10 @@ public class Melody extends Phrase {
 		return out.toString();
 	}
 
+	public double getRythmValue() {
+		return this.getNoteList().stream().mapToDouble( value -> ( (Note) value ).getRhythmValue() ).sum();
+	}
+
     @Override
     public boolean equals( Object o ) {
         if ( this == o ) return true;

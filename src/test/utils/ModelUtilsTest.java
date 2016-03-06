@@ -1,15 +1,15 @@
 package utils;
 
 import jm.music.data.Note;
+import jm.music.data.Rest;
+import model.melody.Melody;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static jm.constants.Durations.HALF_NOTE;
-import static jm.constants.Durations.QUARTER_NOTE;
-import static jm.constants.Durations.SIXTEENTH_NOTE;
-import static jm.constants.Pitches.C0;
+import static jm.constants.Durations.*;
+import static jm.constants.Pitches.*;
 import static junit.framework.Assert.assertEquals;
 import static utils.ModelUtils.*;
 
@@ -58,5 +58,23 @@ public class ModelUtilsTest {
 	public void testGetNoteNameByPitch() {
 		assertEquals( getNoteNameByPitch( 60 ), "C4" );
 		assertEquals( getNoteNameByPitch( 62 ), "D4" );
+	}
+
+	@Test
+	public void testTrimToTime() {
+		Melody melody = new Melody(
+				new Rest( WHOLE_NOTE ),
+				new Note( C4, HALF_NOTE),
+				new Note( CS4, EIGHTH_NOTE )
+		);
+		Melody trimmedMelody = trimToTime( melody, 2, 6.25 );
+
+		Melody etalonMelody = new Melody(
+				new Rest( 2 ),
+				new Note( C4, 2 ),
+				new Note( CS4, 0.25 )
+		);
+
+		assertEquals( etalonMelody, trimmedMelody );
 	}
 }

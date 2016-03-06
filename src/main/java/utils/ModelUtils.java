@@ -189,6 +189,9 @@ public class ModelUtils {
 	 * @return
 	 */
 	public static Melody trimToTime( Melody melody, double startTime, double endTime ) {
+		if ( startTime < 0 || endTime > melody.getRythmValue()  || startTime > endTime ) {
+			throw new IllegalArgumentException( "Cant trim with this parameters: startTime = " + startTime + " ,endTime = " + endTime );
+		}
 		double noteStartTime = 0;
 		Melody out = new Melody(  );
 		for ( int noteNumber = 0; noteNumber < melody.getNoteList().size(); noteNumber++ ) {
