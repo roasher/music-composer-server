@@ -1,6 +1,5 @@
 package model;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -10,11 +9,11 @@ import java.util.List;
 public class Key {
 
 	private String name;
-	private List< Integer > notes;
+	private List< Integer > notePitches;
 
 	public Key( String name, List< Integer > notes ) {
 		this.name = name;
-		this.notes = notes;
+		this.notePitches = notes;
 	}
 
 	@Override
@@ -31,7 +30,7 @@ public class Key {
 		if ( !name.equals( key.name ) ) {
 			return false;
 		}
-		if ( !notes.equals( key.notes ) ) {
+		if ( !notePitches.equals( key.notePitches ) ) {
 			return false;
 		}
 
@@ -41,7 +40,7 @@ public class Key {
 	@Override
 	public int hashCode() {
 		int result = name.hashCode();
-		result = 31 * result + notes.hashCode();
+		result = 31 * result + notePitches.hashCode();
 		return result;
 	}
 
@@ -53,12 +52,12 @@ public class Key {
 		this.name = name;
 	}
 
-	public List<Integer> getNotes() {
-		return notes;
+	public List<Integer> getNotePitches() {
+		return notePitches;
 	}
 
-	public void setNotes( List<Integer> notes ) {
-		this.notes = notes;
+	public void setNotePitches( List<Integer> notePitches ) {
+		this.notePitches = notePitches;
 	}
 }
 

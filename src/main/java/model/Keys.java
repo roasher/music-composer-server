@@ -46,21 +46,4 @@ public class Keys {
 		allKeys.add( G_FLAT_MAJOR );
 		allKeys.add( C_FLAT_MAJOR );
 	};
-
-	public static List< Key > getPossibleKeys( List<Note> notes, int maxNumberOfNotesOutOfKey ) {
-		List< Key > possibleKeys = new ArrayList<>();
-		for ( Key key : allKeys ) {
-			int numberOfNotesOutOfKey = 0;
-			for ( Note note : notes ) {
-				if ( note.getPitch() != Integer.MIN_VALUE && !key.getNotes().contains( note.getPitch()%12 ) ) {
-					numberOfNotesOutOfKey++;
-				}
-			}
-			if ( numberOfNotesOutOfKey <= maxNumberOfNotesOutOfKey ) {
-				possibleKeys.add( key );
-			}
-		}
-
-		return possibleKeys;
-	}
 }

@@ -1,9 +1,12 @@
 package decomposer.melody.equality;
 
+import jm.music.data.Note;
 import model.Key;
 import model.melody.Melody;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 
 import static model.Keys.*;
 
@@ -14,17 +17,44 @@ public class KeyEqualityTest implements EqualityTest {
 
 	private int maxNumberOfNotesOutOfKey;
 
+	// TODO Change logic of comparison: now equality metrics may be only 0 | 1. Ideally we need discrete metric: something like min notes that can be removed to
+	@Override
+	public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
+		List<Key> firstMelodyPossibleKeys = getPossibleKeys( firstMelody, 0 );
+		OptionalInt minNumberOfOutNotes = firstMelodyPossibleKeys.stream().mapToInt( value -> getNumberOfNotesOutOfKey( value, secondMelody ) ).min();
+		return ( secondMelody.size() - minNumberOfOutNotes.getAsInt() ) * 1. / secondMelody.size();
+	}
+
 	@Override
 	public boolean test( Melody firstMelody, Melody secondMelody ) {
-		List< Key > firstMelodyPossibleKeys = getPossibleKeys( firstMelody.getNoteList(), maxNumberOfNotesOutOfKey );
-		List< Key > secondMelodyPossibleKeys = getPossibleKeys( secondMelody.getNoteList(), maxNumberOfNotesOutOfKey );
+		double equalityMetrics = getEqualityMetric( firstMelody, secondMelody );
+		double numberOfNotesOutOfKey = ( 1 - equalityMetrics ) * secondMelody.size();
+		return numberOfNotesOutOfKey <= maxNumberOfNotesOutOfKey;
+	}
 
-		for ( Key key : firstMelodyPossibleKeys ) {
-			if ( secondMelodyPossibleKeys.contains( key ) ) {
-				return true;
+	public int getNumberOfNotesOutOfKey( Key key, Melody melody ) {
+		return melody.getNoteList().stream()
+				.filter( o -> !( ( Note ) o ).isRest() )
+				.mapToInt( note -> ( ( Note ) note ).getPitch() % 12 )
+				.filter( notePitch -> !key.getNotePitches().contains( notePitch ) )
+				.toArray().length;
+	}
+
+	public List<Key> getPossibleKeys( Melody melody, int maxNumberOfNotesOutOfKey ) {
+		List<Key> possibleKeys = new ArrayList<>();
+		for ( Key key : allKeys ) {
+			int numberOfNotesOutOfKey = 0;
+			for ( Note note : ( List<Note> ) melody.getNoteList() ) {
+				if ( note.getPitch() != Note.REST && !key.getNotePitches().contains( note.getPitch() % 12 ) ) {
+					numberOfNotesOutOfKey++;
+				}
+			}
+			if ( numberOfNotesOutOfKey <= maxNumberOfNotesOutOfKey ) {
+				possibleKeys.add( key );
 			}
 		}
-		return false;
+
+		return possibleKeys;
 	}
 
 	@Override
