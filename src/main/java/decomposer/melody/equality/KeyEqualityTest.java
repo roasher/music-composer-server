@@ -17,7 +17,6 @@ public class KeyEqualityTest implements EqualityTest {
 
 	private int maxNumberOfNotesOutOfKey;
 
-	// TODO Change logic of comparison: now equality metrics may be only 0 | 1. Ideally we need discrete metric: something like min notes that can be removed to
 	@Override
 	public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
 		List<Key> firstMelodyPossibleKeys = getPossibleKeys( firstMelody, 0 );
