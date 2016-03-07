@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Class analyzes if two melodies can belong to one form element
  * Created by night wish on 26.07.14.
@@ -44,24 +47,13 @@ public class MelodyFormEqualityAnalyzer implements MelodyEqualityAnalyzer {
 
 	public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
 
-		EqualityTest[] testArray = new EqualityTest[] {
+		List<EqualityTest> tests = Arrays.asList(
 				intervalsEqualityTest,
 				rhythmEqualityTest,
 				keyEqualityTest
-		};
+		);
 
-		int numberOfTestsPassed = 0;
-		logger.debug( "Comparing {} with {}", firstMelody, secondMelody );
-		for ( EqualityTest aTestArray : testArray ) {
-			boolean testPassed = aTestArray.test( firstMelody, secondMelody );
-			if ( testPassed ) {
-				numberOfTestsPassed++;
-				logger.debug( "{} test succeed", aTestArray.getClass().getSimpleName() );
-			} else {
-				logger.debug( "{} test failed", aTestArray.getClass().getSimpleName() );
-			}
-		}
-		return 1.0*numberOfTestsPassed/testArray.length;
+		return tests.stream().mapToDouble( equalityTest -> equalityTest.getEqualityMetric( firstMelody, secondMelody ) ).average().getAsDouble();
 	}
 
 	public double getEqualityTestPassThreshold() {
