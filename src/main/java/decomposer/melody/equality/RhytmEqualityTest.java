@@ -16,15 +16,22 @@ public class RhytmEqualityTest implements EqualityTest {
 
     @Override
     public boolean test( Melody firstMelody, Melody secondMelody ) {
+		double equalityMetrics = getEqualityMetric( firstMelody, secondMelody );
+		double currentNumberOfRhythmicallyDifferentNotes = ( 1 - equalityMetrics )*firstMelody.getNoteList().size();
+		return currentNumberOfRhythmicallyDifferentNotes <= maxNumberOfRhythmicallyDifferentNotes;
+    }
 
-        double[] firstRhythmArray = firstMelody.getRhythmArray();
-        double[] secondRhythmArray = secondMelody.getRhythmArray();
-        double[] coefficient = new double[firstMelody.length()];
+	@Override
+	public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
+
+		double[] firstRhythmArray = firstMelody.getRhythmArray();
+		double[] secondRhythmArray = secondMelody.getRhythmArray();
+		double[] coefficient = new double[firstMelody.length()];
 		Map<Double, Integer> countMap = new HashMap<>(  );
 
 		int currentMaxNumberOfRhythmicallyDifferentNotes = 0;
 
-        for ( int currentRhytmValue = 0; currentRhytmValue < firstRhythmArray.length; currentRhytmValue ++ ) {
+		for ( int currentRhytmValue = 0; currentRhytmValue < firstRhythmArray.length; currentRhytmValue ++ ) {
 			coefficient[currentRhytmValue] = firstRhythmArray[ currentRhytmValue ]/secondRhythmArray[ currentRhytmValue ];
 			Integer count = countMap.get( coefficient[currentRhytmValue] );
 			if ( count != null ) {
@@ -49,28 +56,28 @@ public class RhytmEqualityTest implements EqualityTest {
 
 			double rightPart = 0;
 			double leftPart = 0;
-//			if ( mostCommonCoefficient >= 1 ) {
-//				leftPart = Math.abs( firstRhythmArray[currentCoefficientNumber] - mostCommonCoefficient*secondRhythmArray[currentCoefficientNumber] );
-//				rightPart = maxRhythmDeviationSteps*firstRhythmArray[currentCoefficientNumber];
-//			} else {
-//				leftPart = Math.abs( firstRhythmArray[currentCoefficientNumber]/mostCommonCoefficient - secondRhythmArray[currentCoefficientNumber] );
-//				rightPart = maxRhythmDeviationSteps*secondRhythmArray[currentCoefficientNumber];
-//			}
+			//			if ( mostCommonCoefficient >= 1 ) {
+			//				leftPart = Math.abs( firstRhythmArray[currentCoefficientNumber] - mostCommonCoefficient*secondRhythmArray[currentCoefficientNumber] );
+			//				rightPart = maxRhythmDeviationSteps*firstRhythmArray[currentCoefficientNumber];
+			//			} else {
+			//				leftPart = Math.abs( firstRhythmArray[currentCoefficientNumber]/mostCommonCoefficient - secondRhythmArray[currentCoefficientNumber] );
+			//				rightPart = maxRhythmDeviationSteps*secondRhythmArray[currentCoefficientNumber];
+			//			}
 
 			leftPart = Math.abs( firstRhythmArray[currentCoefficientNumber] - mostCommonCoefficient*secondRhythmArray[currentCoefficientNumber] );
 			rightPart = maxRhythmDeviationSteps*Math.max( firstRhythmArray[currentCoefficientNumber], mostCommonCoefficient*secondRhythmArray[currentCoefficientNumber] );
 
-				if ( leftPart <= rightPart ) {
-					currentMaxNumberOfRhythmicallyDifferentNotes++;
-				} else {
-					return false;
-				}
+			if ( leftPart <= rightPart ) {
+				currentMaxNumberOfRhythmicallyDifferentNotes++;
+			} else {
+				return 0;
+			}
 		}
 
-		return currentMaxNumberOfRhythmicallyDifferentNotes <= maxNumberOfRhythmicallyDifferentNotes;
-    }
+		return ( firstMelody.getNoteList().size() - currentMaxNumberOfRhythmicallyDifferentNotes )*1./firstMelody.getNoteList().size();
+	}
 
-    @Override
+	@Override
     public int getMaxNumberOfDiversedNotes() {
         return maxNumberOfRhythmicallyDifferentNotes;
     }
