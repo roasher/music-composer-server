@@ -112,7 +112,7 @@ public class CompositionComposer {
 				Melody melody = composeBlocks.get( composeBlockNumber ).getMelodyList().get( partNumber );
 				Melody previousMelody = ( Melody ) parts.get( partNumber ).getPhraseList().get( parts.get( partNumber ).getPhraseList().size() - 1 );
 
-				Note previousNote = ( Note ) previousMelody.getNoteList().get( previousMelody.getNoteList().size() - 1 );
+				Note previousNote = ( Note ) previousMelody.getNoteList().get( previousMelody.size() - 1 );
 				Note firstNote = ( Note ) melody.getNoteList().get( 0 );
 
 				if ( previousNote.samePitch( firstNote ) ) {

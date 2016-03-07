@@ -17,7 +17,7 @@ public class RhytmEqualityTest implements EqualityTest {
     @Override
     public boolean test( Melody firstMelody, Melody secondMelody ) {
 		double equalityMetrics = getEqualityMetric( firstMelody, secondMelody );
-		double currentNumberOfRhythmicallyDifferentNotes = ( 1 - equalityMetrics )*firstMelody.getNoteList().size();
+		double currentNumberOfRhythmicallyDifferentNotes = ( 1 - equalityMetrics )*firstMelody.size();
 		return currentNumberOfRhythmicallyDifferentNotes <= maxNumberOfRhythmicallyDifferentNotes;
     }
 
@@ -74,7 +74,7 @@ public class RhytmEqualityTest implements EqualityTest {
 			}
 		}
 
-		return ( firstMelody.getNoteList().size() - currentMaxNumberOfRhythmicallyDifferentNotes )*1./firstMelody.getNoteList().size();
+		return ( firstMelody.size() - currentMaxNumberOfRhythmicallyDifferentNotes )*1./firstMelody.size();
 	}
 
 	@Override

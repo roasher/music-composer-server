@@ -99,7 +99,7 @@ public class Melody extends Phrase {
 	 * @return
 	 */
 	public Melody transposeClone( int transposePitch ) {
-		List<Note> notes = new ArrayList<>( this.getNoteList().size() );
+		List<Note> notes = new ArrayList<>( this.size() );
 		for ( Note note : ( List<Note> ) this.getNoteList() ) {
 			notes.add( new Note( note.getPitch() == Note.REST ? Note.REST : note.getPitch() + transposePitch, note.getRhythmValue(), note.getDynamic(), note.getPan() ) );
 		}

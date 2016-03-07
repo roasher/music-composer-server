@@ -193,7 +193,7 @@ public class ModelUtils {
 		}
 		double noteStartTime = 0;
 		Melody out = new Melody(  );
-		for ( int noteNumber = 0; noteNumber < melody.getNoteList().size(); noteNumber++ ) {
+		for ( int noteNumber = 0; noteNumber < melody.size(); noteNumber++ ) {
 			Note currentNote = ( Note ) melody.getNote( noteNumber );
 			if ( noteStartTime < startTime && noteStartTime + currentNote.getRhythmValue() > startTime ) {
 				out.add( new Note( currentNote.getPitch(), noteStartTime + currentNote.getRhythmValue() - startTime ) );

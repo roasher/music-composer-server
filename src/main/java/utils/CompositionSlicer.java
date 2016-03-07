@@ -76,7 +76,7 @@ public class CompositionSlicer {
 			state.add( new Note( JMC.REST, phrase.getStartTime() ) );
 		}
 
-        for ( int noteNumber = 0; noteNumber < phrase.getNoteList().size(); noteNumber ++ ) {
+        for ( int noteNumber = 0; noteNumber < phrase.size(); noteNumber ++ ) {
             Note note = phrase.getNote( noteNumber );
             state.add( phrase.getNote( noteNumber ) );
         }
