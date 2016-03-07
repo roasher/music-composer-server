@@ -63,8 +63,8 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 
 			Melody firstMelody = melodyList.get( 0 );
 			Melody secondMelody = melodyList.get( 1 );
-			assertEquals( firstMelody.getNoteList().size(), 1 );
-			assertEquals( secondMelody.getNoteList().size(), 1 );
+			assertEquals( firstMelody.size(), 1 );
+			assertEquals( secondMelody.size(), 1 );
 			assertEquals( firstMelody.getStartTime(), rhythmValue );
 			assertEquals( secondMelody.getStartTime(), rhythmValue );
 			rhythmValue += firstMelody.getNote( 0 ).getRhythmValue();
