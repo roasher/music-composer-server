@@ -10,6 +10,7 @@ import model.melody.MelodyMovement;
  */
 public abstract class AbstractMelodyMovementEqualityTest implements EqualityTest {
 
+    @Override
     public boolean test( Melody firstMelody, Melody secondMelody ) {
         MelodyMovement firstMelodyMovement = new MelodyMovement( firstMelody.getNoteList() );
         MelodyMovement secondMelodyMovement = new MelodyMovement( secondMelody.getNoteList() );
@@ -19,6 +20,22 @@ public abstract class AbstractMelodyMovementEqualityTest implements EqualityTest
         } else {
             return testEqualityByLogic( firstMelodyMovement, secondMelodyMovement );
         }
+    }
+
+    @Override
+    public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
+        MelodyMovement firstMelodyMovement = new MelodyMovement( firstMelody.getNoteList() );
+        MelodyMovement secondMelodyMovement = new MelodyMovement( secondMelody.getNoteList() );
+        // Test on equality to save some time
+        if ( firstMelodyMovement.equals( secondMelodyMovement ) ) {
+            return 1;
+        } else {
+            return getEqualityMetric( firstMelodyMovement, secondMelodyMovement );
+        }
+    }
+
+    public double getEqualityMetric( MelodyMovement firstMelodyMovement, MelodyMovement secondMelodyMovement ) {
+        throw new RuntimeException( "we don't support that ;)" );
     }
 
     /**

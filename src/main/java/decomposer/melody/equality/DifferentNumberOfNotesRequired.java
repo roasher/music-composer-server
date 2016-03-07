@@ -21,8 +21,13 @@ public class DifferentNumberOfNotesRequired implements EqualityTest {
     }
 
     @Override
+    public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
+        return equalityTest.getEqualityMetric( firstMelody, secondMelody );
+    }
+
+    @Override
     public boolean test( Melody firstMelody, Melody secondMelody ) {
-        if ( firstMelody.getNoteList().size() == secondMelody.getNoteList().size() ) {
+        if ( firstMelody.size() == secondMelody.size() ) {
             return false;
         } else {
             if ( this.equalityTest != null ) {

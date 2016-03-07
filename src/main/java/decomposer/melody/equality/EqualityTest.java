@@ -10,12 +10,23 @@ public interface EqualityTest {
      * @param secondMelody
      * @return
      */
-    public boolean test( Melody firstMelody, Melody secondMelody );
+    boolean test( Melody firstMelody, Melody secondMelody );
+
+    // TODO delete default and create new interface for that
+	/**
+	 * Returns discrete metric of equality between who melodies
+     * @param firstMelody
+     * @param secondMelody
+     * @return
+     */
+    default double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
+        throw new RuntimeException( "we don't support that)" );
+    }
 
     /**
      * Returns maximum number of not suitable notes that allows this Equality test
      * @return
      */
-    public int getMaxNumberOfDiversedNotes();
+    int getMaxNumberOfDiversedNotes();
 
 }

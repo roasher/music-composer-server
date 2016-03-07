@@ -21,8 +21,21 @@ public class EqualNumberOfNotesRequired implements EqualityTest {
     }
 
     @Override
+    public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
+        if ( firstMelody.size() != secondMelody.size() ) {
+            return 0;
+        } else {
+            if ( this.equalityTest != null ) {
+                return equalityTest.getEqualityMetric( firstMelody, secondMelody );
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    @Override
     public boolean test( Melody firstMelody, Melody secondMelody ) {
-        if ( firstMelody.getNoteList().size() != secondMelody.getNoteList().size() ) {
+        if ( firstMelody.size() != secondMelody.size() ) {
             return false;
         } else {
             if ( this.equalityTest != null ) {
