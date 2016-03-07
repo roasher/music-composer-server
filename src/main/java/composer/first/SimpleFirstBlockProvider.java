@@ -14,6 +14,6 @@ import java.util.Optional;
 public class SimpleFirstBlockProvider implements FirstBlockProvider {
 	@Override
 	public Optional<ComposeBlock> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
-		return lexicon.getComposeBlockList().stream().filter( composeBlock -> !exclusions.contains( composeBlock ) ).findFirst();
+		return lexicon.getComposeBlockList().stream().filter( composeBlock -> !exclusions.contains( composeBlock ) && !composeBlock.isStartsWithRest() ).findFirst();
 	}
 }

@@ -1,11 +1,13 @@
 package model;
 
+import jm.music.data.Note;
 import model.composition.CompositionInfo;
 import model.melody.Melody;
 import sun.plugin.com.event.COMEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 import static utils.ModelUtils.*;
@@ -128,6 +130,11 @@ public class ComposeBlock {
 		this.melodyList.forEach( melody -> cloneMelodies.add( melody.transposeClone( transposePitch ) ) );
 		ComposeBlock clone = new ComposeBlock( this.startTime, this.compositionInfo, cloneMelodies, this.blockMovementFromPreviousToThis );
 		return clone;
+	}
+
+	public boolean isStartsWithRest() {
+		OptionalInt firstNonRestPitch = melodyList.stream().mapToInt( melody -> melody.getNote( 0 ).getPitch() ).filter( value -> value != Note.REST ).findFirst();
+		return !firstNonRestPitch.isPresent();
 	}
 
 	@Override
