@@ -20,6 +20,7 @@ public class KeyEqualityTest implements EqualityTest {
 	@Override
 	public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
 		List<Key> firstMelodyPossibleKeys = getPossibleKeys( firstMelody, 0 );
+		if ( firstMelodyPossibleKeys.isEmpty() ) return 1;
 		OptionalInt minNumberOfOutNotes = firstMelodyPossibleKeys.stream().mapToInt( value -> getNumberOfNotesOutOfKey( value, secondMelody ) ).min();
 		return ( secondMelody.size() - minNumberOfOutNotes.getAsInt() ) * 1. / secondMelody.size();
 	}
