@@ -38,9 +38,9 @@ public class FormNextBlockProvider implements NextBlockProvider {
 
 		double previouslyComposedRhythmValue = previousCompositionSteps.stream().skip( 1 ).mapToDouble( value -> value.getOriginComposeBlock().getRhythmValue() ).sum();
 
-		Optional<ComposeBlock> lastOfPossibles = filteredBlocks.stream()
-				.filter( composeBlock -> previouslyComposedRhythmValue + composeBlock.getRhythmValue() <= length )
-				.sorted( getComposeBlockComparator( similarFormSteps, differentFormSteps, previouslyComposedRhythmValue ) )
+		Optional<ComposeBlock> lastOfPossibles = filteredBlocks.stream().filter( composeBlock -> previouslyComposedRhythmValue + composeBlock.getRhythmValue() <= length ).sorted(
+				getComposeBlockComparator( similarFormSteps, differentFormSteps,
+						previousCompositionSteps.stream().skip( 1 ).map( CompositionStep::getTransposeComposeBlock ).collect( Collectors.toList() ) ) )
 				.reduce( ( composeBlock1, composeBlock2 ) -> composeBlock2 );
 
 		return lastOfPossibles;
@@ -49,18 +49,22 @@ public class FormNextBlockProvider implements NextBlockProvider {
 	/**
 	 * Comparator that finds out which of compose blocks better suites to add in composition in terms of form
 	 *
-	 * @param similars                      - whole pieces of needed form
-	 * @param differents                    - whole pieces of NOT desired form
-	 * @param previouslyComposedRhythmValue - amount of time that was already
+	 * @param similars                - whole pieces of needed form
+	 * @param differents              - whole pieces of NOT desired form
+	 * @param previouslyComposedBlocks
 	 * @return
 	 */
-	private Comparator<ComposeBlock> getComposeBlockComparator( List<FormCompositionStep> similars, List<FormCompositionStep> differents,
-			double previouslyComposedRhythmValue ) {
+	private Comparator<ComposeBlock> getComposeBlockComparator( List<FormCompositionStep> similars, List<FormCompositionStep> differents, List<ComposeBlock> previouslyComposedBlocks ) {
 		return ( firstComposeBlock, secondComposeBlock ) -> {
-			double firstEqualEtalons = getEqualityMetrics( firstComposeBlock, previouslyComposedRhythmValue, similars );
-			double firstEqualDifferents = getEqualityMetrics( firstComposeBlock, previouslyComposedRhythmValue, differents );
-			double secondEqualEtalons = getEqualityMetrics( secondComposeBlock, previouslyComposedRhythmValue, similars );
-			double secondEqualDifferents = getEqualityMetrics( secondComposeBlock, previouslyComposedRhythmValue, differents );
+			List<ComposeBlock> firstComposeBlocks = new ArrayList<>( previouslyComposedBlocks );
+			firstComposeBlocks.add( firstComposeBlock );
+			double firstEqualEtalons = getEqualityMetrics( previouslyComposedBlocks.isEmpty() ? firstComposeBlock : new ComposeBlock( firstComposeBlocks ), similars );
+			double firstEqualDifferents = getEqualityMetrics( previouslyComposedBlocks.isEmpty() ? firstComposeBlock : new ComposeBlock( firstComposeBlocks ), differents );
+
+			List<ComposeBlock> secondComposeBlocks = new ArrayList<>( previouslyComposedBlocks );
+			secondComposeBlocks.add( firstComposeBlock );
+			double secondEqualEtalons = getEqualityMetrics( previouslyComposedBlocks.isEmpty() ? secondComposeBlock : new ComposeBlock( secondComposeBlocks ), similars );
+			double secondEqualDifferents = getEqualityMetrics( previouslyComposedBlocks.isEmpty() ? secondComposeBlock : new ComposeBlock( secondComposeBlocks ), differents );
 
 			double combinedMetric = ( firstEqualEtalons - firstEqualDifferents ) - ( secondEqualEtalons - secondEqualDifferents );
 			return combinedMetric != 0 ? ( combinedMetric > 0 ? 1 : -1 ) : 0;
@@ -70,19 +74,18 @@ public class FormNextBlockProvider implements NextBlockProvider {
 	/**
 	 * Returns average of equality metrics between composeBlock and list of stepsToCompareWith
 	 * Actual comparison take place between composeBlock and trimmed blocks inside composition step.
-	 * Blocks from composition steps trimmed from startTime to startTime + composeBlock rythm value
+	 * Blocks from composition steps trimmed according to composeBlock rhythm value
 	 *
 	 * @param composeBlock
-	 * @param startTime
 	 * @param stepsToCompareWith
 	 * @return
 	 */
-	public double getEqualityMetrics( ComposeBlock composeBlock, double startTime, List<FormCompositionStep> stepsToCompareWith ) {
+	public double getEqualityMetrics( ComposeBlock composeBlock, List<FormCompositionStep> stepsToCompareWith ) {
 		List<List<Melody>> trimmedCollectionOfMelodies = stepsToCompareWith.stream().map( formCompositionStep -> ModelUtils
-				.trimToTime( ( new ComposeBlock( formCompositionStep.getTrasposedComposeBlocks() ) ).getMelodyList(), startTime,
-						startTime + composeBlock.getRhythmValue() ) ).collect( Collectors.toList() );
-		OptionalDouble average = trimmedCollectionOfMelodies.stream()
-				.mapToDouble( value -> formEqualityAnalyser.getAverageEqualityMetric( value, composeBlock.getMelodyList() ) ).average();
+				.trimToTime( ( new ComposeBlock( formCompositionStep.getTrasposedComposeBlocks() ) ).getMelodyList(), 0, composeBlock.getRhythmValue() ) )
+				.collect( Collectors.toList() );
+		OptionalDouble average = trimmedCollectionOfMelodies.stream().mapToDouble( value -> formEqualityAnalyser.getAverageEqualityMetric( value, composeBlock.getMelodyList() ) )
+				.average();
 		return average.orElse( 0 );
 	}
 
