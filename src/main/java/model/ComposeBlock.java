@@ -3,7 +3,6 @@ package model;
 import jm.music.data.Note;
 import model.composition.CompositionInfo;
 import model.melody.Melody;
-import sun.plugin.com.event.COMEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
