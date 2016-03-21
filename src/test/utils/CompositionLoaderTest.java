@@ -33,14 +33,14 @@ public class CompositionLoaderTest extends AbstractSpringTest {
 
 	@Test
 	public void correctInstrumentNumberTest() {
-		Composition composition = compositionLoader.getComposition( new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ) );
+		Composition composition = compositionLoader.getComposition( new File( "src/test/decomposer/form/formDecomposer/quartets/2.Scarecrow's song (midi).mid" ) );
 		assertEquals( composition.getPartArray().length, 4 );
 	}
 
 	@Test
 	@Ignore
 	public void loadScarecrow() {
-		File file = new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" );
+		File file = new File( "src/test/decomposer/form/formDecomposer/quartets/2.Scarecrow's song (midi).mid" );
 
 		Composition compositionAsIs = new Composition(  );
 		Read.midi( compositionAsIs, file.getAbsolutePath() );
@@ -62,7 +62,7 @@ public class CompositionLoaderTest extends AbstractSpringTest {
 
     @Test
     public void loadPhoenix() {
-        Composition composition = compositionLoader.getComposition( new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ) );
+        Composition composition = compositionLoader.getComposition( new File( "src/test/decomposer/form/formDecomposer/quartets/2.Another Phoenix (midi)_2.mid" ) );
     }
 
 	private void noteRounding( Phrase firstPhrase, Phrase secondPhrase, double tempo ) {

@@ -47,7 +47,7 @@ public class LexiconDAOTest extends AbstractSpringTest {
 	@DatabaseSetup( "/persistance/dao/LexiconDAOTest-blank.xml" )
 	public void storeIdentityTest() throws IOException {
 
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/composer/simpleMelodies" ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 
 		lexiconDAO.persist( lexicon );

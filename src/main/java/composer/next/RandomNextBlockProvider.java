@@ -25,8 +25,8 @@ public class RandomNextBlockProvider implements NextBlockProvider {
 		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getOriginComposeBlock().getPossibleNextComposeBlocks() );
 		possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions());
 		if ( !possibleNextComposeBlocks.isEmpty() ) {
-			int randomNumber = ( int ) ( Math.random() * ( possibleNextComposeBlocks.size() - 1 ) );
-			//int randomNumber = 0;
+//			int randomNumber = ( int ) ( Math.random() * ( possibleNextComposeBlocks.size() - 1 ) );
+			int randomNumber = 0;
 			ComposeBlock composeBlock = possibleNextComposeBlocks.get( randomNumber );
 			return Optional.of( composeBlock );
 		} else {

@@ -40,7 +40,7 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 
 	@Test
 	public void formBlockProviderTest() {
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/composer/simpleMelodies" ) );
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 
 		Optional<FormCompositionStep> formCompositionStep = formBlockProvider

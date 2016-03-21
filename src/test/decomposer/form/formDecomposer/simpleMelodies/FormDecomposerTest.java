@@ -24,7 +24,7 @@ public class FormDecomposerTest extends AbstractSpringTest {
 
 	@Test
 	public void simpleMelodyAABC1() {
-		Composition composition = compositionLoader.getComposition( new File( "src\\test\\decomposer\\form\\formDecomposer\\simpleMelodies\\AABC1.mid" ) );
+		Composition composition = compositionLoader.getComposition( new File( "src/test/decomposer/form/formDecomposer/simpleMelodies/AABC1.mid" ) );
 
 		List<Form> formList = formDecomposer.getInstrumentForm( 0, composition, JMC.WHOLE_NOTE );
 
@@ -38,7 +38,7 @@ public class FormDecomposerTest extends AbstractSpringTest {
 
 	@Test
 	public void simpleMelodyABAB1() {
-		Composition composition = compositionLoader.getComposition( new File( "src\\test\\decomposer\\form\\formDecomposer\\simpleMelodies\\ABAB1.mid" ) );
+		Composition composition = compositionLoader.getComposition( new File( "src/test/decomposer/form/formDecomposer/simpleMelodies/ABAB1.mid" ) );
 
 		List<Form> formList = formDecomposer.getInstrumentForm( 0, composition, JMC.WHOLE_NOTE );
 
@@ -52,7 +52,7 @@ public class FormDecomposerTest extends AbstractSpringTest {
 
 	@Test
 	public void simpleMelodyABAC1() {
-		Composition composition = compositionLoader.getComposition( new File( "src\\test\\decomposer\\form\\formDecomposer\\simpleMelodies\\ABAC1.mid" ) );
+		Composition composition = compositionLoader.getComposition( new File( "src/test/decomposer/form/formDecomposer/simpleMelodies/ABAC1.mid" ) );
 
 		List<Form> formList = formDecomposer.getInstrumentForm( 0, composition, JMC.WHOLE_NOTE );
 

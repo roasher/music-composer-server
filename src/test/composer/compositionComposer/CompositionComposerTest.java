@@ -54,7 +54,7 @@ public class CompositionComposerTest extends AbstractSpringTest {
 
 	@Test
 	public void getSimplePieceTest1() {
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src\\test\\composer\\simpleMelodies" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/composer/simpleMelodies" ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 		Composition composition = compositionComposer.compose( composeBlockProvider, lexicon, "ABCD", 4 * JMC.WHOLE_NOTE );
 		assertEquals( 16., composition.getEndTime(), 0 );

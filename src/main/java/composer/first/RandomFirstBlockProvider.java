@@ -24,8 +24,8 @@ public class RandomFirstBlockProvider implements FirstBlockProvider {
 		List<ComposeBlock> allPossibleFirstBlocks = lexicon.getAllPossibleFirst();
 		allPossibleFirstBlocks.removeAll( exclusions );
 		if ( !allPossibleFirstBlocks.isEmpty() ) {
-			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );
-			//int randomNumber = 0;
+//			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );
+			int randomNumber = 0;
 			return Optional.of( allPossibleFirstBlocks.get( randomNumber ) );
 		} else {
 			return Optional.empty();

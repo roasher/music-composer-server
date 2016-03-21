@@ -52,13 +52,13 @@ public class FormNextBlockProviderTest extends AbstractSpringTest {
 		) );
 
 		List<CompositionStep> previousCompositionSteps = Arrays.asList(
-				new CompositionStep( composeBlock0, null ),
-				new CompositionStep( composeBlock1, null ),
-				new CompositionStep( composeBlock2, null )
+				new CompositionStep( composeBlock0, composeBlock0 ),
+				new CompositionStep( composeBlock1, composeBlock1 ),
+				new CompositionStep( composeBlock2, composeBlock2 )
 		);
 
 		List<Melody> melodyList20 = composeBlock20.getMelodyList();
-		when( formEqualityAnalyser.getAverageEqualityMetric( any( List.class ), eq( melodyList20 ) ) ).thenReturn( 0.5 );
+		when( formEqualityAnalyser.getAverageEqualityMetric( any( List.class ), eq( melodyList20 ) ) ).thenReturn( 0.3 );
 		List<Melody> melodyList21 = composeBlock21.getMelodyList();
 		when( formEqualityAnalyser.getAverageEqualityMetric( any( List.class ), eq( melodyList21 ) ) ).thenReturn( 0.51 );
 		List<Melody> melodyList22 = composeBlock22.getMelodyList();

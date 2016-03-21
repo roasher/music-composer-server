@@ -444,7 +444,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 
 	@Test
 	public void restInTheBeginningTestSlice() {
-		Composition composition = compositionLoader.getComposition( new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ) );
+		Composition composition = compositionLoader.getComposition( new File( "src/test/decomposer/form/formDecomposer/quartets/2.Scarecrow's song (midi).mid" ) );
 
 //		View.notate( composition );
 //		suspend();
