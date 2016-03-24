@@ -16,6 +16,8 @@ import java.util.Vector;
 public class BlockMovement implements Serializable {
 
 	private List<Integer> voiceMovements = new ArrayList<>();
+	public static final int MOVEMENT_TO_REST = Integer.MIN_VALUE;
+	public static final int MOVEMENT_FROM_REST = Integer.MAX_VALUE;
 
 	public BlockMovement( List<Integer> movements ) {
 		this.voiceMovements = movements;
@@ -33,10 +35,17 @@ public class BlockMovement implements Serializable {
 
 		for ( int melodyNumber = 0; melodyNumber < firstMelodies.size(); melodyNumber++ ) {
 			Vector firstMelodyNoteList = firstMelodies.get( melodyNumber ).getNoteList();
-			Note lastNoteFromFirstMelody = ( Note ) firstMelodyNoteList.get( firstMelodyNoteList.size() - 1 );
+			int lastNotePitchFromFirstMelody = ( ( Note ) firstMelodyNoteList.get( firstMelodyNoteList.size() - 1 ) ).getPitch();
 			Vector secondMelodyNoteList = secondMelodies.get( melodyNumber ).getNoteList();
-			Note firstNoteFromSecondMelody = ( Note ) secondMelodyNoteList.get( 0 );
-			voiceMovements.add( firstNoteFromSecondMelody.getPitch() - lastNoteFromFirstMelody.getPitch() );
+			int firstNotePitchFromSecondMelody = ( ( Note ) secondMelodyNoteList.get( 0 ) ).getPitch();
+
+			if ( lastNotePitchFromFirstMelody == Note.REST && firstNotePitchFromSecondMelody != Note.REST ) {
+				voiceMovements.add( MOVEMENT_FROM_REST );
+			} else if ( lastNotePitchFromFirstMelody != Note.REST && firstNotePitchFromSecondMelody == Note.REST ) {
+				voiceMovements.add( MOVEMENT_TO_REST );
+			} else {
+				voiceMovements.add(firstNotePitchFromSecondMelody - lastNotePitchFromFirstMelody);
+			}
 		}
 
     }
