@@ -4,7 +4,9 @@ import composer.step.CompositionStep;
 import composer.step.FormCompositionStep;
 import decomposer.form.analyzer.FormEqualityAnalyser;
 import helper.AbstractSpringTest;
+import jm.music.data.Note;
 import jm.music.data.Rest;
+import model.BlockMovement;
 import model.ComposeBlock;
 import model.melody.Melody;
 import org.junit.Before;
@@ -37,32 +39,49 @@ public class FormNextBlockProviderTest extends AbstractSpringTest {
 
 	@Test
 	public void testGetNextBlock() throws Exception {
-		// already composed blocks
-		ComposeBlock composeBlock0 = getMockComposeBlock( 0 );
-		ComposeBlock composeBlock1 = getMockComposeBlock( 1 );
-		ComposeBlock composeBlock2 = getMockComposeBlock( 2 );
+
+		// Already composed blocks
+        BlockMovement blockMovementFromPreviousToThis = new BlockMovement( 0, 0 );
+        ComposeBlock composeBlock0 = new ComposeBlock( 0, null, Arrays.asList(
+				new Melody( new Note( C3, QUARTER_NOTE ) ),
+				new Melody( new Note( F3, QUARTER_NOTE ) ) ),
+                blockMovementFromPreviousToThis );
+		ComposeBlock composeBlock1 = new ComposeBlock( 1, null, Arrays.asList(
+                new Melody( new Note( D3, EIGHTH_NOTE ) ),
+				new Melody( new Note( G3, EIGHTH_NOTE ) ) ),
+                blockMovementFromPreviousToThis );
+		ComposeBlock composeBlock2 = new ComposeBlock( 2, null, Arrays.asList(
+				new Melody( new Note( E3, EIGHTH_NOTE ), new Note( F3, EIGHTH_NOTE ) ),
+				new Melody( new Note( A3, EIGHTH_NOTE ), new Note( B3, EIGHTH_NOTE ) ) ),
+                blockMovementFromPreviousToThis );
+        ComposeBlock allreadyComposedBlock = new ComposeBlock( Arrays.asList( composeBlock0, composeBlock1, composeBlock2 ) );
+
 		// Possible next blocks
-		ComposeBlock composeBlock20 = getMockComposeBlock( 20 );
-		ComposeBlock composeBlock21 = getMockComposeBlock( 21 );
-		ComposeBlock composeBlock22 = getMockComposeBlock( 22 );
-		when( composeBlock2.getPossibleNextComposeBlocks() ).thenReturn( Arrays.asList(
-				composeBlock20,
-				composeBlock21,
-				composeBlock22
-		) );
+		ComposeBlock composeBlock20 = new ComposeBlock( 20, null, Arrays.asList(
+				new Melody( new Note( BF4, SIXTEENTH_NOTE ) ),
+				new Melody( new Rest( SIXTEENTH_NOTE ) ) ),
+                blockMovementFromPreviousToThis );
+		ComposeBlock composeBlock21 = new ComposeBlock( 21, null, Arrays.asList(
+                new Melody( new Note( BF5, SIXTEENTH_NOTE ) ),
+                new Melody( new Rest( SIXTEENTH_NOTE ) ) ),
+                blockMovementFromPreviousToThis );
+		ComposeBlock composeBlock22 = new ComposeBlock( 22, null, Arrays.asList(
+                new Melody( new Note( BF6, SIXTEENTH_NOTE ) ),
+                new Melody( new Rest( SIXTEENTH_NOTE ) ) ),
+                blockMovementFromPreviousToThis );
 
-		List<CompositionStep> previousCompositionSteps = Arrays.asList(
-				new CompositionStep( composeBlock0, composeBlock0 ),
-				new CompositionStep( composeBlock1, composeBlock1 ),
-				new CompositionStep( composeBlock2, composeBlock2 )
-		);
+        composeBlock2.setPossibleNextComposeBlocks( Arrays.asList(
+                composeBlock20,
+                composeBlock21,
+                composeBlock22
+        ) );
 
-		List<Melody> melodyList20 = composeBlock20.getMelodyList();
-		when( formEqualityAnalyser.getAverageEqualityMetric( any( List.class ), eq( melodyList20 ) ) ).thenReturn( 0.3 );
-		List<Melody> melodyList21 = composeBlock21.getMelodyList();
+		List<Melody> melodyList20 = sumMelodies( allreadyComposedBlock.getMelodyList(), composeBlock20.getMelodyList() );
+		when( formEqualityAnalyser.getAverageEqualityMetric( any( List.class ), eq( melodyList20 ) ) ).thenReturn( 0.41 );
+		List<Melody> melodyList21 = sumMelodies( allreadyComposedBlock.getMelodyList(), composeBlock21.getMelodyList() );
 		when( formEqualityAnalyser.getAverageEqualityMetric( any( List.class ), eq( melodyList21 ) ) ).thenReturn( 0.51 );
-		List<Melody> melodyList22 = composeBlock22.getMelodyList();
-		when( formEqualityAnalyser.getAverageEqualityMetric( any( List.class ), eq( melodyList22 ) ) ).thenReturn( 0.4 );
+		List<Melody> melodyList22 = sumMelodies( allreadyComposedBlock.getMelodyList(), composeBlock22.getMelodyList() );
+		when( formEqualityAnalyser.getAverageEqualityMetric( any( List.class ), eq(melodyList22) ) ).thenReturn( 0.4 );
 
 		// Actually we don't care about similarFromSteps as long we mocked formEqualityAnalyser
 		List<ComposeBlock> originComposeBlocks = Arrays.asList( new ComposeBlock( 0, null, Arrays.asList( new Melody( new Rest( WHOLE_NOTE ) ) ), null ) );
@@ -70,16 +89,27 @@ public class FormNextBlockProviderTest extends AbstractSpringTest {
 			new FormCompositionStep( originComposeBlocks, originComposeBlocks, null	)
 		);
 
+        List<CompositionStep> previousCompositionSteps = Arrays.asList(
+				new CompositionStep( null, null ),
+                new CompositionStep( composeBlock0, composeBlock0 ),
+                new CompositionStep( composeBlock1, composeBlock1 ),
+                new CompositionStep( composeBlock2, composeBlock2 )
+        );
+
 		Optional<ComposeBlock> nextBlock = formNextBlockProvider.getNextBlock( previousCompositionSteps, similarFormSteps, Collections.emptyList(), WHOLE_NOTE );
 
 		assertEquals( composeBlock21, nextBlock.get() );
 	}
 
-	private ComposeBlock getMockComposeBlock( int id ) {
-		ComposeBlock composeBlock = mock( ComposeBlock.class, RETURNS_DEEP_STUBS );
-		when( composeBlock.getStartTime() ).thenReturn( (double) id );
-		when( composeBlock.toString() ).thenReturn( String.valueOf( id ) );
-		return composeBlock;
+	private List<Melody> sumMelodies(List<Melody> melodies, List<Melody> melodiesToAdd ) {
+		List<Melody> out = new ArrayList<>();
+		for (int melodyNumber = 0; melodyNumber < melodies.size(); melodyNumber++) {
+			Melody melody = new Melody();
+			melody.addNoteList( melodies.get( melodyNumber ).getNoteList(), true );
+			melody.addNoteList( melodiesToAdd.get( melodyNumber ).getNoteList(), true );
+			out.add( melody );
+		}
+		return out;
 	}
 
 }

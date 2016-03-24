@@ -62,7 +62,7 @@ public class FormNextBlockProvider implements NextBlockProvider {
 			double firstEqualDifferents = getEqualityMetrics( previouslyComposedBlocks.isEmpty() ? firstComposeBlock : new ComposeBlock( firstComposeBlocks ), differents );
 
 			List<ComposeBlock> secondComposeBlocks = new ArrayList<>( previouslyComposedBlocks );
-			secondComposeBlocks.add( firstComposeBlock );
+			secondComposeBlocks.add( secondComposeBlock );
 			double secondEqualEtalons = getEqualityMetrics( previouslyComposedBlocks.isEmpty() ? secondComposeBlock : new ComposeBlock( secondComposeBlocks ), similars );
 			double secondEqualDifferents = getEqualityMetrics( previouslyComposedBlocks.isEmpty() ? secondComposeBlock : new ComposeBlock( secondComposeBlocks ), differents );
 
