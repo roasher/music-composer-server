@@ -91,7 +91,12 @@ public class ModelUtils {
 
         List< Integer > intervalPattern = new ArrayList<Integer>( copyInputNotePitches.size() - 1 );
         for ( int currentPitchNumber = 0; currentPitchNumber < copyInputNotePitches.size() - 1; currentPitchNumber++ ) {
-            intervalPattern.add( copyInputNotePitches.get( currentPitchNumber + 1 ) - copyInputNotePitches.get( currentPitchNumber ) );
+			Integer currentPitch = copyInputNotePitches.get(currentPitchNumber);
+			if ( currentPitch == Note.REST ) {
+				intervalPattern.add( Note.REST );
+			} else {
+				intervalPattern.add( copyInputNotePitches.get( currentPitchNumber + 1 ) - currentPitch);
+			}
         }
         return intervalPattern;
     }
