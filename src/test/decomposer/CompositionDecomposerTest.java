@@ -1,29 +1,31 @@
 package decomposer;
 
-import helper.AbstractSpringTest;
-import jm.JMC;
-import jm.music.data.Note;
-import model.ComposeBlock;
-import model.Lexicon;
-import model.MusicBlock;
-import model.composition.Composition;
-import model.melody.Form;
-import model.melody.Melody;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import utils.CompositionLoader;
+import static jm.JMC.DOTTED_HALF_NOTE;
+import static jm.JMC.DOTTED_QUARTER_NOTE;
+import static jm.JMC.EIGHTH_NOTE;
+import static jm.JMC.QUARTER_NOTE;
+import static jm.JMC.WHOLE_NOTE;
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-import static jm.JMC.*;
-import static junit.framework.Assert.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import helper.AbstractSpringTest;
+import jm.JMC;
+import jm.music.data.Note;
+import model.ComposeBlock;
+import model.Lexicon;
+import model.composition.Composition;
+import model.melody.Form;
+import model.melody.Melody;
+import utils.CompositionLoader;
 
 public class CompositionDecomposerTest extends AbstractSpringTest {
 
@@ -173,4 +175,11 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 		}
 	}
 
+	@Test
+	public void singleMelodyTest() {
+		Lexicon lexicon = compositionDecomposer.decompose( compositionLoader.getComposition( new File( "src/test/decomposer/gen_1"
+			+ ".mid") ), JMC.WHOLE_NOTE );
+		// TODO impl
+		lexicon.get(0);
+	}
 }
