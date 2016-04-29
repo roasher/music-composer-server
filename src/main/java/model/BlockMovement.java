@@ -1,13 +1,13 @@
 package model;
 
-import jm.music.data.Note;
-import model.melody.Melody;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+
+import jm.music.data.Note;
+import model.melody.Melody;
 
 /**
  * Class represents movement from one musical block to another
@@ -72,5 +72,10 @@ public class BlockMovement implements Serializable {
 	@Override
 	public int hashCode() {
 		return voiceMovements.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return voiceMovements.toString();
 	}
 }

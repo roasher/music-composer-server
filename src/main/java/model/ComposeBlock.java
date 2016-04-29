@@ -1,15 +1,15 @@
 package model;
 
-import jm.music.data.Note;
-import model.composition.CompositionInfo;
-import model.melody.Melody;
+import static utils.ModelUtils.retrieveFirstIntervalPattern;
+import static utils.ModelUtils.retrieveRhythmValue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
-import java.util.stream.Collectors;
 
-import static utils.ModelUtils.*;
+import jm.music.data.Note;
+import model.composition.CompositionInfo;
+import model.melody.Melody;
 
 /**
  * Class represents blocks which can be used in composing process
@@ -140,7 +140,7 @@ public class ComposeBlock {
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder(  );
 		for ( Melody melody : this.getMelodyList() ) {
-			stringBuilder.append('|').append( melody.toString() );
+			stringBuilder.append('|').append( this.blockMovementFromPreviousToThis.toString() ).append( melody.toString() );
 		}
 		return stringBuilder.toString();
 	}
