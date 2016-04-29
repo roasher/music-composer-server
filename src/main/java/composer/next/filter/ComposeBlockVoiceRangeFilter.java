@@ -1,14 +1,18 @@
 package composer.next.filter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import composer.step.CompositionStep;
 import jm.music.data.Note;
 import model.ComposeBlock;
 import model.melody.Melody;
-import org.springframework.stereotype.Component;
 import utils.ModelUtils;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by wish on 03.02.2016.
@@ -47,7 +51,8 @@ public class ComposeBlockVoiceRangeFilter extends AbstractComposeBlockFilter {
 		ComposeBlock lastTrasposedComposeBlock = previousCompositionSteps.get( previousCompositionSteps.size() - 1 ).getTransposeComposeBlock();
 		nextBlock:
 		for ( ComposeBlock possibleNext : possibleNextComposeBlocks ) {
-			if ( possibleNext.getMelodyList().size() != melodyRange.size() ) throw new RuntimeException( "Number of melodies doesn't match number of ranges" );
+			if ( possibleNext.getMelodyList().size() > melodyRange.size() ) throw new RuntimeException( "Number of melodies is "
+				+ "greater than number of ranges" );
 			int trasposePitch = ModelUtils.getTransposePitch( Optional.of( lastTrasposedComposeBlock ), possibleNext );
 			ComposeBlock trasposedBlock = possibleNext.transposeClone( trasposePitch );
 			for ( int melodyNumber = 0; melodyNumber < trasposedBlock.getMelodyList().size(); melodyNumber++ ) {
