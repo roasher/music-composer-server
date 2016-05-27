@@ -1,17 +1,17 @@
 package model;
 
-import model.composition.Composition;
-import model.composition.CompositionInfo;
-import model.melody.Melody;
-import model.tension.Tension;
-import utils.Utils;
+import static utils.ModelUtils.retrieveFirstIntervalPattern;
+import static utils.ModelUtils.retrieveLastIntervalPattern;
+import static utils.ModelUtils.retrieveRhythmValue;
+import static utils.ModelUtils.retrieveStartTime;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static utils.ModelUtils.*;
+import model.composition.CompositionInfo;
+import model.melody.Melody;
+import utils.Utils;
 
 /**
  * Class represents music MusicBlock
@@ -27,7 +27,6 @@ public class MusicBlock implements Serializable {
 	private List<Integer> endIntervalPattern;
 	private double rhythmValue;
 	private double startTime;
-	private Tension tension;
 
 	// Origin surrounding information
 	private MusicBlock previous;
@@ -150,14 +149,6 @@ public class MusicBlock implements Serializable {
 	// Getters & Setters
 	public List<Melody> getMelodyList() {
 		return melodyList;
-	}
-
-	public Tension getTension() {
-		return tension;
-	}
-
-	public void setTension( Tension tension ) {
-		this.tension = tension;
 	}
 
 	public double getStartTime() {
