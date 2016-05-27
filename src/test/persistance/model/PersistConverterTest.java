@@ -1,24 +1,47 @@
 package persistance.model;
 
-import helper.AbstractSpringTest;
-import model.Lexicon;
+import static jm.JMC.A4;
+import static jm.JMC.B4;
+import static jm.JMC.C3;
+import static jm.JMC.C4;
+import static jm.JMC.CS4;
+import static jm.JMC.D4;
+import static jm.JMC.DOTTED_EIGHTH_NOTE;
+import static jm.JMC.DOTTED_HALF_NOTE;
+import static jm.JMC.DS4;
+import static jm.JMC.E4;
+import static jm.JMC.EIGHTH_NOTE;
+import static jm.JMC.F4;
+import static jm.JMC.G4;
+import static jm.JMC.GS4;
+import static jm.JMC.HALF_NOTE;
+import static jm.JMC.HALF_NOTE_TRIPLET;
+import static jm.JMC.QUARTER_NOTE;
+import static jm.JMC.SIXTEENTH_NOTE;
+import static jm.JMC.WHOLE_NOTE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.collections.map.HashedMap;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import helper.AbstractSpringTest;
+import model.BlockMovement;
+import model.Lexicon;
 import persistance.PersistConverter;
-import persistance.jpa.factory.BlockMovementFactory;
 import persistance.jpa.ComposeBlock;
 import persistance.jpa.Melody;
+import persistance.jpa.Note;
+import persistance.jpa.factory.BlockMovementFactory;
 import persistance.jpa.factory.MelodyFactory;
 import persistance.jpa.factory.NoteFactory;
-import persistance.jpa.Note;
-
-import java.util.*;
-
-import static jm.JMC.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by pyurkin on 05.05.2015.
@@ -214,16 +237,18 @@ public class PersistConverterTest extends AbstractSpringTest {
 						new jm.music.data.Note( F4, SIXTEENTH_NOTE, 0, 0 ),
 						new jm.music.data.Note( E4, SIXTEENTH_NOTE, 0, 0 ) ) );
 
-		musicBlock0.setPrevious( null );
-		musicBlock0.setNext( musicBlock1 );
-		musicBlock1.setPrevious( musicBlock0 );
-		musicBlock1.setNext( musicBlock2 );
-		musicBlock2.setPrevious( musicBlock1 );
-		musicBlock2.setNext( musicBlock3 );
-		musicBlock3.setPrevious( musicBlock2 );
-		musicBlock3.setNext( musicBlock4 );
-		musicBlock4.setPrevious( musicBlock3 );
-		musicBlock4.setNext( null );
+		BlockMovement blockMovement01 = new BlockMovement( musicBlock0.getMelodyList(), musicBlock1.getMelodyList() );
+		musicBlock0.setBlockMovementFromThisToNext( blockMovement01 );
+		musicBlock1.setBlockMovementFromPreviousToThis( blockMovement01 );
+		BlockMovement blockMovement12 = new BlockMovement( musicBlock1.getMelodyList(), musicBlock2.getMelodyList() );
+		musicBlock1.setBlockMovementFromThisToNext( blockMovement12 );
+		musicBlock2.setBlockMovementFromPreviousToThis( blockMovement12 );
+		BlockMovement blockMovement23 = new BlockMovement( musicBlock2.getMelodyList(), musicBlock3.getMelodyList() );
+		musicBlock2.setBlockMovementFromThisToNext( blockMovement23 );
+		musicBlock3.setBlockMovementFromPreviousToThis( blockMovement23 );
+		BlockMovement blockMovement34 = new BlockMovement( musicBlock4.getMelodyList(), musicBlock4.getMelodyList() );
+		musicBlock3.setBlockMovementFromThisToNext( blockMovement34 );
+		musicBlock4.setBlockMovementFromPreviousToThis( blockMovement34 );
 
 		model.ComposeBlock composeBlock0 = new model.ComposeBlock( musicBlock0 );
 		model.ComposeBlock composeBlock1 = new model.ComposeBlock( musicBlock1 );

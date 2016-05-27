@@ -1,13 +1,14 @@
 package model;
 
-import jm.music.data.Note;
-import model.melody.Melody;
-import org.junit.Test;
+import static junit.framework.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertTrue;
+import org.junit.Test;
+
+import jm.music.data.Note;
+import model.melody.Melody;
 
 
 /**
@@ -26,7 +27,7 @@ public class MusicBlockTest {
 		melodyList2.add( new Melody( new Note( 48, 0.5 ) ) );
 		MusicBlock musicBlock2 = new MusicBlock( melodyList2, null );
 
-		musicBlock1.setNext( musicBlock2 );
+		musicBlock1.setBlockMovementFromThisToNext( new BlockMovement( musicBlock1.getMelodyList(), musicBlock2.getMelodyList() ) );
 		assertTrue( musicBlock1.getBlockMovementFromThisToNext().getVoiceMovements().get( 0 ) == 2 );
 		assertTrue( musicBlock1.getBlockMovementFromThisToNext().getVoiceMovements().get( 1 ) == 0 );
 	}

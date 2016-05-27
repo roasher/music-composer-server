@@ -1,23 +1,28 @@
 package decomposer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import composer.MusicBlockProvider;
-import org.omg.CORBA.COMM_FAILURE;
-import persistance.dao.LexiconDAO;
 import decomposer.form.FormDecomposer;
+import model.BlockMovement;
 import model.ComposeBlock;
 import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
 import model.composition.CompositionInfo;
 import model.melody.Melody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import persistance.dao.LexiconDAO;
 import utils.Recombinator;
-
-import java.util.*;
 
 /**
  * Class analyses and decomposes the composition, creating MusicBlocks
@@ -60,8 +65,9 @@ public class CompositionDecomposer {
 			// binding with previous Music Block
 			if ( melodyBlockNumber != 0 ) {
 				MusicBlock previousMusicBlock = lexiconMusicBlocks.get( melodyBlockNumber - 1 );
-				musicBlock.setPrevious( previousMusicBlock );
-				previousMusicBlock.setNext( musicBlock );
+				BlockMovement blockMovement = new BlockMovement( previousMusicBlock.getMelodyList(), musicBlock.getMelodyList() );
+				musicBlock.setBlockMovementFromPreviousToThis( blockMovement );
+				previousMusicBlock.setBlockMovementFromThisToNext( blockMovement );
 			}
 			lexiconMusicBlocks.add( musicBlock );
 		}
