@@ -1,27 +1,31 @@
 package composer;
 
-import com.sun.java.swing.plaf.motif.resources.motif_ko;
-import com.sun.org.apache.bcel.internal.generic.MULTIANEWARRAY;
+import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import decomposer.CompositionDecomposer;
 import helper.AbstractSpringTest;
 import jm.JMC;
-import junit.framework.Assert;
-import model.BlockMovement;
 import model.ComposeBlock;
 import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import utils.CompositionLoader;
-
-import java.io.File;
-import java.util.*;
-
-import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
 
 /**
  * Created by pyurkin on 16.02.15.
@@ -55,71 +59,15 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 	}
 
 	@Test
-	public void timeCorrelationTest() {
-
-		class MockFactory {
-			private List<Integer> startIntervalPattern = Collections.EMPTY_LIST;
-			private BlockMovement blockMovement = new BlockMovement( 0, 0 );
-
-			private MusicBlock getOrigin( double preRhythmValue, double startTime ) {
-				MusicBlock preFirst = mock( MusicBlock.class );
-				when( preFirst.getRhythmValue() ).thenReturn( preRhythmValue );
-				MusicBlock first = mock( MusicBlock.class );
-				when( first.getPrevious() ).thenReturn( preFirst );
-				when( first.getStartTime() ).thenReturn( startTime );
-				when( first.getStartIntervalPattern() ).thenReturn( startIntervalPattern );
-				when( first.getBlockMovementFromPreviousToThis() ).thenReturn( blockMovement );
-				return first;
-			}
-
-			private MusicBlock getSubstitutor( double mockStartTime, double startTime ) {
-				MusicBlock first = mock( MusicBlock.class );
-				when( first.getRhythmValue() ).thenReturn( mockStartTime );
-				when( first.getStartTime() ).thenReturn( startTime );
-				when( first.getStartIntervalPattern() ).thenReturn( startIntervalPattern );
-				when( first.getBlockMovementFromPreviousToThis() ).thenReturn( blockMovement );
-				return first;
-			}
-		}
-
-		MockFactory mockFactory = new MockFactory();
-
-		MusicBlock musicBlock11 = mockFactory.getOrigin( JMC.WHOLE_NOTE, 20 );
-		MusicBlock musicBlock12 = mockFactory.getSubstitutor( JMC.WHOLE_NOTE + JMC.QUARTER_NOTE_TRIPLET, 0.11 );
-		assertFalse( musicBlockProvider.canSubstitute( musicBlock11, musicBlock12 ) );
-
-		MusicBlock musicBlock21 = mockFactory.getOrigin( JMC.WHOLE_NOTE, 20 );
-		MusicBlock musicBlock22 = mockFactory.getSubstitutor( JMC.WHOLE_NOTE + JMC.QUARTER_NOTE_TRIPLET, 0 );
-		assertTrue( musicBlockProvider.canSubstitute( musicBlock21, musicBlock22 ) );
-
-		MusicBlock musicBlock31 = mockFactory.getOrigin( JMC.WHOLE_NOTE, 20 + 0.5 );
-		MusicBlock musicBlock32 = mockFactory.getSubstitutor( JMC.WHOLE_NOTE + JMC.QUARTER_NOTE_TRIPLET, 11 + 0.5 );
-		assertTrue( musicBlockProvider.canSubstitute( musicBlock31, musicBlock32 ) );
-
-		MusicBlock musicBlock41 = mockFactory.getOrigin( JMC.WHOLE_NOTE, 20 + 0.75 );
-		MusicBlock musicBlock42 = mockFactory.getSubstitutor( JMC.WHOLE_NOTE + JMC.QUARTER_NOTE_TRIPLET, 45 + 0.25 );
-		assertTrue( musicBlockProvider.canSubstitute( musicBlock41, musicBlock42 ) );
-
-		MusicBlock musicBlock51 = mockFactory.getOrigin( JMC.WHOLE_NOTE, 0.25 );
-		MusicBlock musicBlock52 = mockFactory.getSubstitutor( JMC.WHOLE_NOTE + JMC.QUARTER_NOTE_TRIPLET, 0.5 );
-		assertFalse( musicBlockProvider.canSubstitute( musicBlock51, musicBlock52 ) );
-
-		MusicBlock musicBlock61 = mockFactory.getOrigin( 2.0, 2 );
-		MusicBlock musicBlock62 = mockFactory.getSubstitutor( 0.5, 14.5 );
-		assertFalse( musicBlockProvider.canSubstitute( musicBlock61, musicBlock62 ) );
-
-	}
-
-	@Test
 	public void getAllPossibleNextMapTest() {
 
 		List<MusicBlock> musicBlocks = getMusicBlockMocks();
 
 		MusicBlockProvider mockProvider = spy( musicBlockProvider );
 
-		doReturn( false ).when( mockProvider ).canSubstitute( any( MusicBlock.class ), any( MusicBlock.class ) );
-		doReturn( true ).when( mockProvider ).canSubstitute( musicBlocks.get( 1 ), musicBlocks.get( 2 ) );
-		doReturn( true ).when( mockProvider ).canSubstitute( musicBlocks.get( 3 ), musicBlocks.get( 1 ) );
+		doReturn( false ).when( mockProvider ).isPossibleNext( any( MusicBlock.class ), any( MusicBlock.class ) );
+		doReturn( true ).when( mockProvider ).isPossibleNext( musicBlocks.get( 0 ), musicBlocks.get( 2 ) );
+		doReturn( true ).when( mockProvider ).isPossibleNext( musicBlocks.get( 2 ), musicBlocks.get( 1 ) );
 
 		Map<Integer, List<Integer>> allPossibleNextVariants = mockProvider.getAllPossibleNextVariants( musicBlocks );
 
