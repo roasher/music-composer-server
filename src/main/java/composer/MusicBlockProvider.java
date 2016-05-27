@@ -28,26 +28,37 @@ public class MusicBlockProvider {
 		for ( int firstMusicBlockNumber = 0; firstMusicBlockNumber < musicBlocks.size(); firstMusicBlockNumber++ ) {
 			List<Integer> possibleNextMusicBlockNumbers = new ArrayList<>();
 			map.put( firstMusicBlockNumber, possibleNextMusicBlockNumbers );
-			for ( int secondMusicBlockNumber = 0; secondMusicBlockNumber < musicBlocks.size(); secondMusicBlockNumber++ ) {
-				MusicBlock firstMusicBlock = musicBlocks.get( firstMusicBlockNumber );
-				MusicBlock secondMusicBlock = musicBlocks.get( secondMusicBlockNumber );
-				if ( secondMusicBlock == firstMusicBlock.getNext() ) {
+			for ( int secondMusicBlockNumber = 1; secondMusicBlockNumber < musicBlocks.size(); secondMusicBlockNumber++ ) {
+				if ( secondMusicBlockNumber - firstMusicBlockNumber == 1 ) {
 					possibleNextMusicBlockNumbers.add( 0, secondMusicBlockNumber );
-				} else if ( isPossibleNext( firstMusicBlock, secondMusicBlock ) ) {
-					possibleNextMusicBlockNumbers.add( secondMusicBlockNumber );
+				}
+				if ( canSubstitute( firstMusicBlockNumber, secondMusicBlockNumber, musicBlocks ) ) {
+					map.get( firstMusicBlockNumber - 1 ).add( secondMusicBlockNumber );
 				}
 			}
 		}
 		return map;
 	}
 
-	public boolean isPossibleNext( MusicBlock musicBlock, MusicBlock possibleNext ) {
-		MusicBlock previous = possibleNext.getPrevious();
-		if ( previous == null && musicBlock == null ) return true;
-		if ( previous == null || musicBlock == null ) return false;
-		boolean correlatingTime = onCorrelatedTime(  musicBlock.getStartTime(), previous.getStartTime() );
-		boolean intervalPatternEquality = musicBlock.getEndIntervalPattern().equals(previous.getEndIntervalPattern());
+	public boolean isSame( List<Integer> firstIntervalPattern, double firstStartTime, List<Integer> secondIntervalPattern, double
+		secondStartTime) {
+		boolean correlatingTime = onCorrelatedTime( firstStartTime, secondStartTime );
+		boolean intervalPatternEquality = firstIntervalPattern.equals( secondIntervalPattern );
 		return intervalPatternEquality && correlatingTime;
+	}
+
+	/**
+	 * Blocks are substitutable if THEIR PREVIOUSES have same interval patterns and time correlating
+	 * @return
+   */
+	public boolean canSubstitute( int firstBlockNumber, int secondBlockNumber, List<MusicBlock> musicBlocks ) {
+		if ( firstBlockNumber > 0 && secondBlockNumber > 0 ) {
+			MusicBlock preFirst = musicBlocks.get( firstBlockNumber - 1 );
+			MusicBlock preSecond = musicBlocks.get( secondBlockNumber - 1 );
+			return isSame( preFirst.getEndIntervalPattern(), preFirst.getStartTime(), preSecond.getEndIntervalPattern(), preSecond
+				.getStartTime() );
+		}
+		return false;
 	}
 
 	public boolean canSubstitute(ComposeBlock firstComposeBlock, ComposeBlock secondComposeBlock) {

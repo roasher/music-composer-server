@@ -3,11 +3,11 @@ package composer;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,15 +65,17 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 
 		MusicBlockProvider mockProvider = spy( musicBlockProvider );
 
-		doReturn( false ).when( mockProvider ).isPossibleNext( any( MusicBlock.class ), any( MusicBlock.class ) );
-		doReturn( true ).when( mockProvider ).isPossibleNext( musicBlocks.get( 0 ), musicBlocks.get( 2 ) );
-		doReturn( true ).when( mockProvider ).isPossibleNext( musicBlocks.get( 2 ), musicBlocks.get( 1 ) );
+		doReturn( false ).when( mockProvider ).canSubstitute( any( Integer.class ), any( Integer.class ), eq( musicBlocks ) );
+		doReturn( true ).when( mockProvider ).canSubstitute( eq( 1 ), eq( 2 ), eq( musicBlocks ) );
+		doReturn( true ).when( mockProvider ).canSubstitute( eq( 2 ), eq( 1 ), eq( musicBlocks ) );
+		doReturn( true ).when( mockProvider ).canSubstitute( eq( 1 ), eq( 3 ), eq( musicBlocks ) );
+		doReturn( true ).when( mockProvider ).canSubstitute( eq( 3 ), eq( 1 ), eq( musicBlocks ) );
 
 		Map<Integer, List<Integer>> allPossibleNextVariants = mockProvider.getAllPossibleNextVariants( musicBlocks );
 
 		assertEquals( musicBlocks.size(), allPossibleNextVariants.size() );
-		assertEquals( Arrays.asList( 1, 2 ), allPossibleNextVariants.get( 0 ) );
-		assertEquals( Arrays.asList( 2 ), allPossibleNextVariants.get( 1 ) );
+		assertEquals( Arrays.asList( 1, 2, 3 ), allPossibleNextVariants.get( 0 ) );
+		assertEquals( Arrays.asList( 2, 1 ), allPossibleNextVariants.get( 1 ) );
 		assertEquals( Arrays.asList( 3, 1 ), allPossibleNextVariants.get( 2 ) );
 		assertEquals( Arrays.asList( 4 ), allPossibleNextVariants.get( 3 ) );
 		assertEquals( Arrays.asList(  ), allPossibleNextVariants.get( 4 ) );
@@ -86,12 +88,6 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 		MusicBlock musicBlock2 = mock( MusicBlock.class );
 		MusicBlock musicBlock3 = mock( MusicBlock.class );
 		MusicBlock musicBlock4 = mock( MusicBlock.class );
-
-		when( musicBlock0.getNext() ).thenReturn( musicBlock1 );
-		when( musicBlock1.getNext() ).thenReturn( musicBlock2 );
-		when( musicBlock2.getNext() ).thenReturn( musicBlock3 );
-		when( musicBlock3.getNext() ).thenReturn( musicBlock4 );
-		when( musicBlock4.getNext() ).thenReturn( null );
 
 		List<MusicBlock> musicBlockList = new ArrayList<>(  );
 		musicBlockList.add( musicBlock0 );
