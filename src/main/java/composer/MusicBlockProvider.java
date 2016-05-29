@@ -32,7 +32,8 @@ public class MusicBlockProvider {
 				if ( secondMusicBlockNumber - firstMusicBlockNumber == 1 ) {
 					possibleNextMusicBlockNumbers.add( 0, secondMusicBlockNumber );
 				}
-				if ( firstMusicBlockNumber != 0 && nextAreSubstitutable( musicBlocks.get( firstMusicBlockNumber - 1 ), musicBlocks.get( secondMusicBlockNumber - 1 ) ) ) {
+				if ( firstMusicBlockNumber != 0 && nextAreSubstitutable( musicBlocks.get( firstMusicBlockNumber - 1 ), musicBlocks.get( secondMusicBlockNumber - 1 ) )
+						&& !map.get( firstMusicBlockNumber - 1 ).contains( secondMusicBlockNumber ) ) {
 					map.get( firstMusicBlockNumber - 1 ).add( secondMusicBlockNumber );
 				}
 			}
