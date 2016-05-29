@@ -243,7 +243,7 @@ public class PersistConverterTest extends AbstractSpringTest {
 		musicBlock2.setBlockMovementFromPreviousToThis( blockMovement12 );
 		BlockMovement blockMovement23 = new BlockMovement( musicBlock2.getMelodyList(), musicBlock3.getMelodyList() );
 		musicBlock3.setBlockMovementFromPreviousToThis( blockMovement23 );
-		BlockMovement blockMovement34 = new BlockMovement( musicBlock4.getMelodyList(), musicBlock4.getMelodyList() );
+		BlockMovement blockMovement34 = new BlockMovement( musicBlock3.getMelodyList(), musicBlock4.getMelodyList() );
 		musicBlock4.setBlockMovementFromPreviousToThis( blockMovement34 );
 
 		model.ComposeBlock composeBlock0 = new model.ComposeBlock( musicBlock0 );
