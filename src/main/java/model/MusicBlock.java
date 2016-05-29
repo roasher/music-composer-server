@@ -23,8 +23,6 @@ public class MusicBlock implements Serializable {
 	private List<Melody> melodyList;
 	private CompositionInfo compositionInfo;
 	private BlockMovement blockMovementFromPreviousToThis;
-	// TODO delete this
-	private BlockMovement blockMovementFromThisToNext;
 	// Derivative Self Information
 	private List<Integer> startIntervalPattern;
 	private List<Integer> endIntervalPattern;
@@ -72,7 +70,6 @@ public class MusicBlock implements Serializable {
 		this.compositionInfo = null;
 
 		this.blockMovementFromPreviousToThis = musicBlocks.get( 0 ).getBlockMovementFromPreviousToThis();
-		this.blockMovementFromThisToNext = musicBlocks.get( musicBlocks.size() -1 ).getBlockMovementFromThisToNext();
 
 		this.startIntervalPattern = musicBlocks.get( 0 ).getStartIntervalPattern();
 		this.endIntervalPattern = musicBlocks.get( musicBlocks.size() -1 ).getEndIntervalPattern();
@@ -111,8 +108,6 @@ public class MusicBlock implements Serializable {
 				!blockMovementFromPreviousToThis.equals( that.blockMovementFromPreviousToThis ) :
 				that.blockMovementFromPreviousToThis != null )
 			return false;
-		if ( blockMovementFromThisToNext != null ? !blockMovementFromThisToNext.equals( that.blockMovementFromThisToNext ) : that.blockMovementFromThisToNext != null )
-			return false;
 		if ( !startIntervalPattern.equals( that.startIntervalPattern ) )
 			return false;
 		return endIntervalPattern.equals( that.endIntervalPattern );
@@ -126,7 +121,6 @@ public class MusicBlock implements Serializable {
 		result = melodyList.hashCode();
 		result = 31 * result + ( compositionInfo != null ? compositionInfo.hashCode() : 0 );
 		result = 31 * result + ( blockMovementFromPreviousToThis != null ? blockMovementFromPreviousToThis.hashCode() : 0 );
-		result = 31 * result + ( blockMovementFromThisToNext != null ? blockMovementFromThisToNext.hashCode() : 0 );
 		result = 31 * result + startIntervalPattern.hashCode();
 		result = 31 * result + endIntervalPattern.hashCode();
 		temp = Double.doubleToLongBits( rhythmValue );
@@ -147,10 +141,6 @@ public class MusicBlock implements Serializable {
 
 	public void setBlockMovementFromPreviousToThis( BlockMovement blockMovementFromPreviousToThis ) {
 		this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
-	}
-
-	public void setBlockMovementFromThisToNext( BlockMovement blockMovementFromThisToNext ) {
-		this.blockMovementFromThisToNext = blockMovementFromThisToNext;
 	}
 
 	public List<Melody> getMelodyList() {
@@ -179,10 +169,6 @@ public class MusicBlock implements Serializable {
 
 	public BlockMovement getBlockMovementFromPreviousToThis() {
 		return blockMovementFromPreviousToThis;
-	}
-
-	public BlockMovement getBlockMovementFromThisToNext() {
-		return blockMovementFromThisToNext;
 	}
 
 	public void setStartTime( double startTime ) {

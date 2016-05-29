@@ -65,9 +65,7 @@ public class CompositionDecomposer {
 			// binding with previous Music Block
 			if ( melodyBlockNumber != 0 ) {
 				MusicBlock previousMusicBlock = lexiconMusicBlocks.get( melodyBlockNumber - 1 );
-				BlockMovement blockMovement = new BlockMovement( previousMusicBlock.getMelodyList(), musicBlock.getMelodyList() );
-				musicBlock.setBlockMovementFromPreviousToThis( blockMovement );
-				previousMusicBlock.setBlockMovementFromThisToNext( blockMovement );
+				musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( previousMusicBlock.getMelodyList(), musicBlock.getMelodyList() ) );
 			}
 			lexiconMusicBlocks.add( musicBlock );
 		}
