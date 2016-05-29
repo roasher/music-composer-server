@@ -49,13 +49,7 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 		ComposeBlock current;
 		ComposeBlock next;
 
-		current = lexiconFromFirst.get( 8 );
-		next = lexiconFromSecond.get( 13 );
-		assertTrue( musicBlockProvider.canSubstitute( current, next ) );
-
-		current = lexiconFromFirst.get( 1 );
-		next = lexiconFromSecond.get( 1 );
-		assertFalse( musicBlockProvider.canSubstitute( current, next ) );
+		assertTrue( musicBlockProvider.nextAreSubstitutable( lexiconFromFirst.get( 7 ).getMusicBlock(), lexiconFromSecond.get( 12 ).getMusicBlock() ) );
 	}
 
 	@Test
@@ -65,11 +59,11 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 
 		MusicBlockProvider mockProvider = spy( musicBlockProvider );
 
-		doReturn( false ).when( mockProvider ).canSubstitute( any( Integer.class ), any( Integer.class ), eq( musicBlocks ) );
-		doReturn( true ).when( mockProvider ).canSubstitute( eq( 1 ), eq( 2 ), eq( musicBlocks ) );
-		doReturn( true ).when( mockProvider ).canSubstitute( eq( 2 ), eq( 1 ), eq( musicBlocks ) );
-		doReturn( true ).when( mockProvider ).canSubstitute( eq( 1 ), eq( 3 ), eq( musicBlocks ) );
-		doReturn( true ).when( mockProvider ).canSubstitute( eq( 3 ), eq( 1 ), eq( musicBlocks ) );
+		doReturn( false ).when( mockProvider ).nextAreSubstitutable( any( MusicBlock.class ), any( MusicBlock.class ) );
+		doReturn( true ).when( mockProvider ).nextAreSubstitutable( musicBlocks.get( 0 ), musicBlocks.get( 1 ) );
+		doReturn( true ).when( mockProvider ).nextAreSubstitutable( musicBlocks.get( 1 ), musicBlocks.get( 0 ) );
+		doReturn( true ).when( mockProvider ).nextAreSubstitutable( musicBlocks.get( 0 ), musicBlocks.get( 2 ) );
+		doReturn( true ).when( mockProvider ).nextAreSubstitutable( musicBlocks.get( 2 ), musicBlocks.get( 0 ) );
 
 		Map<Integer, List<Integer>> allPossibleNextVariants = mockProvider.getAllPossibleNextVariants( musicBlocks );
 

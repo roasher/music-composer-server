@@ -138,7 +138,7 @@ public class CompositionDecomposer {
 		Lexicon lexiconFromComposition = getComposeBlocks( musicBlockList );
 
 		logger.info( "Combining blocks from compositions and blocks persistance" );
-		Lexicon combinedLexicon= union( dataBaseLexicon, lexiconFromComposition );
+		Lexicon combinedLexicon = union( dataBaseLexicon, lexiconFromComposition );
 
 		return combinedLexicon;
 	}
@@ -202,21 +202,25 @@ public class CompositionDecomposer {
 	 * Unions but Changes both input Lists!!!
 	 * TODO think of need to impl cloning ?
 	 * TODO write tests
+	 *
 	 * @return
 	 */
 	private Lexicon union( Lexicon firstLexicon, Lexicon secondLexicon ) {
-		if ( secondLexicon.getComposeBlockList().isEmpty() ) return firstLexicon;
-		if ( firstLexicon.getComposeBlockList().isEmpty() ) return secondLexicon;
+		if ( secondLexicon.getComposeBlockList().isEmpty() )
+			return firstLexicon;
+		if ( firstLexicon.getComposeBlockList().isEmpty() )
+			return secondLexicon;
 		Map<Integer, List<Integer>> unionMap = unionMaps( firstLexicon.getPossibleNextMusicBlockNumbers(), secondLexicon.getPossibleNextMusicBlockNumbers() );
 		// adding the possible next/previous
 		List<ComposeBlock> firstComposeBlocks = firstLexicon.getComposeBlockList();
 		List<ComposeBlock> secondComposeBlocks = secondLexicon.getComposeBlockList();
-		for ( int firstComposeBlockNumber = 0; firstComposeBlockNumber < firstComposeBlocks.size(); firstComposeBlockNumber++ ) {
+		for ( int firstComposeBlockNumber = 1; firstComposeBlockNumber < firstComposeBlocks.size(); firstComposeBlockNumber++ ) {
 			ComposeBlock firstComposeBlock = firstComposeBlocks.get( firstComposeBlockNumber );
-			for ( int secondComposeBlockNumber = 0; secondComposeBlockNumber < secondComposeBlocks.size(); secondComposeBlockNumber++ ) {
+			for ( int secondComposeBlockNumber = 1; secondComposeBlockNumber < secondComposeBlocks.size(); secondComposeBlockNumber++ ) {
 				ComposeBlock secondComposeBlock = secondComposeBlocks.get( secondComposeBlockNumber );
 
-				if ( musicBlockProvider.canSubstitute( firstComposeBlock, secondComposeBlock ) ) {
+				if ( musicBlockProvider.nextAreSubstitutable( firstComposeBlocks.get( firstComposeBlockNumber - 1 ).getMusicBlock(),
+						secondComposeBlocks.get( secondComposeBlockNumber - 1 ).getMusicBlock() ) ) {
 					// We are assuming that first members of possiblePrevious and possibleNext list is taken from the original composition
 					if ( firstComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
 						ComposeBlock originalPreviousFirst = firstComposeBlock.getPossiblePreviousComposeBlocks().get( 0 );

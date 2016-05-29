@@ -6,6 +6,7 @@ import static utils.ModelUtils.retrieveRhythmValue;
 import static utils.ModelUtils.retrieveStartTime;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,12 +23,18 @@ public class MusicBlock implements Serializable {
 	private List<Melody> melodyList;
 	private CompositionInfo compositionInfo;
 	private BlockMovement blockMovementFromPreviousToThis;
+	// TODO delete this
 	private BlockMovement blockMovementFromThisToNext;
 	// Derivative Self Information
 	private List<Integer> startIntervalPattern;
 	private List<Integer> endIntervalPattern;
 	private double rhythmValue;
 	private double startTime;
+
+	public MusicBlock( List<Melody> melodyList, CompositionInfo compositionInfo, BlockMovement blockMovementFromPreviousToThis ) {
+		this( melodyList, compositionInfo );
+		this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
+	}
 
 	public MusicBlock( List<Melody> inputMelodyList, CompositionInfo inputCompositionInfo ) {
 		this.melodyList = inputMelodyList;
@@ -48,6 +55,33 @@ public class MusicBlock implements Serializable {
 		this( Arrays.asList( melodies ), compositionInfo );
 	}
 
+	public MusicBlock( List<MusicBlock> musicBlocks ) {
+		List<Melody> melodyList = new ArrayList<>();
+		for ( int melodyNubmer = 0; melodyNubmer < musicBlocks.get( 0 ).getMelodyList().size(); melodyNubmer++ ) {
+			melodyList.add( new Melody() );
+		}
+		double rhythmValue = 0;
+		for ( MusicBlock currentComposeBlock : musicBlocks ) {
+			for ( int melodyNumber = 0; melodyNumber < currentComposeBlock.getMelodyList().size(); melodyNumber++ ) {
+				melodyList.get( melodyNumber ).addNoteList( currentComposeBlock.getMelodyList().get( melodyNumber ).getNoteList(), true );
+			}
+			rhythmValue += currentComposeBlock.getRhythmValue();
+		}
+
+		this.melodyList = melodyList;
+		this.compositionInfo = null;
+
+		this.blockMovementFromPreviousToThis = musicBlocks.get( 0 ).getBlockMovementFromPreviousToThis();
+		this.blockMovementFromThisToNext = musicBlocks.get( musicBlocks.size() -1 ).getBlockMovementFromThisToNext();
+
+		this.startIntervalPattern = musicBlocks.get( 0 ).getStartIntervalPattern();
+		this.endIntervalPattern = musicBlocks.get( musicBlocks.size() -1 ).getEndIntervalPattern();
+
+		this.rhythmValue = rhythmValue;
+		this.startTime = musicBlocks.get( 0 ).getStartTime();
+
+	}
+
 	public String getForm() {
 		StringBuilder stringBuilder = new StringBuilder();
 		for ( Melody melody : this.getMelodyList() ) {
@@ -57,24 +91,31 @@ public class MusicBlock implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+	public boolean equals( Object o ) {
+		if ( this == o )
+			return true;
+		if ( o == null || getClass() != o.getClass() )
+			return false;
 
-		MusicBlock that = (MusicBlock) o;
+		MusicBlock that = ( MusicBlock ) o;
 
-		if (Double.compare(that.rhythmValue, rhythmValue) != 0) return false;
-		if (Double.compare(that.startTime, startTime) != 0) return false;
-		if (!melodyList.equals(that.melodyList)) return false;
-		if (compositionInfo != null ? !compositionInfo.equals(that.compositionInfo) : that.compositionInfo != null) return false;
-		if (
-			blockMovementFromPreviousToThis != null ? !blockMovementFromPreviousToThis.equals(that.blockMovementFromPreviousToThis) :
-				that.blockMovementFromPreviousToThis != null) return false;
-		if (
-			blockMovementFromThisToNext != null ? !blockMovementFromThisToNext.equals(that.blockMovementFromThisToNext) :
-				that.blockMovementFromThisToNext != null) return false;
-		if (!startIntervalPattern.equals(that.startIntervalPattern)) return false;
-		return endIntervalPattern.equals(that.endIntervalPattern);
+		if ( Double.compare( that.rhythmValue, rhythmValue ) != 0 )
+			return false;
+		if ( Double.compare( that.startTime, startTime ) != 0 )
+			return false;
+		if ( !melodyList.equals( that.melodyList ) )
+			return false;
+		if ( compositionInfo != null ? !compositionInfo.equals( that.compositionInfo ) : that.compositionInfo != null )
+			return false;
+		if ( blockMovementFromPreviousToThis != null ?
+				!blockMovementFromPreviousToThis.equals( that.blockMovementFromPreviousToThis ) :
+				that.blockMovementFromPreviousToThis != null )
+			return false;
+		if ( blockMovementFromThisToNext != null ? !blockMovementFromThisToNext.equals( that.blockMovementFromThisToNext ) : that.blockMovementFromThisToNext != null )
+			return false;
+		if ( !startIntervalPattern.equals( that.startIntervalPattern ) )
+			return false;
+		return endIntervalPattern.equals( that.endIntervalPattern );
 
 	}
 
@@ -83,37 +124,36 @@ public class MusicBlock implements Serializable {
 		int result;
 		long temp;
 		result = melodyList.hashCode();
-		result = 31 * result + (compositionInfo != null ? compositionInfo.hashCode() : 0);
-		result = 31 * result + (blockMovementFromPreviousToThis != null ? blockMovementFromPreviousToThis.hashCode() : 0);
-		result = 31 * result + (blockMovementFromThisToNext != null ? blockMovementFromThisToNext.hashCode() : 0);
+		result = 31 * result + ( compositionInfo != null ? compositionInfo.hashCode() : 0 );
+		result = 31 * result + ( blockMovementFromPreviousToThis != null ? blockMovementFromPreviousToThis.hashCode() : 0 );
+		result = 31 * result + ( blockMovementFromThisToNext != null ? blockMovementFromThisToNext.hashCode() : 0 );
 		result = 31 * result + startIntervalPattern.hashCode();
 		result = 31 * result + endIntervalPattern.hashCode();
-		temp = Double.doubleToLongBits(rhythmValue);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(startTime);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits( rhythmValue );
+		result = 31 * result + ( int ) ( temp ^ ( temp >>> 32 ) );
+		temp = Double.doubleToLongBits( startTime );
+		result = 31 * result + ( int ) ( temp ^ ( temp >>> 32 ) );
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder stringBuilder = new StringBuilder(  );
+		StringBuilder stringBuilder = new StringBuilder();
 		for ( Melody melody : this.getMelodyList() ) {
-			stringBuilder.append('|').append( melody.toString() );
+			stringBuilder.append( '|' ).append( melody.toString() );
 		}
 		return stringBuilder.toString();
 	}
 
+	public void setBlockMovementFromPreviousToThis( BlockMovement blockMovementFromPreviousToThis ) {
+		this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
+	}
 
-  public void setBlockMovementFromPreviousToThis(BlockMovement blockMovementFromPreviousToThis) {
-    this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
-  }
+	public void setBlockMovementFromThisToNext( BlockMovement blockMovementFromThisToNext ) {
+		this.blockMovementFromThisToNext = blockMovementFromThisToNext;
+	}
 
-  public void setBlockMovementFromThisToNext(BlockMovement blockMovementFromThisToNext) {
-    this.blockMovementFromThisToNext = blockMovementFromThisToNext;
-  }
-
-  public List<Melody> getMelodyList() {
+	public List<Melody> getMelodyList() {
 		return melodyList;
 	}
 
@@ -143,5 +183,9 @@ public class MusicBlock implements Serializable {
 
 	public BlockMovement getBlockMovementFromThisToNext() {
 		return blockMovementFromThisToNext;
+	}
+
+	public void setStartTime( double startTime ) {
+		this.startTime = startTime;
 	}
 }

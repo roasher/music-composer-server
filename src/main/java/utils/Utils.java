@@ -175,7 +175,7 @@ public class Utils {
 //		for ( int composeBlockNumber = 0; composeBlockNumber < firstLexicon.getComposeBlockList().size(); composeBlockNumber++ ) {
 //			ComposeBlock firstComposeBlock = firstLexicon.getComposeBlockList().get( composeBlockNumber );
 //			ComposeBlock secondComposeBlock = secondLexicon.getComposeBlockList().get( composeBlockNumber );
-//			if ( firstComposeBlock.isSimilar(  ))
+//			if ( firstComposeBlock.hasEqualsMusicBlock(  ))
 //		}
 //		return true;
 //	}

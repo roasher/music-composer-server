@@ -2,23 +2,18 @@ package decomposer;
 
 import composer.MusicBlockProvider;
 import helper.AbstractSpringTest;
-import jm.JMC;
 import jm.music.data.Note;
 import model.ComposeBlock;
-import model.Lexicon;
 import model.MusicBlock;
-import model.composition.Composition;
 import model.melody.Melody;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import utils.CompositionLoader;
 
-import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -181,9 +176,10 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 
 	private boolean isValidForwardRoute( List<ComposeBlock> composeBlocks, MusicBlock... route ) {
 		List<ComposeBlock> currentRoutLexicon = composeBlocks;
-		nextRoute: for ( MusicBlock routState : route ) {
+		List<ComposeBlock> routeComposeBlocks = Arrays.asList( route ).stream().map( o -> new ComposeBlock( o ) ).collect( Collectors.toList() );
+		nextRoute: for ( ComposeBlock routState : routeComposeBlocks ) {
 			for ( ComposeBlock lexiconBlock : currentRoutLexicon ) {
-				if ( lexiconBlock.isSimilar( routState ) ) {
+				if ( lexiconBlock.hasEqualsMusicBlock( routState ) ) {
 					currentRoutLexicon = lexiconBlock.getPossibleNextComposeBlocks();
 					continue nextRoute;
 				}
@@ -195,9 +191,10 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 
 	private boolean isValidBackwardRoute( List<ComposeBlock> composeBlocks, MusicBlock... route ) {
 		List<ComposeBlock> currentRoutLexicon = composeBlocks;
-		nextRoute: for ( MusicBlock routState : route ) {
+		List<ComposeBlock> routeComposeBlocks = Arrays.asList( route ).stream().map( o -> new ComposeBlock( o ) ).collect( Collectors.toList() );
+		nextRoute: for ( ComposeBlock routState : routeComposeBlocks ) {
 			for ( ComposeBlock lexiconBlock : currentRoutLexicon ) {
-				if ( lexiconBlock.isSimilar( routState ) ) {
+				if ( lexiconBlock.hasEqualsMusicBlock( routState ) ) {
 					currentRoutLexicon = lexiconBlock.getPossiblePreviousComposeBlocks();
 					continue nextRoute;
 				}
