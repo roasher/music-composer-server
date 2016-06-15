@@ -32,12 +32,12 @@ public class RecombinatorTest extends AbstractSpringTest {
 	@Test
 	public void testRebuildingMelodyBlockList() {
 		// input
-		Melody melodyInput0 = new Melody( new Note[]{
+		Melody melodyInput0 = new Melody(
 		  new Rest( QUARTER_NOTE ),
 		  new Note( 60, DOTTED_QUARTER_NOTE ),
 	      new Note( 62, SIXTEENTH_NOTE ),
 		  new Note( 60, SIXTEENTH_NOTE ),
-		  new Note( 64, QUARTER_NOTE ),
+		  new Note( 64, QUARTER_NOTE )
 
 //		  new Note( 67, SIXTEENTH_NOTE ),
 //		  new Note( 65, SIXTEENTH_NOTE ),
@@ -46,23 +46,21 @@ public class RecombinatorTest extends AbstractSpringTest {
 //		  new Note( 67, SIXTEENTH_NOTE ),
 //		  new Note( 68, DOUBLE_DOTTED_QUARTER_NOTE ),
 //		  new Rest( QUARTER_NOTE )
-		}
 		);
 		melodyInput0.setForm( new Form( 'B' ) );
 
-		Melody melodyInput1 = new Melody( new Note[]{
+		Melody melodyInput1 = new Melody(
 		  new Note( 58, HALF_NOTE ),
 		  new Note( 56, EIGHTH_NOTE ),
 		  new Note( 58, EIGHTH_NOTE ),
 		  new Note( 50, DOTTED_EIGHTH_NOTE ),
-		  new Note( 51, SIXTEENTH_NOTE ),
+		  new Note( 51, SIXTEENTH_NOTE )
 
 //		  new Note( 60, EIGHTH_NOTE ),
 //		  new Note( 62, EIGHTH_NOTE ),
 //		  new Note( 60, QUARTER_NOTE ),
 //		  new Note( 60, QUARTER_NOTE ),
-//		  new Rest( QUARTER_NOTE ),
-		}
+//		  new Rest( QUARTER_NOTE )
 		);
 		melodyInput1.setForm( new Form( 'C' ) );
 
@@ -75,14 +73,10 @@ public class RecombinatorTest extends AbstractSpringTest {
 
 		// etalon output
 		// item
-		Melody melody00 = new Melody( new Note[] {
-		  new Rest( QUARTER_NOTE ),
-		} );
+		Melody melody00 = new Melody( new Rest( QUARTER_NOTE ) );
 		melody00.setForm( new Form( 'B' ) );
 
-		Melody melody01 = new Melody( new Note[] {
-		  new Note( 58, QUARTER_NOTE ),
-		} );
+		Melody melody01 = new Melody( new Note( 58, QUARTER_NOTE ) );
 		melody01.setForm( new Form( 'C' ) );
 
 		List< Melody > melodyList0 = new ArrayList<>(  );
@@ -90,15 +84,11 @@ public class RecombinatorTest extends AbstractSpringTest {
 		melodyList0.add( melody01 );
 
 		// item
-		Melody melody10 = new Melody( new Note[] {
-		  new Note( 60, QUARTER_NOTE ),
-		} );
+		Melody melody10 = new Melody( new Note( 60, QUARTER_NOTE ) );
 		melody10.setStartTime( melody00.getEndTime() );
 		melody10.setForm( new Form( 'B' ) );
 
-		Melody melody11 = new Melody( new Note[] {
-		  new Note( 58, QUARTER_NOTE )
-		} );
+		Melody melody11 = new Melody( new Note( 58, QUARTER_NOTE ) );
 		melody11.setStartTime( melody00.getEndTime() );
 		melody11.setForm( new Form( 'C' ) );
 
@@ -107,15 +97,11 @@ public class RecombinatorTest extends AbstractSpringTest {
 		melodyList1.add( melody11 );
 
 		// item
-		Melody melody100 = new Melody( new Note[] {
-		  new Note( 60, EIGHTH_NOTE ),
-		} );
+		Melody melody100 = new Melody( new Note( 60, EIGHTH_NOTE ) );
 		melody100.setStartTime( melody10.getEndTime() );
 		melody100.setForm( new Form( 'B' ) );
 
-		Melody melody110 = new Melody( new Note[] {
-		  new Note( 56, EIGHTH_NOTE )
-		} );
+		Melody melody110 = new Melody( new Note( 56, EIGHTH_NOTE ) );
 		melody110.setStartTime( melody10.getEndTime() );
 		melody110.setForm( new Form( 'C' ) );
 
@@ -124,15 +110,11 @@ public class RecombinatorTest extends AbstractSpringTest {
 		melodyList10.add( melody110 );
 
 		// item
-		Melody melody20 = new Melody( new Note[] {
-		  new Note( 62, SIXTEENTH_NOTE )
-		} );
+		Melody melody20 = new Melody( new Note( 62, SIXTEENTH_NOTE ) );
 		melody20.setStartTime( melody100.getEndTime() );
 		melody20.setForm( new Form( 'B' ) );
 
-		Melody melody21 = new Melody( new Note[] {
-		  new Note( 58, SIXTEENTH_NOTE ),
-		} );
+		Melody melody21 = new Melody( new Note( 58, SIXTEENTH_NOTE ) );
 		melody21.setStartTime( melody110.getEndTime() );
 		melody21.setForm( new Form( 'C' ) );
 
@@ -141,15 +123,11 @@ public class RecombinatorTest extends AbstractSpringTest {
 		melodyList2.add( melody21 );
 
 		// item
-		Melody melody30 = new Melody( new Note[] {
-		  new Note( 60, SIXTEENTH_NOTE )
-		} );
+		Melody melody30 = new Melody( new Note( 60, SIXTEENTH_NOTE ) );
 		melody30.setStartTime( melody20.getEndTime() );
 		melody30.setForm( new Form( 'B' ) );
 
-		Melody melody31 = new Melody( new Note[] {
-		  new Note( 58, SIXTEENTH_NOTE ),
-		} );
+		Melody melody31 = new Melody( new Note( 58, SIXTEENTH_NOTE ) );
 		melody31.setStartTime( melody20.getEndTime() );
 		melody31.setForm( new Form( 'C' ) );
 
@@ -158,15 +136,11 @@ public class RecombinatorTest extends AbstractSpringTest {
 		melodyList3.add( melody31 );
 
 		// item
-		Melody melody40 = new Melody( new Note[] {
-		  new Note( 64, DOTTED_EIGHTH_NOTE ),
-		} );
+		Melody melody40 = new Melody( new Note( 64, DOTTED_EIGHTH_NOTE ) );
 		melody40.setStartTime( melody30.getEndTime() );
 		melody40.setForm( new Form( 'B' ) );
 
-		Melody melody41 = new Melody( new Note[] {
-		  new Note( 50, DOTTED_EIGHTH_NOTE ),
-		} );
+		Melody melody41 = new Melody( new Note( 50, DOTTED_EIGHTH_NOTE ) );
 		melody41.setStartTime( melody30.getEndTime() );
 		melody41.setForm( new Form( 'C' ) );
 
@@ -175,15 +149,11 @@ public class RecombinatorTest extends AbstractSpringTest {
 		melodyList4.add( melody41 );
 
 		// item
-		Melody melody50 = new Melody( new Note[] {
-		  new Note( 64, SIXTEENTH_NOTE ),
-		} );
+		Melody melody50 = new Melody( new Note( 64, SIXTEENTH_NOTE ) );
 		melody50.setStartTime( melody40.getEndTime() );
 		melody50.setForm( new Form( 'B' ) );
 
-		Melody melody51 = new Melody( new Note[] {
-		  new Note( 51, SIXTEENTH_NOTE ),
-		} );
+		Melody melody51 = new Melody( new Note( 51, SIXTEENTH_NOTE ) );
 		melody51.setStartTime( melody40.getEndTime() );
 		melody51.setForm( new Form( 'C' ) );
 
@@ -206,35 +176,33 @@ public class RecombinatorTest extends AbstractSpringTest {
 	@Test
 	public void testRecombine() {
 		// input
-		Melody melodyInput00 = new Melody( new Note[]{
+		Melody melodyInput00 = new Melody(
 		  new Rest( QUARTER_NOTE ),
 		  new Note( 60, DOTTED_QUARTER_NOTE ),
 		  new Note( 62, SIXTEENTH_NOTE ),
-		  new Note( 60, SIXTEENTH_NOTE ),
-		} );
+		  new Note( 60, SIXTEENTH_NOTE )
+		);
 		melodyInput00.setForm( new Form( 'B' ) );
 
-		Melody melodyInput01 = new Melody( new Note[]{
+		Melody melodyInput01 = new Melody(
 		  new Note( 58, HALF_NOTE ),
 		  new Note( 56, EIGHTH_NOTE ),
-		  new Note( 58, EIGHTH_NOTE ),
-		} );
+		  new Note( 58, EIGHTH_NOTE )
+		);
 		melodyInput01.setForm( new Form( 'I' ) );
 
 		List< Melody > melodyList0 = new ArrayList<>(  );
 		melodyList0.add( melodyInput00 );
 		melodyList0.add( melodyInput01 );
 
-		Melody melodyInput10 = new Melody( new Note[]{
-		  new Note( 64, QUARTER_NOTE ),
-		} );
+		Melody melodyInput10 = new Melody( new Note( 64, QUARTER_NOTE ) );
 		melodyInput10.setForm( new Form( 'C' ) );
 		melodyInput10.setStartTime( melodyInput00.getEndTime() );
 
-		Melody melodyInput11 = new Melody( new Note[]{
+		Melody melodyInput11 = new Melody(
 		  new Note( 50, DOTTED_EIGHTH_NOTE ),
-		  new Note( 51, SIXTEENTH_NOTE ),
-		} );
+		  new Note( 51, SIXTEENTH_NOTE )
+		);
 		melodyInput11.setForm( new Form( 'J' ) );
 		melodyInput11.setStartTime( melodyInput01.getEndTime() );
 
@@ -242,19 +210,19 @@ public class RecombinatorTest extends AbstractSpringTest {
 		melodyList1.add( melodyInput10 );
 		melodyList1.add( melodyInput11 );
 
-		Melody melodyInput20 = new Melody( new Note[]{
+		Melody melodyInput20 = new Melody(
 		  new Note( 67, SIXTEENTH_NOTE ),
 		  new Note( 65, SIXTEENTH_NOTE ),
 		  new Note( 67, SIXTEENTH_NOTE ),
-		  new Note( 65, SIXTEENTH_NOTE ),
-		} );
+		  new Note( 65, SIXTEENTH_NOTE )
+		);
 		melodyInput20.setForm( new Form( 'D' ) );
 		melodyInput20.setStartTime( melodyInput10.getEndTime() );
 
-		Melody melodyInput21 = new Melody( new Note[]{
+		Melody melodyInput21 = new Melody(
 		  new Note( 60, EIGHTH_NOTE ),
-		  new Note( 62, EIGHTH_NOTE ),
-		} );
+		  new Note( 62, EIGHTH_NOTE )
+		);
 		melodyInput21.setForm( new Form( 'K' ) );
 		melodyInput21.setStartTime( melodyInput11.getEndTime() );
 
@@ -262,19 +230,19 @@ public class RecombinatorTest extends AbstractSpringTest {
 		melodyList2.add( melodyInput20 );
 		melodyList2.add( melodyInput21 );
 
-		Melody melodyInput30 = new Melody( new Note[]{
+		Melody melodyInput30 = new Melody(
 		  new Note( 67, SIXTEENTH_NOTE ),
 		  new Note( 68, DOUBLE_DOTTED_QUARTER_NOTE ),
 		  new Rest( QUARTER_NOTE )
-		} );
+		);
 		melodyInput30.setForm( new Form( 'E' ) );
 		melodyInput30.setStartTime( melodyInput20.getEndTime() );
 
-		Melody melodyInput31 = new Melody( new Note[]{
+		Melody melodyInput31 = new Melody(
 		  new Note( 60, QUARTER_NOTE ),
 		  new Note( 60, QUARTER_NOTE ),
-		  new Rest( QUARTER_NOTE ),
-		} );
+		  new Rest( QUARTER_NOTE )
+		);
 		melodyInput31.setForm( new Form( 'L' ) );
 		melodyInput31.setStartTime( melodyInput21.getEndTime() );
 
