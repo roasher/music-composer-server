@@ -1,20 +1,41 @@
 package utils;
 
-import helper.AbstractSpringTest;
-import jm.music.data.*;
-import model.melody.Melody;
-import model.composition.Composition;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static jm.JMC.A3;
+import static jm.JMC.B3;
+import static jm.JMC.C0;
+import static jm.JMC.C3;
+import static jm.JMC.C4;
+import static jm.JMC.C5;
+import static jm.JMC.D4;
+import static jm.JMC.D5;
+import static jm.JMC.DOTTED_HALF_NOTE;
+import static jm.JMC.E5;
+import static jm.JMC.EIGHTH_NOTE;
+import static jm.JMC.EIGHTH_NOTE_TRIPLET;
+import static jm.JMC.HALF_NOTE;
+import static jm.JMC.QUARTER_NOTE;
+import static jm.JMC.REST;
+import static jm.JMC.SIXTEENTH_NOTE;
+import static jm.JMC.WHOLE_NOTE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jm.JMC.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import helper.AbstractSpringTest;
+import jm.music.data.Note;
+import jm.music.data.Part;
+import jm.music.data.Phrase;
+import jm.music.data.Rest;
+import jm.music.data.Score;
+import model.composition.Composition;
+import model.melody.Melody;
 
 public class CompositionSlicerTest extends AbstractSpringTest {
 
@@ -114,7 +135,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 			phrase.add( note );
 		}
 		List<Melody> sliceToTest = compositionSlicer.slice( phrase, HALF_NOTE );
-		assertTrue( Utils.listOfMelodiesAreEqual( sliceToTest, sliceHalfNote ) );
+		assertEquals( sliceToTest, sliceHalfNote );
 
 		// QUARTER NOTE
 		List<Melody> sliceQuarterNote = new ArrayList<>();
@@ -230,7 +251,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 			phraseQuarter.add( note );
 		}
 		List<Melody> sliceToTestQuarter = compositionSlicer.slice( phraseQuarter, QUARTER_NOTE );
-		assertTrue( Utils.listOfMelodiesAreEqual( sliceToTestQuarter, sliceQuarterNote ) );
+		assertEquals( sliceToTestQuarter, sliceQuarterNote );
 
 		// WHOLE NOTE
 		List<Melody> sliceWholefNote = new ArrayList<>(  );
@@ -277,11 +298,11 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 			phraseW.add( note );
 		}
 		List<Melody> sliceToTestW = compositionSlicer.slice( phraseW, WHOLE_NOTE );
-		assertTrue( Utils.listOfMelodiesAreEqual( sliceToTestW, sliceWholefNote ) );
+		assertEquals( sliceToTestW, sliceWholefNote );
 
 		phraseW.getNote( 0 ).setRhythmValue( HALF_NOTE );
 		List<Melody> sliceToTestW1 = compositionSlicer.slice( phraseW, WHOLE_NOTE );
-		assertFalse( Utils.listOfMelodiesAreEqual( sliceToTestW1, sliceWholefNote ) );
+		assertNotEquals( sliceToTestW1, sliceWholefNote );
 	}
 
 	@Test
@@ -409,7 +430,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		}
 		List<Melody> sliceToTest = compositionSlicer.slice( phrase, WHOLE_NOTE );
 
-		assertTrue( Utils.listOfMelodiesAreEqual( sliceToTest, sliceEtalon ) );
+		assertEquals( sliceToTest, sliceEtalon );
 	}
 
 	@Test
@@ -485,7 +506,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		slice3.setStartTime( slice2.getEndTime() );
 		etalonSlice.add( slice3 );
 
-		assertTrue( Utils.listOfMelodiesAreEqual( sliceToTest, etalonSlice ) );
+		assertEquals( sliceToTest, etalonSlice );
 	}
 
     @Test

@@ -1,15 +1,13 @@
 package utils;
 
-import jm.music.data.Note;
-import jm.music.data.Part;
-import model.ComposeBlock;
-import model.MusicBlock;
-import model.composition.Composition;
-import model.melody.Melody;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by night wish on 25.08.14.
@@ -39,64 +37,6 @@ public class Utils {
         double roundedValue = Math.round( value*multiplier )/multiplier;
         return roundedValue;
     }
-
-	public static boolean ListOfListsOfMelodiesAreEqual( List<List<Melody>> firstListOfListsOfMelodies, List<List<Melody>> secondListOfListsOfMelodies ) {
-		if ( firstListOfListsOfMelodies == null || secondListOfListsOfMelodies == null || firstListOfListsOfMelodies.size() != secondListOfListsOfMelodies.size() ) {
-			return false;
-		}
-		for ( int currentMelodyBlockNumber = 0; currentMelodyBlockNumber < firstListOfListsOfMelodies.size(); currentMelodyBlockNumber ++ ) {
-			List< Melody > firstMelodyBlock = firstListOfListsOfMelodies.get( currentMelodyBlockNumber );
-			List< Melody > secondMelodyBlock = secondListOfListsOfMelodies.get( currentMelodyBlockNumber );
-			if ( !listOfMelodiesAreEqual( firstMelodyBlock, secondMelodyBlock ) ) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public static boolean listOfMelodiesAreEqual( List<Melody> firstMelodyList, List<Melody> secondMelodyList ) {
-		if ( firstMelodyList == null || secondMelodyList == null || firstMelodyList.size() != secondMelodyList.size() ) {
-			return false;
-		}
-		for ( int currentListeNumber = 0; currentListeNumber < firstMelodyList.size(); currentListeNumber ++ ) {
-			Melody firstMelody = firstMelodyList.get( currentListeNumber );
-			Melody secondMelody = secondMelodyList.get( currentListeNumber );
-			if ( !firstMelody.equals( secondMelody ) ) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-
-	public static boolean containsMelody( MusicBlock firstMusicBlock, List<MusicBlock> musicBlockList ) {
-		for ( MusicBlock musicBlock : musicBlockList ) {
-			if ( listOfMelodiesAreEqual( musicBlock.getMelodyList(), firstMusicBlock.getMelodyList() ) ) {
-				return true;
-			};
-		}
-		return false;
-	}
-
-	/**
-	 * Returns number of the note in the Note Array that sounds in particular time
-	 * If input time is finish time to one and start time to another, the first one will be returned
-	 * @param notes - note array
-	 * @param time
-	 * @return
-	 * TODO refactor using binary search
-	 */
-	public static int getNoteNumber( List<Note> notes, double time ) {
-		double startTime = 0;
-		for ( int currentNoteNumber = 0; currentNoteNumber < notes.size(); currentNoteNumber ++ ) {
-			double rhythm = notes.get( currentNoteNumber ).getRhythmValue();
-			if ( startTime < time && time <= startTime + rhythm ) {
-				return currentNoteNumber;
-			}
-			startTime += rhythm;
-		}
-		return notes.size() + 1;
-	}
 
 	public static int getDecimalPlaces( double value ) {
 		String[] places = String.valueOf( value ).split( "\\." );
@@ -160,23 +100,4 @@ public class Utils {
 		}
 	}
 
-//	public static boolean areLexiconsSimilar( Lexicon firstLexicon, Lexicon secondLexicon ) {
-//		if ( firstLexicon.getMinRhythmValue() != secondLexicon.getMinRhythmValue() ) return false;
-//		// Compositions check
-//		if ( firstLexicon.getCompositionsInLexicon().size() != secondLexicon.getCompositionsInLexicon().size() ) return false;
-//		for ( CompositionInfo firstLexiconCompositionInfo : firstLexicon.getCompositionsInLexicon() ) {
-//			boolean found = false;
-//			for ( CompositionInfo secondLexiconCompositionInfo : secondLexicon.getCompositionsInLexicon() ) {
-//				if ( firstLexiconCompositionInfo.equals( secondLexiconCompositionInfo ) ) found = true;
-//			}
-//			if ( !found ) return false;
-//		}
-//		// Compose blocks check
-//		for ( int composeBlockNumber = 0; composeBlockNumber < firstLexicon.getComposeBlockList().size(); composeBlockNumber++ ) {
-//			ComposeBlock firstComposeBlock = firstLexicon.getComposeBlockList().get( composeBlockNumber );
-//			ComposeBlock secondComposeBlock = secondLexicon.getComposeBlockList().get( composeBlockNumber );
-//			if ( firstComposeBlock.hasEqualsMusicBlock(  ))
-//		}
-//		return true;
-//	}
 }

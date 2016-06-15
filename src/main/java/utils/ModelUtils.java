@@ -1,19 +1,16 @@
 package utils;
 
-import jm.constants.Pitches;
-import jm.music.data.Note;
-import jm.music.data.Score;
-import model.ComposeBlock;
-import model.melody.Melody;
-import model.composition.CompositionInfo;
-import model.composition.Meter;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import jm.constants.Pitches;
+import jm.music.data.Note;
+import model.ComposeBlock;
+import model.melody.Melody;
 
 /**
  * Class aggregates useful utilities upon Model objects
@@ -125,27 +122,6 @@ public class ModelUtils {
 			rhytmSum += currentNote.getRhythmValue();
 		}
 		return rhytmSum;
-	}
-
-    public static CompositionInfo buildCompositionInfo( Score score, String author, Meter meter ) {
-        CompositionInfo compositionInfo = new CompositionInfo();
-        compositionInfo.setTitle( score.getTitle() );
-        compositionInfo.setTempo( score.getTempo() );
-        compositionInfo.setAuthor( author );
-        compositionInfo.setMetre( meter );
-        return compositionInfo;
-    }
-
-	public static double getMinRhythmValue( List< Melody > melodyList ) {
-		double minRhythmValue = Double.MAX_VALUE;
-		for ( Melody melody : melodyList ) {
-			for ( Note note : ( List<Note> ) melody.getNoteList() ) {
-				if ( note.getRhythmValue() < minRhythmValue ) {
-					minRhythmValue = note.getRhythmValue();
-				}
-			}
-		}
-		return minRhythmValue;
 	}
 
 	public static String getNoteNameByPitch( int pitch ) {

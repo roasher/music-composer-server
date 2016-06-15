@@ -1,10 +1,15 @@
 package utils;
 
-import jm.music.data.Note;
-import model.melody.Melody;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import jm.music.data.Note;
+import model.melody.Melody;
 
 /**
  * Class handles all recombination between melody lists
@@ -52,7 +57,7 @@ public class Recombinator {
 		for ( double edge : edgeArray ) {
 			List< Melody > melodyBlock = new ArrayList<>(  );
 			for ( Melody melody : inputMelodyBlock ) {
-				int noteNumber = Utils.getNoteNumber( melody.getNoteList(), edge );
+				int noteNumber = getNoteNumber( melody.getNoteList(), edge );
 				Note notePlayingAtThisMoment = melody.getNote( noteNumber );
 
 				Melody newMelody = new Melody( new Note[]{ new Note( notePlayingAtThisMoment.getPitch(), edge - prevoiusEdge ) } );
@@ -83,5 +88,25 @@ public class Recombinator {
 			lastEdge = edgeList.get( edgeList.size() - 1 );
 		}
 		return edgeList;
+	}
+
+	/**
+	 * Returns number of the note in the Note Array that sounds in particular time
+	 * If input time is finish time to one and start time to another, the first one will be returned
+	 * @param notes - note array
+	 * @param time
+	 * @return
+	 * TODO refactor using binary search
+	 */
+	public int getNoteNumber( List<Note> notes, double time ) {
+		double startTime = 0;
+		for ( int currentNoteNumber = 0; currentNoteNumber < notes.size(); currentNoteNumber ++ ) {
+			double rhythm = notes.get( currentNoteNumber ).getRhythmValue();
+			if ( startTime < time && time <= startTime + rhythm ) {
+				return currentNoteNumber;
+			}
+			startTime += rhythm;
+		}
+		return notes.size() + 1;
 	}
 }

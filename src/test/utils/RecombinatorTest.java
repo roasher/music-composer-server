@@ -1,20 +1,25 @@
 package utils;
 
+import static jm.JMC.DOTTED_EIGHTH_NOTE;
+import static jm.JMC.DOTTED_QUARTER_NOTE;
+import static jm.JMC.DOUBLE_DOTTED_QUARTER_NOTE;
+import static jm.JMC.EIGHTH_NOTE;
+import static jm.JMC.HALF_NOTE;
+import static jm.JMC.QUARTER_NOTE;
+import static jm.JMC.SIXTEENTH_NOTE;
+import static junit.framework.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import helper.AbstractSpringTest;
 import jm.music.data.Note;
 import jm.music.data.Rest;
 import model.melody.Form;
 import model.melody.Melody;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static junit.framework.Assert.assertEquals;
-
-import static jm.JMC.*;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by pyurkin on 25.11.14.
@@ -195,7 +200,7 @@ public class RecombinatorTest extends AbstractSpringTest {
 		etalonList.add( melodyList4 );
 		etalonList.add( melodyList5 );
 
-		assertTrue( Utils.ListOfListsOfMelodiesAreEqual( testList, etalonList ) );
+		assertEquals( etalonList, testList );
 	}
 
 	@Test

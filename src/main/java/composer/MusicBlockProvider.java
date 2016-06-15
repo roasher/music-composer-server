@@ -1,5 +1,7 @@
 package composer;
 
+import static utils.ModelEqualityUtils.isTimeCorrelated;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +10,6 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import model.MusicBlock;
-import utils.Utils;
 
 /**
  * Created by pyurkin on 15.01.15.
@@ -41,8 +42,8 @@ public class MusicBlockProvider {
 		return map;
 	}
 
-	public boolean isSame( List<Integer> firstIntervalPattern, double firstStartTime, List<Integer> secondIntervalPattern, double secondStartTime ) {
-		boolean correlatingTime = onCorrelatedTime( firstStartTime, secondStartTime );
+	private boolean isSame( List<Integer> firstIntervalPattern, double firstStartTime, List<Integer> secondIntervalPattern, double secondStartTime ) {
+		boolean correlatingTime = isTimeCorrelated( firstStartTime, secondStartTime );
 		boolean intervalPatternEquality = firstIntervalPattern.equals( secondIntervalPattern );
 		return intervalPatternEquality && correlatingTime;
 	}
@@ -54,22 +55,6 @@ public class MusicBlockProvider {
 	 */
 	public boolean nextAreSubstitutable( MusicBlock firstMusicBlock, MusicBlock secondMusicBlock ) {
 		return isSame( firstMusicBlock.getEndIntervalPattern(), firstMusicBlock.getStartTime(), secondMusicBlock.getEndIntervalPattern(), secondMusicBlock.getStartTime() );
-	}
-
-	/**
-	 * Check if two times have equal "strength"
-	 *
-	 * @param firstStartTime
-	 * @param secondStartTime
-	 * @return
-	 */
-	public boolean onCorrelatedTime( double firstStartTime, double secondStartTime ) {
-		int originStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces( firstStartTime );
-		int substitutorStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces( secondStartTime );
-		if ( originStartTimeDecimalPlacesNumber == substitutorStartTimeDecimalPlacesNumber ) {
-			return true;
-		}
-		return false;
 	}
 
 }
