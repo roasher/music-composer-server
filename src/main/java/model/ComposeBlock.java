@@ -161,20 +161,6 @@ public class ComposeBlock {
 		return possiblePreviousComposeBlocks;
 	}
 
-	public ComposeBlock getNext( int number ) {
-		if ( this.possibleNextComposeBlocks.size() > number ) {
-			return this.possibleNextComposeBlocks.get( number );
-		}
-		return null;
-	}
-
-	public ComposeBlock getPrevious( int number ) {
-		if ( this.possiblePreviousComposeBlocks.size() > number ) {
-			return this.possiblePreviousComposeBlocks.get( number );
-		}
-		return null;
-	}
-
 	public MusicBlock getMusicBlock() {
 		return musicBlock;
 	}

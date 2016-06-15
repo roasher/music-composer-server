@@ -1,5 +1,6 @@
 package model;
 
+import static utils.ModelEqualityUtils.isTimeCorrelated;
 import static utils.ModelUtils.retrieveFirstIntervalPattern;
 import static utils.ModelUtils.retrieveLastIntervalPattern;
 import static utils.ModelUtils.retrieveRhythmValue;
@@ -14,9 +15,8 @@ import model.composition.CompositionInfo;
 import model.melody.Melody;
 
 /**
- * Class represents music MusicBlock
- * Music Block is the cut from the one's partition with some characteristics - the blocks with which new generated composition will be made from.
- * Created by Pavel Yurkin on 18.07.14.
+ * Class represents music MusicBlock Music Block is the cut from the one's partition with some characteristics - the blocks with which new generated composition
+ * will be made from. Created by Pavel Yurkin on 18.07.14.
  */
 public class MusicBlock implements Serializable {
 	// Origin Self Information
@@ -72,7 +72,7 @@ public class MusicBlock implements Serializable {
 		this.blockMovementFromPreviousToThis = musicBlocks.get( 0 ).getBlockMovementFromPreviousToThis();
 
 		this.startIntervalPattern = musicBlocks.get( 0 ).getStartIntervalPattern();
-		this.endIntervalPattern = musicBlocks.get( musicBlocks.size() -1 ).getEndIntervalPattern();
+		this.endIntervalPattern = musicBlocks.get( musicBlocks.size() - 1 ).getEndIntervalPattern();
 
 		this.rhythmValue = rhythmValue;
 		this.startTime = musicBlocks.get( 0 ).getStartTime();
@@ -98,7 +98,7 @@ public class MusicBlock implements Serializable {
 
 		if ( Double.compare( that.rhythmValue, rhythmValue ) != 0 )
 			return false;
-		if ( Double.compare( that.startTime, startTime ) != 0 )
+		if ( !isTimeCorrelated( that.startTime, startTime ) )
 			return false;
 		if ( !melodyList.equals( that.melodyList ) )
 			return false;

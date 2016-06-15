@@ -1,9 +1,10 @@
 package composer;
 
-import static junit.framework.Assert.assertFalse;
+import static jm.constants.Durations.DOTTED_HALF_NOTE;
+import static jm.constants.Durations.HALF_NOTE;
+import static jm.constants.Durations.QUARTER_NOTE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -21,10 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import decomposer.CompositionDecomposer;
 import helper.AbstractSpringTest;
 import jm.JMC;
+import jm.music.data.Note;
+import jm.music.data.Rest;
+import model.BlockMovement;
 import model.ComposeBlock;
 import model.Lexicon;
 import model.MusicBlock;
 import model.composition.Composition;
+import model.melody.Melody;
 import utils.CompositionLoader;
 
 /**
@@ -49,7 +54,7 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 		ComposeBlock current;
 		ComposeBlock next;
 
-		assertTrue( musicBlockProvider.nextAreSubstitutable( lexiconFromFirst.get( 7 ).getMusicBlock(), lexiconFromSecond.get( 12 ).getMusicBlock() ) );
+		assertTrue( musicBlockProvider.isPossibleNext( lexiconFromFirst.get( 7 ).getMusicBlock(), lexiconFromSecond.get( 13 ).getMusicBlock() ) );
 	}
 
 	@Test
@@ -59,11 +64,11 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 
 		MusicBlockProvider mockProvider = spy( musicBlockProvider );
 
-		doReturn( false ).when( mockProvider ).nextAreSubstitutable( any( MusicBlock.class ), any( MusicBlock.class ) );
-		doReturn( true ).when( mockProvider ).nextAreSubstitutable( musicBlocks.get( 0 ), musicBlocks.get( 1 ) );
-		doReturn( true ).when( mockProvider ).nextAreSubstitutable( musicBlocks.get( 1 ), musicBlocks.get( 0 ) );
-		doReturn( true ).when( mockProvider ).nextAreSubstitutable( musicBlocks.get( 0 ), musicBlocks.get( 2 ) );
-		doReturn( true ).when( mockProvider ).nextAreSubstitutable( musicBlocks.get( 2 ), musicBlocks.get( 0 ) );
+		doReturn( false ).when( mockProvider ).isPossibleNext( any( MusicBlock.class ), any( MusicBlock.class ) );
+		doReturn( true ).when( mockProvider ).isPossibleNext( musicBlocks.get( 0 ), musicBlocks.get( 2 ) );
+		doReturn( true ).when( mockProvider ).isPossibleNext( musicBlocks.get( 1 ), musicBlocks.get( 1 ) );
+		doReturn( true ).when( mockProvider ).isPossibleNext( musicBlocks.get( 0 ), musicBlocks.get( 3 ) );
+		doReturn( true ).when( mockProvider ).isPossibleNext( musicBlocks.get( 2 ), musicBlocks.get( 1 ) );
 
 		Map<Integer, List<Integer>> allPossibleNextVariants = mockProvider.getAllPossibleNextVariants( musicBlocks );
 
@@ -93,4 +98,22 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 		return musicBlockList;
 	}
 
+	@Test
+	public void getPreviousEndIntervalPattern() throws Exception {
+		MusicBlock musicBlock = new MusicBlock( null,
+				new Melody(
+						new Note(4, QUARTER_NOTE),
+						new Rest(QUARTER_NOTE),
+						new Note(135, QUARTER_NOTE)
+				),
+				new Melody(
+						new Note(3, DOTTED_HALF_NOTE)
+				),
+				new Melody(
+						new Note(0, HALF_NOTE),
+						new Rest(QUARTER_NOTE)
+				));
+		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -1, 1, -1 ) );
+		assertEquals( Arrays.asList( 1, 3 ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
+	}
 }

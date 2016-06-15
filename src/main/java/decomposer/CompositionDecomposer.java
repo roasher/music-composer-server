@@ -69,7 +69,12 @@ public class CompositionDecomposer {
 			}
 			lexiconMusicBlocks.add( musicBlock );
 		}
-		return lexiconMusicBlocks;
+		// removing duplicates
+		List<MusicBlock> uniqueMusicBlocks = new ArrayList<>(  );
+		lexiconMusicBlocks.forEach( musicBlock -> {
+			if ( !uniqueMusicBlocks.contains( musicBlock ) ) uniqueMusicBlocks.add( musicBlock );
+		} );
+		return uniqueMusicBlocks;
 	}
 
 	public Lexicon decompose( Composition composition, double rhythmValue ) {
@@ -216,9 +221,9 @@ public class CompositionDecomposer {
 			ComposeBlock firstComposeBlock = firstComposeBlocks.get( firstComposeBlockNumber );
 			for ( int secondComposeBlockNumber = 1; secondComposeBlockNumber < secondComposeBlocks.size(); secondComposeBlockNumber++ ) {
 				ComposeBlock secondComposeBlock = secondComposeBlocks.get( secondComposeBlockNumber );
-
-				if ( musicBlockProvider.nextAreSubstitutable( firstComposeBlocks.get( firstComposeBlockNumber - 1 ).getMusicBlock(),
-						secondComposeBlocks.get( secondComposeBlockNumber - 1 ).getMusicBlock() ) ) {
+				// TODO fix this
+				if ( musicBlockProvider.isPossibleNext( firstComposeBlocks.get( firstComposeBlockNumber ).getMusicBlock(),
+						secondComposeBlocks.get( secondComposeBlockNumber ).getMusicBlock() ) ) {
 					// We are assuming that first members of possiblePrevious and possibleNext list is taken from the original composition
 					if ( firstComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
 						ComposeBlock originalPreviousFirst = firstComposeBlock.getPossiblePreviousComposeBlocks().get( 0 );

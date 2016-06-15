@@ -1,5 +1,27 @@
 package composer.compositionComposer;
 
+import static jm.JMC.B5;
+import static jm.JMC.C3;
+import static jm.JMC.C4;
+import static jm.JMC.D4;
+import static jm.JMC.D5;
+import static jm.JMC.E4;
+import static jm.JMC.E5;
+import static jm.JMC.EIGHTH_NOTE;
+import static jm.JMC.F5;
+import static jm.JMC.QUARTER_NOTE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import composer.ComposeBlockProvider;
 import composer.CompositionComposer;
 import decomposer.CompositionDecomposer;
@@ -14,21 +36,8 @@ import model.ComposeBlock;
 import model.Lexicon;
 import model.composition.Composition;
 import model.melody.Melody;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import persistance.dao.LexiconDAO;
 import utils.CompositionLoader;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static jm.JMC.*;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by pyurkin on 15.12.14.
