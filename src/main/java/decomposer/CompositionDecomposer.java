@@ -202,11 +202,7 @@ public class CompositionDecomposer {
 	}
 
 	/**
-	 * Unions but Changes both input Lists!!!
-	 * TODO think of need to impl cloning ?
-	 * TODO write tests
-	 *
-	 * @return
+	 * Unions lexicons but changes both inputs
 	 */
 	private Lexicon union( Lexicon firstLexicon, Lexicon secondLexicon ) {
 		if ( secondLexicon.getComposeBlockList().isEmpty() )
@@ -217,37 +213,19 @@ public class CompositionDecomposer {
 		// adding the possible next/previous
 		List<ComposeBlock> firstComposeBlocks = firstLexicon.getComposeBlockList();
 		List<ComposeBlock> secondComposeBlocks = secondLexicon.getComposeBlockList();
-		for ( int firstComposeBlockNumber = 1; firstComposeBlockNumber < firstComposeBlocks.size(); firstComposeBlockNumber++ ) {
+		for ( int firstComposeBlockNumber = 0; firstComposeBlockNumber < firstComposeBlocks.size(); firstComposeBlockNumber++ ) {
 			ComposeBlock firstComposeBlock = firstComposeBlocks.get( firstComposeBlockNumber );
-			for ( int secondComposeBlockNumber = 1; secondComposeBlockNumber < secondComposeBlocks.size(); secondComposeBlockNumber++ ) {
+			for ( int secondComposeBlockNumber = 0; secondComposeBlockNumber < secondComposeBlocks.size(); secondComposeBlockNumber++ ) {
 				ComposeBlock secondComposeBlock = secondComposeBlocks.get( secondComposeBlockNumber );
-				// TODO fix this
-				if ( musicBlockProvider.isPossibleNext( firstComposeBlocks.get( firstComposeBlockNumber ).getMusicBlock(),
-						secondComposeBlocks.get( secondComposeBlockNumber ).getMusicBlock() ) ) {
-					// We are assuming that first members of possiblePrevious and possibleNext list is taken from the original composition
-					if ( firstComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
-						ComposeBlock originalPreviousFirst = firstComposeBlock.getPossiblePreviousComposeBlocks().get( 0 );
-						if ( !secondComposeBlock.getPossiblePreviousComposeBlocks().contains( originalPreviousFirst ) ) {
-							secondComposeBlock.getPossiblePreviousComposeBlocks().add( originalPreviousFirst );
-						}
-						if ( !originalPreviousFirst.getPossibleNextComposeBlocks().contains( secondComposeBlock ) ) {
-							originalPreviousFirst.getPossibleNextComposeBlocks().add( secondComposeBlock );
-							int originalPreviousFirstNumber = unionMap.get( firstComposeBlockNumber ).get( 0 );
-							unionMap.get( originalPreviousFirstNumber ).add( secondComposeBlockNumber );
-						}
-					}
-
-					if ( secondComposeBlock.getPossiblePreviousComposeBlocks().size() > 0 ) {
-						ComposeBlock originalPreviousSecond = secondComposeBlock.getPossiblePreviousComposeBlocks().get( 0 );
-						if ( !firstComposeBlock.getPossiblePreviousComposeBlocks().contains( originalPreviousSecond ) ) {
-							firstComposeBlock.getPossiblePreviousComposeBlocks().add( originalPreviousSecond );
-						}
-						if ( !originalPreviousSecond.getPossibleNextComposeBlocks().contains( firstComposeBlock ) ) {
-							originalPreviousSecond.getPossibleNextComposeBlocks().add( firstComposeBlock );
-							int originalPreviousSecondNumber = unionMap.get( secondComposeBlockNumber ).get( 0 );
-							unionMap.get( originalPreviousSecondNumber ).add( firstComposeBlockNumber );
-						}
-					}
+				if ( musicBlockProvider.isPossibleNext( firstComposeBlock.getMusicBlock(), secondComposeBlock.getMusicBlock() ) ) {
+					firstComposeBlock.getPossibleNextComposeBlocks().add( secondComposeBlock );
+					unionMap.get( firstComposeBlockNumber ).add( firstComposeBlocks.size() + secondComposeBlockNumber );
+					secondComposeBlock.getPossiblePreviousComposeBlocks().add( firstComposeBlock );
+				}
+				if ( musicBlockProvider.isPossibleNext( secondComposeBlock.getMusicBlock(), firstComposeBlock.getMusicBlock() ) ) {
+					secondComposeBlock.getPossibleNextComposeBlocks().add( firstComposeBlock );
+					unionMap.get( firstComposeBlocks.size() + secondComposeBlockNumber ).add( firstComposeBlockNumber );
+					firstComposeBlock.getPossiblePreviousComposeBlocks().add( secondComposeBlock );
 				}
 			}
 		}
