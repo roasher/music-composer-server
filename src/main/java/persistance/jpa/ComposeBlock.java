@@ -1,8 +1,16 @@
 package persistance.jpa;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Created by pyurkin on 29.04.2015.
@@ -77,9 +85,9 @@ public class ComposeBlock extends AbstractPersistanceModel {
 		if ( !melodies.equals( that.melodies ) )
 			return false;
 
-		if ( !isEquals( this.possibleNextComposeBlocks, that.possibleNextComposeBlocks ) )
+		if ( !areEquals( this.possibleNextComposeBlocks, that.possibleNextComposeBlocks ) )
 			return false;
-		if ( !isEquals( this.possiblePreviousComposeBlocks, that.possiblePreviousComposeBlocks ) )
+		if ( !areEquals( this.possiblePreviousComposeBlocks, that.possiblePreviousComposeBlocks ) )
 			return false;
 
 		return true;
@@ -88,17 +96,17 @@ public class ComposeBlock extends AbstractPersistanceModel {
 	/**
 	 * Two lists considered equals if they have equal size and every entry from one has similar entry from another
 	 *
-	 * @param firstComposeBlockList
-	 * @param secondComposeBlockList
+	 * @param firstComposeBlocks
+	 * @param secondComposeBlocks
 	 * @return
 	 */
-	private boolean isEquals( List<ComposeBlock> firstComposeBlockList, List<ComposeBlock> secondComposeBlockList ) {
-		if ( firstComposeBlockList.size() != secondComposeBlockList.size() )
+	private boolean areEquals( List<ComposeBlock> firstComposeBlocks, List<ComposeBlock> secondComposeBlocks ) {
+		if ( firstComposeBlocks.size() != secondComposeBlocks.size() )
 			return false;
 
-		for ( ComposeBlock firstComposeBlock : firstComposeBlockList ) {
+		for ( ComposeBlock firstComposeBlock : firstComposeBlocks ) {
 			boolean isInList = false;
-			for ( ComposeBlock secondComposeBlock : secondComposeBlockList ) {
+			for ( ComposeBlock secondComposeBlock : secondComposeBlocks ) {
 				if ( ( firstComposeBlock == null && secondComposeBlock != null ) || ( firstComposeBlock != null && secondComposeBlock == null ) ) {
 					continue;
 				} else if ( firstComposeBlock == null && secondComposeBlock == null || firstComposeBlock.isSimilar( secondComposeBlock ) ) {

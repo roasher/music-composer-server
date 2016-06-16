@@ -1,6 +1,7 @@
 package model;
 
-import static utils.ModelEqualityUtils.isTimeCorrelated;
+import static utils.ModelUtils.areTwosomeParallel;
+import static utils.ModelUtils.isTimeCorrelated;
 import static utils.ModelUtils.retrieveFirstIntervalPattern;
 import static utils.ModelUtils.retrieveLastIntervalPattern;
 import static utils.ModelUtils.retrieveRhythmValue;
@@ -100,8 +101,6 @@ public class MusicBlock implements Serializable {
 			return false;
 		if ( !isTimeCorrelated( that.startTime, startTime ) )
 			return false;
-		if ( !melodyList.equals( that.melodyList ) )
-			return false;
 		if ( compositionInfo != null ? !compositionInfo.equals( that.compositionInfo ) : that.compositionInfo != null )
 			return false;
 		if ( blockMovementFromPreviousToThis != null ?
@@ -110,15 +109,17 @@ public class MusicBlock implements Serializable {
 			return false;
 		if ( !startIntervalPattern.equals( that.startIntervalPattern ) )
 			return false;
+		if ( !areTwosomeParallel( this.melodyList, that.melodyList ) )
+			return false;
 		return endIntervalPattern.equals( that.endIntervalPattern );
-
 	}
 
 	@Override
 	public int hashCode() {
 		int result;
 		long temp;
-		result = melodyList.hashCode();
+//		result = melodyList.hashCode();
+		result = 1;
 		result = 31 * result + ( compositionInfo != null ? compositionInfo.hashCode() : 0 );
 		result = 31 * result + ( blockMovementFromPreviousToThis != null ? blockMovementFromPreviousToThis.hashCode() : 0 );
 		result = 31 * result + startIntervalPattern.hashCode();

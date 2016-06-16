@@ -1,6 +1,6 @@
 package composer;
 
-import static utils.ModelEqualityUtils.isTimeCorrelated;
+import static utils.ModelUtils.isTimeCorrelated;
 import static utils.ModelUtils.retrieveIntervalPattern;
 
 import java.util.ArrayList;
