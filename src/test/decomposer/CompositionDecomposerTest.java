@@ -1,6 +1,7 @@
 package decomposer;
 
 import static jm.JMC.WHOLE_NOTE;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -32,16 +33,24 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 		String fileName = "AABC1_with_base.mid";
 		Composition composition = compositionLoader.getComposition( new File( "src/test/decomposer/form/formDecomposer/simpleMelodies/" + fileName ) );
 		Lexicon lexicon = compositionDecomposer.decompose( composition, WHOLE_NOTE );
-		// TODO implementation
+		// TODO particularly validate
+		lexicon.get( 0 );
 	}
 
-	@Ignore
 	@Test
-	public void singleMelodyTest() {
-		Lexicon lexicon = compositionDecomposer
-				.decompose( compositionLoader.getComposition( new File( "src/test/decomposer/gen_1" + ".mid" ) ), JMC.WHOLE_NOTE );
-		// TODO impl
-		lexicon.get( 0 );
+	public void singleVoiceMelodyTest() {
+		Lexicon lexicon = compositionDecomposer.decompose( compositionLoader.getComposition( new File( "src/test/decomposer/gen_1.mid" ) ), JMC.WHOLE_NOTE );
+		// works if time correlation is disabled
+		assertEquals( 6, lexicon.getComposeBlockList().size() );
+		lexicon.getComposeBlockList().forEach( composeBlock -> {
+			if ( composeBlock.getBlockMovementFromPreviousToThis() != null ) {
+				assertEquals( 6, composeBlock.getPossiblePreviousComposeBlocks().size() );
+				assertEquals( 5, composeBlock.getPossibleNextComposeBlocks().size() );
+			} else {
+				assertEquals( 0, composeBlock.getPossiblePreviousComposeBlocks().size() );
+				assertEquals( 5, composeBlock.getPossibleNextComposeBlocks().size() );
+			}
+		} );
 	}
 
 	@Test
