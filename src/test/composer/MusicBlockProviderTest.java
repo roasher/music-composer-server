@@ -4,13 +4,11 @@ import static jm.constants.Durations.DOTTED_HALF_NOTE;
 import static jm.constants.Durations.HALF_NOTE;
 import static jm.constants.Durations.QUARTER_NOTE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,18 +17,12 @@ import java.util.Map;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import decomposer.CompositionDecomposer;
 import helper.AbstractSpringTest;
-import jm.JMC;
 import jm.music.data.Note;
 import jm.music.data.Rest;
 import model.BlockMovement;
-import model.ComposeBlock;
-import model.Lexicon;
 import model.MusicBlock;
-import model.composition.Composition;
 import model.melody.Melody;
-import utils.CompositionLoader;
 
 /**
  * Created by pyurkin on 16.02.15.
@@ -39,23 +31,6 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 
 	@Autowired
 	private MusicBlockProvider musicBlockProvider;
-
-	@Autowired
-	private CompositionLoader compositionLoader;
-
-	@Autowired
-	private CompositionDecomposer compositionDecomposer;
-
-	@Test
-	public void followTestCase() {
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/composer/simpleMelodies" ) );
-		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
-		Lexicon lexiconFromSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
-		ComposeBlock current;
-		ComposeBlock next;
-
-		assertTrue( musicBlockProvider.isPossibleNext( lexiconFromFirst.get( 7 ).getMusicBlock(), lexiconFromSecond.get( 13 ).getMusicBlock() ) );
-	}
 
 	@Test
 	public void getAllPossibleNextMapTest() {
