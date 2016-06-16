@@ -197,12 +197,14 @@ public class ModelUtils {
 	 * @return
 	 */
 	public static boolean isTimeCorrelated( double firstStartTime, double secondStartTime ) {
-		int originStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces( firstStartTime );
-		int substitutorStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces( secondStartTime );
-		if ( originStartTimeDecimalPlacesNumber == substitutorStartTimeDecimalPlacesNumber ) {
-			return true;
-		}
-		return false;
+		return true;
+		//TODO Disabled for testing purposes (Don't know if needed decide later)
+//		int originStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces( firstStartTime );
+//		int substitutorStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces( secondStartTime );
+//		if ( originStartTimeDecimalPlacesNumber == substitutorStartTimeDecimalPlacesNumber ) {
+//			return true;
+//		}
+//		return false;
 	}
 
 	public static boolean areParallel( Melody firstMelody, Melody secondMelody ) {
