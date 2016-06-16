@@ -57,7 +57,8 @@ public class PersistConverterTest extends AbstractSpringTest {
 	@Autowired
 	private MelodyFactory melodyFactory;
 
-	@Test public void convert() {
+	@Test
+	public void convert() {
 		List<ComposeBlock> persitanceMusicBlocks = getDefaultPersitanceMusicBlocks();
 		Lexicon convertedFromPersistanceLexicon = persistConverter.convertPersistComposeBlockList( persitanceMusicBlocks );
 		model.Lexicon lexicon = getDefaultLexicon();
@@ -67,7 +68,8 @@ public class PersistConverterTest extends AbstractSpringTest {
 		assertEquals( persitanceMusicBlocks, persistanceComposeBlocks );
 	}
 
-	@Test public void doubleConvert() {
+	@Test
+	public void doubleConvert() {
 		List<ComposeBlock> persitanceMusicBlocks = getDefaultPersitanceMusicBlocks();
 		Lexicon persistLexiconFirstConvertion = persistConverter.convertPersistComposeBlockList( persitanceMusicBlocks );
 		List<ComposeBlock> persistLexiconSecondConversion = persistConverter.convertComposeBlockList( persistLexiconFirstConvertion );
