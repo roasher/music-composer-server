@@ -73,10 +73,10 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 		Map<Integer, List<Integer>> allPossibleNextVariants = mockProvider.getAllPossibleNextVariants( musicBlocks );
 
 		assertEquals( musicBlocks.size(), allPossibleNextVariants.size() );
-		assertEquals( Arrays.asList( 1, 2, 3 ), allPossibleNextVariants.get( 0 ) );
-		assertEquals( Arrays.asList( 2, 1 ), allPossibleNextVariants.get( 1 ) );
-		assertEquals( Arrays.asList( 3, 1 ), allPossibleNextVariants.get( 2 ) );
-		assertEquals( Arrays.asList( 4 ), allPossibleNextVariants.get( 3 ) );
+		assertEquals( Arrays.asList( 2, 3 ), allPossibleNextVariants.get( 0 ) );
+		assertEquals( Arrays.asList( 1 ), allPossibleNextVariants.get( 1 ) );
+		assertEquals( Arrays.asList( 1 ), allPossibleNextVariants.get( 2 ) );
+		assertEquals( Arrays.asList(  ), allPossibleNextVariants.get( 3 ) );
 		assertEquals( Arrays.asList(  ), allPossibleNextVariants.get( 4 ) );
 	}
 
@@ -99,7 +99,26 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 	}
 
 	@Test
-	public void getPreviousEndIntervalPattern() throws Exception {
+	public void getPreviousEndIntervalPatternWithoutRests() {
+		MusicBlock musicBlock = new MusicBlock( null,
+				new Melody(
+						new Note(14, QUARTER_NOTE),
+						new Rest(QUARTER_NOTE),
+						new Note(135, QUARTER_NOTE)
+				),
+				new Melody(
+						new Note(7, DOTTED_HALF_NOTE)
+				),
+				new Melody(
+						new Note(1, HALF_NOTE),
+						new Rest(QUARTER_NOTE)
+				));
+		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -1, 1, -1 ) );
+		assertEquals( Arrays.asList( 4, 9 ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
+	}
+
+	@Test
+	public void getPreviousEndIntervalPatternSingleRest() {
 		MusicBlock musicBlock = new MusicBlock( null,
 				new Melody(
 						new Note(4, QUARTER_NOTE),
@@ -107,13 +126,31 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 						new Note(135, QUARTER_NOTE)
 				),
 				new Melody(
-						new Note(3, DOTTED_HALF_NOTE)
+						new Rest(DOTTED_HALF_NOTE)
 				),
 				new Melody(
 						new Note(0, HALF_NOTE),
 						new Rest(QUARTER_NOTE)
 				));
 		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -1, 1, -1 ) );
-		assertEquals( Arrays.asList( 1, 3 ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
+		assertEquals( Arrays.asList( Note.REST, 4 ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
+	}
+
+	@Test
+	public void getPreviousEndIntervalPatternAllRests() {
+		MusicBlock musicBlock = new MusicBlock( null,
+				new Melody(
+						new Rest(QUARTER_NOTE),
+						new Note(135, QUARTER_NOTE)
+				),
+				new Melody(
+						new Rest(HALF_NOTE)
+				),
+				new Melody(
+						new Rest(QUARTER_NOTE),
+						new Note(0, QUARTER_NOTE)
+				));
+		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -10, 100, -100 ) );
+		assertEquals( Arrays.asList( Note.REST, Note.REST ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
 	}
 }

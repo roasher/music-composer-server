@@ -1,6 +1,7 @@
 package composer;
 
 import static utils.ModelEqualityUtils.isTimeCorrelated;
+import static utils.ModelUtils.retrieveIntervalPattern;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import jm.music.data.Note;
 import model.MusicBlock;
 
 /**
@@ -46,16 +48,14 @@ public class MusicBlockProvider {
 		return intervalPatternEquality && correlatingTime;
 	}
 
-	// TODO need to write tests using rests
 	public List<Integer> getPreviousEndIntervalPattern( MusicBlock musicBlock ) {
-		List<Integer> startIntervalPattern = musicBlock.getStartIntervalPattern();
 		List<Integer> voiceMovements = musicBlock.getBlockMovementFromPreviousToThis().getVoiceMovements();
-		List<Integer> previousEndIntervalPattern = new ArrayList<>(  );
-		for ( int intervalNumber = 0; intervalNumber < startIntervalPattern.size(); intervalNumber++ ) {
-			previousEndIntervalPattern.add( startIntervalPattern.get( intervalNumber ) - voiceMovements.get( intervalNumber ) + voiceMovements.get(
-					intervalNumber + 1 ) );
+		List<Integer> preFirstVertical = new ArrayList<>();
+		for ( int melodyNumber = 0; melodyNumber < musicBlock.getMelodyList().size(); melodyNumber++ ) {
+			int pitch = musicBlock.getMelodyList().get( melodyNumber ).getNote( 0 ).getPitch();
+			preFirstVertical.add( pitch != Note.REST ? pitch - voiceMovements.get( melodyNumber ) : pitch );
 		}
-		return previousEndIntervalPattern;
+		return retrieveIntervalPattern( preFirstVertical );
 	}
 
 }
