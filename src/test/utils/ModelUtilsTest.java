@@ -1,17 +1,26 @@
 package utils;
 
-import jm.music.data.Note;
-import jm.music.data.Rest;
-import model.melody.Melody;
-import org.junit.Test;
+import static jm.constants.Durations.EIGHTH_NOTE;
+import static jm.constants.Durations.HALF_NOTE;
+import static jm.constants.Durations.QUARTER_NOTE;
+import static jm.constants.Durations.SIXTEENTH_NOTE;
+import static jm.constants.Durations.WHOLE_NOTE;
+import static jm.constants.Pitches.C0;
+import static jm.constants.Pitches.C4;
+import static jm.constants.Pitches.CS4;
+import static junit.framework.Assert.assertEquals;
+import static utils.ModelUtils.getNoteNameByPitch;
+import static utils.ModelUtils.retrieveIntervalPattern;
+import static utils.ModelUtils.trimToTime;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static jm.constants.Durations.*;
-import static jm.constants.Pitches.*;
-import static junit.framework.Assert.assertEquals;
-import static utils.ModelUtils.*;
+import org.junit.Test;
+
+import jm.music.data.Note;
+import jm.music.data.Rest;
+import model.melody.Melody;
 
 /**
  * Created by Pavel Yurkin on 20.07.14.
@@ -43,6 +52,45 @@ public class ModelUtilsTest {
 
         assertEquals( intervalPattern, retrieveIntervalPattern( pitches ) );
     }
+
+	@Test
+	public void testGetIntervalPattern1() throws Exception {
+		List< Integer > pitches = new ArrayList< Integer >( );
+		// 60 62 89 100
+		pitches.add( 100 );
+		pitches.add( Note.REST );
+		pitches.add( 60 );
+		pitches.add( 62 );
+		pitches.add( Note.REST );
+		pitches.add( 89 );
+		pitches.add( Note.REST );
+
+		List< Integer > intervalPattern = new ArrayList< Integer >( pitches.size() - 1 );
+		// REST <REST> 60 <2> 62 <2> 64 <0> 64 <6> 70 <19> 89 <11> 100
+		intervalPattern.add( Note.REST );
+		intervalPattern.add( Note.REST );
+		intervalPattern.add( Note.REST );
+		intervalPattern.add( 2 );
+		intervalPattern.add( 27 );
+		intervalPattern.add( 11 );
+
+		assertEquals( intervalPattern, retrieveIntervalPattern( pitches ) );
+	}
+
+	@Test
+	public void testGetIntervalPatternAllRests() throws Exception {
+		List< Integer > pitches = new ArrayList< Integer >( );
+		pitches.add( Note.REST );
+		pitches.add( Note.REST );
+		pitches.add( Note.REST );
+
+		List< Integer > intervalPattern = new ArrayList< Integer >( pitches.size() - 1 );
+		// REST <REST> 60 <2> 62 <2> 64 <0> 64 <6> 70 <19> 89 <11> 100
+		intervalPattern.add( Note.REST );
+		intervalPattern.add( Note.REST );
+
+		assertEquals( intervalPattern, retrieveIntervalPattern( pitches ) );
+	}
 
 	@Test
 	public void testSumAllRhythmValues() {
