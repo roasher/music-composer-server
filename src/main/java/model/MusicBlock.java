@@ -1,6 +1,5 @@
 package model;
 
-import static utils.ModelUtils.areTwosomeParallel;
 import static utils.ModelUtils.isTimeCorrelated;
 import static utils.ModelUtils.retrieveFirstIntervalPattern;
 import static utils.ModelUtils.retrieveLastIntervalPattern;
@@ -109,8 +108,11 @@ public class MusicBlock implements Serializable {
 			return false;
 		if ( !startIntervalPattern.equals( that.startIntervalPattern ) )
 			return false;
-		if ( !areTwosomeParallel( this.melodyList, that.melodyList ) )
-			return false;
+		if ( this.getMelodyList().size() != that.getMelodyList().size() )
+			throw new IllegalArgumentException( "different melody numbers: " + this.getMelodyList().size() + " and " + that.getMelodyList().size() );
+		for ( int melodyNumber = 0; melodyNumber < this.getMelodyList().size(); melodyNumber++ ) {
+			if ( !this.getMelodyList().get( melodyNumber ).isParallelTo( that.getMelodyList().get( melodyNumber ) ) ) return false;
+		}
 		return endIntervalPattern.equals( that.endIntervalPattern );
 	}
 

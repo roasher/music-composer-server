@@ -206,31 +206,4 @@ public class ModelUtils {
 //		}
 //		return false;
 	}
-
-	public static boolean areParallel( Melody firstMelody, Melody secondMelody ) {
-		if ( firstMelody.size() != secondMelody.size() ) return false;
-		Integer pitchDiff = null;
-		for ( int noteNumber = 0; noteNumber < firstMelody.size(); noteNumber++ ) {
-			Note firstNote = firstMelody.getNote( noteNumber );
-			Note secondNote = secondMelody.getNote( noteNumber );
-			if ( firstNote.getRhythmValue() != secondNote.getRhythmValue() ) return false;
-			if ( ( firstNote.isRest() && !secondNote.isRest() ) || ( !firstNote.isRest() && secondNote.isRest() ) ) return false;
-			if ( firstNote.isRest() && secondNote.isRest() ) continue;
-			if ( pitchDiff == null ) {
-				pitchDiff = secondNote.getPitch() - firstNote.getPitch();
-			} else {
-				if ( pitchDiff != secondNote.getPitch() - firstNote.getPitch() ) return false;
-			}
-		}
-		return true;
-	}
-
-	public static boolean areTwosomeParallel( List<Melody> firstMelodies, List<Melody> secondMelodies ) {
-		if ( firstMelodies.size() != secondMelodies.size() )
-			throw new IllegalArgumentException( "different melody numbers: " + firstMelodies.size() + " and " + secondMelodies.size() );
-		for ( int melodyNumber = 0; melodyNumber < firstMelodies.size(); melodyNumber++ ) {
-			if ( !areParallel( firstMelodies.get( melodyNumber ), secondMelodies.get( melodyNumber ) ) ) return false;
-		}
-		return true;
-	}
 }

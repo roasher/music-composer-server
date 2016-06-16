@@ -1,13 +1,12 @@
 package model.melody;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jm.music.data.Note;
 import jm.music.data.Phrase;
 import model.PlaceInTheComposition;
 import utils.ModelUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * Class represents Melody entity
@@ -76,21 +75,7 @@ public class Melody extends Phrase {
 			return false;
 		}
 
-        List<Note> thisNoteArray = this.getNoteList();
-        List<Note> melodyNoteArray = melody.getNoteList();
-
-        if ( thisNoteArray.size() != melodyNoteArray.size() ) return false;
-
-        for ( int currentNoteNumber = 0; currentNoteNumber < thisNoteArray.size() ; currentNoteNumber ++ ) {
-            Note currentNoteFromThis = thisNoteArray.get( currentNoteNumber );
-            Note currentNoteFromMelody = melodyNoteArray.get( currentNoteNumber );
-            double rhythm1 = currentNoteFromMelody.getRhythmValue();
-            double rhythm2 = currentNoteFromThis.getRhythmValue();
-            if ( currentNoteFromMelody.getPitch() != currentNoteFromThis.getPitch() || rhythm1 != rhythm2 ) {
-                return false;
-            }
-        }
-        return true;
+		return isParallelTo( melody );
     }
 
 	/**
@@ -122,5 +107,23 @@ public class Melody extends Phrase {
 		}
 		stringBuilder.append(" ").append(this.getEndTime() );
 		return stringBuilder.toString();
+	}
+
+	public boolean isParallelTo( Melody melody ) {
+		if ( this.size() != melody.size() ) return false;
+		Integer pitchDiff = null;
+		for ( int noteNumber = 0; noteNumber < this.size(); noteNumber++ ) {
+			Note firstNote = this.getNote( noteNumber );
+			Note secondNote = melody.getNote( noteNumber );
+			if ( firstNote.getRhythmValue() != secondNote.getRhythmValue() ) return false;
+			if ( ( firstNote.isRest() && !secondNote.isRest() ) || ( !firstNote.isRest() && secondNote.isRest() ) ) return false;
+			if ( firstNote.isRest() && secondNote.isRest() ) continue;
+			if ( pitchDiff == null ) {
+				pitchDiff = secondNote.getPitch() - firstNote.getPitch();
+			} else {
+				if ( pitchDiff != secondNote.getPitch() - firstNote.getPitch() ) return false;
+			}
+		}
+		return true;
 	}
 }
