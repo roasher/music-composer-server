@@ -4,6 +4,7 @@ import static jm.constants.Durations.DOTTED_HALF_NOTE;
 import static jm.constants.Durations.HALF_NOTE;
 import static jm.constants.Durations.QUARTER_NOTE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -112,6 +113,25 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 	}
 
 	@Test
+	public void getPreviousEndIntervalPatternTwoRests() {
+		MusicBlock musicBlock = new MusicBlock( null,
+				new Melody(
+						new Note(5, QUARTER_NOTE)
+				),
+				new Melody(
+						new Rest(QUARTER_NOTE)
+				),
+				new Melody(
+						new Rest(QUARTER_NOTE)
+				),
+				new Melody(
+						new Note(1, QUARTER_NOTE)
+				));
+		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -1, 1, 1, -1 ) );
+		assertEquals( Arrays.asList( 0, Note.REST, 4 ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
+	}
+
+	@Test
 	public void getPreviousEndIntervalPatternAllRests() {
 		MusicBlock musicBlock = new MusicBlock( null,
 				new Melody(
@@ -126,6 +146,20 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 						new Note(0, QUARTER_NOTE)
 				));
 		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -10, 100, -100 ) );
-		assertEquals( Arrays.asList( Note.REST, Note.REST ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
+		assertEquals( Arrays.asList( 0, 0 ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
+	}
+
+	@Test
+	public void isPossibleNext() throws Exception {
+		MusicBlock musicBlock = new MusicBlock(
+				null,
+				new Melody( new Note( 76, 1 ) ),
+				new Melody( new Note( 72, 1 ) ),
+				new Melody( new Note( 69, 1 ) ),
+				new Melody( new Note( 57, 1 ) )
+		);
+		BlockMovement blockMovements = new BlockMovement( 2147483647, 2147483647, 2147483647, 2147483647 );
+		musicBlock.setBlockMovementFromPreviousToThis( blockMovements );
+		assertFalse( musicBlockProvider.isPossibleNext( musicBlock, musicBlock ) );
 	}
 }

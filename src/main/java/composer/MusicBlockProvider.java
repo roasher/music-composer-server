@@ -11,6 +11,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import jm.music.data.Note;
+import model.BlockMovement;
 import model.MusicBlock;
 
 /**
@@ -53,7 +54,8 @@ public class MusicBlockProvider {
 		List<Integer> preFirstVertical = new ArrayList<>();
 		for ( int melodyNumber = 0; melodyNumber < musicBlock.getMelodyList().size(); melodyNumber++ ) {
 			int pitch = musicBlock.getMelodyList().get( melodyNumber ).getNote( 0 ).getPitch();
-			preFirstVertical.add( pitch != Note.REST ? pitch - voiceMovements.get( melodyNumber ) : pitch );
+			int voiceMovement = voiceMovements.get( melodyNumber );
+			preFirstVertical.add( pitch != Note.REST && voiceMovement != BlockMovement.MOVEMENT_FROM_REST ? pitch - voiceMovement : Note.REST );
 		}
 		return retrieveIntervalPattern( preFirstVertical );
 	}
