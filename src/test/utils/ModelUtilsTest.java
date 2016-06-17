@@ -66,9 +66,8 @@ public class ModelUtilsTest {
 		pitches.add( Note.REST );
 
 		List< Integer > intervalPattern = new ArrayList< Integer >( pitches.size() - 1 );
-		// REST <REST> 60 <2> 62 <2> 64 <0> 64 <6> 70 <19> 89 <11> 100
-		intervalPattern.add( Note.REST );
-		intervalPattern.add( Note.REST );
+		intervalPattern.add( 0 );
+		intervalPattern.add( 0 );
 		intervalPattern.add( Note.REST );
 		intervalPattern.add( 2 );
 		intervalPattern.add( 27 );
@@ -85,9 +84,8 @@ public class ModelUtilsTest {
 		pitches.add( Note.REST );
 
 		List< Integer > intervalPattern = new ArrayList< Integer >( pitches.size() - 1 );
-		// REST <REST> 60 <2> 62 <2> 64 <0> 64 <6> 70 <19> 89 <11> 100
-		intervalPattern.add( Note.REST );
-		intervalPattern.add( Note.REST );
+		intervalPattern.add( 0 );
+		intervalPattern.add( 0 );
 
 		assertEquals( intervalPattern, retrieveIntervalPattern( pitches ) );
 	}
