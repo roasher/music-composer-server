@@ -1,21 +1,25 @@
 package composer;
 
+import static utils.ModelUtils.getTransposePitch;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import composer.step.CompositionStep;
 import composer.step.FormCompositionStep;
 import decomposer.form.analyzer.FormEqualityAnalyser;
 import model.ComposeBlock;
 import model.Lexicon;
 import model.melody.Form;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import utils.CollectionUtils;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static utils.ModelUtils.getTransposePitch;
 
 /**
  * Class provides form element
@@ -95,14 +99,12 @@ public class FormBlockProvider {
 
 					if ( !formCheckPassed ) {
 						logger.debug( "ComposeBlock check failed in terms of form" );
-						CompositionStep preLastCompositionStep = compositionSteps.get( step - 2 );
-						preLastCompositionStep.addNextExclusion( lastStepOriginComposeBlock.get() );
-						// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
-						if ( compositionSteps.get( step - 1 ).getOriginComposeBlock() != null ) {
-							currentLength -= compositionSteps.get( step - 1 ).getOriginComposeBlock().getRhythmValue();
-						}
-						compositionSteps.remove( step - 1 );
-						step = step - 2;
+						// ( step - 2 ) -> ( step - 1 ) -> ( step )
+						CompositionStep preLastCompositionStep = compositionSteps.get( step - 1 );
+						preLastCompositionStep.addNextExclusion( compositionSteps.get( step ).getOriginComposeBlock() );
+						currentLength -= compositionSteps.get( step ).getOriginComposeBlock().getRhythmValue();
+						compositionSteps.remove( step );
+						step = step - 1;
 						continue;
 					}
 
