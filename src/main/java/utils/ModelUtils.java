@@ -1,6 +1,7 @@
 package utils;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -173,19 +174,21 @@ public class ModelUtils {
 		if ( startTime < 0 || endTime > melody.getRythmValue()  || startTime > endTime ) {
 			throw new IllegalArgumentException( "Cant trim with this parameters: startTime = " + startTime + " ,endTime = " + endTime );
 		}
-		double noteStartTime = 0;
+		BigDecimal noteStartTime = BigDecimal.ZERO;
 		Melody out = new Melody(  );
 		for ( int noteNumber = 0; noteNumber < melody.size(); noteNumber++ ) {
-			Note currentNote = ( Note ) melody.getNote( noteNumber );
-			if ( noteStartTime < startTime && noteStartTime + currentNote.getRhythmValue() > startTime ) {
-				out.add( new Note( currentNote.getPitch(), noteStartTime + currentNote.getRhythmValue() - startTime ) );
-			} else if ( noteStartTime > startTime && noteStartTime + currentNote.getRhythmValue() < endTime ) {
+			Note currentNote = melody.getNote( noteNumber );
+			BigDecimal rhythmValue = BigDecimal.valueOf( currentNote.getRhythmValue() );
+			BigDecimal noteEndTime = noteStartTime.add( rhythmValue );
+			if ( noteStartTime.doubleValue() <= startTime && noteEndTime.doubleValue() > startTime ) {
+				out.add( new Note( currentNote.getPitch(), noteEndTime.subtract( BigDecimal.valueOf( startTime ) ).doubleValue() ) );
+			} else if ( noteStartTime.doubleValue() >= startTime && noteEndTime.doubleValue() <= endTime ) {
 				out.add( currentNote );
-			} else if ( noteStartTime < endTime && noteStartTime + currentNote.getRhythmValue() > endTime ) {
-				out.add( new Note( currentNote.getPitch(), endTime - noteStartTime ) );
+			} else if ( noteStartTime.doubleValue() < endTime && noteEndTime.doubleValue() > endTime ) {
+				out.add( new Note( currentNote.getPitch(), BigDecimal.valueOf( endTime ).subtract( noteStartTime ).doubleValue() ) );
 				return out;
 			}
-			noteStartTime += currentNote.getRhythmValue();
+			noteStartTime = noteStartTime.add( rhythmValue );
 		}
 		return out;
 	}

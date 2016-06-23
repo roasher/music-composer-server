@@ -8,12 +8,17 @@ import static jm.constants.Durations.WHOLE_NOTE;
 import static jm.constants.Pitches.C0;
 import static jm.constants.Pitches.C4;
 import static jm.constants.Pitches.CS4;
+import static jm.constants.Pitches.D4;
+import static jm.constants.Pitches.DF4;
+import static jm.constants.Pitches.EF4;
+import static jm.constants.Pitches.FF4;
 import static junit.framework.Assert.assertEquals;
 import static utils.ModelUtils.getNoteNameByPitch;
 import static utils.ModelUtils.retrieveIntervalPattern;
 import static utils.ModelUtils.trimToTime;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -109,7 +114,7 @@ public class ModelUtilsTest {
 	}
 
 	@Test
-	public void testTrimToTime() {
+	public void testTrimToTimeSingleMelody() {
 		Melody melody = new Melody(
 				new Rest( WHOLE_NOTE ),
 				new Note( C4, HALF_NOTE),
@@ -124,5 +129,16 @@ public class ModelUtilsTest {
 		);
 
 		assertEquals( etalonMelody, trimmedMelody );
+
+		List<Melody> melodies = trimToTime( Arrays.asList( melody ), 2, 6.25 );
+		assertEquals( Arrays.asList( etalonMelody ), melodies );
+
+		Melody melody1 = new Melody( new Note( C4, 0.5 ), new Note( DF4, 0.1 ), new Note( D4, 0.3 ), new Note( EF4, 0.1 ), new Note( FF4, 0.5 ) );
+		List<Melody> trimmedMelodies = trimToTime( Arrays.asList( melody1 ), 0.0, 0.5 );
+		assertEquals( new Melody( new Note( C4, 0.5 ) ), trimToTime( melody1, 0.0, 0.5 ) );
+		assertEquals( Arrays.asList( new Melody( new Note( C4, 0.5 ) ) ), trimmedMelodies );
+
+		assertEquals( new Melody( new Note( DF4, 0.1 ), new Note( D4, 0.3 ), new Note( EF4, 0.1 ) ), trimToTime( melody1, 0.5, 1 ) );
+		assertEquals( new Melody( new Note( FF4, 0.5 ) ), trimToTime( melody1, 1, 1.5 ) );
 	}
 }
