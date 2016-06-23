@@ -10,6 +10,7 @@ import static jm.JMC.E5;
 import static jm.JMC.EIGHTH_NOTE;
 import static jm.JMC.F5;
 import static jm.JMC.QUARTER_NOTE;
+import static jm.constants.Durations.WHOLE_NOTE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,6 +33,7 @@ import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Rest;
+import jm.util.View;
 import model.BlockMovement;
 import model.ComposeBlock;
 import model.Lexicon;
@@ -38,6 +41,7 @@ import model.composition.Composition;
 import model.melody.Melody;
 import persistance.dao.LexiconDAO;
 import utils.CompositionLoader;
+import utils.Utils;
 
 /**
  * Created by pyurkin on 15.12.14.
@@ -58,7 +62,6 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	private LexiconDAO lexiconDAO;
 
 	@Autowired
-	@Qualifier( "simpleComposeBlockProvider" )
 	private ComposeBlockProvider composeBlockProvider;
 
 	@Test
@@ -72,21 +75,14 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	@Test
 	public void gatherCompositionTest() {
 		List<ComposeBlock> composeBlocks = Arrays.asList(
-				new ComposeBlock( 0, null, Arrays.asList(
-						new Melody( new Rest( QUARTER_NOTE ) ),
-						new Melody( new Note( C3, QUARTER_NOTE ) ) ),
+				new ComposeBlock( 0, null, Arrays.asList( new Melody( new Rest( QUARTER_NOTE ) ), new Melody( new Note( C3, QUARTER_NOTE ) ) ),
 						new BlockMovement( -256, -256 ) ),
-				new ComposeBlock( 0, null, Arrays.asList(
-						new Melody( new Rest( EIGHTH_NOTE ) ),
-						new Melody( new Note( C4, EIGHTH_NOTE ) ) ),
-						new BlockMovement( 0, 0 ) ),
-				new ComposeBlock( 0, null, Arrays.asList(
+				new ComposeBlock( 0, null, Arrays.asList( new Melody( new Rest( EIGHTH_NOTE ) ), new Melody( new Note( C4, EIGHTH_NOTE ) ) ),
+						new BlockMovement( 0, 0 ) ), new ComposeBlock( 0, null, Arrays.asList(
 						new Melody( new Note( D5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ), new Note( F5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ) ),
 						new Melody( new Note( C4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( E4, EIGHTH_NOTE ) ) ),
 						new BlockMovement( -256, 2 ) ),
-				new ComposeBlock( 0, null, Arrays.asList(
-						new Melody( new Note( B5, QUARTER_NOTE ) ),
-						new Melody( new Rest( QUARTER_NOTE ) ) ),
+				new ComposeBlock( 0, null, Arrays.asList( new Melody( new Note( B5, QUARTER_NOTE ) ), new Melody( new Rest( QUARTER_NOTE ) ) ),
 						new BlockMovement( 0, -256 ) ) );
 		Composition composition = compositionComposer.gatherComposition( composeBlocks );
 		assertEquals( 2, composition.getPartList().size() );
@@ -118,5 +114,15 @@ public class CompositionComposerTest extends AbstractSpringTest {
 			phrase.getNoteList().forEach( o1 -> notes.add( ( Note ) o1 ) );
 		}
 		return notes;
+	}
+
+	@Ignore
+	@Test
+	public void singleVoiceComposingTest() {
+		Composition composition = compositionLoader.getComposition( new File( "src/test/decomposer/gen_1.mid" ) );
+		Lexicon lexicon = compositionDecomposer.decompose( composition, WHOLE_NOTE );
+		Composition composedComposition = compositionComposer.compose( composeBlockProvider, lexicon, "AB", WHOLE_NOTE * 8 );
+		View.show( composedComposition );
+		Utils.suspend();
 	}
 }
