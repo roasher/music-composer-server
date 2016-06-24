@@ -1,10 +1,8 @@
 package decomposer.melody.equality.melodymovement;
 
-import model.melody.Melody;
-import model.melody.MelodyMovement;
-
 import static java.lang.Math.abs;
-import static java.lang.Math.max;
+
+import model.melody.MelodyMovement;
 
 /**
  * @author Pavel Yurkin
@@ -23,10 +21,8 @@ public class IntervalsMelodyMovementEqualityTest extends AbstractMelodyMovementE
         for ( int currentInterval = 0 ; currentInterval < firstMelodyMovement.getPitchIntervals().size() ; currentInterval ++ ) {
             int intervalDifferece = abs( firstMelodyMovement.getPitchIntervals().get( currentInterval ) - secondMelodyMovement.getPitchIntervals().get( currentInterval ) );
             if ( intervalDifferece != 0) {
-                if ( intervalDifferece <= maxShift) {
+                if ( intervalDifferece >= maxShift) {
                     numberOfShiftedIntervals ++;
-                } else {
-                    return 0;
                 }
             }
         }

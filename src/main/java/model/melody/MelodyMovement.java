@@ -1,10 +1,10 @@
 package model.melody;
 
-import jm.music.data.Note;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import jm.music.data.Note;
 
 /**
  * Class represents note movements regardless off the pitch
@@ -41,7 +41,7 @@ public class MelodyMovement {
         }
     }
 
-    private MelodyMovement() {}
+    public MelodyMovement() {}
 
     /**
      * Returns new MelodyMovement represents MelodyMovement with swapped notes that belongs to the numberOfInterval-nth interval
