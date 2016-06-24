@@ -1,17 +1,24 @@
 package composer.next;
 
+import static utils.ModelUtils.gatherBlocksWithTransposition;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import composer.next.filter.ComposeBlockFilter;
 import composer.step.CompositionStep;
 import composer.step.FormCompositionStep;
 import decomposer.form.analyzer.FormEqualityAnalyser;
 import model.ComposeBlock;
 import model.melody.Melody;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import utils.ModelUtils;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by wish on 16.02.2016.
@@ -56,15 +63,17 @@ public class FormNextBlockProvider implements NextBlockProvider {
 	 */
 	private Comparator<ComposeBlock> getComposeBlockComparator( List<FormCompositionStep> similars, List<FormCompositionStep> differents, List<ComposeBlock> previouslyComposedBlocks ) {
 		return ( firstComposeBlock, secondComposeBlock ) -> {
-			List<ComposeBlock> firstComposeBlocks = new ArrayList<>( previouslyComposedBlocks );
-			firstComposeBlocks.add( firstComposeBlock );
-			double firstEqualEtalons = getEqualityMetrics( previouslyComposedBlocks.isEmpty() ? firstComposeBlock : new ComposeBlock( firstComposeBlocks ), similars );
-			double firstEqualDifferents = getEqualityMetrics( previouslyComposedBlocks.isEmpty() ? firstComposeBlock : new ComposeBlock( firstComposeBlocks ), differents );
+			List<ComposeBlock> firstBlocks = new ArrayList<>( previouslyComposedBlocks );
+			firstBlocks.add( firstComposeBlock );
+			ComposeBlock firstBlockToCompare = gatherBlocksWithTransposition( firstBlocks );
+			double firstEqualEtalons = getEqualityMetrics( firstBlockToCompare, similars );
+			double firstEqualDifferents = getEqualityMetrics( firstBlockToCompare, differents );
 
-			List<ComposeBlock> secondComposeBlocks = new ArrayList<>( previouslyComposedBlocks );
-			secondComposeBlocks.add( secondComposeBlock );
-			double secondEqualEtalons = getEqualityMetrics( previouslyComposedBlocks.isEmpty() ? secondComposeBlock : new ComposeBlock( secondComposeBlocks ), similars );
-			double secondEqualDifferents = getEqualityMetrics( previouslyComposedBlocks.isEmpty() ? secondComposeBlock : new ComposeBlock( secondComposeBlocks ), differents );
+			List<ComposeBlock> secondBlocks = new ArrayList<>( previouslyComposedBlocks );
+			secondBlocks.add( secondComposeBlock );
+			ComposeBlock secondBlockToCompare = gatherBlocksWithTransposition( secondBlocks );
+			double secondEqualEtalons = getEqualityMetrics( secondBlockToCompare, similars );
+			double secondEqualDifferents = getEqualityMetrics( secondBlockToCompare, differents );
 
 			double combinedMetric = ( firstEqualEtalons - firstEqualDifferents ) - ( secondEqualEtalons - secondEqualDifferents );
 			return combinedMetric != 0 ? ( combinedMetric > 0 ? 1 : -1 ) : 0;

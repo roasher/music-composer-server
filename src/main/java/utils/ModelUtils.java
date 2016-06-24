@@ -210,4 +210,21 @@ public class ModelUtils {
 //		}
 //		return false;
 	}
+
+	/**
+	 * Needle blocks from first to the last transposing due to block movement. Solid Block at the end.
+	 * @param composeBlocks
+	 * @return
+	 */
+	public static ComposeBlock gatherBlocksWithTransposition(List<ComposeBlock> composeBlocks) {
+		List<ComposeBlock> transposedBlocks = new ArrayList<>(  );
+		transposedBlocks.add( composeBlocks.get( 0 ) );
+		for ( int blockNumber = 1; blockNumber < composeBlocks.size(); blockNumber++ ) {
+			ComposeBlock previousBlock = composeBlocks.get( blockNumber - 1 );
+			ComposeBlock currentBlock = composeBlocks.get( blockNumber );
+			int transposePitch = getTransposePitch( Optional.of( previousBlock ), currentBlock );
+			transposedBlocks.add( currentBlock.transposeClone( transposePitch ) );
+		}
+		return new ComposeBlock( transposedBlocks );
+	}
 }
