@@ -202,8 +202,7 @@ public class TestIntervalsMelodyMovementEqualityTest {
 
 	@Test
 	public void getEqualityMetricTest() {
-		intervalsMelodyMovementEqualityTest.setMaxNumberOfShiftedIntervals( 0 );
-		intervalsMelodyMovementEqualityTest.setMaxShift( 0 );
+		// logic tests
 		MelodyMovement melodyMovement0 = new MelodyMovement();
 		melodyMovement0.setPitchIntervals( Arrays.asList( 1, 1, 1 ) );
 		MelodyMovement melodyMovement1 = new MelodyMovement();
@@ -211,14 +210,31 @@ public class TestIntervalsMelodyMovementEqualityTest {
 		MelodyMovement melodyMovement2 = new MelodyMovement();
 		melodyMovement2.setPitchIntervals( Arrays.asList( 1, 1, -3 ) );
 		assertEquals( 1, intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement0, melodyMovement0 ), 0 );
-		assertEquals( 1./3, intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement0, melodyMovement1 ), 0 );
-		assertEquals( 2./3, intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement0, melodyMovement2 ), 0 );
-		assertEquals( 1./3, intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement1, melodyMovement2 ), 0 );
+		assertEquals( ( 3 - (1. + 0 + 0.5) )/3, intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement0, melodyMovement1 ), 0 );
+		assertEquals( ( 3 - (0 + 0 + 1.) )/3, intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement0, melodyMovement2 ), 0 );
+		assertEquals( ( 3 - (1 + 0 + 1.) )/3 , intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement1, melodyMovement2 ), 0 );
 
 		MelodyMovement melodyMovement01 = new MelodyMovement();
 		melodyMovement01.setPitchIntervals( Arrays.asList( 1, -2, 1, 0 ) );
 		MelodyMovement melodyMovement11 = new MelodyMovement();
 		melodyMovement11.setPitchIntervals( Arrays.asList( 4, -2, 1, 12 ) );
-		assertEquals( 0.5, intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement01, melodyMovement11 ), 0 );
+		assertEquals( ( 4 - (1 + 0 + 0 + 1) )/4., intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement01, melodyMovement11 ), 0 );
+
+		// comparative tests
+		MelodyMovement melodyMovement20 = new MelodyMovement();
+		melodyMovement20.setPitchIntervals( Arrays.asList( 1, 1, 1 ) );
+		MelodyMovement melodyMovement21 = new MelodyMovement();
+		melodyMovement21.setPitchIntervals( Arrays.asList( 1, 1, 2 ) );
+		MelodyMovement melodyMovement22 = new MelodyMovement();
+		melodyMovement22.setPitchIntervals( Arrays.asList( 1, 1, 3 ) );
+		assertTrue( intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement20, melodyMovement21 ) > intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement20, melodyMovement22 ) );
+
+		MelodyMovement melodyMovement30 = new MelodyMovement();
+		melodyMovement30.setPitchIntervals( Arrays.asList( 1, 1, 1, 1 ) );
+		MelodyMovement melodyMovement31 = new MelodyMovement();
+		melodyMovement31.setPitchIntervals( Arrays.asList( 1, 1, 2, 2 ) );
+		MelodyMovement melodyMovement32 = new MelodyMovement();
+		melodyMovement32.setPitchIntervals( Arrays.asList( 1, 1, 1, 12 ) );
+		assertTrue( intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement30, melodyMovement31 ) == intervalsMelodyMovementEqualityTest.getEqualityMetric( melodyMovement30, melodyMovement32 ) );
 	}
 }
