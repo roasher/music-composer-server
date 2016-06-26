@@ -19,6 +19,7 @@ import model.ComposeBlock;
 import model.Lexicon;
 import model.composition.Composition;
 import utils.CompositionLoader;
+import utils.ModelUtils;
 
 public class CompositionDecomposerTest extends AbstractSpringTest {
 
@@ -40,17 +41,35 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 	@Test
 	public void singleVoiceMelodyTest() {
 		Lexicon lexicon = compositionDecomposer.decompose( compositionLoader.getComposition( new File( "src/test/decomposer/gen_1.mid" ) ), JMC.WHOLE_NOTE );
-		// works if time correlation is disabled
-		assertEquals( 6, lexicon.getComposeBlockList().size() );
-		lexicon.getComposeBlockList().forEach( composeBlock -> {
-			if ( composeBlock.getBlockMovementFromPreviousToThis() != null ) {
-				assertEquals( 6, composeBlock.getPossiblePreviousComposeBlocks().size() );
-				assertEquals( 5, composeBlock.getPossibleNextComposeBlocks().size() );
-			} else {
-				assertEquals( 0, composeBlock.getPossiblePreviousComposeBlocks().size() );
-				assertEquals( 5, composeBlock.getPossibleNextComposeBlocks().size() );
-			}
-		} );
+		if ( ModelUtils.isTimeCorrelated( 1.1, 1.0 ) ) {
+			//	if time correlation is disabled
+			assertEquals( 6, lexicon.getComposeBlockList().size() );
+			lexicon.getComposeBlockList().forEach( composeBlock -> {
+				if ( composeBlock.getBlockMovementFromPreviousToThis() != null ) {
+					assertEquals( 6, composeBlock.getPossiblePreviousComposeBlocks().size() );
+					assertEquals( 5, composeBlock.getPossibleNextComposeBlocks().size() );
+				} else {
+					assertEquals( 0, composeBlock.getPossiblePreviousComposeBlocks().size() );
+					assertEquals( 5, composeBlock.getPossibleNextComposeBlocks().size() );
+				}
+			} );
+		} else {
+			//	if time correlation is enabled
+			assertEquals( 11, lexicon.getComposeBlockList().size() );
+			lexicon.getComposeBlockList().forEach( composeBlock -> {
+				if ( composeBlock.getBlockMovementFromPreviousToThis() != null ) {
+					if ( composeBlock.getPossiblePreviousComposeBlocks().contains( lexicon.get( 0 ) ) ) {
+						assertEquals( 6, composeBlock.getPossiblePreviousComposeBlocks().size() );
+					} else {
+						assertEquals( 5, composeBlock.getPossiblePreviousComposeBlocks().size() );
+					}
+					assertEquals( 5, composeBlock.getPossibleNextComposeBlocks().size() );
+				} else {
+					assertEquals( 0, composeBlock.getPossiblePreviousComposeBlocks().size() );
+					assertEquals( 5, composeBlock.getPossibleNextComposeBlocks().size() );
+				}
+			} );
+		}
 	}
 
 	@Test
