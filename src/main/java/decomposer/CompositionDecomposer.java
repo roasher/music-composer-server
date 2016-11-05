@@ -1,17 +1,5 @@
 package decomposer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
 import composer.MusicBlockProvider;
 import decomposer.form.FormDecomposer;
 import model.BlockMovement;
@@ -21,8 +9,16 @@ import model.MusicBlock;
 import model.composition.Composition;
 import model.composition.CompositionInfo;
 import model.melody.Melody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import persistance.dao.LexiconDAO;
-import utils.Recombinator;
+
+import java.util.*;
+
+import static utils.Recombinator.recombine;
 
 /**
  * Class analyses and decomposes the composition, creating MusicBlocks
@@ -33,9 +29,6 @@ public class CompositionDecomposer {
 
 	@Autowired
 	private FormDecomposer formDecomposer;
-
-	@Autowired
-	private Recombinator recombinator;
 
 	@Autowired
 	private MusicBlockProvider musicBlockProvider;
@@ -57,7 +50,7 @@ public class CompositionDecomposer {
 		// analyzing form
 		List<List<Melody>> melodyBlockList = formDecomposer.decompose( composition, rhythmValue );
 		// recombining result melodies into composeBlockList
-		List<List<Melody>> recombineList = recombinator.recombine( melodyBlockList );
+		List<List<Melody>> recombineList = recombine( melodyBlockList );
 		// filling composition information
 		List<MusicBlock> lexiconMusicBlocks = new ArrayList<MusicBlock>();
 		for ( int melodyBlockNumber = 0; melodyBlockNumber < recombineList.size(); melodyBlockNumber++ ) {

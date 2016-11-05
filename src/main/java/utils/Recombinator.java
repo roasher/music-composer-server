@@ -1,21 +1,14 @@
 package utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.stereotype.Component;
-
 import jm.music.data.Note;
 import model.melody.Melody;
+
+import java.util.*;
 
 /**
  * Class handles all recombination between melody lists
  * Created by pyurkin on 10.12.14.
  */
-@Component
 public class Recombinator {
 
 	/**
@@ -24,7 +17,7 @@ public class Recombinator {
 	 * @param inputMelodyBlockList
 	 * @return
 	 */
-	public List< List< Melody > > recombine( List< List< Melody > > inputMelodyBlockList ) {
+	public static List< List< Melody > > recombine( List< List< Melody > > inputMelodyBlockList ) {
 		List< List< Melody > > recombineList = new ArrayList<>();
 		for ( List< Melody > melodyBlock : inputMelodyBlockList ) {
 			List< List< Melody > > melodyBlockList = recombineMelodyBlock( melodyBlock );
@@ -41,12 +34,12 @@ public class Recombinator {
 	 * @param inputMelodyBlock
 	 * @return
 	 */
-	public List<List< Melody >> recombineMelodyBlock( List<Melody> inputMelodyBlock ) {
+	public static List<List< Melody >> recombineMelodyBlock( List<Melody> inputMelodyBlock ) {
 
 		// The edge set
 		Set< Double > edgeSet = new HashSet<>(  );
 		for ( Melody melody : inputMelodyBlock ) {
-			edgeSet.addAll( getEdgeList( melody ) );
+			edgeSet.addAll( getEdgeList( melody.getNoteList() ) );
 		}
 
 		Double[] edgeArray = edgeSet.toArray( new Double[0] );
@@ -76,14 +69,14 @@ public class Recombinator {
 	 * Returns the edge list of melody notes
 	 * Sets first edge to rhythm value of the first note, and incrementing this value by
 	 * rhythm value of all notes one by one
-	 * @param melody
+	 * @param notes
 	 * @return
 	 */
-	public List< Double > getEdgeList( Melody melody ) {
+	public static List< Double > getEdgeList( List<Note> notes ) {
 		List< Double > edgeList = new ArrayList<>();
 		double lastEdge = 0;
-		for ( int noteNumber = 0; noteNumber < melody.size(); noteNumber ++ ) {
-			Note note = melody.getNote( noteNumber );
+		for ( int noteNumber = 0; noteNumber < notes.size(); noteNumber ++ ) {
+			Note note = notes.get( noteNumber );
 			edgeList.add( lastEdge + note.getRhythmValue() );
 			lastEdge = edgeList.get( edgeList.size() - 1 );
 		}
@@ -98,7 +91,7 @@ public class Recombinator {
 	 * @return
 	 * TODO refactor using binary search
 	 */
-	public int getNoteNumber( List<Note> notes, double time ) {
+	public static int getNoteNumber( List<Note> notes, double time ) {
 		double startTime = 0;
 		for ( int currentNoteNumber = 0; currentNoteNumber < notes.size(); currentNoteNumber ++ ) {
 			double rhythm = notes.get( currentNoteNumber ).getRhythmValue();
