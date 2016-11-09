@@ -19,6 +19,50 @@ public class MetricMelodyEqualityAnalyzerTest extends AbstractSpringComposerTest
 	private MetricMelodyEqualityAnalyzer metricMelodyEqualityAnalyzer;
 
 	@Test
+	public void getStrongTimeMetric() throws Exception {
+		assertEquals( Arrays.asList( true ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( WHOLE_NOTE ) ) );
+		assertEquals( Arrays.asList( true, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( HALF_NOTE, HALF_NOTE ) ) );
+		assertEquals( Arrays.asList( true, false, true, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE ) ) );
+		assertEquals( Arrays.asList( true, true, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( HALF_NOTE, QUARTER_NOTE, QUARTER_NOTE ) ) );
+		assertEquals( Arrays.asList( true, false, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( QUARTER_NOTE, QUARTER_NOTE,  HALF_NOTE ) ) );
+		assertEquals( Arrays.asList( true, true, false, true, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( HALF_NOTE, EIGHTH_NOTE,  EIGHTH_NOTE, EIGHTH_NOTE, EIGHTH_NOTE ) ) );
+		assertEquals( Arrays.asList( true, false, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( DOTTED_QUARTER_NOTE, EIGHTH_NOTE,  HALF_NOTE ) ) );
+		assertEquals( Arrays.asList( true, false, true, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( DOTTED_QUARTER_NOTE, EIGHTH_NOTE,  EIGHTH_NOTE, EIGHTH_NOTE ) ) );
+		assertEquals( Arrays.asList( true, false, true, false, true, false, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( EIGHTH_NOTE, EIGHTH_NOTE,  SIXTEENTH_NOTE, SIXTEENTH_NOTE, SIXTEENTH_NOTE, SIXTEENTH_NOTE,
+						HALF_NOTE ) ) );
+
+		assertEquals( Arrays.asList( true, false, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE,  QUARTER_NOTE ) ) );
+		assertEquals( Arrays.asList( true, false, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE,  WHOLE_NOTE ) ) );
+		assertEquals( Arrays.asList( true, false, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE,  HALF_NOTE ) ) );
+		assertEquals( Arrays.asList( true, false, true, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE,  2 * WHOLE_NOTE ) ) );
+		assertEquals( Arrays.asList( true, false, true, false, true, false, true, false, true, false ),
+				metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE,
+						QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE,
+						QUARTER_NOTE, 2 * WHOLE_NOTE ) ) );
+
+		assertEquals( Arrays.asList( true, false, true, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( EIGHTH_NOTE, DOTTED_QUARTER_NOTE, EIGHTH_NOTE, DOTTED_QUARTER_NOTE ) ) );
+		assertEquals( Arrays.asList( true, true, false, true, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( WHOLE_NOTE, EIGHTH_NOTE, DOTTED_QUARTER_NOTE, EIGHTH_NOTE, DOTTED_QUARTER_NOTE ) ) );
+		assertEquals( Arrays.asList( true, false, false, false ), metricMelodyEqualityAnalyzer.getStrongTimeMetric(
+				Arrays.asList( DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE ) ) );
+	}
+
+	@Test
 	public void getEqualityMetric() throws Exception {
 		Melody etalon = new Melody( Arrays.asList(
 				new Note( 60, HALF_NOTE ),
@@ -66,28 +110,15 @@ public class MetricMelodyEqualityAnalyzerTest extends AbstractSpringComposerTest
 		);
 		// pauses weak time
 		Melody melody6 = new Melody( Arrays.asList(
-				new Note( 60, QUARTER_NOTE ), new Rest( EIGHTH_NOTE ),
-				new Note( 65, EIGHTH_NOTE ), new Rest( EIGHTH_NOTE ) ) );
+				new Note( 60, QUARTER_NOTE ), new Rest( QUARTER_NOTE ),
+				new Note( 65, QUARTER_NOTE ), new Rest( QUARTER_NOTE ) ) );
 		// pauses strong time
 		Melody melody7 = new Melody( Arrays.asList(
-				new Rest( EIGHTH_NOTE ), new Note( 60, QUARTER_NOTE ),
-				new Rest( EIGHTH_NOTE ), new Note( 65, EIGHTH_NOTE ) ) );
+				new Rest( QUARTER_NOTE ), new Note( 60, QUARTER_NOTE ),
+				new Rest( QUARTER_NOTE ), new Note( 65, QUARTER_NOTE ) ) );
 		assertTrue(
 				metricMelodyEqualityAnalyzer.getEqualityMetric( etalon, melody6) >
 						metricMelodyEqualityAnalyzer.getEqualityMetric( etalon, melody7)
-		);
-
-		//alter first note on weak time
-		Melody melody8 = new Melody( Arrays.asList(
-				new Note( 60, QUARTER_NOTE ), new Note( 63, QUARTER_NOTE ),
-				new Note( 65, HALF_NOTE ) ) );
-		//alter first note on DOUBLE weak time
-		Melody melody9 = new Melody( Arrays.asList(
-				new Note( 60, DOTTED_QUARTER_NOTE ), new Note( 63, EIGHTH_NOTE ),
-				new Note( 65, HALF_NOTE ) ) );
-		assertTrue(
-				metricMelodyEqualityAnalyzer.getEqualityMetric( etalon, melody9 ) >
-						metricMelodyEqualityAnalyzer.getEqualityMetric( etalon, melody8 )
 		);
 
 		//split first note into 3

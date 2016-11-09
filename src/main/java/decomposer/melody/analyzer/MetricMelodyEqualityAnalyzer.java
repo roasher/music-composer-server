@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static jm.constants.Durations.WHOLE_NOTE;
+
 @Component
 public class MetricMelodyEqualityAnalyzer {
 
@@ -28,6 +30,10 @@ public class MetricMelodyEqualityAnalyzer {
 		For now simply number of rhythm changes
 		 */
 		double rhythmDiffMetric = unionRhythmValues.size() - secondMelody.size();
+		/*
+		Calculating stong/weak time ( changed notes of strong time are more different than others )
+		 */
+		List<Boolean> isStrongTime = getStrongTimeMetric( unionRhythmValues );
 
 		/*
 		Next, we are going to count pitch different metric.
@@ -58,7 +64,9 @@ public class MetricMelodyEqualityAnalyzer {
 					int diff = Math.abs( firstMelodyNotePitch - transposedSecondMelodyNotePitch );
 					pitchDiffMetric += ( 0.2 * diff ) / Note.MAX_PITCH;
 					// Penalty for strong time
-
+					if ( isStrongTime.get( currentNote ) ) {
+						pitchDiffMetric += 0.2;
+					}
 				}
 			}
 			if ( pitchDiffMetric < minPitchDiffMetric ) {
@@ -69,6 +77,37 @@ public class MetricMelodyEqualityAnalyzer {
 		Now we will combine pitch diff metric with rhythmValue diff metric
 		 */
 		return 1 - ( rhythmDiffMetric + minPitchDiffMetric ) / secondMelody.size();
+	}
+
+	/**
+	 * Function returns list of booleans each of them defy if according input rhythm value is on strong time or not
+	 * @param rhythmValues
+	 * @return
+	 */
+	List<Boolean> getStrongTimeMetric( List<Double> rhythmValues ) {
+		/*
+		 implementation logic is the following:
+		 searching for rhythmValue how many notes of its value can be placed if front of him:
+		 if number is odd then it is a strongTime, weakTime otherwise
+		  */
+		List<Boolean> out = new ArrayList<>();
+		double rhythmValuesSoFar = 0;
+		double previousRhythmValueFromBar = 0;
+		for ( int rhythmValueNumber = 0; rhythmValueNumber < rhythmValues.size(); rhythmValueNumber++ ) {
+			double currentRhythmValue = rhythmValues.get( rhythmValueNumber );
+			double valueLeftToFillTheBar = WHOLE_NOTE - rhythmValuesSoFar % WHOLE_NOTE;
+			// we should cut rhythm value if it's to big and getting out of the bar line
+			double transformed = valueLeftToFillTheBar > currentRhythmValue ? currentRhythmValue : valueLeftToFillTheBar;
+			// if rhythm value is not fit into previous rhythm values - we are counting metric as it was previous
+			if ( rhythmValuesSoFar % transformed != 0 ) {
+				transformed = previousRhythmValueFromBar;
+			}
+			int numberOfRhythmValuesThatFit = (int) ( rhythmValuesSoFar / transformed );
+			out.add( numberOfRhythmValuesThatFit % 2 == 0 );
+			rhythmValuesSoFar += currentRhythmValue;
+			previousRhythmValueFromBar = currentRhythmValue % WHOLE_NOTE;
+		}
+		return out;
 	}
 
 	/**
