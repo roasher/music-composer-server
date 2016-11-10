@@ -8,19 +8,19 @@
     <import resource="form_analyzez_config.xml"/>
     <import resource="persistance.xml"/>
 
-    <bean id="signatureDecomposer" class="decomposer.SignatureDecomposer">
+    <bean id="signatureDecomposer" class="ru.pavelyurkin.musiccomposer.decomposer.SignatureDecomposer">
         <property name="minSignatureLength" value="7"/>
         <property name="maxSignatureLength" value="12"/>
         <property name="melodyEqualityAnalyzer" ref="melodyEqualityAnalyzer"/>
         <!--<property name="melodyEqualityAnalyzer" ref="MelodyEqualityAnalyzerNotator"/>-->
     </bean>
 
-    <bean id="melodyEqualityAnalyzerNotator" class="decomposer.melody.analyzer.MelodyEqualityAnalyzerNotator">
+    <bean id="melodyEqualityAnalyzerNotator" class="ru.pavelyurkin.musiccomposer.decomposer.melody.analyzer.MelodyEqualityAnalyzerNotator">
         <property name="notateSuccessful" value="true"/>
         <property name="analyzer" ref="melodyEqualityAnalyzer"/>
     </bean>
 
-    <bean id="melodyEqualityAnalyzer" class="decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl" >
+    <bean id="melodyEqualityAnalyzer" class="ru.pavelyurkin.musiccomposer.decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl" >
         <property name="equalityTestPassThreshold" value="0.75"/>
         <property name="countourEquality" ref="countourEqualityTestWrapper"/>
         <property name="intervalsEquality" ref="intervalsEqualityTestWrapper"/>
@@ -29,7 +29,7 @@
         <property name="rhythmEquality" ref="rhythmEqualityTestWrapper"/>
     </bean>
 
-    <context:component-scan base-package="model,decomposer,utils,composer,persistance"/>
+    <context:component-scan base-package="ru.pavelyurkin.musiccomposer"/>
     <tx:annotation-driven/>
 
 </beans>

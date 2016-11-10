@@ -3,31 +3,31 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="formKeyEquality" class="decomposer.melody.equality.KeyEquality"/>
+    <bean id="formKeyEquality" class="ru.pavelyurkin.musiccomposer.equality.melody.KeyEquality"/>
 
-    <bean id="formIntervalsEqualityTestWrapper" class="decomposer.melody.equality.EqualNumberOfNotesRequired">
+    <bean id="formIntervalsEqualityTestWrapper" class="ru.pavelyurkin.musiccomposer.equality.melody.EqualNumberOfNotesRequired">
         <property name="equality" ref="formIntervalsEquality"/>
     </bean>
 
-    <bean id="formIntervalsEquality" class="decomposer.melody.equality.melodymovement.IntervalsMelodyMovementEquality">
+    <bean id="formIntervalsEquality" class="ru.pavelyurkin.musiccomposer.equality.melodymovement.IntervalsMelodyMovementEquality">
         <property name="maxNumberOfShiftedIntervals" value="3"/>
         <property name="maxShift" value="2"/>
     </bean>
 
-    <bean id="formRhythmEquality" class="decomposer.melody.equality.RhythmEquality">
+    <bean id="formRhythmEquality" class="ru.pavelyurkin.musiccomposer.equality.melody.RhythmEquality">
         <property name="maxNumberOfRhythmicallyDifferentNotes" value="0"/>
         <property name="maxRhythmDeviationSteps" value="0"/>
     </bean>
 
-    <bean id="formRhythmEqualityTestWrapper" class="decomposer.melody.equality.EqualNumberOfNotesRequired">
+    <bean id="formRhythmEqualityTestWrapper" class="ru.pavelyurkin.musiccomposer.equality.melody.EqualNumberOfNotesRequired">
         <property name="equality" ref="rhythmEquality"/>
     </bean>
     
-    <bean id="formEqualityAnalyzerImpl" class="decomposer.form.analyzer.MelodyFormEqualityAnalyzer">
+    <bean id="formEqualityAnalyzerImpl" class="ru.pavelyurkin.musiccomposer.equality.form.MelodyFormEqualityAnalyzer">
         <property name="equalityTestPassThreshold" value="0.6"/>
     </bean>
     
-    <bean id="formAnalyzer" class="decomposer.form.FormEquality">
+    <bean id="formAnalyzer" class="ru.pavelyurkin.musiccomposer.equality.form.FormEquality">
         <property name="instrumentEqualityPassThreshold" value="1.0"/>
     </bean>
 

@@ -5,23 +5,23 @@
 
     <import resource="equalityPrime.xml"/>
 
-    <bean id="countourEqualityTestWrapper" class="decomposer.melody.equality.EqualNumberOfNotesRequired">
+    <bean id="countourEqualityTestWrapper" class="ru.pavelyurkin.musiccomposer.equality.melody.EqualNumberOfNotesRequired">
         <property name="equality" ref="contourEquality"/>
     </bean>
 
-    <bean id="inversionEqualityTestWrapper" class="decomposer.melody.equality.EqualNumberOfNotesRequired">
+    <bean id="inversionEqualityTestWrapper" class="ru.pavelyurkin.musiccomposer.equality.melody.EqualNumberOfNotesRequired">
         <property name="equality" ref="inversionEquality"/>
     </bean>
 
-    <bean id="intervalsEqualityTestWrapper" class="decomposer.melody.equality.EqualNumberOfNotesRequired">
+    <bean id="intervalsEqualityTestWrapper" class="ru.pavelyurkin.musiccomposer.equality.melody.EqualNumberOfNotesRequired">
         <property name="equality" ref="intervalsEquality"/>
     </bean>
 
-    <bean id="orderEqualityTestWrapper" class="decomposer.melody.equality.EqualNumberOfNotesRequired">
+    <bean id="orderEqualityTestWrapper" class="ru.pavelyurkin.musiccomposer.equality.melody.EqualNumberOfNotesRequired">
         <property name="equality" ref="orderEquality"/>
     </bean>
 
-    <bean id="rhythmEqualityTestWrapper" class="decomposer.melody.equality.EqualNumberOfNotesRequired">
+    <bean id="rhythmEqualityTestWrapper" class="ru.pavelyurkin.musiccomposer.equality.melody.EqualNumberOfNotesRequired">
         <property name="equality" ref="rhythmEquality"/>
     </bean>
 
