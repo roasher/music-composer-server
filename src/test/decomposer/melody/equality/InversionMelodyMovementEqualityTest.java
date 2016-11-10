@@ -1,6 +1,6 @@
 package decomposer.melody.equality;
 
-import decomposer.melody.equality.melodymovement.InversionMelodyMovementEqualityTest;
+import decomposer.melody.equality.melodymovement.InversionMelodyMovementEquality;
 import jm.music.data.Note;
 import model.melody.Melody;
 import org.junit.Test;
@@ -13,10 +13,10 @@ import static jm.constants.Pitches.F4;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-public class TestInversionMelodyMovementEqualityTest {
+public class InversionMelodyMovementEqualityTest {
 
-	InversionMelodyMovementEqualityTest inversionMelodyMovementEqualityTest = new InversionMelodyMovementEqualityTest();
-	EqualityTest equalityTest = new EqualNumberOfNotesRequired( inversionMelodyMovementEqualityTest );
+	InversionMelodyMovementEquality inversionMelodyMovementEquality = new InversionMelodyMovementEquality();
+	Equality equality = new EqualNumberOfNotesRequired( inversionMelodyMovementEquality );
 
 	@Test
 	public void testCase1() {
@@ -33,9 +33,9 @@ public class TestInversionMelodyMovementEqualityTest {
 			new Note( E4, SIXTEENTH_NOTE )
 		);
 
-		inversionMelodyMovementEqualityTest.setMaxNumberOfInvertedIntervals( 3 );
+		inversionMelodyMovementEquality.setMaxNumberOfInvertedIntervals( 3 );
 
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
@@ -55,11 +55,11 @@ public class TestInversionMelodyMovementEqualityTest {
 			new Note( E3, SIXTEENTH_NOTE )
 		);
 
-		inversionMelodyMovementEqualityTest.setMaxNumberOfInvertedIntervals( 3 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		inversionMelodyMovementEquality.setMaxNumberOfInvertedIntervals( 3 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		inversionMelodyMovementEqualityTest.setMaxNumberOfInvertedIntervals( 4 );
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		inversionMelodyMovementEquality.setMaxNumberOfInvertedIntervals( 4 );
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
@@ -75,9 +75,9 @@ public class TestInversionMelodyMovementEqualityTest {
 			new Note( F4, SIXTEENTH_NOTE )
 		);
 
-		inversionMelodyMovementEqualityTest.setMaxNumberOfInvertedIntervals( 3 );
+		inversionMelodyMovementEquality.setMaxNumberOfInvertedIntervals( 3 );
 
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 	}
 
 }

@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by Pavel Yurkin on 17.08.14.
  */
-public class RhytmEqualityTest implements EqualityTest {
+public class RhytmEquality implements Equality {
 
     private int maxNumberOfRhythmicallyDifferentNotes;
     private double maxRhythmDeviationSteps;

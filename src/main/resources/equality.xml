@@ -3,26 +3,26 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <import resource="equalityTestPrime.xml"/>
+    <import resource="equalityPrime.xml"/>
 
     <bean id="countourEqualityTestWrapper" class="decomposer.melody.equality.EqualNumberOfNotesRequired">
-        <property name="equalityTest" ref="contourEqualityTest"/>
+        <property name="equality" ref="contourEquality"/>
     </bean>
 
     <bean id="inversionEqualityTestWrapper" class="decomposer.melody.equality.EqualNumberOfNotesRequired">
-        <property name="equalityTest" ref="inversionEqualityTest"/>
+        <property name="equality" ref="inversionEquality"/>
     </bean>
 
     <bean id="intervalsEqualityTestWrapper" class="decomposer.melody.equality.EqualNumberOfNotesRequired">
-        <property name="equalityTest" ref="intervalsEqualityTest"/>
+        <property name="equality" ref="intervalsEquality"/>
     </bean>
 
     <bean id="orderEqualityTestWrapper" class="decomposer.melody.equality.EqualNumberOfNotesRequired">
-        <property name="equalityTest" ref="orderEqualityTest"/>
+        <property name="equality" ref="orderEquality"/>
     </bean>
 
     <bean id="rhythmEqualityTestWrapper" class="decomposer.melody.equality.EqualNumberOfNotesRequired">
-        <property name="equalityTest" ref="rhythmEqualityTest"/>
+        <property name="equality" ref="rhythmEquality"/>
     </bean>
 
 </beans>

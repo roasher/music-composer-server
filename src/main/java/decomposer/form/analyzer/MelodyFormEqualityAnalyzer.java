@@ -1,6 +1,6 @@
 package decomposer.form.analyzer;
 
-import decomposer.melody.equality.EqualityTest;
+import decomposer.melody.equality.Equality;
 import decomposer.melody.analyzer.MelodyEqualityAnalyzer;
 import model.melody.Melody;
 import org.slf4j.Logger;
@@ -23,11 +23,11 @@ public class MelodyFormEqualityAnalyzer implements MelodyEqualityAnalyzer {
     private double equalityTestPassThreshold;
 
 	@Autowired @Qualifier( "formIntervalsEqualityTestWrapper" )
-    private EqualityTest intervalsEqualityTest;
+    private Equality intervalsEquality;
 	@Autowired @Qualifier( "formRhythmEqualityTestWrapper" )
-    private EqualityTest rhythmEqualityTest;
-	@Autowired @Qualifier( "formKeyEqualityTest" )
-	private EqualityTest keyEqualityTest;
+    private Equality rhythmEquality;
+	@Autowired @Qualifier( "formKeyEquality" )
+	private Equality keyEquality;
 
     private Logger logger = LoggerFactory.getLogger( getClass() );
 
@@ -47,10 +47,7 @@ public class MelodyFormEqualityAnalyzer implements MelodyEqualityAnalyzer {
 
 	public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
 
-		List<EqualityTest> tests = Arrays.asList(
-				intervalsEqualityTest,
-				rhythmEqualityTest,
-				keyEqualityTest
+		List<Equality> tests = Arrays.asList( intervalsEquality, rhythmEquality, keyEquality
 		);
 
 		return tests.stream().mapToDouble( equalityTest -> equalityTest.getEqualityMetric( firstMelody, secondMelody ) ).average().getAsDouble();
@@ -64,27 +61,27 @@ public class MelodyFormEqualityAnalyzer implements MelodyEqualityAnalyzer {
 		this.equalityTestPassThreshold = equalityTestPassThreshold;
 	}
 
-	public EqualityTest getIntervalsEqualityTest() {
-		return intervalsEqualityTest;
+	public Equality getIntervalsEquality() {
+		return intervalsEquality;
 	}
 
-	public void setIntervalsEqualityTest( EqualityTest intervalsEqualityTest ) {
-		this.intervalsEqualityTest = intervalsEqualityTest;
+	public void setIntervalsEquality( Equality intervalsEquality ) {
+		this.intervalsEquality = intervalsEquality;
 	}
 
-	public EqualityTest getRhythmEqualityTest() {
-		return rhythmEqualityTest;
+	public Equality getRhythmEquality() {
+		return rhythmEquality;
 	}
 
-	public void setRhythmEqualityTest( EqualityTest rhythmEqualityTest ) {
-		this.rhythmEqualityTest = rhythmEqualityTest;
+	public void setRhythmEquality( Equality rhythmEquality ) {
+		this.rhythmEquality = rhythmEquality;
 	}
 
-	public EqualityTest getKeyEqualityTest() {
-		return keyEqualityTest;
+	public Equality getKeyEquality() {
+		return keyEquality;
 	}
 
-	public void setKeyEqualityTest( EqualityTest keyEqualityTest ) {
-		this.keyEqualityTest = keyEqualityTest;
+	public void setKeyEquality( Equality keyEquality ) {
+		this.keyEquality = keyEquality;
 	}
 }

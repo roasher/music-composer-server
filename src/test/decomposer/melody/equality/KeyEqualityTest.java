@@ -19,10 +19,10 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith( SpringJUnit4ClassRunner.class )
 @ContextConfiguration( locations = "classpath:spring.configuration.xml" )
-public class TestKeyEqualityTest {
+public class KeyEqualityTest {
 
-	@Autowired @Qualifier("formKeyEqualityTest")
-	private EqualityTest test;
+	@Autowired @Qualifier( "formKeyEquality" )
+	private Equality test;
 
 	@Test
 	public void testCase1() {

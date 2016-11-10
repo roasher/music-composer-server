@@ -1,33 +1,22 @@
 package utils;
 
-import static jm.JMC.DOTTED_EIGHTH_NOTE;
-import static jm.JMC.DOTTED_QUARTER_NOTE;
-import static jm.JMC.DOUBLE_DOTTED_QUARTER_NOTE;
-import static jm.JMC.EIGHTH_NOTE;
-import static jm.JMC.HALF_NOTE;
-import static jm.JMC.QUARTER_NOTE;
-import static jm.JMC.SIXTEENTH_NOTE;
-import static junit.framework.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import helper.AbstractSpringTest;
 import jm.music.data.Note;
 import jm.music.data.Rest;
 import model.melody.Form;
 import model.melody.Melody;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static jm.JMC.*;
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Created by pyurkin on 25.11.14.
  */
 public class RecombinatorTest extends AbstractSpringTest {
-
-	@Autowired
-	private Recombinator recombinator;
 
 	@Test
 	public void testRebuildingMelodyBlockList() {
@@ -69,7 +58,7 @@ public class RecombinatorTest extends AbstractSpringTest {
 		inputMelodyBlock.add( melodyInput1 );
 
 		// testList
-		List< List< Melody > > testList = recombinator.recombineMelodyBlock( inputMelodyBlock );
+		List< List< Melody > > testList = Recombinator.recombineMelodyBlock( inputMelodyBlock );
 
 		// etalon output
 		// item
@@ -256,7 +245,7 @@ public class RecombinatorTest extends AbstractSpringTest {
 		melodyBlockList.add( melodyList2 );
 		melodyBlockList.add( melodyList3 );
 
-		List< List < Melody > > recombineList = recombinator.recombine( melodyBlockList );
+		List< List < Melody > > recombineList = Recombinator.recombine( melodyBlockList );
 
 		assertEquals( recombineList.size(), 15 );
 

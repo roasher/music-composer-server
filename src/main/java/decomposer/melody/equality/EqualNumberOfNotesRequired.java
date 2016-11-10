@@ -9,15 +9,15 @@ import org.slf4j.LoggerFactory;
  * Pattern: chain of responsibility
  * Created by Pavel Yurkin on 18.08.14.
  */
-public class EqualNumberOfNotesRequired implements EqualityTest {
+public class EqualNumberOfNotesRequired implements Equality {
 
     Logger logger = LoggerFactory.getLogger( getClass() );
 
-    private EqualityTest equalityTest;
+    private Equality equality;
 
     public EqualNumberOfNotesRequired() {}
-    public EqualNumberOfNotesRequired( EqualityTest equalityTest ) {
-        this.equalityTest = equalityTest;
+    public EqualNumberOfNotesRequired( Equality equality ) {
+        this.equality = equality;
     }
 
     @Override
@@ -25,8 +25,8 @@ public class EqualNumberOfNotesRequired implements EqualityTest {
         if ( firstMelody.size() != secondMelody.size() ) {
             return 0;
         } else {
-            if ( this.equalityTest != null ) {
-                return equalityTest.getEqualityMetric( firstMelody, secondMelody );
+            if ( this.equality != null ) {
+                return equality.getEqualityMetric( firstMelody, secondMelody );
             } else {
                 return 0;
             }
@@ -38,10 +38,10 @@ public class EqualNumberOfNotesRequired implements EqualityTest {
         if ( firstMelody.size() != secondMelody.size() ) {
             return false;
         } else {
-            if ( this.equalityTest != null ) {
-                return this.equalityTest.test( firstMelody, secondMelody );
+            if ( this.equality != null ) {
+                return this.equality.test( firstMelody, secondMelody );
             } else {
-                logger.warn( "EqualNumberOfNotesRequired instance has null EqualityTest member. Test will be considered UNsuccessful" );
+                logger.warn( "EqualNumberOfNotesRequired instance has null Equality member. Test will be considered UNsuccessful" );
                 return false;
             }
         }
@@ -49,14 +49,14 @@ public class EqualNumberOfNotesRequired implements EqualityTest {
 
     @Override
     public int getMaxNumberOfDiversedNotes() {
-        return equalityTest != null ? equalityTest.getMaxNumberOfDiversedNotes() : 0;
+        return equality != null ? equality.getMaxNumberOfDiversedNotes() : 0;
     }
 
-    public EqualityTest getEqualityTest() {
-        return equalityTest;
+    public Equality getEquality() {
+        return equality;
     }
 
-    public void setEqualityTest( EqualityTest equalityTest ) {
-        this.equalityTest = equalityTest;
+    public void setEquality( Equality equality ) {
+        this.equality = equality;
     }
 }

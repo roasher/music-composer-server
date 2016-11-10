@@ -8,7 +8,7 @@ import static java.lang.Math.abs;
  * @author Pavel Yurkin
  * @date 28.06.2014.
  */
-public class FragmentationMelodyMovementEqualityTest extends AbstractMelodyMovementEqualityTest {
+public class FragmentationMelodyMovementEquality extends AbstractMelodyMovementEquality {
 
     // Maximum allowable number of intervals that can be different
     private int maxNumberOfDeletedIntervals;

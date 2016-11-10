@@ -3,24 +3,24 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="contourEqualityTest" class="decomposer.melody.equality.melodymovement.ContourMelodyMovementEqualityTest">
+    <bean id="contourEquality" class="decomposer.melody.equality.melodymovement.ContourMelodyMovementEquality">
         <property name="maxNumberOfDiffDirectionIntervals" value="3"/>
     </bean>
 
-    <bean id="inversionEqualityTest" class="decomposer.melody.equality.melodymovement.InversionMelodyMovementEqualityTest">
+    <bean id="inversionEquality" class="decomposer.melody.equality.melodymovement.InversionMelodyMovementEquality">
         <property name="maxNumberOfInvertedIntervals" value="1"/>
     </bean>
 
-    <bean id="intervalsEqualityTest" class="decomposer.melody.equality.melodymovement.IntervalsMelodyMovementEqualityTest">
+    <bean id="intervalsEquality" class="decomposer.melody.equality.melodymovement.IntervalsMelodyMovementEquality">
         <property name="maxNumberOfShiftedIntervals" value="2"/>
         <property name="maxShift" value="2"/>
     </bean>
 
-    <bean id="orderEqualityTest" class="decomposer.melody.equality.melodymovement.OrderMelodyMovementEqualityTest">
+    <bean id="orderEquality" class="decomposer.melody.equality.melodymovement.OrderMelodyMovementEquality">
         <property name="maxNumberOfIntervalsHavingSwappedNotes" value="2"/>
     </bean>
 
-    <bean id="rhythmEqualityTest" class="decomposer.melody.equality.RhytmEqualityTest">
+    <bean id="rhythmEquality" class="decomposer.melody.equality.RhytmEquality">
         <property name="maxNumberOfRhythmicallyDifferentNotes" value="1"/>
         <!--<property name="maxRhythmDeviationSteps" listValue="0.01"/>-->
         <property name="maxRhythmDeviationSteps" value="0.75"/>

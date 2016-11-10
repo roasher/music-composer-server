@@ -2,7 +2,7 @@ package decomposer.melody.equality;
 
 import model.melody.Melody;
 
-public interface EqualityTest {
+public interface Equality {
 
     /**
      * Tests if two melodies can be considered equal

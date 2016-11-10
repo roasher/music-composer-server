@@ -13,7 +13,7 @@ import static model.Keys.*;
 /**
  * Created by night wish on 01.11.14.
  */
-public class KeyEqualityTest implements EqualityTest {
+public class KeyEquality implements Equality {
 
 	private int maxNumberOfNotesOutOfKey;
 

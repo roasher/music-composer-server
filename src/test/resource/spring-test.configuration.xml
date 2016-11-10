@@ -4,7 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <import resource="equalityTest.xml"/>
+    <import resource="equality.xml"/>
     <import resource="form_analyzez_config.xml"/>
     <import resource="persistance-test.xml"/>
 
@@ -22,11 +22,11 @@
 
     <bean id="melodyEqualityAnalyzer" class="decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl" >
         <property name="equalityTestPassThreshold" value="0.75"/>
-        <property name="countourEqualityTest" ref="countourEqualityTestWrapper"/>
-        <property name="intervalsEqualityTest" ref="intervalsEqualityTestWrapper"/>
-        <property name="inversionEqualityTest" ref="inversionEqualityTestWrapper"/>
-        <property name="orderEqualityTest" ref="orderEqualityTestWrapper"/>
-        <property name="rhythmEqualityTest" ref="rhythmEqualityTestWrapper"/>
+        <property name="countourEquality" ref="countourEqualityTestWrapper"/>
+        <property name="intervalsEquality" ref="intervalsEqualityTestWrapper"/>
+        <property name="inversionEquality" ref="inversionEqualityTestWrapper"/>
+        <property name="orderEquality" ref="orderEqualityTestWrapper"/>
+        <property name="rhythmEquality" ref="rhythmEqualityTestWrapper"/>
     </bean>
 
     <bean id="simpleComposeBlockProvider" class="composer.ComposeBlockProvider">

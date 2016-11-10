@@ -1,6 +1,6 @@
 package decomposer.melody.equality;
 
-import decomposer.melody.equality.melodymovement.ContourMelodyMovementEqualityTest;
+import decomposer.melody.equality.melodymovement.ContourMelodyMovementEquality;
 import jm.music.data.Note;
 import model.melody.Melody;
 import org.junit.Test;
@@ -10,10 +10,10 @@ import static jm.constants.Pitches.*;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-public class TestContourMelodyMovementEqualityTest {
+public class TestContourMelodyMovementEquality {
 
-	private ContourMelodyMovementEqualityTest contourMelodyMovementEqualityTest = new ContourMelodyMovementEqualityTest();
-	private EqualityTest equalityTest = new EqualNumberOfNotesRequired( contourMelodyMovementEqualityTest );
+	private ContourMelodyMovementEquality contourMelodyMovementEquality = new ContourMelodyMovementEquality();
+	private Equality equality = new EqualNumberOfNotesRequired( contourMelodyMovementEquality );
 
 	@Test
 	public void testCase1() {
@@ -52,11 +52,11 @@ public class TestContourMelodyMovementEqualityTest {
 //		View.notate( testMelody2 );
 //		suspend();
 
-		contourMelodyMovementEqualityTest.setMaxNumberOfDiffDirectionIntervals(4);
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		contourMelodyMovementEquality.setMaxNumberOfDiffDirectionIntervals(4);
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 
-		contourMelodyMovementEqualityTest.setMaxNumberOfDiffDirectionIntervals(0);
-		assertTrue(equalityTest.test( testMelody1, testMelody2 ));
+		contourMelodyMovementEquality.setMaxNumberOfDiffDirectionIntervals(0);
+		assertTrue( equality.test( testMelody1, testMelody2 ));
 	}
 
 	@Test
@@ -96,8 +96,8 @@ public class TestContourMelodyMovementEqualityTest {
 //		View.notate( testMelody2 );
 //		suspend();
 
-		contourMelodyMovementEqualityTest.setMaxNumberOfDiffDirectionIntervals(2);
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		contourMelodyMovementEquality.setMaxNumberOfDiffDirectionIntervals(2);
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 	}
 
     @Test
@@ -137,10 +137,10 @@ public class TestContourMelodyMovementEqualityTest {
 //        View.notate( testMelody2 );
 //		  suspend();
 
-        contourMelodyMovementEqualityTest.setMaxNumberOfDiffDirectionIntervals(0);
-        assertFalse(equalityTest.test( testMelody1, testMelody2 ));
+        contourMelodyMovementEquality.setMaxNumberOfDiffDirectionIntervals(0);
+        assertFalse( equality.test( testMelody1, testMelody2 ));
 
-        contourMelodyMovementEqualityTest.setMaxNumberOfDiffDirectionIntervals(1);
-        assertTrue(equalityTest.test( testMelody1, testMelody2 ));
+        contourMelodyMovementEquality.setMaxNumberOfDiffDirectionIntervals(1);
+        assertTrue( equality.test( testMelody1, testMelody2 ));
     }
 }

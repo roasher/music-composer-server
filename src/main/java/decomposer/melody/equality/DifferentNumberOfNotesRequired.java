@@ -9,20 +9,20 @@ import org.slf4j.LoggerFactory;
  * Pattern: chain of responsibility
  * Created by Pavel Yurkin on 18.08.14.
  */
-public class DifferentNumberOfNotesRequired implements EqualityTest {
+public class DifferentNumberOfNotesRequired implements Equality {
 
     Logger logger = LoggerFactory.getLogger( getClass() );
 
-    private EqualityTest equalityTest;
+    private Equality equality;
 
     public DifferentNumberOfNotesRequired() {}
-    public DifferentNumberOfNotesRequired( EqualityTest equalityTest ) {
-        this.equalityTest = equalityTest;
+    public DifferentNumberOfNotesRequired( Equality equality ) {
+        this.equality = equality;
     }
 
     @Override
     public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
-        return equalityTest.getEqualityMetric( firstMelody, secondMelody );
+        return equality.getEqualityMetric( firstMelody, secondMelody );
     }
 
     @Override
@@ -30,10 +30,10 @@ public class DifferentNumberOfNotesRequired implements EqualityTest {
         if ( firstMelody.size() == secondMelody.size() ) {
             return false;
         } else {
-            if ( this.equalityTest != null ) {
-                return this.equalityTest.test( firstMelody, secondMelody );
+            if ( this.equality != null ) {
+                return this.equality.test( firstMelody, secondMelody );
             } else {
-                logger.warn( "DifferentNumberOfNotesRequired instance has null EqualityTest member. Test will be considered UNsuccessful" );
+                logger.warn( "DifferentNumberOfNotesRequired instance has null Equality member. Test will be considered UNsuccessful" );
                 return false;
             }
         }
@@ -41,14 +41,14 @@ public class DifferentNumberOfNotesRequired implements EqualityTest {
 
     @Override
     public int getMaxNumberOfDiversedNotes() {
-        return equalityTest != null ? equalityTest.getMaxNumberOfDiversedNotes() : 0;
+        return equality != null ? equality.getMaxNumberOfDiversedNotes() : 0;
     }
 
-    public EqualityTest getEqualityTest() {
-        return equalityTest;
+    public Equality getEquality() {
+        return equality;
     }
 
-    public void setEqualityTest( EqualityTest equalityTest ) {
-        this.equalityTest = equalityTest;
+    public void setEquality( Equality equality ) {
+        this.equality = equality;
     }
 }

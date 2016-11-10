@@ -18,14 +18,14 @@ public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
      */
     private double equalityTestPassThreshold;
 
-//    private EqualityTest fragmentationEqualityTest;
-//    private EqualityTest interpolationEqualityTest;
+//    private Equality fragmentationEqualityTest;
+//    private Equality interpolationEqualityTest;
 
-    private EqualityTest countourEqualityTest;
-    private EqualityTest intervalsEqualityTest;
-    private EqualityTest inversionEqualityTest;
-    private EqualityTest orderEqualityTest;
-    private EqualityTest rhythmEqualityTest;
+    private Equality countourEquality;
+    private Equality intervalsEquality;
+    private Equality inversionEquality;
+    private Equality orderEquality;
+    private Equality rhythmEquality;
 
     private Logger logger = LoggerFactory.getLogger( getClass() );
 
@@ -49,17 +49,13 @@ public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 //            return true;
 //        }
 
-        boolean rhythmTest = rhythmEqualityTest.test( firstMelody, secondMelody );
+        boolean rhythmTest = rhythmEquality.test( firstMelody, secondMelody );
         if ( !rhythmTest ) {
             logger.debug( "rhythm_old test failed. No more tests required, melodies considered not equal." );
             return false;
         }
 
-		EqualityTest[] testArray = new EqualityTest[] {
-		  countourEqualityTest,
-		  intervalsEqualityTest,
-		  inversionEqualityTest,
-		  orderEqualityTest,
+		Equality[] testArray = new Equality[] { countourEquality, intervalsEquality, inversionEquality, orderEquality,
 		};
 		int numberOfTestsPassed = 0;
 		int numberOfTestsFailed = 0;
@@ -99,59 +95,59 @@ public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
         this.equalityTestPassThreshold = equalityTestPassThreshold;
     }
 
-//    public EqualityTest getFragmentationEqualityTest() {
+//    public Equality getFragmentationEqualityTest() {
 //        return fragmentationEqualityTest;
 //    }
 //
-//    public void setFragmentationEqualityTest( EqualityTest fragmentationEqualityTest ) {
+//    public void setFragmentationEqualityTest( Equality fragmentationEqualityTest ) {
 //        this.fragmentationEqualityTest = fragmentationEqualityTest;
 //    }
 //
-//    public EqualityTest getInterpolationEqualityTest() {
+//    public Equality getInterpolationEqualityTest() {
 //        return interpolationEqualityTest;
 //    }
 //
-//    public void setInterpolationEqualityTest( EqualityTest interpolationEqualityTest ) {
+//    public void setInterpolationEqualityTest( Equality interpolationEqualityTest ) {
 //        this.interpolationEqualityTest = interpolationEqualityTest;
 //    }
 
-    public EqualityTest getCountourEqualityTest() {
-        return countourEqualityTest;
+    public Equality getCountourEquality() {
+        return countourEquality;
     }
 
-    public void setCountourEqualityTest( EqualityTest countourEqualityTest ) {
-        this.countourEqualityTest = countourEqualityTest;
+    public void setCountourEquality( Equality countourEquality ) {
+        this.countourEquality = countourEquality;
     }
 
-    public EqualityTest getIntervalsEqualityTest() {
-        return intervalsEqualityTest;
+    public Equality getIntervalsEquality() {
+        return intervalsEquality;
     }
 
-    public void setIntervalsEqualityTest( EqualityTest intervalsEqualityTest ) {
-        this.intervalsEqualityTest = intervalsEqualityTest;
+    public void setIntervalsEquality( Equality intervalsEquality ) {
+        this.intervalsEquality = intervalsEquality;
     }
 
-    public EqualityTest getInversionEqualityTest() {
-        return inversionEqualityTest;
+    public Equality getInversionEquality() {
+        return inversionEquality;
     }
 
-    public void setInversionEqualityTest( EqualityTest inversionEqualityTest ) {
-        this.inversionEqualityTest = inversionEqualityTest;
+    public void setInversionEquality( Equality inversionEquality ) {
+        this.inversionEquality = inversionEquality;
     }
 
-    public EqualityTest getOrderEqualityTest() {
-        return orderEqualityTest;
+    public Equality getOrderEquality() {
+        return orderEquality;
     }
 
-    public void setOrderEqualityTest( EqualityTest orderEqualityTest ) {
-        this.orderEqualityTest = orderEqualityTest;
+    public void setOrderEquality( Equality orderEquality ) {
+        this.orderEquality = orderEquality;
     }
 
-    public EqualityTest getRhythmEqualityTest() {
-        return rhythmEqualityTest;
+    public Equality getRhythmEquality() {
+        return rhythmEquality;
     }
 
-    public void setRhythmEqualityTest(EqualityTest rhythmEqualityTest) {
-        this.rhythmEqualityTest = rhythmEqualityTest;
+    public void setRhythmEquality(Equality rhythmEquality ) {
+        this.rhythmEquality = rhythmEquality;
     }
 }

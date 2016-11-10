@@ -1,6 +1,6 @@
 package decomposer.melody.equality.melodymovement;
 
-import decomposer.melody.equality.EqualityTest;
+import decomposer.melody.equality.Equality;
 import model.melody.Melody;
 import model.melody.MelodyMovement;
 
@@ -8,7 +8,7 @@ import model.melody.MelodyMovement;
  * @author Pavel Yurkin
  * @date 28.06.2014.
  */
-public abstract class AbstractMelodyMovementEqualityTest implements EqualityTest {
+public abstract class AbstractMelodyMovementEquality implements Equality {
 
     @Override
     public boolean test( Melody firstMelody, Melody secondMelody ) {

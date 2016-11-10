@@ -1,6 +1,6 @@
 package decomposer.melody.equality;
 
-import decomposer.melody.equality.melodymovement.OrderMelodyMovementEqualityTest;
+import decomposer.melody.equality.melodymovement.OrderMelodyMovementEquality;
 import jm.music.data.Note;
 import model.melody.Melody;
 import org.junit.Test;
@@ -13,10 +13,10 @@ import static jm.constants.Pitches.G4;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-public class TestOrderMelodyMovementEqualityTest {
+public class TestOrderMelodyMovementEquality {
 
-	OrderMelodyMovementEqualityTest orderMelodyMovementEqualityTest = new OrderMelodyMovementEqualityTest();
-	EqualityTest equalityTest = new EqualNumberOfNotesRequired( orderMelodyMovementEqualityTest );
+	OrderMelodyMovementEquality orderMelodyMovementEquality = new OrderMelodyMovementEquality();
+	Equality equality = new EqualNumberOfNotesRequired( orderMelodyMovementEquality );
 
 	@Test
 	public void testCase1() {
@@ -39,8 +39,8 @@ public class TestOrderMelodyMovementEqualityTest {
 			new Note( F4, EIGHTH_NOTE ) }
 		);
 
-		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 0 );
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		orderMelodyMovementEquality.setMaxNumberOfIntervalsHavingSwappedNotes( 0 );
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
@@ -65,11 +65,11 @@ public class TestOrderMelodyMovementEqualityTest {
 		  }
 		);
 
-		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 1 );
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		orderMelodyMovementEquality.setMaxNumberOfIntervalsHavingSwappedNotes( 1 );
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 
-		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 0 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		orderMelodyMovementEquality.setMaxNumberOfIntervalsHavingSwappedNotes( 0 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
@@ -93,8 +93,8 @@ public class TestOrderMelodyMovementEqualityTest {
 			new Note( F4, EIGHTH_NOTE ) }
 		);
 
-		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 2 );
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		orderMelodyMovementEquality.setMaxNumberOfIntervalsHavingSwappedNotes( 2 );
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
@@ -119,11 +119,11 @@ public class TestOrderMelodyMovementEqualityTest {
 		  }
 		);
 
-		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 2 );
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		orderMelodyMovementEquality.setMaxNumberOfIntervalsHavingSwappedNotes( 2 );
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 
-		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 1 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		orderMelodyMovementEquality.setMaxNumberOfIntervalsHavingSwappedNotes( 1 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
@@ -153,11 +153,11 @@ public class TestOrderMelodyMovementEqualityTest {
 		  }
 		);
 
-		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 3 );
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		orderMelodyMovementEquality.setMaxNumberOfIntervalsHavingSwappedNotes( 3 );
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 
-		orderMelodyMovementEqualityTest.setMaxNumberOfIntervalsHavingSwappedNotes( 2 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		orderMelodyMovementEquality.setMaxNumberOfIntervalsHavingSwappedNotes( 2 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 	}
 
 }

@@ -9,7 +9,7 @@ import static java.lang.Math.signum;
  * @author Pavel Yurkin
  * @date 27.06.2014.
  */
-public class ContourMelodyMovementEqualityTest extends AbstractMelodyMovementEqualityTest {
+public class ContourMelodyMovementEquality extends AbstractMelodyMovementEquality {
     // Maximum allowable number of intervals in different direction
     private int maxNumberOfDiffDirectionIntervals;
 

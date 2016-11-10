@@ -8,7 +8,7 @@ import model.melody.MelodyMovement;
  * @author Pavel Yurkin
  * @date 28.06.2014.
  */
-public class IntervalsMelodyMovementEqualityTest extends AbstractMelodyMovementEqualityTest {
+public class IntervalsMelodyMovementEquality extends AbstractMelodyMovementEquality {
 
 	// Maximum allowable number of intervals that can be different
 	private int maxNumberOfShiftedIntervals;

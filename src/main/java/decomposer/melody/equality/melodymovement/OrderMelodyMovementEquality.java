@@ -6,7 +6,7 @@ import model.melody.MelodyMovement;
  * @author Pavel Yurkin
  * @date 28.06.2014.
  */
-public class OrderMelodyMovementEqualityTest extends AbstractMelodyMovementEqualityTest {
+public class OrderMelodyMovementEquality extends AbstractMelodyMovementEquality {
 
     // Maximum allowable numbers of intervals which notes has been swapped
     private int maxNumberOfIntervalsHavingSwappedNotes;

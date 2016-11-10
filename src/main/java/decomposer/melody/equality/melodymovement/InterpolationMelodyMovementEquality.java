@@ -8,7 +8,7 @@ import static java.lang.Math.abs;
  * @author Pavel Yurkin
  * @date 28.06.2014.
  */
-public class InterpolationMelodyMovementEqualityTest extends AbstractMelodyMovementEqualityTest {
+public class InterpolationMelodyMovementEquality extends AbstractMelodyMovementEquality {
 
     // Maximum allowable number of intervals that can be different
     private int maxNumberOfAddedIntervals;

@@ -1,6 +1,6 @@
 package decomposer.melody.equality;
 
-import decomposer.melody.equality.melodymovement.FragmentationMelodyMovementEqualityTest;
+import decomposer.melody.equality.melodymovement.FragmentationMelodyMovementEquality;
 import jm.music.data.Note;
 import model.melody.Melody;
 import org.junit.Test;
@@ -10,9 +10,9 @@ import static jm.constants.Pitches.*;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-public class TestFragmentationMelodyMovementEqualityTest {
-	FragmentationMelodyMovementEqualityTest fragmentationMelodyMovementEqualityTest = new FragmentationMelodyMovementEqualityTest();
-	EqualityTest equalityTest = new DifferentNumberOfNotesRequired( fragmentationMelodyMovementEqualityTest );
+public class TestFragmentationMelodyMovementEquality {
+	FragmentationMelodyMovementEquality fragmentationMelodyMovementEquality = new FragmentationMelodyMovementEquality();
+	Equality equality = new DifferentNumberOfNotesRequired( fragmentationMelodyMovementEquality );
 
 	@Test
 	public void testCase1() {
@@ -31,11 +31,11 @@ public class TestFragmentationMelodyMovementEqualityTest {
 			new Note( B3, EIGHTH_NOTE ) }
 		);
 
-		fragmentationMelodyMovementEqualityTest.setMaxNumberOfDeletedIntervals( 1 );
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		fragmentationMelodyMovementEquality.setMaxNumberOfDeletedIntervals( 1 );
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 
-		fragmentationMelodyMovementEqualityTest.setMaxNumberOfDeletedIntervals( 0 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		fragmentationMelodyMovementEquality.setMaxNumberOfDeletedIntervals( 0 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
@@ -56,11 +56,11 @@ public class TestFragmentationMelodyMovementEqualityTest {
 		  }
 		);
 
-		fragmentationMelodyMovementEqualityTest.setMaxNumberOfDeletedIntervals( 1 );
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		fragmentationMelodyMovementEquality.setMaxNumberOfDeletedIntervals( 1 );
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 
-		fragmentationMelodyMovementEqualityTest.setMaxNumberOfDeletedIntervals( 0 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		fragmentationMelodyMovementEquality.setMaxNumberOfDeletedIntervals( 0 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
@@ -82,11 +82,11 @@ public class TestFragmentationMelodyMovementEqualityTest {
 			new Note( D4, EIGHTH_NOTE ) }
 		);
 
-		fragmentationMelodyMovementEqualityTest.setMaxNumberOfDeletedIntervals( 10 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		fragmentationMelodyMovementEquality.setMaxNumberOfDeletedIntervals( 10 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		fragmentationMelodyMovementEqualityTest.setMaxNumberOfDeletedIntervals( 20 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		fragmentationMelodyMovementEquality.setMaxNumberOfDeletedIntervals( 20 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 	}
 
 }

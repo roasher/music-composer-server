@@ -1,6 +1,6 @@
 package decomposer.melody.equality;
 
-import decomposer.melody.equality.melodymovement.InterpolationMelodyMovementEqualityTest;
+import decomposer.melody.equality.melodymovement.InterpolationMelodyMovementEquality;
 import jm.music.data.Note;
 import model.melody.Melody;
 import org.junit.Ignore;
@@ -13,10 +13,10 @@ import static jm.constants.Pitches.*;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-public class TestInterpolationMelodyMovementEqualityTest {
+public class TestInterpolationMelodyMovementEquality {
 
-	InterpolationMelodyMovementEqualityTest interpolationMelodyMovementEqualityTest = new InterpolationMelodyMovementEqualityTest();
-	EqualityTest equalityTest = new DifferentNumberOfNotesRequired( interpolationMelodyMovementEqualityTest );
+	InterpolationMelodyMovementEquality interpolationMelodyMovementEquality = new InterpolationMelodyMovementEquality();
+	Equality equality = new DifferentNumberOfNotesRequired( interpolationMelodyMovementEquality );
 
 	@Test
 	public void testCase1() {
@@ -37,11 +37,11 @@ public class TestInterpolationMelodyMovementEqualityTest {
 			new Note( A4, SIXTEENTH_NOTE_TRIPLET ) }
 		);
 
-		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 2 );
-		assertTrue( equalityTest.test( testMelody1, testMelody2 ) );
+		interpolationMelodyMovementEquality.setMaxNumberOfAddedIntervals( 2 );
+		assertTrue( equality.test( testMelody1, testMelody2 ) );
 
-		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 1 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		interpolationMelodyMovementEquality.setMaxNumberOfAddedIntervals( 1 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
@@ -64,11 +64,11 @@ public class TestInterpolationMelodyMovementEqualityTest {
 			new Note( BF4, SIXTEENTH_NOTE_TRIPLET ) }
 		);
 
-		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 20 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		interpolationMelodyMovementEquality.setMaxNumberOfAddedIntervals( 20 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 20 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		interpolationMelodyMovementEquality.setMaxNumberOfAddedIntervals( 20 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 	}
 
 	@Test
@@ -88,11 +88,11 @@ public class TestInterpolationMelodyMovementEqualityTest {
 			new Note( G4, EIGHTH_NOTE ) }
 		);
 
-		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 20 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		interpolationMelodyMovementEquality.setMaxNumberOfAddedIntervals( 20 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 20 );
-		assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		interpolationMelodyMovementEquality.setMaxNumberOfAddedIntervals( 20 );
+		assertFalse( equality.test( testMelody1, testMelody2 ) );
 	}
 
 	@Ignore
@@ -131,8 +131,8 @@ public class TestInterpolationMelodyMovementEqualityTest {
 //		View.notate( testMelody2 );
 //		suspend();
 
-		interpolationMelodyMovementEqualityTest.setMaxNumberOfAddedIntervals( 2 );
-        assertFalse( equalityTest.test( testMelody1, testMelody2 ) );
+		interpolationMelodyMovementEquality.setMaxNumberOfAddedIntervals( 2 );
+        assertFalse( equality.test( testMelody1, testMelody2 ) );
 
     }
 }

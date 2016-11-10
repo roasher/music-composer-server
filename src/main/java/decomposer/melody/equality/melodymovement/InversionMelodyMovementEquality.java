@@ -7,7 +7,7 @@ import model.melody.MelodyMovement;
  * @author Pavel Yurkin
  * @date 27.06.2014.
  */
-public class InversionMelodyMovementEqualityTest extends AbstractMelodyMovementEqualityTest {
+public class InversionMelodyMovementEquality extends AbstractMelodyMovementEquality {
     // Maximum allowable number of inverted intervals
     private int maxNumberOfInvertedIntervals;
 
