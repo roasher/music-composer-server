@@ -1,6 +1,16 @@
 package composer;
 
-import static utils.ModelUtils.getTransposePitch;
+import composer.step.CompositionStep;
+import composer.step.FormCompositionStep;
+import decomposer.form.FormEquality;
+import model.ComposeBlock;
+import model.Lexicon;
+import model.melody.Form;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,18 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import composer.step.CompositionStep;
-import composer.step.FormCompositionStep;
-import decomposer.form.analyzer.FormEqualityAnalyser;
-import model.ComposeBlock;
-import model.Lexicon;
-import model.melody.Form;
-import utils.CollectionUtils;
+import static utils.ModelUtils.getTransposePitch;
 
 /**
  * Class provides form element
@@ -31,7 +30,7 @@ public class FormBlockProvider {
 	private Logger logger = LoggerFactory.getLogger( getClass() );
 
 	@Autowired
-	private FormEqualityAnalyser formEqualityAnalyser;
+	private FormEquality formEquality;
 
 	/**
 	 * Generates new form block considering previously generated blocks and it's form.
@@ -144,14 +143,14 @@ public class FormBlockProvider {
 		// checking that new composeBlock is different to differentFormSteps
 		for ( FormCompositionStep differentStep : differentFormSteps ) {
 			ComposeBlock previousComposeBlock = new ComposeBlock( differentStep.getTrasposedComposeBlocks() );
-			if ( formEqualityAnalyser.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() ) ) {
+			if ( formEquality.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() ) ) {
 				return false;
 			}
 		}
 		// checking that new composeBlock is similar to similarFormSteps
 		for ( FormCompositionStep similarStep : similarFormSteps ) {
 			ComposeBlock previousComposeBlock = new ComposeBlock( similarStep.getTrasposedComposeBlocks() );
-			if ( !formEqualityAnalyser.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() ) ) {
+			if ( !formEquality.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() ) ) {
 				return false;
 			}
 		}

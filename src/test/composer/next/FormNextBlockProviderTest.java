@@ -2,7 +2,7 @@ package composer.next;
 
 import composer.step.CompositionStep;
 import composer.step.FormCompositionStep;
-import decomposer.form.analyzer.FormEqualityAnalyser;
+import decomposer.form.FormEquality;
 import helper.AbstractSpringTest;
 import jm.music.data.Note;
 import jm.music.data.Rest;
@@ -30,7 +30,7 @@ public class FormNextBlockProviderTest extends AbstractSpringTest {
 	private FormNextBlockProvider formNextBlockProvider;
 
 	@Mock
-	private FormEqualityAnalyser formEqualityAnalyser;
+	private FormEquality formEquality;
 
 	@Before
 	public void init() {
@@ -77,13 +77,13 @@ public class FormNextBlockProviderTest extends AbstractSpringTest {
         ) );
 
 		List<Melody> melodyList20 = sumMelodies( allreadyComposedBlock.getMelodyList(), composeBlock20.getMelodyList() );
-		when( formEqualityAnalyser.getAverageEqualityMetric( any( List.class ), eq( melodyList20 ) ) ).thenReturn( 0.41 );
+		when( formEquality.getAverageEqualityMetric( any( List.class ), eq( melodyList20 ) ) ).thenReturn( 0.41 );
 		List<Melody> melodyList21 = sumMelodies( allreadyComposedBlock.getMelodyList(), composeBlock21.getMelodyList() );
-		when( formEqualityAnalyser.getAverageEqualityMetric( any( List.class ), eq( melodyList21 ) ) ).thenReturn( 0.51 );
+		when( formEquality.getAverageEqualityMetric( any( List.class ), eq( melodyList21 ) ) ).thenReturn( 0.51 );
 		List<Melody> melodyList22 = sumMelodies( allreadyComposedBlock.getMelodyList(), composeBlock22.getMelodyList() );
-		when( formEqualityAnalyser.getAverageEqualityMetric( any( List.class ), eq(melodyList22) ) ).thenReturn( 0.4 );
+		when( formEquality.getAverageEqualityMetric( any( List.class ), eq(melodyList22) ) ).thenReturn( 0.4 );
 
-		// Actually we don't care about similarFromSteps as long we mocked formEqualityAnalyser
+		// Actually we don't care about similarFromSteps as long we mocked formEquality
 		List<ComposeBlock> originComposeBlocks = Arrays.asList( new ComposeBlock( 0, null, Arrays.asList( new Melody( new Rest( WHOLE_NOTE ) ) ), null ) );
 		List<FormCompositionStep> similarFormSteps = Arrays.asList(
 			new FormCompositionStep( originComposeBlocks, originComposeBlocks, null	)

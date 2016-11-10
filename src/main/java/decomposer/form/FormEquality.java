@@ -1,5 +1,6 @@
-package decomposer.form.analyzer;
+package decomposer.form;
 
+import decomposer.form.analyzer.MelodyFormEqualityAnalyzer;
 import model.melody.Melody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by pyurkin on 12.11.14.
+ * Class that decides if two Lists fo melodies are form equal
  */
-public class FormEqualityAnalyser {
+public class FormEquality {
 
 	private double instrumentEqualityPassThreshold;
 	@Autowired
@@ -40,27 +41,6 @@ public class FormEqualityAnalyser {
 			logger.info( "Successfull tests persentage {} lower than the threshold {}. Music Blocks considered non equal", successTestPersentage, instrumentEqualityPassThreshold );
 			return false;
 		}
-	}
-
-	/**
-	 * Returns numberOfEqualInstrumentParts devided by parts number
-	 * @param firstMusicBlockInstrumentParts
-	 * @param secondMusicBlockInstrumentParts
-	 * @return
-	 */
-	@Deprecated
-	private double getEqualityMetric( List<Melody> firstMusicBlockInstrumentParts, List<Melody> secondMusicBlockInstrumentParts ) {
-		if ( firstMusicBlockInstrumentParts.size() != secondMusicBlockInstrumentParts.size() ) {
-			throw new RuntimeException( "Input collections of melodies has different sizes" );
-		}
-		int numberOfEqualInstrumentParts = 0;
-		for ( int instrumentPartNumber = 0; instrumentPartNumber < firstMusicBlockInstrumentParts.size(); instrumentPartNumber ++ ) {
-			if ( formEqualityAnalyzer.isEqual( firstMusicBlockInstrumentParts.get( instrumentPartNumber ), secondMusicBlockInstrumentParts.get( instrumentPartNumber ) ) ) {
-				numberOfEqualInstrumentParts++;
-			}
-		}
-
-		return numberOfEqualInstrumentParts * 1. / firstMusicBlockInstrumentParts.size();
 	}
 
 	/**

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import composer.next.filter.ComposeBlockFilter;
 import composer.step.CompositionStep;
 import composer.step.FormCompositionStep;
-import decomposer.form.analyzer.FormEqualityAnalyser;
+import decomposer.form.FormEquality;
 import model.ComposeBlock;
 import model.melody.Melody;
 import utils.ModelUtils;
@@ -27,7 +27,7 @@ import utils.ModelUtils;
 public class FormNextBlockProvider implements NextBlockProvider {
 
 	@Autowired
-	private FormEqualityAnalyser formEqualityAnalyser;
+	private FormEquality formEquality;
 
 	private ComposeBlockFilter composeBlockFilter;
 
@@ -93,7 +93,8 @@ public class FormNextBlockProvider implements NextBlockProvider {
 		List<List<Melody>> trimmedCollectionOfMelodies = stepsToCompareWith.stream().map( formCompositionStep -> ModelUtils
 				.trimToTime( ( new ComposeBlock( formCompositionStep.getTrasposedComposeBlocks() ) ).getMelodyList(), 0, composeBlock.getRhythmValue() ) )
 				.collect( Collectors.toList() );
-		OptionalDouble average = trimmedCollectionOfMelodies.stream().mapToDouble( value -> formEqualityAnalyser.getAverageEqualityMetric( value, composeBlock.getMelodyList() ) )
+		OptionalDouble average = trimmedCollectionOfMelodies.stream().mapToDouble( value -> formEquality
+				.getAverageEqualityMetric( value, composeBlock.getMelodyList() ) )
 				.average();
 		return average.orElse( 0 );
 	}

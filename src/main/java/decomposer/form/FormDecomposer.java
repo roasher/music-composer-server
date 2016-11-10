@@ -22,7 +22,7 @@ public class FormDecomposer {
 	@Autowired
 	private CompositionSlicer compositionSlicer;
 //	@Autowired
-//	private FormEqualityAnalyser formAnalyzer;
+//	private FormEquality formAnalyzer;
 	@Autowired
 	private MelodyFormEqualityAnalyzer formEqualityAnalyzer;
 

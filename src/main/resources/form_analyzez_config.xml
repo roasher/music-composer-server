@@ -27,7 +27,7 @@
         <property name="equalityTestPassThreshold" value="0.6"/>
     </bean>
     
-    <bean id="formAnalyzer" class="decomposer.form.analyzer.FormEqualityAnalyser">
+    <bean id="formAnalyzer" class="decomposer.form.FormEquality">
         <property name="instrumentEqualityPassThreshold" value="1.0"/>
     </bean>
 
