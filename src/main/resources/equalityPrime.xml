@@ -20,7 +20,7 @@
         <property name="maxNumberOfIntervalsHavingSwappedNotes" value="2"/>
     </bean>
 
-    <bean id="rhythmEquality" class="decomposer.melody.equality.RhytmEquality">
+    <bean id="rhythmEquality" class="decomposer.melody.equality.RhythmEquality">
         <property name="maxNumberOfRhythmicallyDifferentNotes" value="1"/>
         <!--<property name="maxRhythmDeviationSteps" listValue="0.01"/>-->
         <property name="maxRhythmDeviationSteps" value="0.75"/>

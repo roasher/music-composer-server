@@ -11,8 +11,8 @@ import static junit.framework.Assert.assertTrue;
 
 public class RhythmEqualityTest {
 
-	RhytmEquality rhytmEquality = new RhytmEquality();
-	Equality equality = new EqualNumberOfNotesRequired( rhytmEquality );
+	RhythmEquality rhythmEquality = new RhythmEquality();
+	Equality equality = new EqualNumberOfNotesRequired( rhythmEquality );
 
 	@Test
 	public void testCase1() {
@@ -33,8 +33,8 @@ public class RhythmEqualityTest {
 			new Note( F4, EIGHTH_NOTE )
 		);
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 0 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 0 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0 );
 		assertTrue( equality.test( testMelody1, testMelody2 ) );
 	}
 
@@ -57,20 +57,20 @@ public class RhythmEqualityTest {
 			new Note( E4, DOTTED_EIGHTH_NOTE )
 		);
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0 );
 		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.5 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.5 );
 		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.5 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.5 );
 		assertTrue( equality.test( testMelody1, testMelody2 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.5 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.5 );
 		assertTrue( equality.test( testMelody2, testMelody1 ) );
 	}
 
@@ -93,20 +93,20 @@ public class RhythmEqualityTest {
 			new Note( E4, DOTTED_EIGHTH_NOTE )
 		);
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0 );
 		assertFalse( equality.test( testMelody2, testMelody1 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.5 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.5 );
 		assertFalse( equality.test( testMelody2, testMelody1 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.5 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.5 );
 		assertTrue( equality.test( testMelody2, testMelody1 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.5 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.5 );
 		assertTrue( equality.test( testMelody1, testMelody2 ) );
 	}
 
@@ -129,32 +129,32 @@ public class RhythmEqualityTest {
 			new Note( E4, SIXTEENTH_NOTE )
 		);
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0 );
 		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 1 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 1 );
 		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.5 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.5 );
 		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.75 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.75 );
 		assertTrue( equality.test( testMelody1, testMelody2 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.75 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.75 );
 		assertTrue( equality.test( testMelody2, testMelody1 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.74 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.74 );
 		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.74 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.74 );
 		assertFalse( equality.test( testMelody2, testMelody1 ) );
 	}
 
@@ -177,45 +177,45 @@ public class RhythmEqualityTest {
 			new Note( F4, EIGHTH_NOTE )
 		);
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0 );
 		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 1 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 1 );
 		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 1 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 1 );
 		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 3 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.5 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 3 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.5 );
 		assertTrue( equality.test( testMelody1, testMelody2 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 3 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.49 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 3 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.49 );
 		assertFalse( equality.test( testMelody1, testMelody2 ) );
 
 		// inverse
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0 );
 		assertFalse( equality.test( testMelody2, testMelody1 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 1 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 1 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 1 );
 		assertFalse( equality.test( testMelody2, testMelody1 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 1 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 1 );
 		assertFalse( equality.test( testMelody2, testMelody1 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 3 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.5 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 3 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.5 );
 		assertTrue( equality.test( testMelody2, testMelody1 ) );
 
-		rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 3 );
-		rhytmEquality.setMaxRhythmDeviationSteps( 0.49 );
+		rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 3 );
+		rhythmEquality.setMaxRhythmDeviationSteps( 0.49 );
 		assertFalse( equality.test( testMelody2, testMelody1 ) );
 	}
 
@@ -238,8 +238,8 @@ public class RhythmEqualityTest {
                 new Note( F4, 1 )
         );
 
-        rhytmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
-        rhytmEquality.setMaxRhythmDeviationSteps( 0.5 );
+        rhythmEquality.setMaxNumberOfRhythmicallyDifferentNotes( 2 );
+        rhythmEquality.setMaxRhythmDeviationSteps( 0.5 );
         assertTrue( equality.test( testMelody1, testMelody2 ) );
 
     }
