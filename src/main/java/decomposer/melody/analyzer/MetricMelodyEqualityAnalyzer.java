@@ -99,7 +99,7 @@ public class MetricMelodyEqualityAnalyzer {
 			// we should cut rhythm value if it's to big and getting out of the bar line
 			double transformed = valueLeftToFillTheBar > currentRhythmValue ? currentRhythmValue : valueLeftToFillTheBar;
 			// if rhythm value is not fit into previous rhythm values - we are counting metric as it was previous
-			if ( rhythmValuesSoFar % transformed != 0 ) {
+			if ( Double.compare( rhythmValuesSoFar % transformed, 0 ) != 0 ) {
 				transformed = previousRhythmValueFromBar;
 			}
 			int numberOfRhythmValuesThatFit = (int) ( rhythmValuesSoFar / transformed );

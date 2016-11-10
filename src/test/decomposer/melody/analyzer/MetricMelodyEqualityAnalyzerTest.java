@@ -139,8 +139,8 @@ public class MetricMelodyEqualityAnalyzerTest extends AbstractSpringComposerTest
 				new Note( 60, EIGHTH_NOTE ), new Note( 59, DOTTED_QUARTER_NOTE ),
 				new Note( 65, HALF_NOTE ) ) );
 		assertTrue(
-				metricMelodyEqualityAnalyzer.getEqualityMetric( etalon, melody1 ) >
-						metricMelodyEqualityAnalyzer.getEqualityMetric( etalon, melody12 )
+				metricMelodyEqualityAnalyzer.getEqualityMetric( etalon, melody12 ) >
+						metricMelodyEqualityAnalyzer.getEqualityMetric( etalon, melody1 )
 		);
 
 		//Change first note (strong time)
@@ -148,8 +148,8 @@ public class MetricMelodyEqualityAnalyzerTest extends AbstractSpringComposerTest
 				new Note( 58, EIGHTH_NOTE ), new Note( 60, DOTTED_QUARTER_NOTE ),
 				new Note( 65, HALF_NOTE ) ) );
 		assertTrue(
-				metricMelodyEqualityAnalyzer.getEqualityMetric( etalon, melody1 ) >
-						metricMelodyEqualityAnalyzer.getEqualityMetric( etalon, melody13 )
+				metricMelodyEqualityAnalyzer.getEqualityMetric( etalon, melody13 ) >
+						metricMelodyEqualityAnalyzer.getEqualityMetric( etalon, melody1 )
 		);
 
 		//2 notes change
