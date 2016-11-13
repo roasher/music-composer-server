@@ -1,5 +1,10 @@
 package ru.pavelyurkin.musiccomposer.utils;
 
+import jm.constants.Pitches;
+import jm.music.data.Note;
+import ru.pavelyurkin.musiccomposer.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.model.melody.Melody;
+
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -7,11 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import jm.constants.Pitches;
-import jm.music.data.Note;
-import ru.pavelyurkin.musiccomposer.model.ComposeBlock;
-import ru.pavelyurkin.musiccomposer.model.melody.Melody;
 
 /**
  * Class aggregates useful utilities upon Model objects
@@ -180,11 +180,23 @@ public class ModelUtils {
 			Note currentNote = melody.getNote( noteNumber );
 			BigDecimal rhythmValue = BigDecimal.valueOf( currentNote.getRhythmValue() );
 			BigDecimal noteEndTime = noteStartTime.add( rhythmValue );
+			//   noteStTime             noteEndTime					noteEndTime may be after endTime
+			// ------<>--------|------------<>------------------|----------<>-------
+			//	 			startTime		  				endTime
 			if ( noteStartTime.doubleValue() <= startTime && noteEndTime.doubleValue() > startTime ) {
-				out.add( new Note( currentNote.getPitch(), noteEndTime.subtract( BigDecimal.valueOf( startTime ) ).doubleValue() ) );
-			} else if ( noteStartTime.doubleValue() >= startTime && noteEndTime.doubleValue() <= endTime ) {
+				BigDecimal min = BigDecimal.valueOf( Math.min( endTime, noteEndTime.doubleValue() ) );
+				out.add( new Note( currentNote.getPitch(), min.subtract( BigDecimal.valueOf( startTime ) ).doubleValue() ) );
+			} else
+				//             noteStTime     noteEndTime
+				// ------|--------<>------------<>------------------|-------------------
+				//	 startTime		  				              endTime
+				if ( noteStartTime.doubleValue() >= startTime && noteEndTime.doubleValue() <= endTime ) {
 				out.add( currentNote );
-			} else if ( noteStartTime.doubleValue() < endTime && noteEndTime.doubleValue() > endTime ) {
+			} else
+				//             noteStTime     								noteEndTime
+				// ------|--------<>---------------------------------|-----------<>-------
+				//	 startTime		  				              endTime
+				if ( noteStartTime.doubleValue() < endTime && noteEndTime.doubleValue() > endTime ) {
 				out.add( new Note( currentNote.getPitch(), BigDecimal.valueOf( endTime ).subtract( noteStartTime ).doubleValue() ) );
 				return out;
 			}
