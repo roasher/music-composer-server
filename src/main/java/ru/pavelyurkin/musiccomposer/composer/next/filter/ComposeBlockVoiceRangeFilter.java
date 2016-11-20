@@ -54,9 +54,9 @@ public class ComposeBlockVoiceRangeFilter extends AbstractComposeBlockFilter {
 			if ( possibleNext.getMelodyList().size() > melodyRange.size() ) throw new RuntimeException( "Number of melodies is "
 				+ "greater than number of ranges" );
 			int trasposePitch = ModelUtils.getTransposePitch( Optional.of( lastTrasposedComposeBlock ), possibleNext );
-			ComposeBlock trasposedBlock = possibleNext.transposeClone( trasposePitch );
-			for ( int melodyNumber = 0; melodyNumber < trasposedBlock.getMelodyList().size(); melodyNumber++ ) {
-				Melody melody = trasposedBlock.getMelodyList().get( melodyNumber );
+			ComposeBlock transposedBlock = possibleNext.transposeClone( trasposePitch );
+			for ( int melodyNumber = 0; melodyNumber < transposedBlock.getMelodyList().size(); melodyNumber++ ) {
+				Melody melody = transposedBlock.getMelodyList().get( melodyNumber );
 				List<Integer> pitches = melody.getNoteList().stream().mapToInt( value -> ( ( Note ) value ).getPitch() ).filter( value -> value != Note.REST )
 						.boxed().collect( Collectors.toList() );
 				if ( pitches.size() != 0 && ( Collections.max( pitches ) > melodyRange.get( melodyNumber ).highPitch || Collections.min( pitches ) < melodyRange.get( melodyNumber ).lowPitch ) ) {

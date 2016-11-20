@@ -134,11 +134,11 @@ public class MusicBlock implements Serializable {
 		StringBuilder stringBuilder = new StringBuilder(  );
 		for ( int melodyNumber = 0; melodyNumber < this.getMelodyList().size(); melodyNumber++ ) {
 			Melody melody = this.getMelodyList().get( melodyNumber );
-			stringBuilder.append('|');
 			if ( this.getBlockMovementFromPreviousToThis() != null ) {
 				stringBuilder.append( "[" ).append( this.getBlockMovementFromPreviousToThis().getVoiceMovements().get( melodyNumber ).toString() ).append( "]" );
 			}
 			stringBuilder.append( melody.toString() );
+			stringBuilder.append(" & ");
 		}
 		return stringBuilder.toString();
 	}

@@ -155,6 +155,11 @@ public class ModelUtils {
 	 */
 	public static int getTransposePitch( Optional<ComposeBlock> firstComposeBlock, ComposeBlock secondComposeBlock ) {
 		if ( !firstComposeBlock.isPresent() ) return 0;
+		// check if all pauses
+		if ( secondComposeBlock.getMelodyList()
+				.stream()
+				.flatMap( melody -> melody.getNoteList().stream() )
+				.filter( note ->  !( ( Note ) note ).isRest() ).count() == 0 ) return 0;
 		for ( int melodyNumber = 0; melodyNumber < firstComposeBlock.get().getMelodyList().size(); melodyNumber++ ) {
 			Note lastNoteOfFirst = firstComposeBlock.get().getMelodyList().get( melodyNumber )
 					.getNote( firstComposeBlock.get().getMelodyList().get( melodyNumber ).size() - 1 );
