@@ -54,6 +54,10 @@ public class BlockMovement implements Serializable {
 		return voiceMovements;
 	}
 
+	public int getVoiceMovement( int melodyNumber ) {
+		return voiceMovements.get( melodyNumber );
+	}
+
 	@Override
 	public boolean equals( Object o ) {
 		if ( this == o )

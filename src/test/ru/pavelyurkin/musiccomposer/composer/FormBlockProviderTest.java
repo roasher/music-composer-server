@@ -22,7 +22,10 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static jm.JMC.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static ru.pavelyurkin.musiccomposer.utils.ModelUtils.getTransposePitch;
+import static ru.pavelyurkin.musiccomposer.utils.ModelUtils.sumAllRhythmValues;
 
 /**
  * Created by pyurkin on 17.02.15.
@@ -43,14 +46,31 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resource/simpleMelodies" ) );
 		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
 
-		Optional<FormCompositionStep> formCompositionStep = formBlockProvider
-				.getFormElement( composeBlockProvider, new Form( 'A' ), JMC.WHOLE_NOTE, Arrays.asList( new FormCompositionStep() ), lexiconFromFirst );
+		double lenght = JMC.WHOLE_NOTE;
+		Optional<FormCompositionStep> optFormCompositionStep = formBlockProvider
+				.getFormElement( composeBlockProvider, new Form( 'A' ), lenght, Arrays.asList( new FormCompositionStep() ), lexiconFromFirst );
 
-		List<ComposeBlock> composeBlockList = new ArrayList<>();
-		composeBlockList.add( lexiconFromFirst.get( 0 ) );
-		composeBlockList.add( lexiconFromFirst.get( 1 ) );
+		assertTrue( optFormCompositionStep.isPresent() );
+		optFormCompositionStep.ifPresent( formCompositionStep -> {
+			// checking lenght
+			assertEquals( lenght, sumAllRhythmValues( formCompositionStep.getTransposedComposeBlocks() ), 0 );
+			// checking quality of composing
+			for ( int composeBlockNumber = 1;
+				  composeBlockNumber < formCompositionStep.getOriginComposeBlocks().size(); composeBlockNumber++ ) {
+				ComposeBlock currentOrigin = formCompositionStep.getOriginComposeBlocks().get( composeBlockNumber );
+				ComposeBlock previousOrigin = formCompositionStep.getOriginComposeBlocks().get( composeBlockNumber - 1 );
+				assertTrue( previousOrigin.getPossibleNextComposeBlocks().contains( currentOrigin ) );
 
-		assertEquals( formCompositionStep.get().getOriginComposeBlocks(), composeBlockList );
+				ComposeBlock currentTransposed = formCompositionStep.getTransposedComposeBlocks().get( composeBlockNumber );
+				ComposeBlock previousTransposed = formCompositionStep.getTransposedComposeBlocks().get( composeBlockNumber - 1 );
+				BlockMovement blockMovement = new BlockMovement( previousTransposed.getMelodyList(), currentTransposed.getMelodyList() );
+				assertEquals( blockMovement.getVoiceMovements().size(), currentTransposed.getMelodyList().size() );
+				assertEquals( blockMovement.getVoiceMovements().size(), previousTransposed.getMelodyList().size() );
+				for ( int instrumentNumber = 0; instrumentNumber < blockMovement.getVoiceMovements().size(); instrumentNumber++ ) {
+					assertEquals( currentOrigin.getBlockMovementFromPreviousToThis().getVoiceMovement( instrumentNumber ), blockMovement.getVoiceMovement( instrumentNumber ) );
+				}
+			}
+		} );
 	}
 
 	@Test
