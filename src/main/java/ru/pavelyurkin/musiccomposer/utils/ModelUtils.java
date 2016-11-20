@@ -2,8 +2,12 @@ package ru.pavelyurkin.musiccomposer.utils;
 
 import jm.constants.Pitches;
 import jm.music.data.Note;
+import org.springframework.context.annotation.ComponentScan;
+import ru.pavelyurkin.musiccomposer.model.BlockMovement;
 import ru.pavelyurkin.musiccomposer.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.model.melody.MelodyMovement;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -119,11 +123,11 @@ public class ModelUtils {
 	 * @return
 	 */
 	public static double sumAllRhytmValues( Melody melody ) {
-		double rhytmSum = 0;
-		for ( Note currentNote : ( List<Note> ) melody.getNoteList() ) {
-			rhytmSum += currentNote.getRhythmValue();
-		}
-		return rhytmSum;
+		return sumAllRhytmValues( melody.getNoteList() );
+	}
+
+	public static double sumAllRhythmValues( List<ComposeBlock> musicBlocks ) {
+		return musicBlocks.stream().mapToDouble( ComposeBlock::getRhythmValue ).sum();
 	}
 
 	public static String getNoteNameByPitch( int pitch ) {
@@ -142,6 +146,9 @@ public class ModelUtils {
 
 	/**
 	 * Returns pitch on which second compose block should be transposed according to first
+     * To be able to calculate transpose pitch there should be at least one pair of non rest notes
+     * in lastNoteOfFirst and firstNoteOfSecond ComposeBlocks and also firstNoteOfSecond movementFromPreviousToThis
+     * shouldn't be movement from rest
 	 * @param firstComposeBlock
 	 * @param secondComposeBlock
 	 * @return
@@ -152,12 +159,13 @@ public class ModelUtils {
 			Note lastNoteOfFirst = firstComposeBlock.get().getMelodyList().get( melodyNumber )
 					.getNote( firstComposeBlock.get().getMelodyList().get( melodyNumber ).size() - 1 );
 			Note firstNoteOfSecond = secondComposeBlock.getMelodyList().get( melodyNumber ).getNote( 0 );
-			if ( lastNoteOfFirst.getPitch() != Note.REST && firstNoteOfSecond.getPitch() != Note.REST ) {
-				return lastNoteOfFirst.getPitch() + secondComposeBlock.getBlockMovementFromPreviousToThis().getVoiceMovements().get( melodyNumber )
-						- firstNoteOfSecond.getPitch();
+			int noteMovement = secondComposeBlock.getBlockMovementFromPreviousToThis().getVoiceMovements().get(melodyNumber);
+			if ( lastNoteOfFirst.getPitch() != Note.REST && firstNoteOfSecond.getPitch() != Note.REST &&
+                    noteMovement != BlockMovement.MOVEMENT_FROM_REST) {
+				return lastNoteOfFirst.getPitch() + noteMovement - firstNoteOfSecond.getPitch();
 			}
 		}
-		return 0;
+		throw new IllegalArgumentException("Can't calculate pitch to transpose");
 	}
 
 	public static List<Melody> trimToTime( List<Melody> melodies, double startTime, double endTime ) {
