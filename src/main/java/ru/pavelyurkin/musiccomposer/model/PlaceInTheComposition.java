@@ -2,6 +2,8 @@ package ru.pavelyurkin.musiccomposer.model;
 
 import ru.pavelyurkin.musiccomposer.model.composition.CompositionInfo;
 
+import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
+
 /**
  * Created by night wish on 27.07.14.
  */
@@ -23,8 +25,8 @@ public class PlaceInTheComposition {
 
         PlaceInTheComposition that = ( PlaceInTheComposition ) o;
 
-        if ( Double.compare( that.firstNoteStartTime, firstNoteStartTime ) != 0 ) return false;
-        if ( Double.compare( that.lastNoteEndTime, lastNoteEndTime ) != 0 ) return false;
+        if ( !isEquals( that.firstNoteStartTime, firstNoteStartTime ) ) return false;
+        if ( !isEquals( that.lastNoteEndTime, lastNoteEndTime ) ) return false;
         if ( compositionInfo != null ? !compositionInfo.equals( that.compositionInfo ) : that.compositionInfo != null )
             return false;
 

@@ -8,10 +8,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static jm.JMC.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static ru.pavelyurkin.musiccomposer.utils.Utils.compare;
+import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
 
 public class MelodyMetricEqualityAnalyzerTest extends AbstractSpringComposerTest {
 
@@ -67,7 +70,7 @@ public class MelodyMetricEqualityAnalyzerTest extends AbstractSpringComposerTest
 		Melody etalon = new Melody( Arrays.asList(
 				new Note( 60, HALF_NOTE ),
 				new Note( 65, HALF_NOTE ) ) );
-		assertEquals( Double.compare( melodyMetricEqualityAnalyzer.getEqualityMetric( etalon, etalon ), 1 ), 0 );
+		assertTrue( isEquals( melodyMetricEqualityAnalyzer.getEqualityMetric( etalon, etalon ), 1 ) );
 
 		// very little pitch change
 		Melody melody0 = new Melody( Arrays.asList( new Note( 60, HALF_NOTE ), new Note( 64, HALF_NOTE ) ) );
@@ -160,6 +163,26 @@ public class MelodyMetricEqualityAnalyzerTest extends AbstractSpringComposerTest
 				melodyMetricEqualityAnalyzer.getEqualityMetric( etalon, melody13 ) >
 						melodyMetricEqualityAnalyzer.getEqualityMetric( etalon, melody14 )
 		);
+	}
+
+	@Test
+	public void transformMelodyToNewRhythmValues() throws Exception {
+		List<Double> newRhythmValues = Arrays.asList(
+				0.25,
+				0.25,
+				0.5,
+				0.33333333333333326,
+				0.16666666666666674,
+				2.5
+		);
+		List<Note> notes = Arrays.asList(
+			new Note( 72, 0.25 ),
+				new Note( 71, 0.25 ),
+				new Note( 72, 0.8333333333333333 ),
+				new Rest( 2.6666666666666665 )
+		);
+		// asserting no exception
+		melodyMetricEqualityAnalyzer.transformMelodyToNewRhythmValues( notes, newRhythmValues );
 	}
 
 }

@@ -1,5 +1,7 @@
 package ru.pavelyurkin.musiccomposer.model.composition;
 
+import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
+
 /**
  * Class represents CompositionInfo
  * Created by Pavel Yurkin on 18.07.14.
@@ -28,7 +30,7 @@ public class CompositionInfo {
 
 		CompositionInfo that = ( CompositionInfo ) o;
 
-		if ( Double.compare( that.tempo, tempo ) != 0 ) {
+		if ( !isEquals( that.tempo, tempo ) ) {
 			return false;
 		}
 		if ( author != null ? !author.equals( that.author ) : that.author != null ) {

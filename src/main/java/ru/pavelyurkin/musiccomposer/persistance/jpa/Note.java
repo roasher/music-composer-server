@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.SequenceGenerator;
 
+import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
+
 /**
  * Created by pyurkin on 29.04.2015.
  */
@@ -39,11 +41,11 @@ public class Note extends AbstractPersistanceModel {
 
 		if ( dynamic != note.dynamic )
 			return false;
-		if ( Double.compare( note.pan, pan ) != 0 )
+		if ( !isEquals( note.pan, pan ) )
 			return false;
 		if ( pitch != note.pitch )
 			return false;
-		if ( Double.compare( note.rhythmValue, rhythmValue ) != 0 )
+		if ( !isEquals( note.rhythmValue, rhythmValue ) )
 			return false;
 
 		return true;

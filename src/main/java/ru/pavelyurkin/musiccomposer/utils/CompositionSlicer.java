@@ -16,6 +16,8 @@ import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
+
 /**
  * Slices composition into pieces
  * Created by night wish on 08.11.14.
@@ -70,7 +72,7 @@ public class CompositionSlicer {
 
 		State state = new State( timePeriod );
 		// Adding rests if phrase starts not from the beginning
-		if ( Double.compare( phrase.getStartTime(), 0 ) != 0. ) {
+		if ( !isEquals( phrase.getStartTime(), 0 ) ) {
 			state.add( new Note( JMC.REST, phrase.getStartTime() ) );
 		}
 

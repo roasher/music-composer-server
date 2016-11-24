@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static ru.pavelyurkin.musiccomposer.utils.ModelUtils.*;
+import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
 
 /**
  * Class represents music MusicBlock Music Block is the cut from the one's partition with some characteristics - the blocks with which new generated composition
@@ -92,7 +93,7 @@ public class MusicBlock implements Serializable {
 
 		MusicBlock that = ( MusicBlock ) o;
 
-		if ( Double.compare( that.rhythmValue, rhythmValue ) != 0 )
+		if ( !isEquals( that.rhythmValue, rhythmValue ) )
 			return false;
 		if ( !isTimeCorrelated( that.startTime, startTime ) )
 			return false;

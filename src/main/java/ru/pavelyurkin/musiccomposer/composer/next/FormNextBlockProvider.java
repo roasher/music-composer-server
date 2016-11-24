@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.pavelyurkin.musiccomposer.utils.ModelUtils.gatherBlocksWithTransposition;
+import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
 
 /**
  * Created by wish on 16.02.2016.
@@ -71,7 +72,7 @@ public class FormNextBlockProvider implements NextBlockProvider {
 			double secondEqualDifferents = getEqualityMetrics( secondBlockToCompare, differents );
 
 			double combinedMetric = ( firstEqualEtalons - firstEqualDifferents ) - ( secondEqualEtalons - secondEqualDifferents );
-			return Double.compare( combinedMetric, 0 ) != 0 ? ( combinedMetric > 0 ? 1 : -1 ) : 0;
+			return !isEquals( combinedMetric, 0 ) ? ( combinedMetric > 0 ? 1 : -1 ) : 0;
 		};
 	}
 

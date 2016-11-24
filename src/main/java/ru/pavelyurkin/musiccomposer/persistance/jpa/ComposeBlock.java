@@ -12,6 +12,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
+
 /**
  * Created by pyurkin on 29.04.2015.
  */
@@ -78,7 +80,7 @@ public class ComposeBlock extends AbstractPersistanceModel {
 
 		ComposeBlock that = ( ComposeBlock ) o;
 
-		if ( Double.compare( that.startTime, startTime ) != 0 )
+		if ( !isEquals( that.startTime, startTime ) )
 			return false;
 		if ( compositionInfo != null ? !compositionInfo.equals( that.compositionInfo ) : that.compositionInfo != null )
 			return false;
@@ -135,7 +137,7 @@ public class ComposeBlock extends AbstractPersistanceModel {
 	}
 
 	public boolean isSimilar( ComposeBlock composeBlock ) {
-		boolean isEqualStartTimes = Double.compare( this.startTime, composeBlock.startTime ) == 0;
+		boolean isEqualStartTimes = isEquals( this.startTime, composeBlock.startTime );
 
 		boolean isEqualCompositionInfos;
 		if ( this.compositionInfo != null ) {

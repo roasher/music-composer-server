@@ -14,13 +14,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static jm.constants.Durations.WHOLE_NOTE;
+import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
 
 @Component
 public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melody> {
 
 	@Override
 	public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
-		if ( Double.compare( firstMelody.getRythmValue(), secondMelody.getRythmValue() ) != 0 ) {
+		if ( !isEquals( firstMelody.getRythmValue(), secondMelody.getRythmValue() ) ) {
 			throw new IllegalArgumentException( "Input melodies have different rhythm values." );
 		}
 		List<Double> unionRhythmValues = getUnionRhythmValues( firstMelody.getNoteList(), secondMelody.getNoteList() );
@@ -101,7 +102,7 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melo
 			// we should cut rhythm value if it's to big and getting out of the bar line
 			double transformed = valueLeftToFillTheBar > currentRhythmValue ? currentRhythmValue : valueLeftToFillTheBar;
 			// if rhythm value is not fit into previous rhythm values - we are counting metric as it was previous
-			if ( Double.compare( rhythmValuesSoFar % transformed, 0 ) != 0 ) {
+			if ( !isEquals( rhythmValuesSoFar % transformed, 0 ) ) {
 				transformed = previousRhythmValueFromBar;
 			}
 			int numberOfRhythmValuesThatFit = (int) ( rhythmValuesSoFar / transformed );
@@ -119,7 +120,7 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melo
 	 * @param newRhythmValues rhythm values that output notes will have
 	 * @return
 	 */
-	private List<Note> transformMelodyToNewRhythmValues( List<Note> notes, List<Double> newRhythmValues ) {
+	List<Note> transformMelodyToNewRhythmValues( List<Note> notes, List<Double> newRhythmValues ) {
 		List<Note> out = new ArrayList<>();
 		int notesRhythmValueCounter = 0;
 		int newRhythmValuesCounter = 0;
@@ -129,7 +130,7 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melo
 			double rhythmValue = newRhythmValues.get( newRhythmValuesCounter );
 			sumRhythmValue += rhythmValue;
 			out.add( new Note( note.getPitch(), rhythmValue ) );
-			if ( Double.compare( note.getRhythmValue(), sumRhythmValue ) == 0 ) {
+			if ( isEquals(note.getRhythmValue(), sumRhythmValue) ) {
 				notesRhythmValueCounter++;
 				sumRhythmValue = 0;
 			}
@@ -147,7 +148,7 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melo
 	 * @param secondNotes
 	 * @return
 	 */
-	private List<Double> getUnionRhythmValues( List<Note> firstNotes, List<Note> secondNotes ) {
+	List<Double> getUnionRhythmValues( List<Note> firstNotes, List<Note> secondNotes ) {
 		Set<Double> firstEdges = new HashSet<>( Recombinator.getEdgeList( firstNotes ) );
 		List<Double> secondEdges = Recombinator.getEdgeList( secondNotes );
 		firstEdges.addAll( secondEdges );

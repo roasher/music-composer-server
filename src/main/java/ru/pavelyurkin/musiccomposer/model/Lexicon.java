@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
+
 /**
  * Class represents wrapper to Music Block collection
  * Incapsulates all methods of getting proper music block
@@ -84,7 +86,7 @@ public class Lexicon {
 
 		Lexicon lexicon = ( Lexicon ) o;
 
-		if ( Double.compare( lexicon.minRhythmValue, minRhythmValue ) != 0 ) {
+		if ( !isEquals( lexicon.minRhythmValue, minRhythmValue ) ) {
 			return false;
 		}
 		if ( !composeBlockList.equals( lexicon.composeBlockList ) ) {

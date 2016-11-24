@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.SequenceGenerator;
 
+import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
+
 /**
  * Created by pyurkin on 29.04.2015.
  */
@@ -26,7 +28,7 @@ public class CompositionInfo extends AbstractPersistanceModel {
 
 		CompositionInfo that = ( CompositionInfo ) o;
 
-		if ( Double.compare( that.tempo, tempo ) != 0 )
+		if ( !isEquals( that.tempo, tempo ) )
 			return false;
 		if ( author != null ? !author.equals( that.author ) : that.author != null )
 			return false;
