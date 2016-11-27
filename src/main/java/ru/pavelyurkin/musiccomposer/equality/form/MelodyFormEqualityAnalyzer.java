@@ -1,7 +1,7 @@
 package ru.pavelyurkin.musiccomposer.equality.form;
 
 import ru.pavelyurkin.musiccomposer.decomposer.melody.analyzer.MelodyEqualityAnalyzer;
-import ru.pavelyurkin.musiccomposer.equalityMetric.EqualityMetricAnalyzer;
+import ru.pavelyurkin.musiccomposer.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.model.melody.Melody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

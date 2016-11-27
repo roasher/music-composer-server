@@ -1,8 +1,9 @@
-package ru.pavelyurkin.musiccomposer.equalityMetric.melody;
+package ru.pavelyurkin.musiccomposer.equality.equalityMetric;
 
 import helper.AbstractSpringComposerTest;
 import jm.music.data.Note;
 import jm.music.data.Rest;
+import ru.pavelyurkin.musiccomposer.equality.equalityMetric.MelodyMetricEqualityAnalyzer;
 import ru.pavelyurkin.musiccomposer.model.melody.Melody;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import java.util.List;
 import static jm.JMC.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static ru.pavelyurkin.musiccomposer.utils.Utils.compare;
 import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
 
 public class MelodyMetricEqualityAnalyzerTest extends AbstractSpringComposerTest {

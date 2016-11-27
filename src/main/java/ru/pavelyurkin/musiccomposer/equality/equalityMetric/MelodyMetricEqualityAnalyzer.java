@@ -1,6 +1,5 @@
-package ru.pavelyurkin.musiccomposer.equalityMetric.melody;
+package ru.pavelyurkin.musiccomposer.equality.equalityMetric;
 
-import ru.pavelyurkin.musiccomposer.equalityMetric.EqualityMetricAnalyzer;
 import jm.music.data.Note;
 import ru.pavelyurkin.musiccomposer.model.melody.Melody;
 import org.springframework.stereotype.Component;

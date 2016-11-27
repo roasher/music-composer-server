@@ -2,7 +2,7 @@ package ru.pavelyurkin.musiccomposer.composer.next;
 
 import ru.pavelyurkin.musiccomposer.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.composer.step.FormCompositionStep;
-import ru.pavelyurkin.musiccomposer.equalityMetric.EqualityMetricAnalyzer;
+import ru.pavelyurkin.musiccomposer.equality.equalityMetric.EqualityMetricAnalyzer;
 import helper.AbstractSpringTest;
 import jm.music.data.Note;
 import jm.music.data.Rest;

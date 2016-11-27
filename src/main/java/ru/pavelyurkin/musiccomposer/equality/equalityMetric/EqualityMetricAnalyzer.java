@@ -1,4 +1,4 @@
-package ru.pavelyurkin.musiccomposer.equalityMetric;
+package ru.pavelyurkin.musiccomposer.equality.equalityMetric;
 
 public interface EqualityMetricAnalyzer<T> {
 

@@ -1,6 +1,5 @@
-package ru.pavelyurkin.musiccomposer.equalityMetric.form;
+package ru.pavelyurkin.musiccomposer.equality.equalityMetric;
 
-import ru.pavelyurkin.musiccomposer.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.model.melody.Melody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

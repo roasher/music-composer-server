@@ -3,7 +3,7 @@ package ru.pavelyurkin.musiccomposer.composer.next;
 import ru.pavelyurkin.musiccomposer.composer.next.filter.ComposeBlockFilter;
 import ru.pavelyurkin.musiccomposer.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.composer.step.FormCompositionStep;
-import ru.pavelyurkin.musiccomposer.equalityMetric.EqualityMetricAnalyzer;
+import ru.pavelyurkin.musiccomposer.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.model.melody.Melody;
 import org.springframework.beans.factory.annotation.Autowired;
