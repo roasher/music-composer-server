@@ -13,12 +13,23 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static jm.constants.Durations.QUARTER_NOTE;
 import static jm.constants.Durations.WHOLE_NOTE;
 import static ru.pavelyurkin.musiccomposer.utils.Utils.isEquals;
 
 @Component
 public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melody> {
 
+	/**
+	 * Main idea of getting this metrics - is how many operations should be performed to change second melody
+	 * to be like first.
+	 * Firstly we count how many cutting and joining should be performed to make second melody rhythmic identical to first
+	 * Next, after we have same melodies rhythmically we are counting pith transpositions.
+	 *
+	 * @param firstMelody
+	 * @param secondMelody
+	 * @return
+	 */
 	@Override
 	public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
 		if ( !isEquals( firstMelody.getRythmValue(), secondMelody.getRythmValue() ) ) {
@@ -28,11 +39,17 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melo
 		List<Note> transformedFirst = transformMelodyToNewRhythmValues( firstMelody.getNoteList(), unionRhythmValues );
 		List<Note> transformedSecond = transformMelodyToNewRhythmValues( secondMelody.getNoteList(), unionRhythmValues );
 		Assert.isTrue( transformedFirst.size() == transformedSecond.size() );
-		/*
-		Calculating rhythm difference metric
-		For now simply number of rhythm changes
+		/**
+		 * Calculating rhythm difference metric
+		 * To transform secondMelody into first in rhythmical way two operations should be preformed - cutting some notes
+		 * and joining some.
+		 * numberOfCuttedNotes is the number of notes that should be cutted in firstMelody to get it unionRhythm-like
+		 * this is exact number of cuttings that should be performed on secondMelody to get it firstMelody rhythmic like
+		 * Secondally we are getting number of needed joins.
 		 */
-		double rhythmDiffMetric = unionRhythmValues.size() - secondMelody.size();
+		int numberOfCuttedNotes = unionRhythmValues.size() - firstMelody.size();
+		int numberOfJoinedNotes = unionRhythmValues.size() - secondMelody.size();
+		double rhythmDiffMetric = 0.5*numberOfCuttedNotes + 0.5*numberOfJoinedNotes;
 		/*
 		Calculating stong/weak time ( changed notes of strong time are more different than others )
 		 */
@@ -57,15 +74,23 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melo
 			double pitchDiffMetric = 0;
 			for ( int currentNote = 0; currentNote < transformedFirst.size(); currentNote++ ) {
 				// All logic of calculating pitch diff metric goes here
-				int transposedSecondMelodyNotePitch =
-						transformedSecond.get( currentNote ).getPitch() + pitchToTransposeSecond;
+				int transposedSecondMelodyNotePitch = !transformedSecond.get( currentNote ).isRest() ?
+						transformedSecond.get( currentNote ).getPitch() + pitchToTransposeSecond: Note.REST;
 				int firstMelodyNotePitch = transformedFirst.get( currentNote ).getPitch();
 				if ( firstMelodyNotePitch != transposedSecondMelodyNotePitch ) {
 					// Different note penalty
-					pitchDiffMetric += 1;
+					pitchDiffMetric += 0.8*unionRhythmValues.get( currentNote )/QUARTER_NOTE;
 					// Penalty for pitch difference
-					int diff = Math.abs( firstMelodyNotePitch - transposedSecondMelodyNotePitch );
-					pitchDiffMetric += ( 0.2 * diff ) / Note.MAX_PITCH;
+					if (firstMelodyNotePitch != Note.REST && transposedSecondMelodyNotePitch != Note.REST) {
+						int diff = Math.abs( firstMelodyNotePitch - transposedSecondMelodyNotePitch );
+						pitchDiffMetric += ( 10.0 * diff ) / Note.MAX_PITCH;
+					} else if (firstMelodyNotePitch == Note.REST && transposedSecondMelodyNotePitch != Note.REST) {
+						// penalty for inserting note while in the origin is rest
+						pitchDiffMetric += 0.4;
+					} else if (firstMelodyNotePitch != Note.REST && transposedSecondMelodyNotePitch == Note.REST) {
+						// penalty for eliminating origin note to rest
+						pitchDiffMetric += 0.1;
+					}
 					// Penalty for strong time
 					if ( isStrongTime.get( currentNote ) ) {
 						pitchDiffMetric += 0.2;

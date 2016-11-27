@@ -130,7 +130,7 @@ public class MelodyMetricEqualityAnalyzerTest extends AbstractSpringComposerTest
 				new Note( 65, HALF_NOTE ) ) );
 		//split first note into 4
 		Melody melody11 = new Melody( Arrays.asList(
-				new Note( 60, EIGHTH_NOTE ), new Note( 59, EIGHTH_NOTE ), new Note( 62, EIGHTH_NOTE ), new Note( 61, EIGHTH_NOTE ),
+				new Note( 60, EIGHTH_NOTE ), new Note( 59, EIGHTH_NOTE ), new Note( 62, EIGHTH_NOTE ), new Note( 63, EIGHTH_NOTE ),
 				new Note( 65, HALF_NOTE ) ) );
 		assertTrue(
 				melodyMetricEqualityAnalyzer.getEqualityMetric( etalon, melody10 ) >

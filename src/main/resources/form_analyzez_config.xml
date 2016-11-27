@@ -24,7 +24,7 @@
     </bean>
     
     <bean id="formEqualityAnalyzerImpl" class="ru.pavelyurkin.musiccomposer.equality.form.MelodyFormEqualityAnalyzer">
-        <property name="equalityTestPassThreshold" value="0.6"/>
+        <property name="equalityTestPassThreshold" value="0.45"/>
     </bean>
     
     <bean id="formAnalyzer" class="ru.pavelyurkin.musiccomposer.equality.form.FormEquality">

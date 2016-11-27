@@ -50,7 +50,7 @@ public class FormDecomposer {
 				// We are checking ru.pavelyurkin.musiccomposer.equality for every melody
 				for ( int instrumentNumber = 0; instrumentNumber < melodyBlock.size(); instrumentNumber ++ ) {
 					if ( hasFoundEqualFormValue[ instrumentNumber ] ) {
-						// once ru.pavelyurkin.musiccomposer.equality has been found there is no more search necessary
+						// once equality has been found there is no more search necessary
 					} else {
 						char formInstrumentValue = melodyBlockToCompareWith.get( instrumentNumber ).getForm().getValue();
 						if ( formEqualityAnalyzer.isEqual( melodyBlock.get( instrumentNumber ), melodyBlockToCompareWith.get( instrumentNumber ) ) ) {
