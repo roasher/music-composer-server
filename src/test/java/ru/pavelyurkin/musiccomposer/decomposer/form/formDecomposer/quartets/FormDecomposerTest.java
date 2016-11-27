@@ -25,7 +25,7 @@ public class FormDecomposerTest extends AbstractSpringTest {
 
 	@Test
 	public void quartetScarecrowIntro() {
-		Composition composition = compositionLoader.getComposition( new File( "src/test/java/ru/pavelyurkin/musiccomposer/decomposer/form/formDecomposer/quartets/2.Scarecrow's song (midi).mid" ) );
+		Composition composition = compositionLoader.getComposition( new File( "src/test/java/ru/pavelyurkin/musiccomposer/decomposer/form/formDecomposer/quartets/2.Scarecrow's_song(midi).mid" ) );
 
 		List< List< Melody > > melodyBlockList = formDecomposer.decompose( composition, JMC.WHOLE_NOTE );
 //		List<MusicBlock> musicBlockList = ModelUtils.simpleWrap( melodies );
