@@ -108,7 +108,7 @@ public class MusicBlock implements Serializable {
 		if ( this.getMelodyList().size() != that.getMelodyList().size() )
 			throw new IllegalArgumentException( "different melody numbers: " + this.getMelodyList().size() + " and " + that.getMelodyList().size() );
 		for ( int melodyNumber = 0; melodyNumber < this.getMelodyList().size(); melodyNumber++ ) {
-			if ( !this.getMelodyList().get( melodyNumber ).isParallelTo( that.getMelodyList().get( melodyNumber ) ) ) return false;
+			if ( !this.getMelodyList().get( melodyNumber ).equals( that.getMelodyList().get( melodyNumber ) ) ) return false;
 		}
 		return endIntervalPattern.equals( that.endIntervalPattern );
 	}
