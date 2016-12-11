@@ -6,14 +6,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
  * Class that decides if two Lists fo melodies are form equal
  */
-public class FormEquality {
+public class FormEquality implements RelativelyComparable<List<Melody>>{
 
+	/**
+	 * Min value of equality metric to consider two blocks form equal
+	 */
 	private double instrumentEqualityPassThreshold;
+	/**
+	 * Max value of equality metric to consider two blocks form different
+	 */
+	private double instrumentEqualityFailThreshold;
+
 	@Autowired
 	private EqualityMetricAnalyzer<List<Melody>> equalityMetricAnalyzer;
 
@@ -26,27 +35,40 @@ public class FormEquality {
 	 * @param secondMusicBlockInstrumentParts
 	 * @return
 	 */
-	public boolean isEqual( List<Melody> firstMusicBlockInstrumentParts, List<Melody> secondMusicBlockInstrumentParts ) {
+	@Override
+	public ResultOfComparison isEqual( List<Melody> firstMusicBlockInstrumentParts, List<Melody> secondMusicBlockInstrumentParts ) {
 		if ( firstMusicBlockInstrumentParts.size() != secondMusicBlockInstrumentParts.size() ) {
 			logger.info( "Input collections of melodies has different sizes so they can't be considered equal" );
-			return false;
+			return ResultOfComparison.UNDEFINED;
 		}
 
 		double successTestPersentage = equalityMetricAnalyzer.getEqualityMetric( firstMusicBlockInstrumentParts, secondMusicBlockInstrumentParts );
 		if ( successTestPersentage >= instrumentEqualityPassThreshold ) {
-			logger.info( "Music Blocks considered form - equal" );
-			return true;
+			logger.debug( "Successfull tests persentage {} higher than pass threshold {}. Music Blocks considered form equal", successTestPersentage, instrumentEqualityPassThreshold );
+			return ResultOfComparison.EQUAL;
+		} else if ( successTestPersentage <= instrumentEqualityFailThreshold ) {
+			logger.debug( "Successfull tests persentage {} lower than fail threshold {}. Music Blocks considered non equal", successTestPersentage, instrumentEqualityPassThreshold );
+			return ResultOfComparison.DIFFERENT;
 		} else {
-			logger.info( "Successfull tests persentage {} lower than the threshold {}. Music Blocks considered non equal", successTestPersentage, instrumentEqualityPassThreshold );
-			return false;
+			logger.debug( "Successfull tests persentage {} higher than the fail threshold {} but lower that pass threshold {}. Blocks form equality considered undefined",
+					successTestPersentage, instrumentEqualityPassThreshold, instrumentEqualityFailThreshold );
+			return ResultOfComparison.UNDEFINED;
 		}
 	}
 
-	public double getInstrumentEqualityPassThreshold() {
-		return instrumentEqualityPassThreshold;
+	@PostConstruct
+	public void init() {
+		if ( instrumentEqualityFailThreshold > instrumentEqualityPassThreshold ) {
+			throw new IllegalArgumentException( "Illegal configuration of FormEqualityBean: fail threshold " + instrumentEqualityFailThreshold + " is greater than pass threshold "
+			+ instrumentEqualityPassThreshold );
+		}
 	}
 
 	public void setInstrumentEqualityPassThreshold( double instrumentEqualityPassThreshold ) {
 		this.instrumentEqualityPassThreshold = instrumentEqualityPassThreshold;
+	}
+
+	public void setInstrumentEqualityFailThreshold( double instrumentEqualityFailThreshold ) {
+		this.instrumentEqualityFailThreshold = instrumentEqualityFailThreshold;
 	}
 }

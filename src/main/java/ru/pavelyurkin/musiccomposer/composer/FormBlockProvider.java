@@ -3,6 +3,7 @@ package ru.pavelyurkin.musiccomposer.composer;
 import ru.pavelyurkin.musiccomposer.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.equality.form.FormEquality;
+import ru.pavelyurkin.musiccomposer.equality.form.RelativelyComparable;
 import ru.pavelyurkin.musiccomposer.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.model.melody.Form;
@@ -143,14 +144,16 @@ public class FormBlockProvider {
 		// checking that new composeBlock is different to differentFormSteps
 		for ( FormCompositionStep differentStep : differentFormSteps ) {
 			ComposeBlock previousComposeBlock = new ComposeBlock( differentStep.getTransposedComposeBlocks() );
-			if ( formEquality.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() ) ) {
+			RelativelyComparable.ResultOfComparison resultOfComparison = formEquality.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() );
+			if ( resultOfComparison != RelativelyComparable.ResultOfComparison.DIFFERENT ) {
 				return false;
 			}
 		}
 		// checking that new composeBlock is similar to similarFormSteps
 		for ( FormCompositionStep similarStep : similarFormSteps ) {
 			ComposeBlock previousComposeBlock = new ComposeBlock( similarStep.getTransposedComposeBlocks() );
-			if ( !formEquality.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() ) ) {
+			RelativelyComparable.ResultOfComparison resultOfComparison = formEquality.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() );
+			if ( resultOfComparison != RelativelyComparable.ResultOfComparison.EQUAL ) {
 				return false;
 			}
 		}

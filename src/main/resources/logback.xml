@@ -8,10 +8,11 @@
         </encoder>
     </appender>
 
-    <logger name="decomposer.SignatureDecomposer" level="DEBUG"/>
-    <logger name="decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl" level="DEBUG"/>
-    <logger name="composer.CompositionComposer" level="DEBUG"/>
-    <logger name="composer.FormBlockProvider" level="DEBUG"/>
+    <logger name="ru.pavelyurkin.musiccomposer.decomposer.SignatureDecomposer" level="DEBUG"/>
+    <logger name="ru.pavelyurkin.musiccomposer.decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl" level="DEBUG"/>
+    <logger name="ru.pavelyurkin.musiccomposer.composer.CompositionComposer" level="DEBUG"/>
+    <logger name="ru.pavelyurkin.musiccomposer.composer.FormBlockProvider" level="DEBUG"/>
+    <logger name="ru.pavelyurkin.musiccomposer.equality.form.FormEquality" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

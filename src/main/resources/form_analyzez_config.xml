@@ -28,7 +28,8 @@
     </bean>
     
     <bean id="formAnalyzer" class="ru.pavelyurkin.musiccomposer.equality.form.FormEquality">
-        <property name="instrumentEqualityPassThreshold" value="1.0"/>
+        <property name="instrumentEqualityPassThreshold" value="0.5"/>
+        <property name="instrumentEqualityFailThreshold" value="0.3"/>
     </bean>
 
 </beans>
