@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.equality.form;
 
+import javafx.util.Pair;
 import ru.pavelyurkin.musiccomposer.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.model.melody.Melody;
 import org.slf4j.Logger;
@@ -36,24 +37,35 @@ public class FormEquality implements RelativelyComparable<List<Melody>>{
 	 * @return
 	 */
 	@Override
-	public ResultOfComparison isEqual( List<Melody> firstMusicBlockInstrumentParts, List<Melody> secondMusicBlockInstrumentParts ) {
+	public Pair<ResultOfComparison, Double> isEqual( List<Melody> firstMusicBlockInstrumentParts, List<Melody> secondMusicBlockInstrumentParts ) {
 		if ( firstMusicBlockInstrumentParts.size() != secondMusicBlockInstrumentParts.size() ) {
 			logger.info( "Input collections of melodies has different sizes so they can't be considered equal" );
-			return ResultOfComparison.UNDEFINED;
+			return new Pair<>( ResultOfComparison.UNDEFINED, Double.MAX_VALUE );
 		}
 
 		double successTestPersentage = equalityMetricAnalyzer.getEqualityMetric( firstMusicBlockInstrumentParts, secondMusicBlockInstrumentParts );
+		double diffMeasure;
 		if ( successTestPersentage >= instrumentEqualityPassThreshold ) {
-			logger.debug( "Successfull tests persentage {} higher than pass threshold {}. Music Blocks considered form equal", successTestPersentage, instrumentEqualityPassThreshold );
-			return ResultOfComparison.EQUAL;
+			diffMeasure = getMeasureOfDifference( successTestPersentage, instrumentEqualityPassThreshold );
+			logger.debug( "Successful tests percentage {} higher than pass threshold {}. Diff measure = {}. Music Blocks considered form equal.", successTestPersentage, instrumentEqualityPassThreshold, diffMeasure );
+			return new Pair<>( ResultOfComparison.EQUAL, diffMeasure );
 		} else if ( successTestPersentage <= instrumentEqualityFailThreshold ) {
-			logger.debug( "Successfull tests persentage {} lower than fail threshold {}. Music Blocks considered non equal", successTestPersentage, instrumentEqualityPassThreshold );
-			return ResultOfComparison.DIFFERENT;
+			diffMeasure = getMeasureOfDifference( successTestPersentage, instrumentEqualityFailThreshold );
+			logger.debug( "Successful tests percentage {} lower than fail threshold {}. Diff measure = {}. Music Blocks considered non equal", successTestPersentage, instrumentEqualityFailThreshold, diffMeasure );
+			return new Pair<>( ResultOfComparison.DIFFERENT, diffMeasure );
 		} else {
-			logger.debug( "Successfull tests persentage {} higher than the fail threshold {} but lower that pass threshold {}. Blocks form equality considered undefined",
-					successTestPersentage, instrumentEqualityPassThreshold, instrumentEqualityFailThreshold );
-			return ResultOfComparison.UNDEFINED;
+			diffMeasure = Math.min( getMeasureOfDifference( successTestPersentage, instrumentEqualityFailThreshold ),
+					getMeasureOfDifference( successTestPersentage, instrumentEqualityPassThreshold ) );
+			logger.debug( "Successful tests percentage {} higher than the fail threshold {} but lower that pass threshold {}. Diff measure = {}. Blocks form equality considered undefined",
+					successTestPersentage, instrumentEqualityFailThreshold, instrumentEqualityPassThreshold, diffMeasure );
+			return new Pair<>( ResultOfComparison.UNDEFINED, diffMeasure );
 		}
+	}
+
+	public static double getMeasureOfDifference( double first, double second ) {
+		double diff = Math.abs( first - second );
+		if ( diff > 1 ) return 0;
+		return 1 - diff;
 	}
 
 	@PostConstruct

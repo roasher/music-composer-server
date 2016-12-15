@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.composer;
 
+import javafx.util.Pair;
 import ru.pavelyurkin.musiccomposer.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.equality.form.FormEquality;
@@ -13,12 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.utils.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 import static ru.pavelyurkin.musiccomposer.utils.ModelUtils.getTransposePitch;
 
 /**
@@ -95,16 +94,19 @@ public class FormBlockProvider {
 					List<ComposeBlock> transposedComposeBlocks = compositionSteps.stream().skip( 1 ).map( CompositionStep::getTransposeComposeBlock )
 							.collect( Collectors.toList() );
 					ComposeBlock composeBlock = new ComposeBlock( transposedComposeBlocks );
-					boolean formCheckPassed = isFormCheckPassed( composeBlock, similarFormSteps, differentFormSteps );
-
-					if ( !formCheckPassed ) {
-						logger.debug( "ComposeBlock check failed in terms of form" );
-						// ( step - 2 ) -> ( step - 1 ) -> ( step )
-						CompositionStep preLastCompositionStep = compositionSteps.get( step - 1 );
-						preLastCompositionStep.addNextExclusion( compositionSteps.get( step ).getOriginComposeBlock() );
-						currentLength -= compositionSteps.get( step ).getOriginComposeBlock().getRhythmValue();
-						compositionSteps.remove( step );
-						step = step - 1;
+					Pair<Boolean, Double> formCheckPassed = isFormCheckPassed( composeBlock, similarFormSteps, differentFormSteps );
+					if ( !formCheckPassed.getKey() ) {
+						int stepToRevert = getStepToRevert( step, formCheckPassed.getValue() );
+						logger.debug( "ComposeBlock check failed in terms of form. Reverting to step {}", stepToRevert );
+						// ( stepToRevert ) -> ... -> ( step - 1 ) -> ( step )
+						compositionSteps.get( stepToRevert ).addNextExclusion( compositionSteps.get( stepToRevert + 1 ).getOriginComposeBlock() );
+						ListIterator<CompositionStep> iterator = compositionSteps.listIterator( compositionSteps.size() );
+						while ( iterator.previousIndex() != stepToRevert ) {
+							CompositionStep previousStep = iterator.previous();
+							currentLength -= previousStep.getOriginComposeBlock().getRhythmValue();
+							iterator.remove();
+						}
+						step = stepToRevert;
 						continue;
 					}
 
@@ -133,31 +135,51 @@ public class FormBlockProvider {
 	}
 
 	/**
-	 * Checks if new compose block can be used in composition in terms of form
+	 * Should return step to revert - so new composition will be handled to next to this step.
+	 * Step calculated according to step count and measure that shows difference with what form comparison was failed.
+	 * Step should be no greater then step-2. There is no point returning to step-1 cause starting to compose next = last block (last step) block provider will give best
+	 * variant in terms of form.
+	 * @param step
+	 * @param diffMeasure
+	 * @return
+	 */
+	private int getStepToRevert( int step, Double diffMeasure ) {
+		assertTrue( "Diff measure " + diffMeasure + " < 0", diffMeasure >= 0 );
+		int calculatedStepToReturn = ( int ) ( step * diffMeasure );
+		if ( calculatedStepToReturn == 0 ) return 1;
+		if ( calculatedStepToReturn > step - 2 ) return step - 2;
+		return calculatedStepToReturn;
+	}
+
+	/**
+	 * Checks if new compose block can be used in composition in terms of form. Returning diff measure as well.
 	 *
 	 * @param composeBlock
 	 * @param similarFormSteps
 	 * @param differentFormSteps
 	 * @return
 	 */
-	private boolean isFormCheckPassed( ComposeBlock composeBlock, List<FormCompositionStep> similarFormSteps, List<FormCompositionStep> differentFormSteps ) {
+	private Pair<Boolean, Double> isFormCheckPassed( ComposeBlock composeBlock, List<FormCompositionStep> similarFormSteps, List<FormCompositionStep> differentFormSteps ) {
+		double maxDiffMeasure = 0;
 		// checking that new composeBlock is different to differentFormSteps
 		for ( FormCompositionStep differentStep : differentFormSteps ) {
 			ComposeBlock previousComposeBlock = new ComposeBlock( differentStep.getTransposedComposeBlocks() );
-			RelativelyComparable.ResultOfComparison resultOfComparison = formEquality.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() );
-			if ( resultOfComparison != RelativelyComparable.ResultOfComparison.DIFFERENT ) {
-				return false;
+			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() );
+			if ( comparison.getKey() != RelativelyComparable.ResultOfComparison.DIFFERENT ) {
+				return new Pair<>( false, comparison.getValue() );
 			}
+			if ( maxDiffMeasure < comparison.getValue() ) maxDiffMeasure = comparison.getValue();
 		}
 		// checking that new composeBlock is similar to similarFormSteps
 		for ( FormCompositionStep similarStep : similarFormSteps ) {
 			ComposeBlock previousComposeBlock = new ComposeBlock( similarStep.getTransposedComposeBlocks() );
-			RelativelyComparable.ResultOfComparison resultOfComparison = formEquality.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() );
-			if ( resultOfComparison != RelativelyComparable.ResultOfComparison.EQUAL ) {
-				return false;
+			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() );
+			if ( comparison.getKey() != RelativelyComparable.ResultOfComparison.EQUAL ) {
+				return new Pair<>( false, comparison.getValue() );
 			}
+			if ( maxDiffMeasure < comparison.getValue() ) maxDiffMeasure = comparison.getValue();
 		}
-		return true;
+		return new Pair<>( true, maxDiffMeasure );
 	}
 
 	/**
@@ -168,7 +190,7 @@ public class FormBlockProvider {
 	 * @param formCompositionStep
 	 * @return
 	 */
-	public CompositionStep fetchLastCompositionStep( FormCompositionStep formCompositionStep ) {
+	private CompositionStep fetchLastCompositionStep( FormCompositionStep formCompositionStep ) {
 		List<ComposeBlock> exclusions = CollectionUtils.getListOfFirsts( formCompositionStep.getNextMusicBlockExclusions() );
 		List<ComposeBlock> originComposeBlocks = formCompositionStep.getOriginComposeBlocks();
 		List<ComposeBlock> trasposedComposeBlocks = formCompositionStep.getTransposedComposeBlocks();

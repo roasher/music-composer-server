@@ -25,6 +25,8 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melo
 	 * Firstly we count how many cutting and joining should be performed to make second melody rhythmic identical to first
 	 * Next, after we have same melodies rhythmically we are counting pith transpositions.
 	 *
+	 * // TODO made output between 0 and 1
+	 *
 	 * @param firstMelody
 	 * @param secondMelody
 	 * @return

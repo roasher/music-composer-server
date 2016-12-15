@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.composer.compositionComposer;
 
+import ru.pavelyurkin.musiccomposer.decomposer.CompositionDecomposerTest;
 import ru.pavelyurkin.musiccomposer.helper.AbstractSpringTest;
 import jm.JMC;
 import jm.music.data.Note;
@@ -109,9 +110,9 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	@Ignore
 	@Test
 	public void singleVoiceComposingTest() {
-		Composition composition = compositionLoader.getComposition( new File( "src/test/decomposer/gen_1.mid" ) );
+		Composition composition = compositionLoader.getComposition( new File( CompositionDecomposerTest.class.getResource( "gen_1.mid" ).getFile() ) );
 		Lexicon lexicon = compositionDecomposer.decompose( composition, WHOLE_NOTE );
-		Composition composedComposition = compositionComposer.compose( composeBlockProvider, lexicon, "AB", WHOLE_NOTE * 8 );
+		Composition composedComposition = compositionComposer.compose( composeBlockProvider, lexicon, "ABCB", WHOLE_NOTE * 4 );
 		View.show( composedComposition );
 		Utils.suspend();
 	}
