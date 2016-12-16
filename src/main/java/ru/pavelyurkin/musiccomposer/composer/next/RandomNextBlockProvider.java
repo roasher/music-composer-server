@@ -13,21 +13,18 @@ import java.util.Optional;
  * Created by Wish on 22.12.2015.
  */
 @Component
-public class RandomNextBlockProvider implements NextBlockProvider {
+public class RandomNextBlockProvider extends NextBlockProvider {
 
 	/**
 	 * Returns one of the possible next currentBlocks randomly
 	 */
 	@Override
 	public Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> similarFormSteps,
-			List<FormCompositionStep> differentFormSteps, double length ) {
-		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
-		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getOriginComposeBlock().getPossibleNextComposeBlocks() );
-		possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions());
-		if ( !possibleNextComposeBlocks.isEmpty() ) {
-//			int randomNumber = ( int ) ( Math.random() * ( possibleNextComposeBlocks.size() - 1 ) );
+			List<FormCompositionStep> differentFormSteps, double length, List<ComposeBlock> blocksToChooseFrom ) {
+		if ( !blocksToChooseFrom.isEmpty() ) {
+			//			int randomNumber = ( int ) ( Math.random() * ( possibleNextComposeBlocks.size() - 1 ) );
 			int randomNumber = 0;
-			ComposeBlock composeBlock = possibleNextComposeBlocks.get( randomNumber );
+			ComposeBlock composeBlock = blocksToChooseFrom.get( randomNumber );
 			return Optional.of( composeBlock );
 		} else {
 			return Optional.empty();

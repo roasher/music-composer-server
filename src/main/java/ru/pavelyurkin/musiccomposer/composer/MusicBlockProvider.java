@@ -15,7 +15,7 @@ import ru.pavelyurkin.musiccomposer.model.BlockMovement;
 import ru.pavelyurkin.musiccomposer.model.MusicBlock;
 
 /**
- * Created by pyurkin on 15.01.15.
+ * Class handles routine to decide possible nexts from each of input blocks
  */
 @Component
 public class MusicBlockProvider {
