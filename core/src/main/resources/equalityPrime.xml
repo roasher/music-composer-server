@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="contourEquality" class="ru.pavelyurkin.musiccomposer.core.equality.melodymovement.ContourMelodyMovementEquality">
+        <property name="maxNumberOfDiffDirectionIntervals" value="3"/>
+    </bean>
+
+    <bean id="inversionEquality" class="ru.pavelyurkin.musiccomposer.core.equality.melodymovement.InversionMelodyMovementEquality">
+        <property name="maxNumberOfInvertedIntervals" value="1"/>
+    </bean>
+
+    <bean id="intervalsEquality" class="ru.pavelyurkin.musiccomposer.core.equality.melodymovement.IntervalsMelodyMovementEquality">
+        <property name="maxNumberOfShiftedIntervals" value="2"/>
+        <property name="maxShift" value="2"/>
+    </bean>
+
+    <bean id="orderEquality" class="ru.pavelyurkin.musiccomposer.core.equality.melodymovement.OrderMelodyMovementEquality">
+        <property name="maxNumberOfIntervalsHavingSwappedNotes" value="2"/>
+    </bean>
+
+    <bean id="rhythmEquality" class="ru.pavelyurkin.musiccomposer.core.equality.melody.RhythmEquality">
+        <property name="maxNumberOfRhythmicallyDifferentNotes" value="1"/>
+        <!--<property name="maxRhythmDeviationSteps" listValue="0.01"/>-->
+        <property name="maxRhythmDeviationSteps" value="0.75"/>
+    </bean>
+
+</beans>

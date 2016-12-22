@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="driverClass" value="org.h2.Driver"/>
+        <property name="url" value="jdbc:h2:~/prod;AUTO_SERVER=TRUE"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--<property name="annotatedPackages" value="persistance.ru.pavelyurkin.musiccomposer.model"/>-->
+        <property name="annotatedClasses">
+            <list>
+                <value>ru.pavelyurkin.musiccomposer.core.persistance.jpa.BlockMovement</value>
+                <value>ru.pavelyurkin.musiccomposer.core.persistance.jpa.ComposeBlock</value>
+                <value>ru.pavelyurkin.musiccomposer.core.persistance.jpa.CompositionInfo</value>
+                <value>ru.pavelyurkin.musiccomposer.core.persistance.jpa.Melody</value>
+                <value>ru.pavelyurkin.musiccomposer.core.persistance.jpa.Note</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+                <!--<prop key="hibernate.show_sql">true</prop>-->
+                <!--<prop key="hibernate.format_sql">true</prop>-->
+                <!--<prop key="hibernate.use_sql_comments">true</prop>-->
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+</beans>
