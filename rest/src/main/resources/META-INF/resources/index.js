@@ -1,13 +1,17 @@
-var notes = [];
-
-var retrieveNotesFromServer = function (numberOfNotes) {
-    console.log("retrieving " + numberOfNotes + " notes");
+var playNextTSeconds = function (seconds, whenShouldPlay) {
+    console.log("retrieving notes for " + seconds + " seconds");
     var request = new XMLHttpRequest();
-    request.open("GET", "http://localhost:8080/getNotes?number=" + numberOfNotes, true);
+    request.open("GET", "/getNotes?number=" + seconds, true);
     request.addEventListener("load", function () {
         var responsedata = eval("(" + request.responseText + ")");
-        notes.push(responsedata);
-        console.log(notes)
+        var timeWhenLoaded = Date.now();
+        var delayBeforePlay = whenShouldPlay >= timeWhenLoaded ? whenShouldPlay - timeWhenLoaded : 0 ;
+        var noteStartTime = delayBeforePlay;
+        for (var noteNumber = 0; noteNumber < responsedata.length; noteNumber++) {
+            playNote(responsedata[noteNumber].pitch, 127, noteStartTime, responsedata[noteNumber].rhythmValue);
+            noteStartTime += responsedata[noteNumber].rhythmValue;
+        }
+
     });
     request.send(null);
 };
