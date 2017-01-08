@@ -8,8 +8,7 @@ var playNextTSeconds = function (seconds, whenShouldPlay) {
         var delayBeforePlay = whenShouldPlay >= timeWhenLoaded ? whenShouldPlay - timeWhenLoaded : 0 ;
         var noteStartTime = delayBeforePlay;
         for (var noteNumber = 0; noteNumber < responsedata.length; noteNumber++) {
-            playNote(responsedata[noteNumber].pitch, 127, noteStartTime, responsedata[noteNumber].rhythmValue);
-            noteStartTime += responsedata[noteNumber].rhythmValue;
+            player.play(responsedata[noteNumber].pitch, responsedata[noteNumber].rhythmValue, true)
         }
 
     });
