@@ -33,21 +33,38 @@
             },
             onsuccess: function () {
                 console.log('load success');
-                playNextTSeconds(4);
-                playNextTSeconds(2);
+                var play = true;
+                // time up to that notes are loaded into player
+                var timeOfStartButtonPress = Date.now();
+                // min time buffer that should be loaded into player
+                var minTimeBufferMs = 2000;
+                // time that will be requested from server
+                var secondsToLoadNotes = 4;
+
+                window.setInterval(function fillPlayer() {
+                    var timeInBufferToPlay = timeOfStartButtonPress + player.timeline * 1000 - Date.now();
+                    if (timeInBufferToPlay < minTimeBufferMs) {
+                        console.log("loading notes to player... time in Buffer left to play = " + timeInBufferToPlay + " min time buffer = " + minTimeBufferMs);
+                        playNextTBars(secondsToLoadNotes/player.barDuration, true);
+                    } else {
+                        console.log("waiting... time in Buffer left to play = " + timeInBufferToPlay + " min time buffer = " + minTimeBufferMs);
+                    }
+                }, 2000);
             }
         });
     };
 
     var player = {
         barDuration: 2,
+        // in seconds
         timeline: 1,
         velocity: 127,
-        play: function (noteInt, duration, moveTime) {
+        play: function (noteInt, rhythmValue, moveTime) {
 
             MIDI.noteOn(0, noteInt, this.velocity, this.timeline);
             // звучание ноты заканчивается через длительность такта * длительность ноты в такте
-            var endTime = this.barDuration * duration;
+            // rhythmValue = 4 - this is the WHOLE NOTE, so we are dividing on 4 to get bar rhythm value
+            var endTime = this.barDuration * rhythmValue / 4;
             MIDI.noteOff(0, noteInt, this.velocity, this.timeline + endTime);
 
             if (typeof moveTime !== 'undefined' && moveTime === true) {

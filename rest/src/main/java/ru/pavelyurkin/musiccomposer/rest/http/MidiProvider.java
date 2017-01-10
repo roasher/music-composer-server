@@ -17,7 +17,7 @@ public class MidiProvider {
 	public List<Note> getNotes( @RequestParam int number ) {
 		List<Note> notes = new ArrayList<>( number );
 		for ( int noteNumber = 0; noteNumber < number; noteNumber++ ) {
-			notes.add( new Note( 60 + noteNumber, JMC.EIGHTH_NOTE, 0, 0) );
+			notes.add( new Note( 60 + noteNumber, JMC.WHOLE_NOTE, 0, 0 ) );
 		}
 		return notes;
 	}
