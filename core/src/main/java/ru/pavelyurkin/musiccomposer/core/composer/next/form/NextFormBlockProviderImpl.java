@@ -1,5 +1,6 @@
-package ru.pavelyurkin.musiccomposer.core.composer.next;
+package ru.pavelyurkin.musiccomposer.core.composer.next.form;
 
+import ru.pavelyurkin.musiccomposer.core.composer.next.form.FilteredNextFormBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
 
 @Component
-public class FormNextBlockProvider extends FilteredNextBlockProvider {
+public class NextFormBlockProviderImpl extends FilteredNextFormBlockProvider {
 
 	@Autowired
 	private EqualityMetricAnalyzer<List<Melody>> equalityMetricAnalyzer;

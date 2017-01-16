@@ -10,27 +10,25 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Handles logic of getting next step
+ * Parent class of next block providers
  */
 public abstract class NextBlockProvider {
 
-    public Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> similarFormSteps, List<FormCompositionStep> differentFormSteps,
-            double length ) {
+	public Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, double length ) {
 
-        CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
-        List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getOriginComposeBlock().getPossibleNextComposeBlocks() );
-        possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions() );
+		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
+		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getOriginComposeBlock().getPossibleNextComposeBlocks() );
+		possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions() );
 
-        // Leving all blocks adding whose will keep whole piece in range
-        double previouslyComposedRhythmValue = previousCompositionSteps.stream().skip( 1 ).mapToDouble( value -> value.getOriginComposeBlock().getRhythmValue() ).sum();
-        List<ComposeBlock> blocksToChooseFrom = possibleNextComposeBlocks.stream().filter( composeBlock -> previouslyComposedRhythmValue + composeBlock.getRhythmValue() <= length )
-                .collect( Collectors.toList() );
+		// Leaving all blocks adding whose will keep whole piece in range
+		double previouslyComposedRhythmValue = previousCompositionSteps.stream().skip( 1 ).mapToDouble( value -> value.getOriginComposeBlock().getRhythmValue() ).sum();
+		List<ComposeBlock> blocksToChooseFrom = possibleNextComposeBlocks.stream().filter( composeBlock -> previouslyComposedRhythmValue + composeBlock.getRhythmValue() <= length )
+				.collect( Collectors.toList() );
 
-        return getNextBlock( previousCompositionSteps, similarFormSteps, differentFormSteps, length, blocksToChooseFrom );
+		return getNextBlock( previousCompositionSteps, length, blocksToChooseFrom );
 
-    }
+	}
 
-    public abstract Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> similarFormSteps,
-            List<FormCompositionStep> differentFormSteps, double length, List<ComposeBlock> blocksToChooseFrom );
+	public abstract Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, double length, List<ComposeBlock> blocksToChooseFrom );
 
 }

@@ -2,7 +2,10 @@ package ru.pavelyurkin.musiccomposer.core;
 
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
-import ru.pavelyurkin.musiccomposer.core.composer.next.FormNextBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.next.FilteredNextBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.next.NextBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.next.SimpleNextBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.next.form.NextFormBlockProviderImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
@@ -48,13 +51,19 @@ public class Controller {
 //		compositionDecomposer.getLexiconDAO().persist( lexicon );
 
 		ComposeBlockFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
-		FormNextBlockProvider formNextBlockProvider = applicationContext.getBean( FormNextBlockProvider.class );
-		formNextBlockProvider.setComposeBlockFilter( bachChoralFilter );
+
+		NextFormBlockProviderImpl nextFormBlockProvider = applicationContext.getBean( NextFormBlockProviderImpl.class );
+		nextFormBlockProvider.setComposeBlockFilter( bachChoralFilter );
+
+		SimpleNextBlockProvider nextBlockProvider = applicationContext.getBean( SimpleNextBlockProvider.class );
+		nextBlockProvider.setComposeBlockFilter( bachChoralFilter );
 
 		ComposeBlockProvider composeBlockProvider = applicationContext.getBean( ComposeBlockProvider.class );
-		composeBlockProvider.setNextBlockProvider( formNextBlockProvider );
 
-		Composition composition = compositionComposer.compose( composeBlockProvider, lexicon, "ABAB", 8 * JMC.WHOLE_NOTE );
+		composeBlockProvider.setNextFormBlockProvider( nextFormBlockProvider );
+		composeBlockProvider.setNextBlockProvider( nextBlockProvider );
+
+		Composition composition = compositionComposer.compose( composeBlockProvider, lexicon, 8 * JMC.WHOLE_NOTE );
 		//		assertEquals( 16., composition.getEndTime(), 0 );
 
 		//		View.notate( composition );

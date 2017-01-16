@@ -31,6 +31,7 @@
 
     <bean id="simpleComposeBlockProvider" class="ru.pavelyurkin.musiccomposer.core.composer.ComposeBlockProvider">
         <property name="firstBlockProvider" ref="randomFirstBlockProvider"/>
+        <property name="nextFormBlockProvider" ref="nextFormBlockProviderImpl"/>
         <property name="nextBlockProvider" ref="randomNextBlockProvider"/>
     </bean>
 

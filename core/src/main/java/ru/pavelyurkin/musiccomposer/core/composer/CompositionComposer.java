@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
+import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import jm.music.data.Note;
 import jm.music.data.Part;
@@ -13,9 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class handles composition of new piece using lexicon
@@ -29,6 +29,22 @@ public class CompositionComposer {
 	private FormBlockProvider formBlockProvider;
 
 	/**
+	 * Composing piece considering given lexicon and composition compositionLength
+	 *
+	 * @param lexicon
+	 * @param compositionLength
+	 * @return
+	 */
+	public Composition compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, double compositionLength ) {
+		List<CompositionStep> compositionSteps = formBlockProvider.composeSteps( compositionLength, lexicon, composeBlockProvider, new CompositionStep( null, null ) );
+		List<ComposeBlock> composeBlocks = compositionSteps
+						.stream()
+						.map( CompositionStep::getTransposeComposeBlock )
+						.collect( Collectors.toList() );
+		return gatherComposition( composeBlocks );
+	}
+
+	/**
 	 * Composing piece considering given lexicon, form pattern and composition compositionLength
 	 *
 	 * @param lexicon
@@ -37,18 +53,16 @@ public class CompositionComposer {
 	 * @return
 	 */
 	public Composition compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, String form, double compositionLength ) {
-		List<FormCompositionStep> compositionSteps = composeSteps( composeBlockProvider, lexicon, form, compositionLength );
-		List<ComposeBlock> composeBlocks = new ArrayList<>();
-		for ( FormCompositionStep compositionStep : compositionSteps ) {
-			for ( ComposeBlock composeBlock : compositionStep.getTransposedComposeBlocks() ) {
-				composeBlocks.add( composeBlock );
-			}
-		}
+		List<FormCompositionStep> formCompositionSteps = composeSteps( composeBlockProvider, lexicon, form, compositionLength );
+		List<ComposeBlock> composeBlocks = formCompositionSteps
+							.stream()
+							.flatMap( formCompositionStep -> formCompositionStep.getTransposedComposeBlocks().stream() )
+							.collect( Collectors.toList() );
 		return gatherComposition( composeBlocks );
 	}
 
 	/**
-	 * Main composing function.
+	 * Main composing function if form is set.
 	 * Assuming we are on k-th step of composing.
 	 * Composing k+1 block according given form.
 	 * If it is impossible, than recomposing k-th block.
@@ -68,7 +82,7 @@ public class CompositionComposer {
 
 			FormCompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
 			Form form1 = new Form( form.charAt( formElementNumber - 1 ) );
-			Optional<FormCompositionStep> nextStep = formBlockProvider.getFormElement( composeBlockProvider, form1, stepLength, compositionSteps, lexicon );
+			Optional<FormCompositionStep> nextStep = formBlockProvider.getFormElement( stepLength, lexicon, composeBlockProvider, form1, compositionSteps );
 
 			if ( nextStep.isPresent() ) {
 				compositionSteps.add( nextStep.get() );

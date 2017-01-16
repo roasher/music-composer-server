@@ -35,14 +35,13 @@ public class FormBlockProvider {
 	/**
 	 * Generates new form block considering previously generated blocks and it's form.
 	 *
-	 * @param form          - form, from part of witch new Block is going to be generated
 	 * @param length
-	 * @param previousSteps
 	 * @param lexicon
+	 * @param form          - form, from part of witch new Block is going to be generated
+	 * @param previousSteps
 	 * @return
 	 */
-	public Optional<FormCompositionStep> getFormElement( ComposeBlockProvider composeBlockProvider, Form form, double length, List<FormCompositionStep> previousSteps,
-			Lexicon lexicon ) {
+	public Optional<FormCompositionStep> getFormElement( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, Form form, List<FormCompositionStep> previousSteps ) {
 		logger.info( "Composing form element : {}, length : {}", form.getValue(), length );
 
 		List<FormCompositionStep> similarFormSteps = previousSteps.stream().skip( 1 )
@@ -50,8 +49,8 @@ public class FormBlockProvider {
 		List<FormCompositionStep> differentFormSteps = previousSteps.stream().skip( 1 )
 				.filter( formCompositionStep -> formCompositionStep.getForm() != null && !formCompositionStep.getForm().equals( form ) ).collect( Collectors.toList() );
 
-		List<CompositionStep> compositionSteps = composeSteps( composeBlockProvider, lexicon, length, similarFormSteps, differentFormSteps,
-				fetchLastCompositionStep( previousSteps.get( previousSteps.size() - 1 ) ) );
+		List<CompositionStep> compositionSteps = composeSteps( length, lexicon, composeBlockProvider, fetchLastCompositionStep( previousSteps.get( previousSteps.size() - 1 ) ),
+				similarFormSteps, differentFormSteps, true );
 
 		return Optional.ofNullable( !compositionSteps.isEmpty() ?
 				new FormCompositionStep( compositionSteps.stream().map( CompositionStep::getOriginComposeBlock ).collect( Collectors.toList() ),
@@ -62,16 +61,30 @@ public class FormBlockProvider {
 	/**
 	 * Returns composition step list filled with compose blocks that summary covers input length sharp
 	 *
-	 * @param composeBlockProvider
-	 * @param lexicon
 	 * @param length
+	 * @param lexicon
+	 * @param composeBlockProvider
+	 * @param preFirstCompositionStep
+	 * @return
+	 */
+	public List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, CompositionStep preFirstCompositionStep ) {
+		return composeSteps( length, lexicon, composeBlockProvider, preFirstCompositionStep, null, null, false );
+	}
+
+	/**
+	 * Returns composition step list filled with compose blocks that summary covers input length sharp regarding similar and different form steps
+	 *
+	 * @param length
+	 * @param lexicon
+	 * @param composeBlockProvider
+	 * @param preFirstCompositionStep
 	 * @param similarFormSteps
 	 * @param differentFormSteps
-	 * @param preFirstCompositionStep
+	 * @param composingRegardingForm
 	 * @return TODO tests
 	 */
-	public List<CompositionStep> composeSteps( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, double length, List<FormCompositionStep> similarFormSteps,
-			List<FormCompositionStep> differentFormSteps, CompositionStep preFirstCompositionStep ) {
+	private List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, CompositionStep preFirstCompositionStep,
+			List<FormCompositionStep> similarFormSteps, List<FormCompositionStep> differentFormSteps, boolean composingRegardingForm ) {
 
 		List<CompositionStep> compositionSteps = new ArrayList<>();
 		compositionSteps.add( preFirstCompositionStep );
@@ -81,7 +94,9 @@ public class FormBlockProvider {
 			logger.debug( "Current state {}", step );
 			CompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
 			Optional<ComposeBlock> lastStepOriginComposeBlock = Optional.ofNullable( lastCompositionStep.getOriginComposeBlock() );
-			Optional<ComposeBlock> nextComposeBlock = composeBlockProvider.getNextComposeBlock( lexicon, compositionSteps, similarFormSteps, differentFormSteps, length );
+			Optional<ComposeBlock> nextComposeBlock = composingRegardingForm ?
+					composeBlockProvider.getNextComposeBlock( lexicon, compositionSteps, similarFormSteps, differentFormSteps, length ) :
+					composeBlockProvider.getNextComposeBlock( lexicon, compositionSteps, length );
 
 			if ( nextComposeBlock.isPresent() && currentLength + nextComposeBlock.get().getRhythmValue() <= length ) {
 				Optional<ComposeBlock> lastCompositionStepTransposeComposeBlock = Optional.ofNullable( lastCompositionStep.getTransposeComposeBlock() );
@@ -90,26 +105,26 @@ public class FormBlockProvider {
 				compositionSteps.add( nextStep );
 				currentLength += nextComposeBlock.get().getRhythmValue();
 				if ( currentLength == length ) {
-					// FORM CHECK
-					List<ComposeBlock> transposedComposeBlocks = compositionSteps.stream().skip( 1 ).map( CompositionStep::getTransposeComposeBlock )
-							.collect( Collectors.toList() );
-					ComposeBlock composeBlock = new ComposeBlock( transposedComposeBlocks );
-					Pair<Boolean, Double> formCheckPassed = isFormCheckPassed( composeBlock, similarFormSteps, differentFormSteps );
-					if ( !formCheckPassed.getKey() ) {
-						int stepToRevert = getStepToRevert( step, formCheckPassed.getValue() );
-						logger.debug( "ComposeBlock check failed in terms of form. Reverting to step {}", stepToRevert );
-						// ( stepToRevert ) -> ... -> ( step - 1 ) -> ( step )
-						compositionSteps.get( stepToRevert ).addNextExclusion( compositionSteps.get( stepToRevert + 1 ).getOriginComposeBlock() );
-						ListIterator<CompositionStep> iterator = compositionSteps.listIterator( compositionSteps.size() );
-						while ( iterator.previousIndex() != stepToRevert ) {
-							CompositionStep previousStep = iterator.previous();
-							currentLength -= previousStep.getOriginComposeBlock().getRhythmValue();
-							iterator.remove();
+					if ( composingRegardingForm ) {
+						// FORM CHECK
+						List<ComposeBlock> transposedComposeBlocks = compositionSteps.stream().skip( 1 ).map( CompositionStep::getTransposeComposeBlock ).collect( Collectors.toList() );
+						ComposeBlock composeBlock = new ComposeBlock( transposedComposeBlocks );
+						Pair<Boolean, Double> formCheckPassed = isFormCheckPassed( composeBlock, similarFormSteps, differentFormSteps );
+						if ( !formCheckPassed.getKey() ) {
+							int stepToRevert = getStepToRevert( step, formCheckPassed.getValue() );
+							logger.debug( "ComposeBlock check failed in terms of form. Reverting to step {}", stepToRevert );
+							// ( stepToRevert ) -> ... -> ( step - 1 ) -> ( step )
+							compositionSteps.get( stepToRevert ).addNextExclusion( compositionSteps.get( stepToRevert + 1 ).getOriginComposeBlock() );
+							ListIterator<CompositionStep> iterator = compositionSteps.listIterator( compositionSteps.size() );
+							while ( iterator.previousIndex() != stepToRevert ) {
+								CompositionStep previousStep = iterator.previous();
+								currentLength -= previousStep.getOriginComposeBlock().getRhythmValue();
+								iterator.remove();
+							}
+							step = stepToRevert;
+							continue;
 						}
-						step = stepToRevert;
-						continue;
 					}
-
 					// removing prefirst step
 					compositionSteps.remove( 0 );
 					return compositionSteps;
@@ -139,6 +154,7 @@ public class FormBlockProvider {
 	 * Step calculated according to step count and measure that shows difference with what form comparison was failed.
 	 * Step should be no greater then step-2. There is no point returning to step-1 cause starting to compose next = last block (last step) block provider will give best
 	 * variant in terms of form.
+	 *
 	 * @param step
 	 * @param diffMeasure
 	 * @return
@@ -146,8 +162,10 @@ public class FormBlockProvider {
 	private int getStepToRevert( int step, Double diffMeasure ) {
 		assertTrue( "Diff measure " + diffMeasure + " < 0", diffMeasure >= 0 );
 		int calculatedStepToReturn = ( int ) ( step * diffMeasure );
-		if ( calculatedStepToReturn == 0 ) return 1;
-		if ( calculatedStepToReturn > step - 2 ) return step - 2;
+		if ( calculatedStepToReturn == 0 )
+			return 1;
+		if ( calculatedStepToReturn > step - 2 )
+			return step - 2;
 		return calculatedStepToReturn;
 	}
 
@@ -168,7 +186,8 @@ public class FormBlockProvider {
 			if ( comparison.getKey() != RelativelyComparable.ResultOfComparison.DIFFERENT ) {
 				return new Pair<>( false, comparison.getValue() );
 			}
-			if ( maxDiffMeasure < comparison.getValue() ) maxDiffMeasure = comparison.getValue();
+			if ( maxDiffMeasure < comparison.getValue() )
+				maxDiffMeasure = comparison.getValue();
 		}
 		// checking that new composeBlock is similar to similarFormSteps
 		for ( FormCompositionStep similarStep : similarFormSteps ) {
@@ -177,7 +196,8 @@ public class FormBlockProvider {
 			if ( comparison.getKey() != RelativelyComparable.ResultOfComparison.EQUAL ) {
 				return new Pair<>( false, comparison.getValue() );
 			}
-			if ( maxDiffMeasure < comparison.getValue() ) maxDiffMeasure = comparison.getValue();
+			if ( maxDiffMeasure < comparison.getValue() )
+				maxDiffMeasure = comparison.getValue();
 		}
 		return new Pair<>( true, maxDiffMeasure );
 	}
@@ -196,8 +216,7 @@ public class FormBlockProvider {
 		List<ComposeBlock> trasposedComposeBlocks = formCompositionStep.getTransposedComposeBlocks();
 		CompositionStep compositionStep;
 		if ( originComposeBlocks != null ) {
-			compositionStep = new CompositionStep( originComposeBlocks.get( originComposeBlocks.size() - 1 ),
-					trasposedComposeBlocks.get( trasposedComposeBlocks.size() - 1 ) );
+			compositionStep = new CompositionStep( originComposeBlocks.get( originComposeBlocks.size() - 1 ), trasposedComposeBlocks.get( trasposedComposeBlocks.size() - 1 ) );
 		} else {
 			compositionStep = new CompositionStep( null, null );
 		}
