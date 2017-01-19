@@ -1,5 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.equality.melodymovement;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
 
 /**
@@ -7,8 +9,10 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
  * @author Pavel Yurkin
  * @date 27.06.2014.
  */
+@Component
 public class InversionMelodyMovementEquality extends AbstractMelodyMovementEquality {
     // Maximum allowable number of inverted intervals
+    @Value( "${InversionMelodyMovementEquality.maxNumberOfInvertedIntervals}" )
     private int maxNumberOfInvertedIntervals;
 
     @Override

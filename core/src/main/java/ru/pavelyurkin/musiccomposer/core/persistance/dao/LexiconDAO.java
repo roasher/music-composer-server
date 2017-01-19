@@ -8,7 +8,6 @@ import java.io.IOException;
 /**
  * Created by pyurkin on 29.04.2015.
  */
-@Component
 public interface LexiconDAO {
 
 	void persist( Lexicon lexicon ) throws IOException;

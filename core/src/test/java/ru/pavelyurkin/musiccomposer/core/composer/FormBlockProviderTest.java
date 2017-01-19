@@ -38,7 +38,6 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 	@Autowired
 	private FormBlockProvider formBlockProvider;
 	@Autowired
-	@Qualifier( "simpleComposeBlockProvider" )
 	private ComposeBlockProvider composeBlockProvider;
 
 	@Test

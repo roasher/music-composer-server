@@ -2,6 +2,7 @@ package ru.pavelyurkin.musiccomposer.core.decomposer.melody.equality;
 
 import ru.pavelyurkin.musiccomposer.core.equality.melody.Equality;
 import jm.music.data.Note;
+import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,14 +16,9 @@ import static jm.constants.Pitches.*;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-/**
- * Created by night wish on 02.11.14.
- */
-@RunWith( SpringJUnit4ClassRunner.class )
-@ContextConfiguration( locations = "classpath:spring.configuration.xml" )
-public class KeyEqualityTest {
+public class KeyEqualityTest extends AbstractSpringTest {
 
-	@Autowired @Qualifier( "formKeyEquality" )
+	@Autowired @Qualifier( "keyEquality" )
 	private Equality test;
 
 	@Test

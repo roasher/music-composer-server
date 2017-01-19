@@ -1,14 +1,18 @@
 package ru.pavelyurkin.musiccomposer.core.equality.melodymovement;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
 
 /**
  * @author Pavel Yurkin
  * @date 28.06.2014.
  */
+@Component
 public class OrderMelodyMovementEquality extends AbstractMelodyMovementEquality {
 
     // Maximum allowable numbers of intervals which notes has been swapped
+    @Value( "${OrderMelodyMovementEquality.maxNumberOfIntervalsHavingSwappedNotes}" )
     private int maxNumberOfIntervalsHavingSwappedNotes;
 
     @Override

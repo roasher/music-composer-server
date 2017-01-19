@@ -5,7 +5,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.pavelyurkin.musiccomposer.core.utils.test.FactoryConfigurer;
+import ru.pavelyurkin.musiccomposer.core.MyTestConfiguration;
+import ru.pavelyurkin.musiccomposer.core.FactoryConfigurer;
 
 import java.sql.SQLException;
 
@@ -14,7 +15,7 @@ import java.sql.SQLException;
  * Created by pyurkin on 05.12.14.
  */
 @RunWith( SpringJUnit4ClassRunner.class )
-@ContextConfiguration( locations = "classpath:spring-test.configuration.xml" )
+@ContextConfiguration( classes = MyTestConfiguration.class )
 public abstract class AbstractSpringTest {
 
 	@Autowired

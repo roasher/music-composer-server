@@ -1,6 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.equality.form;
 
 import javafx.util.Pair;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import org.slf4j.Logger;
@@ -13,15 +15,18 @@ import java.util.List;
 /**
  * Class that decides if two Lists fo melodies are form equal
  */
+@Component
 public class FormEquality implements RelativelyComparable<List<Melody>>{
 
 	/**
 	 * Min value of equality metric to consider two blocks form equal
 	 */
+	@Value( "${FormEquality.instrumentEqualityPassThreshold}" )
 	private double instrumentEqualityPassThreshold;
 	/**
 	 * Max value of equality metric to consider two blocks form different
 	 */
+	@Value( "${FormEquality.instrumentEqualityFailThreshold}" )
 	private double instrumentEqualityFailThreshold;
 
 	@Autowired

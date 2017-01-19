@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import jm.music.data.Note;
 import junit.framework.Assert;
@@ -15,7 +16,7 @@ import static jm.constants.Pitches.REST;
  */
 public class MelodyEqualityAnalyzerImplTest extends AbstractSpringTest {
 
-	@Autowired
+	@Autowired @Qualifier("melodyEqualityAnalyzerImpl")
 	MelodyEqualityAnalyzer melodyEqualityAnalyzer;
 
 	@Test

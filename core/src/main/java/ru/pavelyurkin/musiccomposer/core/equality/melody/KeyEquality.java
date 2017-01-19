@@ -1,6 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.equality.melody;
 
 import jm.music.data.Note;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.Key;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
@@ -13,8 +15,10 @@ import static ru.pavelyurkin.musiccomposer.core.model.Keys.allKeys;
 /**
  * Created by night wish on 01.11.14.
  */
+@Component
 public class KeyEquality implements Equality {
 
+	@Value( "${maxNumberOfNotesOutOfKey:0}" )
 	private int maxNumberOfNotesOutOfKey;
 
 	@Override

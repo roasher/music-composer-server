@@ -118,6 +118,7 @@ public class CompositionDecomposer {
 	public Lexicon decompose( List<Composition> compositionList, double rhythmValue ) {
 		logger.info( "Getting persisted blocks" );
 		Lexicon dataBaseLexicon = lexiconDAO.fetch();
+		logger.info( dataBaseLexicon.getComposeBlockList().size() != 0 ? "Fetched Lexicon is NOT empty" : "Fetched Lexicon IS empty" );
 
 		logger.info( "Deleting all blocks, build from other than input list compositions" );
 		trimToCompositions( dataBaseLexicon.getComposeBlockList(), compositionList );

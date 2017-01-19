@@ -1,5 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.equality.melodymovement;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
 
 import static java.lang.Math.signum;
@@ -9,8 +12,11 @@ import static java.lang.Math.signum;
  * @author Pavel Yurkin
  * @date 27.06.2014.
  */
+@Component
 public class ContourMelodyMovementEquality extends AbstractMelodyMovementEquality {
     // Maximum allowable number of intervals in different direction
+
+    @Value( "${ContourMelodyMovementEquality.maxNumberOfDiffDirectionIntervals}" )
     private int maxNumberOfDiffDirectionIntervals;
 
     @Override

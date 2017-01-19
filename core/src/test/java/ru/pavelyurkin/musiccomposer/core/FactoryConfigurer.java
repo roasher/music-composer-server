@@ -1,4 +1,4 @@
-package ru.pavelyurkin.musiccomposer.core.utils.test;
+package ru.pavelyurkin.musiccomposer.core;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import java.util.Map;
 @Component
 public class FactoryConfigurer implements ApplicationContextAware {
 
-	@Autowired
 	private ApplicationContext applicationContext;
 
 	@Override

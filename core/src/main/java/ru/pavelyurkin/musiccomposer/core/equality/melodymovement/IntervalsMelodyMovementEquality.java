@@ -1,5 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.equality.melodymovement;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
 
 import static java.lang.Math.abs;
@@ -8,11 +10,14 @@ import static java.lang.Math.abs;
  * @author Pavel Yurkin
  * @date 28.06.2014.
  */
+@Component
 public class IntervalsMelodyMovementEquality extends AbstractMelodyMovementEquality {
 
 	// Maximum allowable number of intervals that can be different
+	@Value( "${IntervalsMelodyMovementEquality.maxNumberOfShiftedIntervals}" )
 	private int maxNumberOfShiftedIntervals;
 	// Maximum allowable pitch difference
+	@Value( "${IntervalsMelodyMovementEquality.maxShift}" )
 	private int maxShift;
 
 	public double getEqualityMetric( MelodyMovement firstMelodyMovement, MelodyMovement secondMelodyMovement ) {

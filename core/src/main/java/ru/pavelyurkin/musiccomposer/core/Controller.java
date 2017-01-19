@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.composer.next.FilteredNextBlockProvider;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 public class Controller {
 
-	public static final ApplicationContext applicationContext = new ClassPathXmlApplicationContext( "classpath:spring.configuration.xml" );
+	public static final ApplicationContext applicationContext = new AnnotationConfigApplicationContext( Application.class );
 
 	private CompositionLoader compositionLoader = applicationContext.getBean( CompositionLoader.class );
 	private CompositionComposer compositionComposer = applicationContext.getBean( CompositionComposer.class );

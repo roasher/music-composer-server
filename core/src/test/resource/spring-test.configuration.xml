@@ -6,7 +6,7 @@
 
     <import resource="equality.xml"/>
     <import resource="form_analyzez_config.xml"/>
-    <import resource="persistance-test.xml"/>
+    <!--<import resource="persistance-test.xml"/>-->
 
     <bean id="signatureDecomposer" class="ru.pavelyurkin.musiccomposer.core.decomposer.SignatureDecomposer">
         <property name="minSignatureLength" value="7"/>

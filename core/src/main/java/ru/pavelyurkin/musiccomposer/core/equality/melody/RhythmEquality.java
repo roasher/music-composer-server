@@ -1,5 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.equality.melody;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 import java.util.Collections;
@@ -9,9 +11,13 @@ import java.util.Map;
 /**
  * Created by Pavel Yurkin on 17.08.14.
  */
+@Component
 public class RhythmEquality implements Equality {
 
+	@Value( "${RhythmEquality.maxNumberOfRhythmicallyDifferentNotes}" )
     private int maxNumberOfRhythmicallyDifferentNotes;
+
+	@Value( "${RhythmEquality.maxRhythmDeviationSteps}" )
     private double maxRhythmDeviationSteps;
 
     @Override

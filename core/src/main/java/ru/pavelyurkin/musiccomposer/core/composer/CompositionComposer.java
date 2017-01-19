@@ -6,6 +6,7 @@ import jm.music.data.Note;
 import jm.music.data.Part;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;

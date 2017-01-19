@@ -3,6 +3,7 @@ package ru.pavelyurkin.musiccomposer.core.equality.equalityMetric;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringComposerTest;
 import jm.music.data.Note;
 import jm.music.data.Rest;
+import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
 
-public class MelodyMetricEqualityAnalyzerTest extends AbstractSpringComposerTest {
+public class MelodyMetricEqualityAnalyzerTest extends AbstractSpringTest {
 
 	@Autowired
 	private MelodyMetricEqualityAnalyzer melodyMetricEqualityAnalyzer;

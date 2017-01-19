@@ -1,5 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.equality.form;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEqualityAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
@@ -11,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Class analyzes if two melodies can belong to one form element
  * Created by night wish on 26.07.14.
  */
+@Component
 public class MelodyFormEqualityAnalyzer implements MelodyEqualityAnalyzer {
 
     /**
      * Min percentage of passed sub tests necessary to consider ru.pavelyurkin.musiccomposer.equality of two melodies
      */
+    @Value( "${MelodyFormEqualityAnalyzer.equalityTestPassThreshold}" )
     private double equalityTestPassThreshold;
 
 	@Autowired

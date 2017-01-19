@@ -1,5 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import org.slf4j.Logger;
@@ -16,15 +19,21 @@ public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
     /**
      * Min percentage of passed sub tests necessary to consider ru.pavelyurkin.musiccomposer.equality of two melodies
      */
+	@Value( "${MelodyEqualityAnalyzerImpl.equalityTestPassThreshold:1}" )
     private double equalityTestPassThreshold;
 
 //    private Equality fragmentationEqualityTest;
 //    private Equality interpolationEqualityTest;
 
+	@Autowired @Qualifier( "getCountourEquality" )
     private Equality countourEquality;
+	@Autowired @Qualifier( "getIntervalsEquality" )
     private Equality intervalsEquality;
+	@Autowired @Qualifier( "getInversionEquality" )
     private Equality inversionEquality;
+	@Autowired @Qualifier( "getOrderEquality" )
     private Equality orderEquality;
+	@Autowired @Qualifier( "getRhythmEquality" )
     private Equality rhythmEquality;
 
     private Logger logger = LoggerFactory.getLogger( getClass() );
