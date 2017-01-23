@@ -4,6 +4,7 @@ import jm.constants.Pitches;
 import jm.music.data.Note;
 import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 import java.lang.reflect.Field;
@@ -123,8 +124,8 @@ public class ModelUtils {
 		return sumAllRhytmValues( melody.getNoteList() );
 	}
 
-	public static double sumAllRhythmValues( List<ComposeBlock> musicBlocks ) {
-		return musicBlocks.stream().mapToDouble( ComposeBlock::getRhythmValue ).sum();
+	public static double sumAllRhythmValues( List<MusicBlock> musicBlocks ) {
+		return musicBlocks.stream().mapToDouble( MusicBlock::getRhythmValue ).sum();
 	}
 
 	public static String getNoteNameByPitch( int pitch ) {
@@ -142,26 +143,26 @@ public class ModelUtils {
 	}
 
 	/**
-	 * Returns pitch on which second compose block should be transposed according to first
+	 * Returns pitch on which second block should be transposed according to first
      * To be able to calculate transpose pitch there should be at least one pair of non rest notes
-     * in lastNoteOfFirst and firstNoteOfSecond ComposeBlocks and also firstNoteOfSecond movementFromPreviousToThis
+     * in lastNoteOfFirst and firstNoteOfSecond blocks and also firstNoteOfSecond movementFromPreviousToThis
      * shouldn't be movement from rest
-	 * @param firstComposeBlock
-	 * @param secondComposeBlock
+	 * @param firstBlock
+	 * @param secondBlock
 	 * @return
 	 */
-	public static int getTransposePitch( Optional<ComposeBlock> firstComposeBlock, ComposeBlock secondComposeBlock ) {
-		if ( !firstComposeBlock.isPresent() ) return 0;
+	public static int getTransposePitch( Optional<MusicBlock> firstBlock, MusicBlock secondBlock ) {
+		if ( !firstBlock.isPresent() ) return 0;
 		// check if all pauses
-		if ( secondComposeBlock.getMelodyList()
+		if ( secondBlock.getMelodyList()
 				.stream()
 				.flatMap( melody -> melody.getNoteList().stream() )
 				.filter( note ->  !( ( Note ) note ).isRest() ).count() == 0 ) return 0;
-		for ( int melodyNumber = 0; melodyNumber < firstComposeBlock.get().getMelodyList().size(); melodyNumber++ ) {
-			Note lastNoteOfFirst = firstComposeBlock.get().getMelodyList().get( melodyNumber )
-					.getNote( firstComposeBlock.get().getMelodyList().get( melodyNumber ).size() - 1 );
-			Note firstNoteOfSecond = secondComposeBlock.getMelodyList().get( melodyNumber ).getNote( 0 );
-			int noteMovement = secondComposeBlock.getBlockMovementFromPreviousToThis().getVoiceMovements().get(melodyNumber);
+		for ( int melodyNumber = 0; melodyNumber < firstBlock.get().getMelodyList().size(); melodyNumber++ ) {
+			Note lastNoteOfFirst = firstBlock.get().getMelodyList().get( melodyNumber )
+					.getNote( firstBlock.get().getMelodyList().get( melodyNumber ).size() - 1 );
+			Note firstNoteOfSecond = secondBlock.getMelodyList().get( melodyNumber ).getNote( 0 );
+			int noteMovement = secondBlock.getBlockMovementFromPreviousToThis().getVoiceMovements().get(melodyNumber);
 			if ( lastNoteOfFirst.getPitch() != Note.REST && firstNoteOfSecond.getPitch() != Note.REST &&
                     noteMovement != BlockMovement.MOVEMENT_FROM_REST) {
 				return lastNoteOfFirst.getPitch() + noteMovement - firstNoteOfSecond.getPitch();
@@ -235,18 +236,18 @@ public class ModelUtils {
 
 	/**
 	 * Needle blocks from first to the last transposing due to block movement. Solid Block at the end.
-	 * @param composeBlocks
+	 * @param blocks
 	 * @return
 	 */
-	public static ComposeBlock gatherBlocksWithTransposition(List<ComposeBlock> composeBlocks) {
-		List<ComposeBlock> transposedBlocks = new ArrayList<>(  );
-		transposedBlocks.add( composeBlocks.get( 0 ) );
-		for ( int blockNumber = 1; blockNumber < composeBlocks.size(); blockNumber++ ) {
-			ComposeBlock previousBlock = composeBlocks.get( blockNumber - 1 );
-			ComposeBlock currentBlock = composeBlocks.get( blockNumber );
+	public static MusicBlock gatherBlocksWithTransposition(List<MusicBlock> blocks) {
+		List<MusicBlock> transposedBlocks = new ArrayList<>(  );
+		transposedBlocks.add( blocks.get( 0 ) );
+		for ( int blockNumber = 1; blockNumber < blocks.size(); blockNumber++ ) {
+			MusicBlock previousBlock = blocks.get( blockNumber - 1 );
+			MusicBlock currentBlock = blocks.get( blockNumber );
 			int transposePitch = getTransposePitch( Optional.of( previousBlock ), currentBlock );
 			transposedBlocks.add( currentBlock.transposeClone( transposePitch ) );
 		}
-		return new ComposeBlock( transposedBlocks );
+		return new MusicBlock( transposedBlocks );
 	}
 }

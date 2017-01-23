@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import jm.music.data.Note;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
@@ -48,17 +49,21 @@ public class ComposeBlockVoiceRangeFilter extends AbstractComposeBlockFilter {
 	@Override
 	public List<ComposeBlock> filterIt( List<ComposeBlock> possibleNextComposeBlocks, List<CompositionStep> previousCompositionSteps ) {
 		List<ComposeBlock> out = new ArrayList<>();
-		ComposeBlock lastTrasposedComposeBlock = previousCompositionSteps.get( previousCompositionSteps.size() - 1 ).getTransposeComposeBlock();
+		MusicBlock lastTrasposedBlock = previousCompositionSteps.get( previousCompositionSteps.size() - 1 ).getTransposedBlock();
 		nextBlock:
 		for ( ComposeBlock possibleNext : possibleNextComposeBlocks ) {
 			if ( possibleNext.getMelodyList().size() > melodyRange.size() ) throw new RuntimeException( "Number of melodies is "
 				+ "greater than number of ranges" );
-			int trasposePitch = ModelUtils.getTransposePitch( Optional.of( lastTrasposedComposeBlock ), possibleNext );
-			ComposeBlock transposedBlock = possibleNext.transposeClone( trasposePitch );
+			int trasposePitch = ModelUtils.getTransposePitch( Optional.of( lastTrasposedBlock ), possibleNext.getMusicBlock() );
+			MusicBlock transposedBlock = possibleNext.getMusicBlock().transposeClone( trasposePitch );
 			for ( int melodyNumber = 0; melodyNumber < transposedBlock.getMelodyList().size(); melodyNumber++ ) {
 				Melody melody = transposedBlock.getMelodyList().get( melodyNumber );
-				List<Integer> pitches = melody.getNoteList().stream().mapToInt( value -> ( ( Note ) value ).getPitch() ).filter( value -> value != Note.REST )
-						.boxed().collect( Collectors.toList() );
+				List<Integer> pitches = melody.getNoteList()
+						.stream()
+						.mapToInt( value -> ( ( Note ) value ).getPitch() )
+						.filter( value -> value != Note.REST )
+						.boxed()
+						.collect( Collectors.toList() );
 				if ( pitches.size() != 0 && ( Collections.max( pitches ) > melodyRange.get( melodyNumber ).highPitch || Collections.min( pitches ) < melodyRange.get( melodyNumber ).lowPitch ) ) {
 					continue nextBlock;
 				}

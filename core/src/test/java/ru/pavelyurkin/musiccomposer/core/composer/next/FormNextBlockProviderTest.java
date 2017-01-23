@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -87,14 +88,14 @@ public class FormNextBlockProviderTest extends AbstractSpringTest {
 		// Actually we don't care about similarFromSteps as long we mocked equalityMetricAnalyzer
 		List<ComposeBlock> originComposeBlocks = Arrays.asList( new ComposeBlock( 0, null, Arrays.asList( new Melody( new Rest( WHOLE_NOTE ) ) ), null ) );
 		List<FormCompositionStep> similarFormSteps = Arrays.asList(
-			new FormCompositionStep( originComposeBlocks, originComposeBlocks, null	)
+			new FormCompositionStep( originComposeBlocks, originComposeBlocks.stream().map( ComposeBlock::getMusicBlock ).collect( Collectors.toList()), null )
 		);
 
         List<CompositionStep> previousCompositionSteps = Arrays.asList(
 				new CompositionStep( null, null ),
-                new CompositionStep( composeBlock0, composeBlock0 ),
-                new CompositionStep( composeBlock1, composeBlock1 ),
-                new CompositionStep( composeBlock2, composeBlock2 )
+                new CompositionStep( composeBlock0, composeBlock0.getMusicBlock() ),
+                new CompositionStep( composeBlock1, composeBlock1.getMusicBlock() ),
+                new CompositionStep( composeBlock2, composeBlock2.getMusicBlock() )
         );
 
 		Optional<ComposeBlock> nextBlock = formNextBlockProvider.getNextBlock( previousCompositionSteps, similarFormSteps, Collections.emptyList(), WHOLE_NOTE );

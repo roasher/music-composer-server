@@ -3,6 +3,7 @@ package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import jm.music.data.Note;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class VoiceRangeFilterTest {
 				getTestComposeBlock( 3, Arrays.asList( G3, GS3, REST ), Arrays.asList( REST, REST, REST ), G3 - C3, REST ),
 				getTestComposeBlock( 4, Arrays.asList( G3, E3 ), Arrays.asList( D3, C3 ), G3 - C3, D3 - C4 ),
 				getTestComposeBlock( 5, Arrays.asList( REST, REST ), Arrays.asList( REST, REST ), G3 - C3, D3 - C4 ) );
-		ComposeBlock firstComposeBlock = new ComposeBlock( 0, null, Arrays.asList(
+		MusicBlock firstBlock = new MusicBlock( 0, null, Arrays.asList(
 				new Melody( new Note( C3, Note.DEFAULT_RHYTHM_VALUE ) ),
 				new Melody( new Note( C4, Note.DEFAULT_RHYTHM_VALUE ) ) ), null );
 
@@ -38,7 +39,7 @@ public class VoiceRangeFilterTest {
 				new ComposeBlockVoiceRangeFilter.Range( A2, D3 )
 		) );
 
-		List<CompositionStep> mockComposeSteps = Arrays.asList( new CompositionStep( firstComposeBlock, firstComposeBlock ) );
+		List<CompositionStep> mockComposeSteps = Arrays.asList( new CompositionStep( new ComposeBlock( firstBlock ), firstBlock ) );
 		List<ComposeBlock> filtered0 = composeBlockVoiceRangeFilter.filter( composeBlocks, mockComposeSteps );
 		assertEquals( 3, filtered0.size() );
 		assertEquals( 0, filtered0.get( 0 ).getStartTime(), 0 );

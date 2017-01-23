@@ -5,6 +5,7 @@ import jm.music.data.Note;
 import jm.music.data.Rest;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import org.junit.Test;
 
@@ -29,10 +30,10 @@ public class RangeFilterTest {
 				getMockComposeBlock( 3, E3, B4, E3 - C3, B4 - C4 ),
 				getMockComposeBlock( 4, E3, B3, E3 - C3, B3 - C4 ),
 				new ComposeBlock( 5, null, Arrays.asList( restMelody, restMelody ), new BlockMovement( Note.REST, Note.REST ) ) );
-		ComposeBlock firstComposeBlock = new ComposeBlock( 0, null, Arrays.asList(
+		MusicBlock firstBlock = new MusicBlock( 0, null, Arrays.asList(
 				new Melody( new Note( C4, Note.DEFAULT_RHYTHM_VALUE ) ),
 				new Melody( new Note( C3, Note.DEFAULT_RHYTHM_VALUE ) ) ), null );
-		List<CompositionStep> mockComposeSteps = Arrays.asList( new CompositionStep( firstComposeBlock, firstComposeBlock ) );
+		List<CompositionStep> mockComposeSteps = Arrays.asList( new CompositionStep( new ComposeBlock( firstBlock ), firstBlock ) );
 
 		ComposeBlockRangeFilter ComposeBlockRangeFilter0 = new ComposeBlockRangeFilter( C3, C4 );
 		List<ComposeBlock> filtered0 = ComposeBlockRangeFilter0.filter( composeBlocks, mockComposeSteps );

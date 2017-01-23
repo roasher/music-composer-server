@@ -1,6 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.composer.step;
 
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
 import java.util.HashSet;
@@ -16,27 +17,27 @@ import java.util.Set;
 public class FormCompositionStep {
 
 	private List<ComposeBlock> originComposeBlocks;
-	private List<ComposeBlock> transposedComposeBlocks;
+	private List<MusicBlock> transposedBlocks;
 	private Form form;
 	/**
 	 * Valid Music Blocks which can come next to this, but their usage leads to dead end in future cause of small lexicon.
 	 */
 	private Set<List<ComposeBlock>> nextMusicBlockExclusions = new HashSet<>(  );
 
-	public FormCompositionStep( List<ComposeBlock> originComposeBlocks, List<ComposeBlock> transposedComposeBlocks, Form form ) {
+	public FormCompositionStep( List<ComposeBlock> originComposeBlocks, List<MusicBlock> transposedBlocks, Form form ) {
 		this.originComposeBlocks = originComposeBlocks;
-		this.transposedComposeBlocks = transposedComposeBlocks;
+		this.transposedBlocks = transposedBlocks;
 		this.form = form;
 	}
 
 	public FormCompositionStep() {}
 
-	public List<ComposeBlock> getTransposedComposeBlocks() {
-		return transposedComposeBlocks;
+	public List<MusicBlock> getTransposedBlocks() {
+		return transposedBlocks;
 	}
 
-	public void setTransposedComposeBlocks( List<ComposeBlock> transposedComposeBlocks ) {
-		this.transposedComposeBlocks = transposedComposeBlocks;
+	public void setTransposedBlocks( List<MusicBlock> transposedBlocks ) {
+		this.transposedBlocks = transposedBlocks;
 	}
 
 	public void addNextExclusion( List<ComposeBlock> musicBlocks ) {

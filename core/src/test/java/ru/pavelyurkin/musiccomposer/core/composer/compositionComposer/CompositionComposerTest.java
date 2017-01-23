@@ -18,6 +18,7 @@ import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
@@ -65,17 +66,18 @@ public class CompositionComposerTest extends AbstractSpringTest {
 
 	@Test
 	public void gatherCompositionTest() {
-		List<ComposeBlock> composeBlocks = Arrays.asList(
-				new ComposeBlock( 0, null, Arrays.asList( new Melody( new Rest( QUARTER_NOTE ) ), new Melody( new Note( C3, QUARTER_NOTE ) ) ),
+		List<MusicBlock> blocks = Arrays.asList(
+				new MusicBlock( 0, null, Arrays.asList( new Melody( new Rest( QUARTER_NOTE ) ), new Melody( new Note( C3, QUARTER_NOTE ) ) ),
 						new BlockMovement( -256, -256 ) ),
-				new ComposeBlock( 0, null, Arrays.asList( new Melody( new Rest( EIGHTH_NOTE ) ), new Melody( new Note( C4, EIGHTH_NOTE ) ) ),
-						new BlockMovement( 0, 0 ) ), new ComposeBlock( 0, null, Arrays.asList(
+				new MusicBlock( 0, null, Arrays.asList( new Melody( new Rest( EIGHTH_NOTE ) ), new Melody( new Note( C4, EIGHTH_NOTE ) ) ),
+						new BlockMovement( 0, 0 ) ),
+				new MusicBlock( 0, null, Arrays.asList(
 						new Melody( new Note( D5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ), new Note( F5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ) ),
 						new Melody( new Note( C4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( E4, EIGHTH_NOTE ) ) ),
 						new BlockMovement( -256, 2 ) ),
-				new ComposeBlock( 0, null, Arrays.asList( new Melody( new Note( B5, QUARTER_NOTE ) ), new Melody( new Rest( QUARTER_NOTE ) ) ),
+				new MusicBlock( 0, null, Arrays.asList( new Melody( new Note( B5, QUARTER_NOTE ) ), new Melody( new Rest( QUARTER_NOTE ) ) ),
 						new BlockMovement( 0, -256 ) ) );
-		Composition composition = compositionComposer.gatherComposition( composeBlocks );
+		Composition composition = compositionComposer.gatherComposition( blocks );
 		assertEquals( 2, composition.getPartList().size() );
 
 		List<Note> firstListOfNotes = getListOfNotes( composition.getPart( 0 ) );

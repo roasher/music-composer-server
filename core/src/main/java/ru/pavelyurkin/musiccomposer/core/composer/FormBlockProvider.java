@@ -7,6 +7,7 @@ import ru.pavelyurkin.musiccomposer.core.equality.form.FormEquality;
 import ru.pavelyurkin.musiccomposer.core.equality.form.RelativelyComparable;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.utils.CollectionUtils;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
@@ -41,7 +42,8 @@ public class FormBlockProvider {
 	 * @param previousSteps
 	 * @return
 	 */
-	public Optional<FormCompositionStep> getFormElement( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, Form form, List<FormCompositionStep> previousSteps ) {
+	public Optional<FormCompositionStep> getFormElement( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, Form form,
+			List<FormCompositionStep> previousSteps ) {
 		logger.info( "Composing form element : {}, length : {}", form.getValue(), length );
 
 		List<FormCompositionStep> similarFormSteps = previousSteps.stream().skip( 1 )
@@ -53,8 +55,16 @@ public class FormBlockProvider {
 				similarFormSteps, differentFormSteps, true );
 
 		return Optional.ofNullable( !compositionSteps.isEmpty() ?
-				new FormCompositionStep( compositionSteps.stream().map( CompositionStep::getOriginComposeBlock ).collect( Collectors.toList() ),
-						compositionSteps.stream().map( CompositionStep::getTransposeComposeBlock ).collect( Collectors.toList() ), form ) :
+				new FormCompositionStep(
+						compositionSteps
+								.stream()
+								.map( CompositionStep::getOriginComposeBlock )
+								.collect( Collectors.toList() ),
+						compositionSteps
+								.stream()
+								.map( CompositionStep::getTransposedBlock )
+								.collect( Collectors.toList() ),
+						form ) :
 				null );
 	}
 
@@ -99,17 +109,21 @@ public class FormBlockProvider {
 					composeBlockProvider.getNextComposeBlock( lexicon, compositionSteps, length );
 
 			if ( nextComposeBlock.isPresent() && currentLength + nextComposeBlock.get().getRhythmValue() <= length ) {
-				Optional<ComposeBlock> lastCompositionStepTransposeComposeBlock = Optional.ofNullable( lastCompositionStep.getTransposeComposeBlock() );
-				int transposePitch = ModelUtils.getTransposePitch( lastCompositionStepTransposeComposeBlock, nextComposeBlock.get() );
-				CompositionStep nextStep = new CompositionStep( nextComposeBlock.get(), nextComposeBlock.get().transposeClone( transposePitch ) );
+				Optional<MusicBlock> lastCompositionStepTransposedBlock = Optional.ofNullable( lastCompositionStep.getTransposedBlock() );
+				int transposePitch = ModelUtils.getTransposePitch( lastCompositionStepTransposedBlock, nextComposeBlock.get().getMusicBlock() );
+				CompositionStep nextStep = new CompositionStep( nextComposeBlock.get(), nextComposeBlock.get().getMusicBlock().transposeClone( transposePitch ) );
 				compositionSteps.add( nextStep );
 				currentLength += nextComposeBlock.get().getRhythmValue();
 				if ( currentLength == length ) {
 					if ( composingRegardingForm ) {
 						// FORM CHECK
-						List<ComposeBlock> transposedComposeBlocks = compositionSteps.stream().skip( 1 ).map( CompositionStep::getTransposeComposeBlock ).collect( Collectors.toList() );
-						ComposeBlock composeBlock = new ComposeBlock( transposedComposeBlocks );
-						Pair<Boolean, Double> formCheckPassed = isFormCheckPassed( composeBlock, similarFormSteps, differentFormSteps );
+						List<MusicBlock> transposedComposeBlocks = compositionSteps
+								.stream()
+								.skip( 1 )
+								.map( CompositionStep::getTransposedBlock )
+								.collect( Collectors.toList() );
+						MusicBlock block = new MusicBlock( transposedComposeBlocks );
+						Pair<Boolean, Double> formCheckPassed = isFormCheckPassed( block, similarFormSteps, differentFormSteps );
 						if ( !formCheckPassed.getKey() ) {
 							int stepToRevert = getStepToRevert( step, formCheckPassed.getValue() );
 							logger.debug( "ComposeBlock check failed in terms of form. Reverting to step {}", stepToRevert );
@@ -170,29 +184,29 @@ public class FormBlockProvider {
 	}
 
 	/**
-	 * Checks if new compose block can be used in composition in terms of form. Returning diff measure as well.
+	 * Checks if new block can be used in composition in terms of form. Returning diff measure as well.
 	 *
-	 * @param composeBlock
+	 * @param block
 	 * @param similarFormSteps
 	 * @param differentFormSteps
 	 * @return
 	 */
-	private Pair<Boolean, Double> isFormCheckPassed( ComposeBlock composeBlock, List<FormCompositionStep> similarFormSteps, List<FormCompositionStep> differentFormSteps ) {
+	private Pair<Boolean, Double> isFormCheckPassed( MusicBlock block, List<FormCompositionStep> similarFormSteps, List<FormCompositionStep> differentFormSteps ) {
 		double maxDiffMeasure = 0;
-		// checking that new composeBlock is different to differentFormSteps
+		// checking that new block is different to differentFormSteps
 		for ( FormCompositionStep differentStep : differentFormSteps ) {
-			ComposeBlock previousComposeBlock = new ComposeBlock( differentStep.getTransposedComposeBlocks() );
-			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() );
+			MusicBlock previousBlock = new MusicBlock( differentStep.getTransposedBlocks() );
+			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( block.getMelodyList(), previousBlock.getMelodyList() );
 			if ( comparison.getKey() != RelativelyComparable.ResultOfComparison.DIFFERENT ) {
 				return new Pair<>( false, comparison.getValue() );
 			}
 			if ( maxDiffMeasure < comparison.getValue() )
 				maxDiffMeasure = comparison.getValue();
 		}
-		// checking that new composeBlock is similar to similarFormSteps
+		// checking that new block is similar to similarFormSteps
 		for ( FormCompositionStep similarStep : similarFormSteps ) {
-			ComposeBlock previousComposeBlock = new ComposeBlock( similarStep.getTransposedComposeBlocks() );
-			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( composeBlock.getMelodyList(), previousComposeBlock.getMelodyList() );
+			MusicBlock previousBlock = new MusicBlock( similarStep.getTransposedBlocks() );
+			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( block.getMelodyList(), previousBlock.getMelodyList() );
 			if ( comparison.getKey() != RelativelyComparable.ResultOfComparison.EQUAL ) {
 				return new Pair<>( false, comparison.getValue() );
 			}
@@ -213,10 +227,10 @@ public class FormBlockProvider {
 	private CompositionStep fetchLastCompositionStep( FormCompositionStep formCompositionStep ) {
 		List<ComposeBlock> exclusions = CollectionUtils.getListOfFirsts( formCompositionStep.getNextMusicBlockExclusions() );
 		List<ComposeBlock> originComposeBlocks = formCompositionStep.getOriginComposeBlocks();
-		List<ComposeBlock> trasposedComposeBlocks = formCompositionStep.getTransposedComposeBlocks();
+		List<MusicBlock> trasposedBlocks = formCompositionStep.getTransposedBlocks();
 		CompositionStep compositionStep;
 		if ( originComposeBlocks != null ) {
-			compositionStep = new CompositionStep( originComposeBlocks.get( originComposeBlocks.size() - 1 ), trasposedComposeBlocks.get( trasposedComposeBlocks.size() - 1 ) );
+			compositionStep = new CompositionStep( originComposeBlocks.get( originComposeBlocks.size() - 1 ), trasposedBlocks.get( trasposedBlocks.size() - 1 ) );
 		} else {
 			compositionStep = new CompositionStep( null, null );
 		}

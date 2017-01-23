@@ -27,26 +27,21 @@ public class ComposeBlock {
 	}
 
 	public ComposeBlock( double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, BlockMovement blockMovementFromPreviousToThis ) {
-		this.musicBlock = new MusicBlock( melodyList, compositionInfo, blockMovementFromPreviousToThis );
-		musicBlock.setStartTime( startTime );
+		this.musicBlock = new MusicBlock( startTime, compositionInfo, melodyList, blockMovementFromPreviousToThis );
 	}
 
 	public ComposeBlock( List<ComposeBlock> composeBlockList ) {
-		this.musicBlock = new MusicBlock( composeBlockList.stream().map( ComposeBlock::getMusicBlock ).collect( Collectors.toList()) );
+		this.musicBlock = new MusicBlock( composeBlockList
+				.stream()
+				.map( ComposeBlock::getMusicBlock )
+				.collect( Collectors.toList())
+		);
 		this.possiblePreviousComposeBlocks = composeBlockList.get( 0 ).getPossiblePreviousComposeBlocks();
 		this.possibleNextComposeBlocks = composeBlockList.get( composeBlockList.size() - 1 ).getPossibleNextComposeBlocks();
 	}
 
 	public boolean hasEqualsMusicBlock( ComposeBlock composeBlock ) {
 		return this.musicBlock.equals( composeBlock.getMusicBlock() );
-	}
-
-	// TODO implement composition info and block movement cloning
-	public ComposeBlock transposeClone( int transposePitch ) {
-		List<Melody> cloneMelodies = new ArrayList<>();
-		this.musicBlock.getMelodyList().forEach( melody -> cloneMelodies.add( melody.transposeClone( transposePitch ) ) );
-		ComposeBlock clone = new ComposeBlock( getStartTime(), getCompositionInfo(), cloneMelodies, getBlockMovementFromPreviousToThis() );
-		return clone;
 	}
 
 	public boolean isStartsWithRest() {

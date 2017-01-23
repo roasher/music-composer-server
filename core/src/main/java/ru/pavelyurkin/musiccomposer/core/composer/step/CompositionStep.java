@@ -1,6 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.composer.step;
 
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 import java.util.*;
 
@@ -19,16 +20,16 @@ public class CompositionStep {
 	/**
 	 * Compose Block that is part of composed composition
 	 */
-	private ComposeBlock transposeComposeBlock;
+	private MusicBlock transposedBlock;
 
 	/**
 	 * Valid Music Blocks which can come next to this, but their usage leads to dead end in future cause of small lexicon.
 	 */
 	private List<ComposeBlock> nextMusicBlockExclusions = new ArrayList<>(  );
 
-	public CompositionStep( ComposeBlock originComposeBlock, ComposeBlock transposeComposeBlock ) {
+	public CompositionStep( ComposeBlock originComposeBlock, MusicBlock transposedBlock ) {
 		this.originComposeBlock = originComposeBlock;
-		this.transposeComposeBlock = transposeComposeBlock;
+		this.transposedBlock = transposedBlock;
 	}
 
 	public void addNextExclusion( ComposeBlock musicBlock ) {
@@ -51,12 +52,12 @@ public class CompositionStep {
 		this.nextMusicBlockExclusions = nextMusicBlockExclusions;
 	}
 
-	public ComposeBlock getTransposeComposeBlock() {
-		return transposeComposeBlock;
+	public MusicBlock getTransposedBlock() {
+		return transposedBlock;
 	}
 
-	public void setTransposeComposeBlock( ComposeBlock transposeComposeBlock ) {
-		this.transposeComposeBlock = transposeComposeBlock;
+	public void setTransposedBlock( MusicBlock transposedBlock ) {
+		this.transposedBlock = transposedBlock;
 	}
 
 }

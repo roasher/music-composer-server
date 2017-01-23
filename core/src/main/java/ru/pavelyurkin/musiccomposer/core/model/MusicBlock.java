@@ -26,6 +26,11 @@ public class MusicBlock implements Serializable {
 	private double rhythmValue;
 	private double startTime;
 
+	public MusicBlock( double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, BlockMovement blockMovementFromPreviousToThis ) {
+		this( melodyList, compositionInfo, blockMovementFromPreviousToThis );
+		this.startTime = startTime;
+	}
+
 	public MusicBlock( List<Melody> melodyList, CompositionInfo compositionInfo, BlockMovement blockMovementFromPreviousToThis ) {
 		this( melodyList, compositionInfo );
 		this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
@@ -142,6 +147,16 @@ public class MusicBlock implements Serializable {
 			stringBuilder.append(" & ");
 		}
 		return stringBuilder.toString();
+	}
+
+	// TODO implement composition info and block movement cloning
+	public MusicBlock transposeClone( int transposePitch ) {
+		List<Melody> cloneMelodies = new ArrayList<>();
+		this.getMelodyList().forEach( melody -> cloneMelodies.add( melody.transposeClone( transposePitch ) ) );
+		MusicBlock clone = new MusicBlock( cloneMelodies, getCompositionInfo() );
+		clone.setStartTime( getStartTime() );
+		clone.setBlockMovementFromPreviousToThis( getBlockMovementFromPreviousToThis() );
+		return clone;
 	}
 
 	public void setBlockMovementFromPreviousToThis( BlockMovement blockMovementFromPreviousToThis ) {
