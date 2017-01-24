@@ -29,6 +29,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static jm.JMC.*;
 import static jm.constants.Durations.WHOLE_NOTE;
@@ -66,18 +67,36 @@ public class CompositionComposerTest extends AbstractSpringTest {
 
 	@Test
 	public void gatherCompositionTest() {
-		List<MusicBlock> blocks = Arrays.asList(
-				new MusicBlock( 0, null, Arrays.asList( new Melody( new Rest( QUARTER_NOTE ) ), new Melody( new Note( C3, QUARTER_NOTE ) ) ),
-						new BlockMovement( -256, -256 ) ),
-				new MusicBlock( 0, null, Arrays.asList( new Melody( new Rest( EIGHTH_NOTE ) ), new Melody( new Note( C4, EIGHTH_NOTE ) ) ),
-						new BlockMovement( 0, 0 ) ),
-				new MusicBlock( 0, null, Arrays.asList(
+		List<List<Melody>> blocks = Arrays.asList(
+				Arrays.asList( new Melody( new Rest( QUARTER_NOTE ) ), new Melody( new Note( C3, QUARTER_NOTE ) ) ),
+				Arrays.asList( new Melody( new Rest( EIGHTH_NOTE ) ), new Melody( new Note( C4, EIGHTH_NOTE ) ) ),
+				Arrays.asList(
 						new Melody( new Note( D5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ), new Note( F5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ) ),
 						new Melody( new Note( C4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( E4, EIGHTH_NOTE ) ) ),
-						new BlockMovement( -256, 2 ) ),
-				new MusicBlock( 0, null, Arrays.asList( new Melody( new Note( B5, QUARTER_NOTE ) ), new Melody( new Rest( QUARTER_NOTE ) ) ),
-						new BlockMovement( 0, -256 ) ) );
+				Arrays.asList( new Melody( new Note( B5, QUARTER_NOTE ) ), new Melody( new Rest( QUARTER_NOTE ) ) ) );
+
 		Composition composition = compositionComposer.gatherComposition( blocks );
+		compositionCheck( composition );
+
+		List<List<Melody>> blocks0 = Arrays.asList(
+				Arrays.asList( new Melody( new Rest( QUARTER_NOTE ) ), new Melody( new Note( C3, QUARTER_NOTE ) ) ) );
+		List<List<Melody>> blocks1 = Arrays.asList(
+				Arrays.asList( new Melody( new Rest( EIGHTH_NOTE ) ), new Melody( new Note( C4, EIGHTH_NOTE ) ) ),
+				Arrays.asList(
+						new Melody( new Note( D5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ), new Note( F5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ) ),
+						new Melody( new Note( C4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( E4, EIGHTH_NOTE ) ) ) );
+		List<List<Melody>> blocks2 = Arrays.asList(
+				Arrays.asList( new Melody( new Note( B5, QUARTER_NOTE ) ), new Melody( new Rest( QUARTER_NOTE ) ) ) );
+
+		Composition composition0 = compositionComposer.gatherComposition( blocks0 );
+		Composition composition1 = compositionComposer.gatherComposition( blocks1 );
+		Composition composition2 = compositionComposer.gatherComposition( blocks2 );
+
+		compositionCheck( compositionComposer.gatherComposition( composition0, composition1, composition2 ) );
+
+	}
+
+	private void compositionCheck( Composition composition ) {
 		assertEquals( 2, composition.getPartList().size() );
 
 		List<Note> firstListOfNotes = getListOfNotes( composition.getPart( 0 ) );
@@ -97,7 +116,6 @@ public class CompositionComposerTest extends AbstractSpringTest {
 		assertTrue( new Note( D4, EIGHTH_NOTE ).equals( secondListOfNotes.get( 3 ) ) );
 		assertTrue( new Note( E4, EIGHTH_NOTE ).equals( secondListOfNotes.get( 4 ) ) );
 		assertTrue( new Rest( QUARTER_NOTE ).equals( secondListOfNotes.get( 5 ) ) );
-
 	}
 
 	private List<Note> getListOfNotes( Part part ) {

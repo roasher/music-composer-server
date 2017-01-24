@@ -1,5 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
+import javafx.util.Pair;
+import jm.music.data.Phrase;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import jm.music.data.Note;
@@ -29,6 +31,24 @@ public class CompositionComposer {
 	private FormBlockProvider formBlockProvider;
 
 	/**
+	 * Composing piece considering given lexicon and step to start from.
+	 * Returns
+	 *
+	 * @param lexicon
+	 * @param compositionLength
+	 * @return
+	 */
+	public Pair<Composition, CompositionStep> compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, double compositionLength, CompositionStep previousCompositionStep ) {
+		List<CompositionStep> compositionSteps = formBlockProvider.composeSteps( compositionLength, lexicon, composeBlockProvider, previousCompositionStep );
+		List<List<Melody>> blocks = compositionSteps
+				.stream()
+				.map( compositionStep -> compositionStep.getTransposedBlock().getMelodyList() )
+				.collect( Collectors.toList() );
+		Composition composition = gatherComposition( blocks );
+		return new Pair<>( composition, compositionSteps.isEmpty() ? null : compositionSteps.get( compositionSteps.size() -1 ) );
+	}
+
+	/**
 	 * Composing piece considering given lexicon and composition compositionLength
 	 *
 	 * @param lexicon
@@ -36,12 +56,7 @@ public class CompositionComposer {
 	 * @return
 	 */
 	public Composition compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, double compositionLength ) {
-		List<CompositionStep> compositionSteps = formBlockProvider.composeSteps( compositionLength, lexicon, composeBlockProvider, new CompositionStep( null, null ) );
-		List<MusicBlock> blocks = compositionSteps
-						.stream()
-						.map( CompositionStep::getTransposedBlock )
-						.collect( Collectors.toList() );
-		return gatherComposition( blocks );
+		return compose( composeBlockProvider, lexicon, compositionLength, new CompositionStep( null, null ) ).getKey();
 	}
 
 	/**
@@ -54,9 +69,11 @@ public class CompositionComposer {
 	 */
 	public Composition compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, String form, double compositionLength ) {
 		List<FormCompositionStep> formCompositionSteps = composeSteps( composeBlockProvider, lexicon, form, compositionLength );
-		List<MusicBlock> blocks = formCompositionSteps
+		List<List<Melody>> blocks = formCompositionSteps
 							.stream()
-							.flatMap( formCompositionStep -> formCompositionStep.getTransposedBlocks().stream() )
+							.flatMap( formCompositionStep -> formCompositionStep.getTransposedBlocks()
+									.stream()
+									.map( MusicBlock::getMelodyList ) )
 							.collect( Collectors.toList() );
 		return gatherComposition( blocks );
 	}
@@ -110,38 +127,50 @@ public class CompositionComposer {
 	 * @param blocks
 	 * @return
 	 */
-	public Composition gatherComposition( List<MusicBlock> blocks ) {
+	public <T extends Phrase> Composition gatherComposition( List<List<T>> blocks ) {
 		List<Part> parts = new ArrayList<>();
-		for ( int partNumber = 0; partNumber < blocks.get( 0 ).getMelodyList().size(); partNumber++ ) {
+		// creating parts and add first block
+		for ( int partNumber = 0; partNumber < blocks.get( 0 ).size(); partNumber++ ) {
 			Part part = new Part();
-			part.add( blocks.get( 0 ).getMelodyList().get( partNumber ) );
+			part.add( blocks.get( 0 ).get( partNumber ) );
 			parts.add( part );
 		}
 		// gluing
 		for ( int blockNumber = 1; blockNumber < blocks.size(); blockNumber++ ) {
-			Optional.ofNullable( blocks.get( blockNumber ).getCompositionInfo() )
-					.ifPresent( compositionInfo -> logger.info( compositionInfo.getTitle() ) );
 			for ( int partNumber = 0; partNumber < parts.size(); partNumber++ ) {
-				Melody melody = blocks.get( blockNumber ).getMelodyList().get( partNumber );
-				Melody previousMelody = ( Melody ) parts.get( partNumber ).getPhraseList().get( parts.get( partNumber ).getPhraseList().size() - 1 );
+				Phrase phrase = blocks.get( blockNumber ).get( partNumber );
+				Phrase previousPhrase = ( Phrase ) parts.get( partNumber ).getPhraseList().get( parts.get( partNumber ).getPhraseList().size() - 1 );
 
-				Note previousNote = ( Note ) previousMelody.getNoteList().get( previousMelody.size() - 1 );
-				Note firstNote = ( Note ) melody.getNoteList().get( 0 );
+				Note previousNote = ( Note ) previousPhrase.getNoteList().get( previousPhrase.size() - 1 );
+				Note firstNote = ( Note ) phrase.getNoteList().get( 0 );
 
 				if ( previousNote.samePitch( firstNote ) ) {
 					previousNote.setRhythmValue( previousNote.getRhythmValue() + firstNote.getRhythmValue() );
 					previousNote.setDuration( previousNote.getDuration() + firstNote.getDuration() );
-					melody.getNoteList().remove( 0 );
+					phrase.getNoteList().remove( 0 );
 				}
 
-				if ( !melody.getNoteList().isEmpty() ) {
-					parts.get( partNumber ).add( melody );
+				if ( !phrase.getNoteList().isEmpty() ) {
+					parts.get( partNumber ).add( phrase );
 				}
 			}
 		}
 
 		Composition composition = new Composition( parts );
 		return composition;
+	}
+
+	public Composition gatherComposition( Composition... compositions ) {
+		List<List<Melody>> collect = Arrays.stream( compositions )
+				.map( composition -> ( ( List<Part> ) composition.getPartList() )
+						.stream()
+						.map( part ->  new Melody( ( List<Note> ) part.getPhraseList()
+								.stream()
+								.flatMap( phrase ->  ( ( Phrase ) phrase ).getNoteList().stream() )
+								.collect( Collectors.toList() ) ) )
+						.collect( Collectors.toList() ) )
+				.collect( Collectors.toList() );
+		return gatherComposition( collect );
 	}
 
 }

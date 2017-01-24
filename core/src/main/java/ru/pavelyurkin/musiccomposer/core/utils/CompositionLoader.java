@@ -29,7 +29,9 @@ public class CompositionLoader {
 
 	private List<File> listFilesForFolder(final File folder) {
 		List<File> nameArray = new ArrayList<>();
-		for (final File fileEntry : folder.listFiles()) {
+		File[] files = folder.listFiles();
+		if ( files == null || files.length == 0 ) return Collections.emptyList();
+		for (final File fileEntry : files ) {
 			if (!fileEntry.isDirectory()) {
 				nameArray.add( fileEntry );
 			}
@@ -55,6 +57,7 @@ public class CompositionLoader {
 			Composition composition = getComposition( currentFile );
 			compositions.add( composition );
 		}
+		if ( compositions.isEmpty() ) throw new RuntimeException( "No compositions in this folder: " + folder.getAbsolutePath() );
 		return compositions;
 	}
 
