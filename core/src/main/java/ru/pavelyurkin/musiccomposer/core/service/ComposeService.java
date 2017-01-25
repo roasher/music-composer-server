@@ -41,7 +41,8 @@ public class ComposeService implements ApplicationContextAware {
 	/**
 	 * Default parameters with lazy init
 	 */
-	private ComposingParameters defaultComposingParameters;
+	private Lexicon defaultLexicon;
+	private ComposeBlockProvider defaultComposeBlockProvider;
 
 	@Autowired
 	private CompositionComposer compositionComposer;
@@ -73,12 +74,10 @@ public class ComposeService implements ApplicationContextAware {
 	 * @return
 	 */
 	public ComposingParameters getDefaultComposingParameters() {
-		if ( defaultComposingParameters == null ) {
-			defaultComposingParameters = new ComposingParameters();
-			defaultComposingParameters.setComposeBlockProvider( getDefaultComposeBlockProvider() );
-			defaultComposingParameters.setLexicon( getDefaultLexicon() );
-		}
-		return defaultComposingParameters;
+		ComposingParameters composingParameters = new ComposingParameters();
+		composingParameters.setComposeBlockProvider( getDefaultComposeBlockProvider() );
+		composingParameters.setLexicon( getDefaultLexicon() );
+		return composingParameters;
 	}
 
 	/**
@@ -86,9 +85,11 @@ public class ComposeService implements ApplicationContextAware {
 	 * @returnd
 	 */
 	private Lexicon getDefaultLexicon() {
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "/home/night_wish/Music/Bach chorals cut/" ) );
-		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
-		return lexicon;
+		if ( defaultLexicon == null ) {
+			List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "/home/night_wish/Music/Bach chorals cut/" ) );
+			defaultLexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
+		}
+		return defaultLexicon;
 	}
 
 	/**
@@ -96,20 +97,20 @@ public class ComposeService implements ApplicationContextAware {
 	 * @return
 	 */
 	private ComposeBlockProvider getDefaultComposeBlockProvider() {
+		if ( defaultComposeBlockProvider == null ) {
+			ComposeBlockFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
 
-		ComposeBlockFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
+			NextFormBlockProviderImpl nextFormBlockProvider = applicationContext.getBean( NextFormBlockProviderImpl.class );
+			nextFormBlockProvider.setComposeBlockFilter( bachChoralFilter );
 
-		NextFormBlockProviderImpl nextFormBlockProvider = applicationContext.getBean( NextFormBlockProviderImpl.class );
-		nextFormBlockProvider.setComposeBlockFilter( bachChoralFilter );
+			SimpleNextBlockProvider nextBlockProvider = applicationContext.getBean( SimpleNextBlockProvider.class );
+			nextBlockProvider.setComposeBlockFilter( bachChoralFilter );
 
-		SimpleNextBlockProvider nextBlockProvider = applicationContext.getBean( SimpleNextBlockProvider.class );
-		nextBlockProvider.setComposeBlockFilter( bachChoralFilter );
-
-		ComposeBlockProvider composeBlockProvider = applicationContext.getBean( ComposeBlockProvider.class );
-		composeBlockProvider.setNextBlockProvider( nextBlockProvider );
-		composeBlockProvider.setNextFormBlockProvider( nextFormBlockProvider );
-
-		return composeBlockProvider;
+			defaultComposeBlockProvider = applicationContext.getBean( ComposeBlockProvider.class );
+			defaultComposeBlockProvider.setNextBlockProvider( nextBlockProvider );
+			defaultComposeBlockProvider.setNextFormBlockProvider( nextFormBlockProvider );
+		}
+		return defaultComposeBlockProvider;
 	}
 
 	@Override
@@ -121,7 +122,11 @@ public class ComposeService implements ApplicationContextAware {
 		return composingParametersMap.get( id );
 	}
 
-	public void setDefaultComposingParameters( ComposingParameters defaultComposingParameters ) {
-		this.defaultComposingParameters = defaultComposingParameters;
+	public void setDefaultLexicon( Lexicon defaultLexicon ) {
+		this.defaultLexicon = defaultLexicon;
+	}
+
+	public void setDefaultComposeBlockProvider( ComposeBlockProvider defaultComposeBlockProvider ) {
+		this.defaultComposeBlockProvider = defaultComposeBlockProvider;
 	}
 }

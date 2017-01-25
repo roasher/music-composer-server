@@ -37,14 +37,11 @@ public class ComposeServiceTest extends AbstractSpringTest {
 
 	@Before
 	public void before() {
-		ComposingParameters composingParameters = new ComposingParameters();
-		composingParameters.setComposeBlockProvider( composeBlockProvider );
+		composeService.setDefaultComposeBlockProvider( composeBlockProvider );
 
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resource/ru/pavelyurkin/musiccomposer/core/decomposer/" ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
-		composingParameters.setLexicon( lexicon );
-
-		composeService.setDefaultComposingParameters( composingParameters );
+		composeService.setDefaultLexicon( lexicon );
 	}
 
 	@Test
