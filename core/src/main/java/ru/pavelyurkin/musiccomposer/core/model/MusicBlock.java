@@ -37,6 +37,9 @@ public class MusicBlock implements Serializable {
 	}
 
 	public MusicBlock( List<Melody> inputMelodyList, CompositionInfo inputCompositionInfo ) {
+		// check if inputMelody have same rhythm value
+		if ( inputMelodyList.stream().mapToDouble( Melody::getRythmValue ).distinct().count() != 1 )
+			throw new IllegalArgumentException( "Can't create Music Block: input melody list has melodies with different rhythm value" );
 		this.melodyList = inputMelodyList;
 		this.compositionInfo = inputCompositionInfo;
 		// Computing derivative information

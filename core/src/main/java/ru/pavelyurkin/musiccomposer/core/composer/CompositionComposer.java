@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class CompositionComposer {
 
 	/**
 	 * Composing piece considering given lexicon and step to start from.
-	 * Returns
+	 * Returns composition and last compose step to being able to start composing process from this point
 	 *
 	 * @param lexicon
 	 * @param compositionLength
@@ -122,7 +123,7 @@ public class CompositionComposer {
 	}
 
 	/**
-	 * Returns composition, build on input compose blocks
+	 * Creates composition, build on input compose blocks without changing the input
 	 *
 	 * @param blocks
 	 * @return
@@ -132,13 +133,13 @@ public class CompositionComposer {
 		// creating parts and add first block
 		for ( int partNumber = 0; partNumber < blocks.get( 0 ).size(); partNumber++ ) {
 			Part part = new Part();
-			part.add( blocks.get( 0 ).get( partNumber ) );
+			part.add( ModelUtils.clone( blocks.get( 0 ).get( partNumber ) ) );
 			parts.add( part );
 		}
 		// gluing
 		for ( int blockNumber = 1; blockNumber < blocks.size(); blockNumber++ ) {
 			for ( int partNumber = 0; partNumber < parts.size(); partNumber++ ) {
-				Phrase phrase = blocks.get( blockNumber ).get( partNumber );
+				Phrase phrase = ModelUtils.clone( blocks.get( blockNumber ).get( partNumber ) );
 				Phrase previousPhrase = ( Phrase ) parts.get( partNumber ).getPhraseList().get( parts.get( partNumber ).getPhraseList().size() - 1 );
 
 				Note previousNote = ( Note ) previousPhrase.getNoteList().get( previousPhrase.size() - 1 );
@@ -160,6 +161,12 @@ public class CompositionComposer {
 		return composition;
 	}
 
+	/**
+	 * Creates composition based on sum of the input
+	 *
+	 * @param compositions
+	 * @return
+	 */
 	public Composition gatherComposition( Composition... compositions ) {
 		List<List<Melody>> collect = Arrays.stream( compositions )
 				.map( composition -> ( ( List<Part> ) composition.getPartList() )

@@ -67,13 +67,7 @@ public class CompositionComposerTest extends AbstractSpringTest {
 
 	@Test
 	public void gatherCompositionTest() {
-		List<List<Melody>> blocks = Arrays.asList(
-				Arrays.asList( new Melody( new Rest( QUARTER_NOTE ) ), new Melody( new Note( C3, QUARTER_NOTE ) ) ),
-				Arrays.asList( new Melody( new Rest( EIGHTH_NOTE ) ), new Melody( new Note( C4, EIGHTH_NOTE ) ) ),
-				Arrays.asList(
-						new Melody( new Note( D5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ), new Note( F5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ) ),
-						new Melody( new Note( C4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( E4, EIGHTH_NOTE ) ) ),
-				Arrays.asList( new Melody( new Note( B5, QUARTER_NOTE ) ), new Melody( new Rest( QUARTER_NOTE ) ) ) );
+		List<List<Melody>> blocks = getBlocks();
 
 		Composition composition = compositionComposer.gatherComposition( blocks );
 		compositionCheck( composition );
@@ -96,6 +90,13 @@ public class CompositionComposerTest extends AbstractSpringTest {
 
 	}
 
+	@Test
+	public void gatherCompositionNotChangingInputTest() {
+		List<List<Melody>> blocksBeforeGathering = getBlocks();
+		compositionComposer.gatherComposition( blocksBeforeGathering );
+		assertEquals( blocksBeforeGathering, getBlocks() );
+	}
+
 	private void compositionCheck( Composition composition ) {
 		assertEquals( 2, composition.getPartList().size() );
 
@@ -116,6 +117,16 @@ public class CompositionComposerTest extends AbstractSpringTest {
 		assertTrue( new Note( D4, EIGHTH_NOTE ).equals( secondListOfNotes.get( 3 ) ) );
 		assertTrue( new Note( E4, EIGHTH_NOTE ).equals( secondListOfNotes.get( 4 ) ) );
 		assertTrue( new Rest( QUARTER_NOTE ).equals( secondListOfNotes.get( 5 ) ) );
+	}
+
+	private List<List<Melody>> getBlocks() {
+		return Arrays.asList(
+				Arrays.asList( new Melody( new Rest( QUARTER_NOTE ) ), new Melody( new Note( C3, QUARTER_NOTE ) ) ),
+				Arrays.asList( new Melody( new Rest( EIGHTH_NOTE ) ), new Melody( new Note( C4, EIGHTH_NOTE ) ) ),
+				Arrays.asList(
+						new Melody( new Note( D5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ), new Note( F5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ) ),
+						new Melody( new Note( C4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( E4, EIGHTH_NOTE ) ) ),
+				Arrays.asList( new Melody( new Note( B5, QUARTER_NOTE ) ), new Melody( new Rest( QUARTER_NOTE ) ) ) );
 	}
 
 	private List<Note> getListOfNotes( Part part ) {

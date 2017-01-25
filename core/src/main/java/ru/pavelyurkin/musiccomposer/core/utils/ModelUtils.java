@@ -2,6 +2,7 @@ package ru.pavelyurkin.musiccomposer.core.utils;
 
 import jm.constants.Pitches;
 import jm.music.data.Note;
+import jm.music.data.Phrase;
 import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
@@ -9,10 +10,7 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -249,5 +247,17 @@ public class ModelUtils {
 			transposedBlocks.add( currentBlock.transposeClone( transposePitch ) );
 		}
 		return new MusicBlock( transposedBlocks );
+	}
+
+	public static Note clone( Note note ) {
+		return new Note( note.getPitch(), note.getRhythmValue(), note.getDynamic(), note.getPan() );
+	}
+
+	public static Phrase clone( Phrase phrase ) {
+		Note[] clonedNotes = ( Note[] ) phrase.getNoteList()
+				.stream()
+				.map( note -> clone( ( Note ) note ) )
+				.toArray( Note[]:: new );
+		return new Phrase( clonedNotes );
 	}
 }
