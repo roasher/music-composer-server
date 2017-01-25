@@ -30,8 +30,6 @@ public class ComposeBlockProvider {
 	@Qualifier( "simpleNextBlockProvider" )
 	private NextBlockProvider nextBlockProvider;
 
-	public ComposeBlockProvider() {}
-
 	public Optional<ComposeBlock> getNextComposeBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps, double length ) {
 		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
 		return lastCompositionStep.getOriginComposeBlock() != null ?
