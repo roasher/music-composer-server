@@ -24,6 +24,50 @@
 <body>
 <script type="text/javascript">
 
+    var barDuration = 4;
+    var velocity = 127;
+
+    class PartPlayer {
+        constructor() {
+            // in seconds
+            this.timeline = 1;
+        }
+
+        play(noteInt, rhythmValue, moveTime) {
+
+            console.log("Note with pitch " + noteInt + " started at " + this.timeline);
+            MIDI.noteOn(0, noteInt, velocity, this.timeline);
+            // звучание ноты заканчивается через длительность такта * длительность ноты в такте
+            // rhythmValue = 4 - this is the WHOLE NOTE, so we are dividing on 4 to get bar rhythm value
+            var duration = barDuration * rhythmValue / 4;
+            var noteOff = this.timeline + duration;
+            MIDI.noteOff(0, noteInt, velocity, noteOff);
+            console.log("Note with pitch " + noteInt + " ended at " + noteOff + ", duration = " + duration);
+
+            if (typeof moveTime !== 'undefined' && moveTime === true) {
+                this.timeline += duration
+            }
+        }
+    }
+
+    class Player {
+        constructor( partNumber ) {
+            this.partPlayers = [];
+            for( var currentPartNumber = 0; currentPartNumber < partNumber; currentPartNumber ++ ) {
+                this.partPlayers.push( new PartPlayer() )
+            }
+        }
+        getTimeLine() {
+            var minTimeLine;
+            for( var currentPartNumber = 0; currentPartNumber < this.partPlayers.length; currentPartNumber ++ ) {
+                if (!minTimeLine || minTimeLine < this.partPlayers[currentPartNumber].timeline) {
+                    minTimeLine = this.partPlayers[currentPartNumber].timeline;
+                }
+            }
+            return minTimeLine;
+        }
+    }
+
     window.onload = function () {
         MIDI.loadPlugin({
             soundfontUrl: "midijs/examples/soundfont/",
@@ -33,7 +77,7 @@
             },
             onsuccess: function () {
                 console.log('load success');
-                var play = true;
+                var player = new Player(4);
                 // time up to that notes are loaded into player
                 var timeOfStartButtonPress = Date.now();
                 // min time buffer that should be loaded into player
@@ -41,37 +85,21 @@
                 // time that will be requested from server
                 var secondsToLoadNotes = 4;
 
-                window.setInterval(function fillPlayer() {
-                    var timeInBufferToPlay = timeOfStartButtonPress + player.timeline * 1000 - Date.now();
+                var fillPlayer = function fillPlayer() {
+                    var timeInBufferToPlay = timeOfStartButtonPress + player.getTimeLine() * 1000 - Date.now();
                     if (timeInBufferToPlay < minTimeBufferMs) {
                         console.log("loading notes to player... time in Buffer left to play = " + timeInBufferToPlay + " min time buffer = " + minTimeBufferMs);
-                        playNextTBars(secondsToLoadNotes/player.barDuration, true);
+                        playNextTBars("session1", secondsToLoadNotes / barDuration, player);
                     } else {
-                        console.log("waiting... time in Buffer left to play = " + timeInBufferToPlay + " min time buffer = " + minTimeBufferMs);
+                        console.log("waiting... time in Buffer left to play = " + timeInBufferToPlay + " sec time buffer = " + minTimeBufferMs);
                     }
-                }, 2000);
+                };
+                window.setInterval(fillPlayer, 2000);
+//                fillPlayer()
             }
         });
     };
 
-    var player = {
-        barDuration: 2,
-        // in seconds
-        timeline: 1,
-        velocity: 127,
-        play: function (noteInt, rhythmValue, moveTime) {
-
-            MIDI.noteOn(0, noteInt, this.velocity, this.timeline);
-            // звучание ноты заканчивается через длительность такта * длительность ноты в такте
-            // rhythmValue = 4 - this is the WHOLE NOTE, so we are dividing on 4 to get bar rhythm value
-            var endTime = this.barDuration * rhythmValue / 4;
-            MIDI.noteOff(0, noteInt, this.velocity, this.timeline + endTime);
-
-            if (typeof moveTime !== 'undefined' && moveTime === true) {
-                this.timeline += endTime
-            }
-        }
-    };
 
 </script>
 </body>
