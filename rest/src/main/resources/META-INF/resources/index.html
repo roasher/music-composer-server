@@ -34,15 +34,10 @@
         }
 
         play(noteInt, rhythmValue, moveTime) {
-
-            console.log("Note with pitch " + noteInt + " started at " + this.timeline);
-            MIDI.noteOn(0, noteInt, velocity, this.timeline);
-            // звучание ноты заканчивается через длительность такта * длительность ноты в такте
-            // rhythmValue = 4 - this is the WHOLE NOTE, so we are dividing on 4 to get bar rhythm value
             var duration = barDuration * rhythmValue / 4;
-            var noteOff = this.timeline + duration;
-            MIDI.noteOff(0, noteInt, velocity, noteOff);
-            console.log("Note with pitch " + noteInt + " ended at " + noteOff + ", duration = " + duration);
+            // play the note
+            MIDI.noteOn(0, noteInt, velocity, this.timeline);
+            MIDI.noteOff(0, noteInt, this.timeline + duration);
 
             if (typeof moveTime !== 'undefined' && moveTime === true) {
                 this.timeline += duration
