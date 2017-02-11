@@ -29,11 +29,12 @@ public class ComposeBlockProvider {
 	@Qualifier( "nextBlockProviderImpl" )
 	private NextBlockProvider nextBlockProvider;
 
-	public Optional<ComposeBlock> getNextComposeBlock( double length, Lexicon lexicon, List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
-		CompositionStep lastCompositionStep = getLast( previousCompositionSteps );
-		return lastCompositionStep.getOriginComposeBlock() != null ?
-				nextBlockProvider.getNextBlock( previousCompositionSteps, previousFormCompositionSteps, form, length ) :
-				firstBlockProvider.getFirstBlock( lexicon, lastCompositionStep.getNextMusicBlockExclusions() );
+	public Optional<ComposeBlock> getNextComposeBlock( double length, List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
+		return nextBlockProvider.getNextBlock( previousCompositionSteps, previousFormCompositionSteps, form, length );
+	}
+
+	public Optional<ComposeBlock> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
+		return firstBlockProvider.getFirstBlock( lexicon, exclusions );
 	}
 
 	public FirstBlockProvider getFirstBlockProvider() {

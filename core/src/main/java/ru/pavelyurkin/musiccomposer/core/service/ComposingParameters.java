@@ -14,7 +14,7 @@ public class ComposingParameters {
 
 	private Lexicon lexicon;
 	private ComposeBlockProvider composeBlockProvider;
-	private List<CompositionStep> previousCompositionSteps = Arrays.asList( new CompositionStep( null, null ) );
+	private List<CompositionStep> previousCompositionSteps = Arrays.asList( CompositionStep.getEmptyCompositionStep() );
 
 	public List<CompositionStep> getPreviousCompositionSteps() {
 		return previousCompositionSteps;

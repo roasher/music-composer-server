@@ -61,7 +61,7 @@ public class CompositionComposer {
 	 * @return
 	 */
 	public Composition compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, double compositionLength ) {
-		return compose( composeBlockProvider, lexicon, compositionLength, Arrays.asList( new CompositionStep( null, null ) ) ).getKey();
+		return compose( composeBlockProvider, lexicon, compositionLength, Arrays.asList( CompositionStep.getEmptyCompositionStep() ) ).getKey();
 	}
 
 	/**
@@ -96,21 +96,22 @@ public class CompositionComposer {
 	 * @return
 	 */
 	public List<FormCompositionStep> composeSteps( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, String form, double compositionLength ) {
+
+		FormCompositionStep prefirstCompositionStep = FormCompositionStep.getEmptyStep();
 		List<FormCompositionStep> compositionSteps = new ArrayList<>();
-		compositionSteps.add( FormCompositionStep.getEmptyStep() );
 
 		double stepLength = compositionLength / form.length();
-		for ( int formElementNumber = 1; formElementNumber < form.length() + 1; formElementNumber++ ) {
+		for ( int formElementNumber = 0; formElementNumber < form.length(); formElementNumber++ ) {
 
-			FormCompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
-			Form form1 = new Form( form.charAt( formElementNumber - 1 ) );
-			Optional<FormCompositionStep> nextStep = formBlockProvider.getFormElement( stepLength, lexicon, composeBlockProvider, form1, compositionSteps );
+			FormCompositionStep lastCompositionStep = !compositionSteps.isEmpty() ? getLast( compositionSteps ) : prefirstCompositionStep;
+			Form current = new Form( form.charAt( formElementNumber ) );
+			Optional<FormCompositionStep> nextStep = formBlockProvider.getFormElement( stepLength, lexicon, composeBlockProvider, current, compositionSteps );
 
 			if ( nextStep.isPresent() ) {
 				compositionSteps.add( nextStep.get() );
 			} else {
-				if ( formElementNumber != 1 ) {
-					FormCompositionStep preLastCompositionStep = compositionSteps.get( formElementNumber - 2 );
+				if ( formElementNumber != 0 ) {
+					FormCompositionStep preLastCompositionStep = formElementNumber != 1 ? compositionSteps.get( formElementNumber - 2 ) : prefirstCompositionStep;
 					getLast( preLastCompositionStep.getCompositionSteps() ).addNextExclusion( lastCompositionStep.getCompositionSteps().get( 0 ).getOriginComposeBlock() );
 					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
 					compositionSteps.remove( formElementNumber - 1 );
@@ -122,7 +123,6 @@ public class CompositionComposer {
 				}
 			}
 		}
-		compositionSteps.remove( 0 );
 		return compositionSteps;
 	}
 

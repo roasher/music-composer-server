@@ -29,16 +29,14 @@ public class NextBlockProviderImpl extends FilteredNextBlockProvider {
 
 		if ( form.isPresent() ) {
 
-			List<FormCompositionStep> skippedCompositionSteps = formCompositionSteps.stream().skip( 1 ).collect( Collectors.toList() );
-			List<MusicBlock> similarFormSteps = getRelativeFormBlocks( skippedCompositionSteps, form.get(), true );
-			List<MusicBlock> differentFormSteps = getRelativeFormBlocks( skippedCompositionSteps, form.get(), false );
+			List<MusicBlock> similarFormSteps = getRelativeFormBlocks( formCompositionSteps, form.get(), true );
+			List<MusicBlock> differentFormSteps = getRelativeFormBlocks( formCompositionSteps, form.get(), false );
 
 			Optional<ComposeBlock> lastOfPossibles = blocksToChooseFrom.stream()
 					.sorted(
 							getComposeBlockComparator( similarFormSteps, differentFormSteps,
 									previousCompositionSteps
 											.stream()
-											.skip( 1 )
 											.map( CompositionStep::getTransposedBlock )
 											.collect( Collectors.toList() ) ) )
 					.reduce( ( composeBlock1, composeBlock2 ) -> composeBlock2 );

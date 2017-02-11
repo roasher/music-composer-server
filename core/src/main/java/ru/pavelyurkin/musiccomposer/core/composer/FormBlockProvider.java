@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Iterables.getLast;
@@ -67,7 +66,7 @@ public class FormBlockProvider {
 	}
 
 	/**
-	 * Returns composition step list filled with compose blocks that summary covers input length sharp regarding similar and different form steps
+	 * Returns composition step list filled with compose blocks that summary covers input length sharp regarding previous form steps
 	 *
 	 * @param length
 	 * @param lexicon
@@ -78,15 +77,17 @@ public class FormBlockProvider {
 	 */
 	private List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
 
+		CompositionStep prefirstCompositionStep = CompositionStep.getEmptyCompositionStep();
 		List<CompositionStep> compositionSteps = new ArrayList<>();
-		compositionSteps.add( getLast( getLast( previousFormCompositionSteps ).getCompositionSteps() ) );
 		double currentLength = 0;
 
-		for ( int step = 1; step < length / lexicon.getMinRhythmValue() + 1; step++ ) {
+		for ( int step = 0; step < length / lexicon.getMinRhythmValue(); step++ ) {
 			logger.debug( "Current state {}", step );
-			CompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
+			CompositionStep lastCompositionStep = !compositionSteps.isEmpty() ? getLast( compositionSteps ) : prefirstCompositionStep;
 			Optional<ComposeBlock> lastStepOriginComposeBlock = Optional.ofNullable( lastCompositionStep.getOriginComposeBlock() );
-			Optional<ComposeBlock> nextComposeBlock = composeBlockProvider.getNextComposeBlock( length, lexicon, compositionSteps, previousFormCompositionSteps, form );
+			Optional<ComposeBlock> nextComposeBlock = step != 0 ?
+					composeBlockProvider.getNextComposeBlock( length, compositionSteps, previousFormCompositionSteps, form ) :
+					composeBlockProvider.getFirstBlock( lexicon, prefirstCompositionStep.getNextMusicBlockExclusions() );
 
 			if ( nextComposeBlock.isPresent() && currentLength + nextComposeBlock.get().getRhythmValue() <= length ) {
 				Optional<MusicBlock> lastCompositionStepTransposedBlock = Optional.ofNullable( lastCompositionStep.getTransposedBlock() );
@@ -97,15 +98,13 @@ public class FormBlockProvider {
 				if ( currentLength == length ) {
 					if ( form.isPresent() ) {
 						// FORM CHECK
-						List<FormCompositionStep> skippedPrevSteps = previousFormCompositionSteps.stream().skip( 1 ).collect( Collectors.toList() );
 						Pair<Boolean, Double> formCheckPassed = isFormCheckPassed(
 								new MusicBlock( compositionSteps
 										.stream()
-										.skip( 1 )
 										.map( CompositionStep::getTransposedBlock )
 										.collect( Collectors.toList() ) ),
-								getRelativeFormBlocks( skippedPrevSteps, form.get(), true ) ,
-								getRelativeFormBlocks( skippedPrevSteps, form.get(), false )
+								getRelativeFormBlocks( previousFormCompositionSteps, form.get(), true ) ,
+								getRelativeFormBlocks( previousFormCompositionSteps, form.get(), false )
 						);
 						if ( !formCheckPassed.getKey() ) {
 							int stepToRevert = getStepToRevert( step, formCheckPassed.getValue() );
@@ -122,13 +121,11 @@ public class FormBlockProvider {
 							continue;
 						}
 					}
-					// removing prefirst step
-					compositionSteps.remove( 0 );
 					return compositionSteps;
 				}
 			} else {
-				if ( step != 1 ) {
-					CompositionStep preLastCompositionStep = compositionSteps.get( step - 2 );
+				if ( step != 0 ) {
+					CompositionStep preLastCompositionStep = step != 1 ? compositionSteps.get( step - 2 ) : prefirstCompositionStep ;
 					preLastCompositionStep.addNextExclusion( lastStepOriginComposeBlock.get() );
 					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
 					if ( compositionSteps.get( step - 1 ).getOriginComposeBlock() != null ) {
@@ -160,7 +157,7 @@ public class FormBlockProvider {
 		assertTrue( "Diff measure " + diffMeasure + " < 0", diffMeasure >= 0 );
 		int calculatedStepToReturn = ( int ) ( step * diffMeasure );
 		if ( calculatedStepToReturn == 0 )
-			return 1;
+			return 0;
 		if ( calculatedStepToReturn > step - 2 )
 			return step - 2;
 		return calculatedStepToReturn;

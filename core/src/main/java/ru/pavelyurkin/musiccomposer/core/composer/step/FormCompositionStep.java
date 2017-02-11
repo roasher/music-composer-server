@@ -1,12 +1,9 @@
 package ru.pavelyurkin.musiccomposer.core.composer.step;
 
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
-import ru.pavelyurkin.musiccomposer.core.utils.CompositionSlicer;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Class represents step that program makes in order to create new composition
@@ -24,7 +21,7 @@ public class FormCompositionStep {
 	 * @return
 	 */
 	public static FormCompositionStep getEmptyStep() {
-		return new FormCompositionStep( Arrays.asList( new CompositionStep( null, null ) ), null );
+		return new FormCompositionStep( Arrays.asList( CompositionStep.getEmptyCompositionStep() ), null );
 	}
 
 	public FormCompositionStep( List<CompositionStep> compositionSteps, Form form ) {

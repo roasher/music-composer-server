@@ -110,7 +110,7 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 	private FormCompositionStep getMockFormCompositionStep( char id ) {
 		FormCompositionStep formCompositionStep = mock( FormCompositionStep.class );
 		when( formCompositionStep.getForm() ).thenReturn( new Form( id ) );
-		when( formCompositionStep.getCompositionSteps() ).thenReturn( Arrays.asList( new CompositionStep( null, null ) ) );
+		when( formCompositionStep.getCompositionSteps() ).thenReturn( Arrays.asList( CompositionStep.getEmptyCompositionStep() ) );
 		return formCompositionStep;
 	}
 }
