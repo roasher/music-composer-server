@@ -8,7 +8,6 @@ import ru.pavelyurkin.musiccomposer.core.equality.form.RelativelyComparable;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-import ru.pavelyurkin.musiccomposer.core.utils.CollectionUtils;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import org.slf4j.Logger;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Iterables.getLast;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 /**
@@ -51,21 +51,10 @@ public class FormBlockProvider {
 		List<FormCompositionStep> differentFormSteps = previousSteps.stream().skip( 1 )
 				.filter( formCompositionStep -> formCompositionStep.getForm() != null && !formCompositionStep.getForm().equals( form ) ).collect( Collectors.toList() );
 
-		List<CompositionStep> compositionSteps = composeSteps( length, lexicon, composeBlockProvider, fetchLastCompositionStep( previousSteps.get( previousSteps.size() - 1 ) ),
+		List<CompositionStep> compositionSteps = composeSteps( length, lexicon, composeBlockProvider, getLast( getLast( previousSteps ).getCompositionSteps() ) ,
 				similarFormSteps, differentFormSteps, true );
 
-		return Optional.ofNullable( !compositionSteps.isEmpty() ?
-				new FormCompositionStep(
-						compositionSteps
-								.stream()
-								.map( CompositionStep::getOriginComposeBlock )
-								.collect( Collectors.toList() ),
-						compositionSteps
-								.stream()
-								.map( CompositionStep::getTransposedBlock )
-								.collect( Collectors.toList() ),
-						form ) :
-				null );
+		return Optional.ofNullable( !compositionSteps.isEmpty() ? new FormCompositionStep( compositionSteps, form ) : null );
 	}
 
 	/**
@@ -215,27 +204,4 @@ public class FormBlockProvider {
 		}
 		return new Pair<>( true, maxDiffMeasure );
 	}
-
-	/**
-	 * Fetches CompositionStep from FormCompositionStep:
-	 * last Compose Block of input = Compose Block for output
-	 * List of first Compose Blocks of exclusions of input = output exclusion
-	 *
-	 * @param formCompositionStep
-	 * @return
-	 */
-	private CompositionStep fetchLastCompositionStep( FormCompositionStep formCompositionStep ) {
-		List<ComposeBlock> exclusions = CollectionUtils.getListOfFirsts( formCompositionStep.getNextMusicBlockExclusions() );
-		List<ComposeBlock> originComposeBlocks = formCompositionStep.getOriginComposeBlocks();
-		List<MusicBlock> trasposedBlocks = formCompositionStep.getTransposedBlocks();
-		CompositionStep compositionStep;
-		if ( originComposeBlocks != null ) {
-			compositionStep = new CompositionStep( originComposeBlocks.get( originComposeBlocks.size() - 1 ), trasposedBlocks.get( trasposedBlocks.size() - 1 ) );
-		} else {
-			compositionStep = new CompositionStep( null, null );
-		}
-		compositionStep.setNextMusicBlockExclusions( exclusions );
-		return compositionStep;
-	}
-
 }

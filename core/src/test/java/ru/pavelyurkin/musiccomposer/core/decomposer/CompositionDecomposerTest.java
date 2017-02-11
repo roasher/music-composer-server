@@ -61,7 +61,7 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 	@Test
 	public void validBlockPossibleSurroundingTest() {
 		List<Composition> compositionList = compositionLoader
-				.getCompositionsFromFolder( new File( "src/test/resource/simpleMelodies" ), Collections.<String>emptyList() );
+				.getCompositionsFromFolder( new File( "src/test/resources/simpleMelodies" ), Collections.<String>emptyList() );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 		for ( ComposeBlock composeBlock : lexicon.getComposeBlockList() ) {
 			boolean isFirst = composeBlock.getPossiblePreviousComposeBlocks().isEmpty() && composeBlock.getPossibleNextComposeBlocks().size() >= 1;
@@ -74,7 +74,7 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 	@Test
 	public void possibleNextComposeBlocksTest() {
 		List<Composition> compositionList = compositionLoader
-				.getCompositionsFromFolder( new File( "src/test/resource/simpleMelodies" ), Collections.emptyList() );
+				.getCompositionsFromFolder( new File( "src/test/resources/simpleMelodies" ), Collections.emptyList() );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, WHOLE_NOTE );
 
 		ComposeBlock firstComposeBlock = null;

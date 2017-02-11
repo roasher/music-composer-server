@@ -37,7 +37,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 	@Test
 	public void decomposeWithOrWithoutStoringEqual() throws IOException {
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resource/simpleMelodies" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resources/simpleMelodies" ) );
 		// first decompose with no persistance
 		Lexicon lexiconWithoutDB = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 		lexiconDAO.persist( lexiconWithoutDB );
@@ -49,7 +49,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 	@Test
 	public void decomposeWithOrWithoutStoring_intersect() throws IOException {
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resource/simpleMelodies" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resources/simpleMelodies" ) );
 		// Decompose all melodies
 		Lexicon lexiconFull = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 
@@ -64,7 +64,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 	@Test
 	public void decomposeWithOrWithoutStoring_nonoverlapping() throws IOException {
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resource/simpleMelodies" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resources/simpleMelodies" ) );
 		// Decompose second
 		Lexicon lexiconSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
 
@@ -79,7 +79,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 	@Test
 	public void failDecompose() throws IOException {
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resource/simpleMelodies" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resources/simpleMelodies" ) );
 		// Decompose second
 		Lexicon lexiconSecond = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
 

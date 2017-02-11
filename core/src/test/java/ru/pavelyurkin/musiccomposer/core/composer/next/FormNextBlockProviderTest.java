@@ -88,7 +88,7 @@ public class FormNextBlockProviderTest extends AbstractSpringTest {
 		// Actually we don't care about similarFromSteps as long we mocked equalityMetricAnalyzer
 		List<ComposeBlock> originComposeBlocks = Arrays.asList( new ComposeBlock( 0, null, Arrays.asList( new Melody( new Rest( WHOLE_NOTE ) ) ), null ) );
 		List<FormCompositionStep> similarFormSteps = Arrays.asList(
-			new FormCompositionStep( originComposeBlocks, originComposeBlocks.stream().map( ComposeBlock::getMusicBlock ).collect( Collectors.toList()), null )
+			new FormCompositionStep( originComposeBlocks.stream().map( composeBlock -> new CompositionStep( composeBlock, composeBlock.getMusicBlock() ) ).collect( Collectors.toList()), null )
 		);
 
         List<CompositionStep> previousCompositionSteps = Arrays.asList(

@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer.compositionComposer;
 
+import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import jm.JMC;
 import org.junit.Before;
@@ -15,6 +16,7 @@ import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -108,6 +110,7 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 	private FormCompositionStep getMockFormCompositionStep( char id ) {
 		FormCompositionStep formCompositionStep = mock( FormCompositionStep.class );
 		when( formCompositionStep.getForm() ).thenReturn( new Form( id ) );
+		when( formCompositionStep.getCompositionSteps() ).thenReturn( Arrays.asList( new CompositionStep( null, null ) ) );
 		return formCompositionStep;
 	}
 }

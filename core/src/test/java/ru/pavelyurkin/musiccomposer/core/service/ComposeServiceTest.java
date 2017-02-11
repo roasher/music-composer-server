@@ -39,7 +39,7 @@ public class ComposeServiceTest extends AbstractSpringTest {
 	public void before() {
 		composeService.setDefaultComposeBlockProvider( composeBlockProvider );
 
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resource/ru/pavelyurkin/musiccomposer/core/decomposer/" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resources/ru/pavelyurkin/musiccomposer/core/decomposer/" ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 		composeService.setDefaultLexicon( lexicon );
 	}
