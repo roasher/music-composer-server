@@ -3,20 +3,24 @@ package ru.pavelyurkin.musiccomposer.core.composer.next;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Iterables.getLast;
+
 /**
- * Parent class of next block providers
+ * Parent class getting Next Block
  */
 public abstract class NextBlockProvider {
 
-	public Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, double length ) {
+	public Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form,
+			double length ) {
 
-		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
+		CompositionStep lastCompositionStep = getLast( previousCompositionSteps );
 		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getOriginComposeBlock().getPossibleNextComposeBlocks() );
 		possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions() );
 
@@ -25,10 +29,10 @@ public abstract class NextBlockProvider {
 		List<ComposeBlock> blocksToChooseFrom = possibleNextComposeBlocks.stream().filter( composeBlock -> previouslyComposedRhythmValue + composeBlock.getRhythmValue() <= length )
 				.collect( Collectors.toList() );
 
-		return getNextBlock( previousCompositionSteps, length, blocksToChooseFrom );
+		return getNextBlock( blocksToChooseFrom, previousCompositionSteps, previousFormCompositionSteps, form, length );
 
 	}
 
-	public abstract Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, double length, List<ComposeBlock> blocksToChooseFrom );
-
+	public abstract Optional<ComposeBlock> getNextBlock( List<ComposeBlock> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
+			List<FormCompositionStep> formCompositionSteps, Optional<Form> form, double length );
 }

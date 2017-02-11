@@ -6,15 +6,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
-import ru.pavelyurkin.musiccomposer.core.composer.next.SimpleNextBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.form.NextFormBlockProviderImpl;
+import ru.pavelyurkin.musiccomposer.core.composer.next.NextBlockProviderImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
@@ -51,6 +51,9 @@ public class ComposeService implements ApplicationContextAware {
 	@Autowired
 	private CompositionLoader compositionLoader;
 
+	@Value( "${Bach.chorale.path:}" )
+	private String bachChoralPath;
+
 	private ApplicationContext applicationContext;
 
 	public Composition getNextBarsFromComposition( String compositionId, int numberOfBars ) {
@@ -62,10 +65,10 @@ public class ComposeService implements ApplicationContextAware {
 			composingParameters = getDefaultComposingParameters();
 			composingParametersMap.put( compositionId, composingParameters );
 		}
-		Pair<Composition, CompositionStep> compose = compositionComposer
+		Pair<Composition, List<CompositionStep>> compose = compositionComposer
 				.compose( composingParameters.getComposeBlockProvider(), composingParameters.getLexicon(), numberOfBars * JMC.WHOLE_NOTE,
-						composingParameters.getPreviousCompositionStep() );
-		if ( compose.getValue() != null ) composingParameters.setPreviousCompositionStep( compose.getValue() );
+						composingParameters.getPreviousCompositionSteps() );
+		if ( compose.getValue() != null ) composingParameters.setPreviousCompositionSteps( compose.getValue() );
 		return compose.getKey();
 	}
 
@@ -86,7 +89,7 @@ public class ComposeService implements ApplicationContextAware {
 	 */
 	private Lexicon getDefaultLexicon() {
 		if ( defaultLexicon == null ) {
-			List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "/home/night_wish/Music/Bach chorals cut/" ) );
+			List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( bachChoralPath ) );
 			defaultLexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 		}
 		return defaultLexicon;
@@ -100,15 +103,11 @@ public class ComposeService implements ApplicationContextAware {
 		if ( defaultComposeBlockProvider == null ) {
 			ComposeBlockFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
 
-			NextFormBlockProviderImpl nextFormBlockProvider = applicationContext.getBean( NextFormBlockProviderImpl.class );
+			NextBlockProviderImpl nextFormBlockProvider = applicationContext.getBean( NextBlockProviderImpl.class );
 			nextFormBlockProvider.setComposeBlockFilter( bachChoralFilter );
 
-			SimpleNextBlockProvider nextBlockProvider = applicationContext.getBean( SimpleNextBlockProvider.class );
-			nextBlockProvider.setComposeBlockFilter( bachChoralFilter );
-
 			defaultComposeBlockProvider = applicationContext.getBean( ComposeBlockProvider.class );
-			defaultComposeBlockProvider.setNextBlockProvider( nextBlockProvider );
-			defaultComposeBlockProvider.setNextFormBlockProvider( nextFormBlockProvider );
+			defaultComposeBlockProvider.setNextBlockProvider( nextFormBlockProvider );
 		}
 		return defaultComposeBlockProvider;
 	}

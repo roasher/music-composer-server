@@ -40,14 +40,17 @@ public class CompositionComposer {
 	 * @param compositionLength
 	 * @return
 	 */
-	public Pair<Composition, CompositionStep> compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, double compositionLength, CompositionStep previousCompositionStep ) {
-		List<CompositionStep> compositionSteps = formBlockProvider.composeSteps( compositionLength, lexicon, composeBlockProvider, previousCompositionStep );
+	public Pair<Composition, List<CompositionStep>> compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, double compositionLength, List<CompositionStep> previousCompositionSteps ) {
+		List<CompositionStep> compositionSteps = formBlockProvider.composeSteps( compositionLength, lexicon, composeBlockProvider, previousCompositionSteps );
 		List<List<Melody>> blocks = compositionSteps
 				.stream()
 				.map( compositionStep -> compositionStep.getTransposedBlock().getMelodyList() )
 				.collect( Collectors.toList() );
 		Composition composition = gatherComposition( blocks );
-		return new Pair<>( composition, compositionSteps.isEmpty() ? null : compositionSteps.get( compositionSteps.size() -1 ) );
+		List<CompositionStep> steps = new ArrayList<>();
+		steps.addAll( previousCompositionSteps );
+		steps.addAll( compositionSteps );
+		return new Pair<>( composition, steps );
 	}
 
 	/**
@@ -58,11 +61,11 @@ public class CompositionComposer {
 	 * @return
 	 */
 	public Composition compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, double compositionLength ) {
-		return compose( composeBlockProvider, lexicon, compositionLength, new CompositionStep( null, null ) ).getKey();
+		return compose( composeBlockProvider, lexicon, compositionLength, Arrays.asList( new CompositionStep( null, null ) ) ).getKey();
 	}
 
 	/**
-	 * Composing piece considering given lexicon, form pattern and composition compositionLength
+	 * Composing piece considering given lexicon, form pattern and composition length
 	 *
 	 * @param lexicon
 	 * @param form

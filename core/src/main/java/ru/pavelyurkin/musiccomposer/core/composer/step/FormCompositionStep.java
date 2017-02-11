@@ -48,7 +48,4 @@ public class FormCompositionStep {
 		this.form = form;
 	}
 
-	public List<MusicBlock> getTransposedBlocks() {
-		return compositionSteps.stream().map( CompositionStep::getTransposedBlock ).collect( Collectors.toList() );
-	}
 }

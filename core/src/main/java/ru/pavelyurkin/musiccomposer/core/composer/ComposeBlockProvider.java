@@ -2,7 +2,6 @@ package ru.pavelyurkin.musiccomposer.core.composer;
 
 import ru.pavelyurkin.musiccomposer.core.composer.first.FirstBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextBlockProvider;
-import ru.pavelyurkin.musiccomposer.core.composer.next.form.NextFormBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
@@ -10,9 +9,12 @@ import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.google.common.collect.Iterables.getLast;
 
 /**
  * Created by wish on 28.01.2016.
@@ -24,24 +26,13 @@ public class ComposeBlockProvider {
 	@Qualifier( "simpleFirstBlockProvider" )
 	private FirstBlockProvider firstBlockProvider;
 	@Autowired
-	@Qualifier( "nextFormBlockProviderImpl" )
-	private NextFormBlockProvider nextFormBlockProvider;
-	@Autowired
-	@Qualifier( "simpleNextBlockProvider" )
+	@Qualifier( "nextBlockProviderImpl" )
 	private NextBlockProvider nextBlockProvider;
 
-	public Optional<ComposeBlock> getNextComposeBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps, double length ) {
-		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
+	public Optional<ComposeBlock> getNextComposeBlock( double length, Lexicon lexicon, List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
+		CompositionStep lastCompositionStep = getLast( previousCompositionSteps );
 		return lastCompositionStep.getOriginComposeBlock() != null ?
-				nextBlockProvider.getNextBlock( previousCompositionSteps, length ) :
-				firstBlockProvider.getFirstBlock( lexicon, lastCompositionStep.getNextMusicBlockExclusions() );
-	}
-
-	public Optional<ComposeBlock> getNextComposeBlock( Lexicon lexicon, List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> similarFormSteps,
-			List<FormCompositionStep> differentFormSteps, double length ) {
-		CompositionStep lastCompositionStep = previousCompositionSteps.get( previousCompositionSteps.size() - 1 );
-		return lastCompositionStep.getOriginComposeBlock() != null ?
-				nextFormBlockProvider.getNextBlock( previousCompositionSteps, similarFormSteps, differentFormSteps, length ) :
+				nextBlockProvider.getNextBlock( previousCompositionSteps, previousFormCompositionSteps, form, length ) :
 				firstBlockProvider.getFirstBlock( lexicon, lastCompositionStep.getNextMusicBlockExclusions() );
 	}
 
@@ -53,15 +44,12 @@ public class ComposeBlockProvider {
 		this.firstBlockProvider = firstBlockProvider;
 	}
 
-	public NextFormBlockProvider getNextFormBlockProvider() {
-		return nextFormBlockProvider;
-	}
-
-	public void setNextFormBlockProvider( NextFormBlockProvider nextFormBlockProvider ) {
-		this.nextFormBlockProvider = nextFormBlockProvider;
+	public NextBlockProvider getNextBlockProvider() {
+		return nextBlockProvider;
 	}
 
 	public void setNextBlockProvider( NextBlockProvider nextBlockProvider ) {
 		this.nextBlockProvider = nextBlockProvider;
 	}
+
 }

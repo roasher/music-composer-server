@@ -3,9 +3,12 @@ package ru.pavelyurkin.musiccomposer.core.utils;
 import jm.constants.Pitches;
 import jm.music.data.Note;
 import jm.music.data.Phrase;
+import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
+import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 import java.lang.reflect.Field;
@@ -259,5 +262,23 @@ public class ModelUtils {
 				.map( note -> clone( ( Note ) note ) )
 				.toArray( Note[]:: new );
 		return new Phrase( clonedNotes );
+	}
+
+	/**
+	 * Returns blocks that are similar or different in terms of form
+	 * @param formCompositionSteps
+	 * @param form
+	 * @param similar - if true returns similar, different otherwise
+	 * @return
+	 */
+	public static List<MusicBlock> getRelativeFormBlocks( List<FormCompositionStep> formCompositionSteps, Form form, boolean similar ) {
+		return formCompositionSteps
+				.stream()
+				.filter( formCompositionStep -> similar == form.equals( formCompositionStep.getForm() ) )
+				.map( formCompositionStep -> new MusicBlock( formCompositionStep.getCompositionSteps()
+						.stream()
+						.map( CompositionStep::getTransposedBlock )
+						.collect( Collectors.toList() ) ) )
+				.collect( Collectors.toList());
 	}
 }

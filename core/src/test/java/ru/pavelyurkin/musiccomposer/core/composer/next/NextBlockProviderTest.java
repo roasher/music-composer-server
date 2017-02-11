@@ -1,6 +1,5 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next;
 
-import ru.pavelyurkin.musiccomposer.core.composer.next.form.NextFormBlockProviderImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
@@ -26,10 +25,10 @@ import static jm.JMC.*;
 /**
  * Created by night wish on 05.03.2016.
  */
-public class FormNextBlockProviderTest extends AbstractSpringTest {
+public class NextBlockProviderTest extends AbstractSpringTest {
 
 	@InjectMocks
-	private NextFormBlockProviderImpl formNextBlockProvider;
+	private NextBlockProviderImpl nextBlockProvider;
 
 	@Mock
 	private EqualityMetricAnalyzer<List<Melody>> equalityMetricAnalyzer;
@@ -98,7 +97,7 @@ public class FormNextBlockProviderTest extends AbstractSpringTest {
                 new CompositionStep( composeBlock2, composeBlock2.getMusicBlock() )
         );
 
-		Optional<ComposeBlock> nextBlock = formNextBlockProvider.getNextBlock( previousCompositionSteps, similarFormSteps, Collections.emptyList(), WHOLE_NOTE );
+		Optional<ComposeBlock> nextBlock = nextBlockProvider.getNextBlock( previousCompositionSteps, Collections.emptyList(), Optional.empty(), WHOLE_NOTE );
 
 		assertEquals( composeBlock21, nextBlock.get() );
 	}

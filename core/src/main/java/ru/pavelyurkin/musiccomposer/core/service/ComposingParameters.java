@@ -4,6 +4,9 @@ import ru.pavelyurkin.musiccomposer.core.composer.ComposeBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Holds parameters of Composing
  */
@@ -11,14 +14,14 @@ public class ComposingParameters {
 
 	private Lexicon lexicon;
 	private ComposeBlockProvider composeBlockProvider;
-	private CompositionStep previousCompositionStep = new CompositionStep( null, null );
+	private List<CompositionStep> previousCompositionSteps = Arrays.asList( new CompositionStep( null, null ) );
 
-	public CompositionStep getPreviousCompositionStep() {
-		return previousCompositionStep;
+	public List<CompositionStep> getPreviousCompositionSteps() {
+		return previousCompositionSteps;
 	}
 
-	public void setPreviousCompositionStep( CompositionStep previousCompositionStep ) {
-		this.previousCompositionStep = previousCompositionStep;
+	public void setPreviousCompositionSteps( List<CompositionStep> previousCompositionSteps ) {
+		this.previousCompositionSteps = previousCompositionSteps;
 	}
 
 	public Lexicon getLexicon() {

@@ -3,10 +3,7 @@ package ru.pavelyurkin.musiccomposer.core;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
-import ru.pavelyurkin.musiccomposer.core.composer.next.FilteredNextBlockProvider;
-import ru.pavelyurkin.musiccomposer.core.composer.next.NextBlockProvider;
-import ru.pavelyurkin.musiccomposer.core.composer.next.SimpleNextBlockProvider;
-import ru.pavelyurkin.musiccomposer.core.composer.next.form.NextFormBlockProviderImpl;
+import ru.pavelyurkin.musiccomposer.core.composer.next.NextBlockProviderImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
@@ -15,7 +12,6 @@ import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import jm.JMC;
 import jm.util.Write;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 
 import java.io.File;
@@ -53,15 +49,10 @@ public class Controller {
 
 		ComposeBlockFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
 
-		NextFormBlockProviderImpl nextFormBlockProvider = applicationContext.getBean( NextFormBlockProviderImpl.class );
-		nextFormBlockProvider.setComposeBlockFilter( bachChoralFilter );
-
-		SimpleNextBlockProvider nextBlockProvider = applicationContext.getBean( SimpleNextBlockProvider.class );
+		NextBlockProviderImpl nextBlockProvider = applicationContext.getBean( NextBlockProviderImpl.class );
 		nextBlockProvider.setComposeBlockFilter( bachChoralFilter );
 
 		ComposeBlockProvider composeBlockProvider = applicationContext.getBean( ComposeBlockProvider.class );
-
-		composeBlockProvider.setNextFormBlockProvider( nextFormBlockProvider );
 		composeBlockProvider.setNextBlockProvider( nextBlockProvider );
 
 		Composition composition = compositionComposer.compose( composeBlockProvider, lexicon, 8 * JMC.WHOLE_NOTE );

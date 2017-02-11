@@ -16,10 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Iterables.getLast;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
+import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getRelativeFormBlocks;
 
 /**
  * Class provides form element
@@ -45,15 +47,7 @@ public class FormBlockProvider {
 	public Optional<FormCompositionStep> getFormElement( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, Form form,
 			List<FormCompositionStep> previousSteps ) {
 		logger.info( "Composing form element : {}, length : {}", form.getValue(), length );
-
-		List<FormCompositionStep> similarFormSteps = previousSteps.stream().skip( 1 )
-				.filter( formCompositionStep -> formCompositionStep.getForm() != null && formCompositionStep.getForm().equals( form ) ).collect( Collectors.toList() );
-		List<FormCompositionStep> differentFormSteps = previousSteps.stream().skip( 1 )
-				.filter( formCompositionStep -> formCompositionStep.getForm() != null && !formCompositionStep.getForm().equals( form ) ).collect( Collectors.toList() );
-
-		List<CompositionStep> compositionSteps = composeSteps( length, lexicon, composeBlockProvider, getLast( getLast( previousSteps ).getCompositionSteps() ) ,
-				similarFormSteps, differentFormSteps, true );
-
+		List<CompositionStep> compositionSteps = composeSteps( length, lexicon, composeBlockProvider, previousSteps , Optional.of( form ) );
 		return Optional.ofNullable( !compositionSteps.isEmpty() ? new FormCompositionStep( compositionSteps, form ) : null );
 	}
 
@@ -63,11 +57,13 @@ public class FormBlockProvider {
 	 * @param length
 	 * @param lexicon
 	 * @param composeBlockProvider
-	 * @param preFirstCompositionStep
+	 * @param previousFormCompositionSteps
 	 * @return
 	 */
-	public List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, CompositionStep preFirstCompositionStep ) {
-		return composeSteps( length, lexicon, composeBlockProvider, preFirstCompositionStep, null, null, false );
+	public List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, List<CompositionStep> previousFormCompositionSteps ) {
+		logger.info( "Composing element regardless form, length : {}", length );
+		List<FormCompositionStep> formCompositionSteps = Arrays.asList( new FormCompositionStep( previousFormCompositionSteps, null ) );
+		return composeSteps( length, lexicon, composeBlockProvider, formCompositionSteps, Optional.empty() );
 	}
 
 	/**
@@ -76,26 +72,21 @@ public class FormBlockProvider {
 	 * @param length
 	 * @param lexicon
 	 * @param composeBlockProvider
-	 * @param preFirstCompositionStep
-	 * @param similarFormSteps
-	 * @param differentFormSteps
-	 * @param composingRegardingForm
-	 * @return TODO tests
+	 * @param previousFormCompositionSteps
+	 * @param form
+	 * @return
 	 */
-	private List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, CompositionStep preFirstCompositionStep,
-			List<FormCompositionStep> similarFormSteps, List<FormCompositionStep> differentFormSteps, boolean composingRegardingForm ) {
+	private List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
 
 		List<CompositionStep> compositionSteps = new ArrayList<>();
-		compositionSteps.add( preFirstCompositionStep );
+		compositionSteps.add( getLast( getLast( previousFormCompositionSteps ).getCompositionSteps() ) );
 		double currentLength = 0;
 
 		for ( int step = 1; step < length / lexicon.getMinRhythmValue() + 1; step++ ) {
 			logger.debug( "Current state {}", step );
 			CompositionStep lastCompositionStep = compositionSteps.get( compositionSteps.size() - 1 );
 			Optional<ComposeBlock> lastStepOriginComposeBlock = Optional.ofNullable( lastCompositionStep.getOriginComposeBlock() );
-			Optional<ComposeBlock> nextComposeBlock = composingRegardingForm ?
-					composeBlockProvider.getNextComposeBlock( lexicon, compositionSteps, similarFormSteps, differentFormSteps, length ) :
-					composeBlockProvider.getNextComposeBlock( lexicon, compositionSteps, length );
+			Optional<ComposeBlock> nextComposeBlock = composeBlockProvider.getNextComposeBlock( length, lexicon, compositionSteps, previousFormCompositionSteps, form );
 
 			if ( nextComposeBlock.isPresent() && currentLength + nextComposeBlock.get().getRhythmValue() <= length ) {
 				Optional<MusicBlock> lastCompositionStepTransposedBlock = Optional.ofNullable( lastCompositionStep.getTransposedBlock() );
@@ -104,15 +95,18 @@ public class FormBlockProvider {
 				compositionSteps.add( nextStep );
 				currentLength += nextComposeBlock.get().getRhythmValue();
 				if ( currentLength == length ) {
-					if ( composingRegardingForm ) {
+					if ( form.isPresent() ) {
 						// FORM CHECK
-						List<MusicBlock> transposedComposeBlocks = compositionSteps
-								.stream()
-								.skip( 1 )
-								.map( CompositionStep::getTransposedBlock )
-								.collect( Collectors.toList() );
-						MusicBlock block = new MusicBlock( transposedComposeBlocks );
-						Pair<Boolean, Double> formCheckPassed = isFormCheckPassed( block, similarFormSteps, differentFormSteps );
+						List<FormCompositionStep> skippedPrevSteps = previousFormCompositionSteps.stream().skip( 1 ).collect( Collectors.toList() );
+						Pair<Boolean, Double> formCheckPassed = isFormCheckPassed(
+								new MusicBlock( compositionSteps
+										.stream()
+										.skip( 1 )
+										.map( CompositionStep::getTransposedBlock )
+										.collect( Collectors.toList() ) ),
+								getRelativeFormBlocks( skippedPrevSteps, form.get(), true ) ,
+								getRelativeFormBlocks( skippedPrevSteps, form.get(), false )
+						);
 						if ( !formCheckPassed.getKey() ) {
 							int stepToRevert = getStepToRevert( step, formCheckPassed.getValue() );
 							logger.debug( "ComposeBlock check failed in terms of form. Reverting to step {}", stepToRevert );
@@ -180,12 +174,11 @@ public class FormBlockProvider {
 	 * @param differentFormSteps
 	 * @return
 	 */
-	private Pair<Boolean, Double> isFormCheckPassed( MusicBlock block, List<FormCompositionStep> similarFormSteps, List<FormCompositionStep> differentFormSteps ) {
+	private Pair<Boolean, Double> isFormCheckPassed( MusicBlock block, List<MusicBlock> similarFormSteps, List<MusicBlock> differentFormSteps ) {
 		double maxDiffMeasure = 0;
 		// checking that new block is different to differentFormSteps
-		for ( FormCompositionStep differentStep : differentFormSteps ) {
-			MusicBlock previousBlock = new MusicBlock( differentStep.getTransposedBlocks() );
-			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( block.getMelodyList(), previousBlock.getMelodyList() );
+		for ( MusicBlock differentStep : differentFormSteps ) {
+			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( block.getMelodyList(), differentStep.getMelodyList() );
 			if ( comparison.getKey() != RelativelyComparable.ResultOfComparison.DIFFERENT ) {
 				return new Pair<>( false, comparison.getValue() );
 			}
@@ -193,9 +186,8 @@ public class FormBlockProvider {
 				maxDiffMeasure = comparison.getValue();
 		}
 		// checking that new block is similar to similarFormSteps
-		for ( FormCompositionStep similarStep : similarFormSteps ) {
-			MusicBlock previousBlock = new MusicBlock( similarStep.getTransposedBlocks() );
-			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( block.getMelodyList(), previousBlock.getMelodyList() );
+		for ( MusicBlock similarStep : similarFormSteps ) {
+			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( block.getMelodyList(), similarStep.getMelodyList() );
 			if ( comparison.getKey() != RelativelyComparable.ResultOfComparison.EQUAL ) {
 				return new Pair<>( false, comparison.getValue() );
 			}
