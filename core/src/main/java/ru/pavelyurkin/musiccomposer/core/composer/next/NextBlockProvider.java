@@ -25,7 +25,7 @@ public abstract class NextBlockProvider {
 		possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions() );
 
 		// Leaving all blocks adding whose will keep whole piece in range
-		double previouslyComposedRhythmValue = previousCompositionSteps.stream().skip( 1 ).mapToDouble( value -> value.getOriginComposeBlock().getRhythmValue() ).sum();
+		double previouslyComposedRhythmValue = previousCompositionSteps.stream().mapToDouble( value -> value.getOriginComposeBlock().getRhythmValue() ).sum();
 		List<ComposeBlock> blocksToChooseFrom = possibleNextComposeBlocks.stream().filter( composeBlock -> previouslyComposedRhythmValue + composeBlock.getRhythmValue() <= length )
 				.collect( Collectors.toList() );
 
