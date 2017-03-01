@@ -6,8 +6,10 @@ import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Next Block provider that handles filters
@@ -20,8 +22,12 @@ public abstract class FilteredNextBlockProvider extends NextBlockProvider {
 	public Optional<ComposeBlock> getNextBlock( List<ComposeBlock> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
 			List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form, double length ) {
 
+		List<CompositionStep> allPreviousCompositionSteps = new ArrayList<>( previousCompositionSteps );
+		allPreviousCompositionSteps.addAll( previousFormCompositionSteps
+				.stream().flatMap( formCompositionStep -> formCompositionStep.getCompositionSteps().stream() ).collect( Collectors.toList() )
+		);
 		// User filters
-		List<ComposeBlock> filteredBlocks = composeBlockFilter != null ? composeBlockFilter.filter( blocksToChooseFrom, previousCompositionSteps ) : blocksToChooseFrom;
+		List<ComposeBlock> filteredBlocks = composeBlockFilter != null ? composeBlockFilter.filter( blocksToChooseFrom, allPreviousCompositionSteps ) : blocksToChooseFrom;
 
 		return getNextBlockFiltered( filteredBlocks, previousCompositionSteps, previousFormCompositionSteps, form, length );
 	}

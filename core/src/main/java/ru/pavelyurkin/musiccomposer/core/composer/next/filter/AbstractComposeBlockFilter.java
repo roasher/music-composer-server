@@ -20,6 +20,12 @@ public abstract class AbstractComposeBlockFilter implements ComposeBlockFilter {
 	public AbstractComposeBlockFilter() {
 	}
 
+	/**
+	 * Returns valid in terms of fitering blocks
+	 * @param possibleNextComposeBlocks
+	 * @param previousCompositionSteps
+	 * @return
+	 */
 	public List<ComposeBlock> filter( List<ComposeBlock> possibleNextComposeBlocks, List<CompositionStep> previousCompositionSteps ) {
 		List<ComposeBlock> filteredPreviously = composeBlockFilter != null ?
 				composeBlockFilter.filter( possibleNextComposeBlocks, previousCompositionSteps ) :
