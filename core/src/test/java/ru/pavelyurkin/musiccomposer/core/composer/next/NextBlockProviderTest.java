@@ -91,7 +91,6 @@ public class NextBlockProviderTest extends AbstractSpringTest {
 		);
 
         List<CompositionStep> previousCompositionSteps = Arrays.asList(
-				new CompositionStep( null, null ),
                 new CompositionStep( composeBlock0, composeBlock0.getMusicBlock() ),
                 new CompositionStep( composeBlock1, composeBlock1.getMusicBlock() ),
                 new CompositionStep( composeBlock2, composeBlock2.getMusicBlock() )

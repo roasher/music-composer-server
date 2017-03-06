@@ -61,7 +61,7 @@ public class CompositionComposer {
 	 * @return
 	 */
 	public Composition compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, double compositionLength ) {
-		return compose( composeBlockProvider, lexicon, compositionLength, Arrays.asList( CompositionStep.getEmptyCompositionStep() ) ).getKey();
+		return compose( composeBlockProvider, lexicon, compositionLength, Collections.emptyList() ).getKey();
 	}
 
 	/**
