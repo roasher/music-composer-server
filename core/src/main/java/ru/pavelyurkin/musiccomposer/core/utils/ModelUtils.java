@@ -281,4 +281,14 @@ public class ModelUtils {
 						.collect( Collectors.toList() ) ) )
 				.collect( Collectors.toList());
 	}
+
+	public static boolean isExactEquals( List<Melody> firstMelodies, List<Melody> secondMelodies ) {
+		if ( firstMelodies.size() != secondMelodies.size() ) return false;
+		for ( int melodyNumber = 0; melodyNumber < firstMelodies.size(); melodyNumber++ ) {
+			if ( !firstMelodies.get( melodyNumber ).isExactEquals( secondMelodies.get( melodyNumber ) ) ) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

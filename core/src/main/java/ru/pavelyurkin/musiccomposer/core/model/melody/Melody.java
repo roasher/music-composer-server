@@ -78,6 +78,33 @@ public class Melody extends Phrase {
 		return isParallelTo( melody );
     }
 
+	public boolean isExactEquals( Object o ) {
+		if ( this == o ) return true;
+		if ( o == null || getClass() != o.getClass() ) return false;
+
+		Melody melody = ( Melody ) o;
+
+		if ( !this.form.equals( melody.form ) ) {
+			return false;
+		}
+
+		List<Note> thisNoteArray = this.getNoteList();
+		List<Note> melodyNoteArray = melody.getNoteList();
+
+		if ( thisNoteArray.size() != melodyNoteArray.size() ) return false;
+
+		for ( int currentNoteNumber = 0; currentNoteNumber < thisNoteArray.size() ; currentNoteNumber ++ ) {
+			Note currentNoteFromThis = thisNoteArray.get( currentNoteNumber );
+			Note currentNoteFromMelody = melodyNoteArray.get( currentNoteNumber );
+			double rhythm1 = currentNoteFromMelody.getRhythmValue();
+			double rhythm2 = currentNoteFromThis.getRhythmValue();
+			if ( currentNoteFromMelody.getPitch() != currentNoteFromThis.getPitch() || rhythm1 != rhythm2 ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * Returns transposed clone of melody
 	 * @param transposePitch
