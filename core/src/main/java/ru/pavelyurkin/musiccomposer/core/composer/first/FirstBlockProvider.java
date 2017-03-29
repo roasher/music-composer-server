@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer.first;
 
+import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 
@@ -11,6 +12,6 @@ import java.util.Optional;
  */
 public interface FirstBlockProvider {
 
-	Optional<ComposeBlock> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions );
+	Optional<CompositionStep> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions );
 
 }

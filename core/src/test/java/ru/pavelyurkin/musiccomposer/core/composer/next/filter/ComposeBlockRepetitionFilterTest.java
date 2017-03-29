@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 
 public class ComposeBlockRepetitionFilterTest {
 
-	private ComposeBlockRepetitionFilter composeBlockRepetitionFilter = new ComposeBlockRepetitionFilter();
+	private ComposeStepRepetitionFilter composeBlockRepetitionFilter = new ComposeStepRepetitionFilter();
 
 	// TODO finish after filter refactoring
 //	public void filterOutEighthNoteRepetition() {

@@ -1,19 +1,18 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
-import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import jm.music.data.Note;
 import jm.music.data.Rest;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.List;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static jm.JMC.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by wish on 03.02.2016.
@@ -22,28 +21,17 @@ public class RangeFilterTest {
 
 	@Test
 	public void test() {
+		ComposeStepRangeFilter composeBlockRangeFilter = new ComposeStepRangeFilter( C3, C4 );
+		assertTrue( composeBlockRangeFilter.filterIt( getBlock( C3, C4, 0, 0 ), null ) );
+		assertFalse( composeBlockRangeFilter.filterIt( getBlock( B2, B3, B2 - C3, B3 - C4 ), null ) );
+		assertFalse( composeBlockRangeFilter.filterIt( getBlock( D3, D4, D3 - C3, D4 - C4 ), null ) );
+		assertFalse( composeBlockRangeFilter.filterIt( getBlock( E3, B4, E3 - C3, B4 - C4 ), null ) );
+		assertTrue( composeBlockRangeFilter.filterIt( getBlock( E3, B3, E3 - C3, B3 - C4 ), null ) );
 		Melody restMelody = new Melody( new Note( REST, Note.DEFAULT_RHYTHM_VALUE ) );
-		List<ComposeBlock> composeBlocks = Arrays.asList(
-				getMockComposeBlock( 0, C3, C4, 0, 0 ),
-				getMockComposeBlock( 1, B2, B3, B2 - C3, B3 - C4 ),
-				getMockComposeBlock( 2, D3, D4, D3 - C3, D4 - C4 ),
-				getMockComposeBlock( 3, E3, B4, E3 - C3, B4 - C4 ),
-				getMockComposeBlock( 4, E3, B3, E3 - C3, B3 - C4 ),
-				new ComposeBlock( 5, null, Arrays.asList( restMelody, restMelody ), new BlockMovement( Note.REST, Note.REST ) ) );
-		MusicBlock firstBlock = new MusicBlock( 0, null, Arrays.asList(
-				new Melody( new Note( C4, Note.DEFAULT_RHYTHM_VALUE ) ),
-				new Melody( new Note( C3, Note.DEFAULT_RHYTHM_VALUE ) ) ), null );
-		List<CompositionStep> mockComposeSteps = Arrays.asList( new CompositionStep( new ComposeBlock( firstBlock ), firstBlock ) );
-
-		ComposeBlockRangeFilter ComposeBlockRangeFilter0 = new ComposeBlockRangeFilter( C3, C4 );
-		List<ComposeBlock> filtered0 = ComposeBlockRangeFilter0.filter( composeBlocks, mockComposeSteps );
-		assertEquals( 3, filtered0.size() );
-		assertEquals( 0, filtered0.get( 0 ).getStartTime(), 0 );
-		assertEquals( 4, filtered0.get( 1 ).getStartTime(), 0 );
-		assertEquals( 5, filtered0.get( 2 ).getStartTime(), 0 );
+		assertTrue( composeBlockRangeFilter.filterIt( new MusicBlock( 5, null, Arrays.asList( restMelody, restMelody ), new BlockMovement( Note.REST, Note.REST ) ), null ) );
 	}
 
-	private ComposeBlock getMockComposeBlock( int id, int lowPitch, int highPitch, int lowMovement, int highMovement ) {
+	private MusicBlock getBlock( int lowPitch, int highPitch, int lowMovement, int highMovement ) {
 		Melody melody0 = new Melody(
 				new Note( highPitch, Note.DEFAULT_RHYTHM_VALUE ),
 				getRandomNote( lowPitch, highPitch ),
@@ -54,7 +42,7 @@ public class RangeFilterTest {
 				getRandomNote( lowPitch, highPitch ),
 				new Rest( Note.DEFAULT_RHYTHM_VALUE),
 				getRandomNote( lowPitch, highPitch ) );
-		return new ComposeBlock( id, null, Arrays.asList( melody0, melody1 ), new BlockMovement( highMovement, lowMovement ) );
+		return new MusicBlock( 0, null, Arrays.asList( melody0, melody1 ), new BlockMovement( highMovement, lowMovement ) );
 	}
 
 	private Note getRandomNote( int lowPitch, int highPitch ) {

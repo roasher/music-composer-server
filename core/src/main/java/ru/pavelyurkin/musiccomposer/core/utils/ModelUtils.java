@@ -246,8 +246,7 @@ public class ModelUtils {
 		for ( int blockNumber = 1; blockNumber < blocks.size(); blockNumber++ ) {
 			MusicBlock previousBlock = blocks.get( blockNumber - 1 );
 			MusicBlock currentBlock = blocks.get( blockNumber );
-			int transposePitch = getTransposePitch( Optional.of( previousBlock ), currentBlock );
-			transposedBlocks.add( currentBlock.transposeClone( transposePitch ) );
+			transposedBlocks.add( currentBlock.transposeClone( previousBlock ) );
 		}
 		return new MusicBlock( transposedBlocks );
 	}

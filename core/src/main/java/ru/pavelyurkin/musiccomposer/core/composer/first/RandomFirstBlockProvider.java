@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer.first;
 
+import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import org.springframework.stereotype.Component;
@@ -19,13 +20,14 @@ public class RandomFirstBlockProvider implements FirstBlockProvider {
 	 * @return
 	 */
 	@Override
-	public Optional<ComposeBlock> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
+	public Optional<CompositionStep> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
 		List<ComposeBlock> allPossibleFirstBlocks = lexicon.getAllPossibleFirst();
 		allPossibleFirstBlocks.removeAll( exclusions );
 		if ( !allPossibleFirstBlocks.isEmpty() ) {
 //			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );
 			int randomNumber = 0;
-			return Optional.of( allPossibleFirstBlocks.get( randomNumber ) );
+			ComposeBlock composeBlock = allPossibleFirstBlocks.get( randomNumber );
+			return Optional.of( new CompositionStep( composeBlock, composeBlock.getMusicBlock().transposeClone( 0 ) ) );
 		} else {
 			return Optional.empty();
 		}

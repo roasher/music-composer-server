@@ -8,7 +8,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getTransposePitch;
 import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
 
 /**
@@ -160,6 +162,11 @@ public class MusicBlock implements Serializable {
 		clone.setStartTime( getStartTime() );
 		clone.setBlockMovementFromPreviousToThis( getBlockMovementFromPreviousToThis() );
 		return clone;
+	}
+
+	public MusicBlock transposeClone( MusicBlock previousBlock ) {
+		int transposePitch = getTransposePitch( Optional.of( previousBlock ), this );
+		return this.transposeClone( transposePitch );
 	}
 
 	public void setBlockMovementFromPreviousToThis( BlockMovement blockMovementFromPreviousToThis ) {

@@ -1,9 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next;
 
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeBlockFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
 import java.util.ArrayList;
@@ -14,12 +13,12 @@ import java.util.stream.Collectors;
 /**
  * Next Block provider that handles filters
  */
-public abstract class FilteredNextBlockProvider extends NextBlockProvider {
+public abstract class FilteredNextStepProvider extends NextStepProvider {
 
-	private ComposeBlockFilter composeBlockFilter;
+	private ComposeStepFilter composeStepFilter;
 
 	@Override
-	public Optional<ComposeBlock> getNextBlock( List<ComposeBlock> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
+	public Optional<CompositionStep> getNext( List<CompositionStep> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
 			List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form, double length ) {
 
 		List<CompositionStep> allPreviousCompositionSteps = new ArrayList<>( previousCompositionSteps );
@@ -27,9 +26,9 @@ public abstract class FilteredNextBlockProvider extends NextBlockProvider {
 				.stream().flatMap( formCompositionStep -> formCompositionStep.getCompositionSteps().stream() ).collect( Collectors.toList() )
 		);
 		// User filters
-		List<ComposeBlock> filteredBlocks = composeBlockFilter != null ? composeBlockFilter.filter( blocksToChooseFrom, allPreviousCompositionSteps ) : blocksToChooseFrom;
+		List<CompositionStep> filtered = composeStepFilter != null ? composeStepFilter.filter( blocksToChooseFrom, allPreviousCompositionSteps ) : blocksToChooseFrom;
 
-		return getNextBlockFiltered( filteredBlocks, previousCompositionSteps, previousFormCompositionSteps, form, length );
+		return getNextBlockFiltered( filtered, previousCompositionSteps, previousFormCompositionSteps, form, length );
 	}
 
 	/**
@@ -42,10 +41,10 @@ public abstract class FilteredNextBlockProvider extends NextBlockProvider {
 	 * @param length
 	 * @return
 	 */
-	public abstract Optional<ComposeBlock> getNextBlockFiltered( List<ComposeBlock> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
+	public abstract Optional<CompositionStep> getNextBlockFiltered( List<CompositionStep> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
 			List<FormCompositionStep> formCompositionSteps, Optional<Form> form, double length );
 
-	public void setComposeBlockFilter( ComposeBlockFilter composeBlockFilter ) {
-		this.composeBlockFilter = composeBlockFilter;
+	public void setComposeStepFilter( ComposeStepFilter composeStepFilter ) {
+		this.composeStepFilter = composeStepFilter;
 	}
 }

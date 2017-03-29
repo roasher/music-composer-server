@@ -84,17 +84,14 @@ public class FormBlockProvider {
 		for ( int step = 0; step < length / lexicon.getMinRhythmValue(); step++ ) {
 			logger.debug( "Current state {}", step );
 			CompositionStep lastCompositionStep = !compositionSteps.isEmpty() ? getLast( compositionSteps ) : prefirstCompositionStep;
-			Optional<ComposeBlock> lastStepOriginComposeBlock = Optional.ofNullable( lastCompositionStep.getOriginComposeBlock() );
-			Optional<ComposeBlock> nextComposeBlock = step != 0 ?
+
+			Optional<CompositionStep> nextComposeBlock = step != 0 ?
 					composeBlockProvider.getNextComposeBlock( length, compositionSteps, previousFormCompositionSteps, form ) :
 					composeBlockProvider.getFirstBlock( lexicon, prefirstCompositionStep.getNextMusicBlockExclusions() );
 
-			if ( nextComposeBlock.isPresent() && currentLength + nextComposeBlock.get().getRhythmValue() <= length ) {
-				Optional<MusicBlock> lastCompositionStepTransposedBlock = Optional.ofNullable( lastCompositionStep.getTransposedBlock() );
-				int transposePitch = ModelUtils.getTransposePitch( lastCompositionStepTransposedBlock, nextComposeBlock.get().getMusicBlock() );
-				CompositionStep nextStep = new CompositionStep( nextComposeBlock.get(), nextComposeBlock.get().getMusicBlock().transposeClone( transposePitch ) );
-				compositionSteps.add( nextStep );
-				currentLength += nextComposeBlock.get().getRhythmValue();
+			if ( nextComposeBlock.isPresent() && currentLength + nextComposeBlock.get().getTransposedBlock().getRhythmValue() <= length ) {
+				compositionSteps.add( nextComposeBlock.get() );
+				currentLength += nextComposeBlock.get().getTransposedBlock().getRhythmValue();
 				if ( currentLength == length ) {
 					if ( form.isPresent() ) {
 						// FORM CHECK
@@ -126,7 +123,7 @@ public class FormBlockProvider {
 			} else {
 				if ( step != 0 ) {
 					CompositionStep preLastCompositionStep = step != 1 ? compositionSteps.get( step - 2 ) : prefirstCompositionStep ;
-					preLastCompositionStep.addNextExclusion( lastStepOriginComposeBlock.get() );
+					preLastCompositionStep.addNextExclusion( lastCompositionStep.getOriginComposeBlock() );
 					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
 					if ( compositionSteps.get( step - 1 ).getOriginComposeBlock() != null ) {
 						currentLength -= compositionSteps.get( step - 1 ).getOriginComposeBlock().getRhythmValue();

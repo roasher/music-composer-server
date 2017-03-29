@@ -13,13 +13,13 @@ import java.util.Optional;
  * Created by wish on 18.02.2016.
  */
 @Component
-public class SimpleNextBlockProvider extends FilteredNextBlockProvider {
+public class SimpleNextStepProvider extends FilteredNextStepProvider {
 
 	@Override
-	public Optional<ComposeBlock> getNextBlockFiltered( List<ComposeBlock> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
+	public Optional<CompositionStep> getNextBlockFiltered( List<CompositionStep> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
 			List<FormCompositionStep> formCompositionSteps, Optional<Form> form, double length ) {
 
-		Optional<ComposeBlock> lastOfPossibles = blocksToChooseFrom.stream().reduce( ( composeBlock1, composeBlock2 ) -> composeBlock2 );
+		Optional<CompositionStep> lastOfPossibles = blocksToChooseFrom.stream().reduce( ( composeBlock1, composeBlock2 ) -> composeBlock2 );
 		return lastOfPossibles;
 	}
 

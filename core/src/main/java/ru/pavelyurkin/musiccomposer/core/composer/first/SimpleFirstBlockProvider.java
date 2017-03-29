@@ -1,11 +1,13 @@
 package ru.pavelyurkin.musiccomposer.core.composer.first;
 
+import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Created by wish on 18.02.2016.
@@ -13,7 +15,9 @@ import java.util.Optional;
 @Component
 public class SimpleFirstBlockProvider implements FirstBlockProvider {
 	@Override
-	public Optional<ComposeBlock> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
-		return lexicon.getComposeBlockList().stream().filter( composeBlock -> !exclusions.contains( composeBlock ) && !composeBlock.isStartsWithRest() ).findFirst();
+	public Optional<CompositionStep> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
+		Optional<ComposeBlock> firstBlock = lexicon.getComposeBlockList().stream().filter( composeBlock -> !exclusions.contains( composeBlock ) && !composeBlock.isStartsWithRest() )
+				.findFirst();
+		return firstBlock.map( composeBlock -> new CompositionStep( composeBlock, composeBlock.getMusicBlock().transposeClone( 0 ) ) );
 	}
 }

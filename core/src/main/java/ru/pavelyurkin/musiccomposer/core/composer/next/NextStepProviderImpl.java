@@ -18,13 +18,13 @@ import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getRelativeForm
 import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
 
 @Component
-public class NextBlockProviderImpl extends FilteredNextBlockProvider {
+public class NextStepProviderImpl extends FilteredNextStepProvider {
 
 	@Autowired
 	private EqualityMetricAnalyzer<List<Melody>> equalityMetricAnalyzer;
 
 	@Override
-	public Optional<ComposeBlock> getNextBlockFiltered( List<ComposeBlock> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
+	public Optional<CompositionStep> getNextBlockFiltered( List<CompositionStep> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
 			List<FormCompositionStep> formCompositionSteps, Optional<Form> form, double length ) {
 
 		if ( form.isPresent() ) {
@@ -32,18 +32,18 @@ public class NextBlockProviderImpl extends FilteredNextBlockProvider {
 			List<MusicBlock> similarFormSteps = getRelativeFormBlocks( formCompositionSteps, form.get(), true );
 			List<MusicBlock> differentFormSteps = getRelativeFormBlocks( formCompositionSteps, form.get(), false );
 
-			Optional<ComposeBlock> lastOfPossibles = blocksToChooseFrom.stream()
+			Optional<CompositionStep> lastOfPossibles = blocksToChooseFrom.stream()
 					.sorted(
 							getComposeBlockComparator( similarFormSteps, differentFormSteps,
 									previousCompositionSteps
 											.stream()
 											.map( CompositionStep::getTransposedBlock )
 											.collect( Collectors.toList() ) ) )
-					.reduce( ( composeBlock1, composeBlock2 ) -> composeBlock2 );
+					.reduce( ( composeStep1, composeStep2 ) -> composeStep2 );
 
 			return lastOfPossibles;
 		} else {
-			return blocksToChooseFrom.stream().reduce( ( composeBlock1, composeBlock2 ) -> composeBlock2 );
+			return blocksToChooseFrom.stream().reduce( ( composeStep1, composeStep2 ) -> composeStep2 );
 		}
 	}
 
@@ -55,17 +55,17 @@ public class NextBlockProviderImpl extends FilteredNextBlockProvider {
 	 * @param previouslyComposedBlocks
 	 * @return
 	 */
-	private Comparator<ComposeBlock> getComposeBlockComparator( List<MusicBlock> similars, List<MusicBlock> differents,
+	private Comparator<CompositionStep> getComposeBlockComparator( List<MusicBlock> similars, List<MusicBlock> differents,
 			List<MusicBlock> previouslyComposedBlocks ) {
 		return ( firstComposeBlock, secondComposeBlock ) -> {
 			List<MusicBlock> firstBlocks = new ArrayList<>( previouslyComposedBlocks );
-			firstBlocks.add( firstComposeBlock.getMusicBlock() );
+			firstBlocks.add( firstComposeBlock.getTransposedBlock() );
 			MusicBlock firstBlockToCompare = ModelUtils.gatherBlocksWithTransposition( firstBlocks );
 			double firstEqualEtalons = getEqualityMetrics( firstBlockToCompare, similars );
 			double firstEqualDifferents = getEqualityMetrics( firstBlockToCompare, differents );
 
 			List<MusicBlock> secondBlocks = new ArrayList<>( previouslyComposedBlocks );
-			secondBlocks.add( secondComposeBlock.getMusicBlock() );
+			secondBlocks.add( secondComposeBlock.getTransposedBlock() );
 			MusicBlock secondBlockToCompare = ModelUtils.gatherBlocksWithTransposition( secondBlocks );
 			double secondEqualEtalons = getEqualityMetrics( secondBlockToCompare, similars );
 			double secondEqualDifferents = getEqualityMetrics( secondBlockToCompare, differents );

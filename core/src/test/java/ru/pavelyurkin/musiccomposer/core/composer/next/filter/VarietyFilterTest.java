@@ -3,12 +3,14 @@ package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 import org.junit.Test;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -19,57 +21,51 @@ public class VarietyFilterTest {
 
 	@Test
 	public void test() {
-		List<ComposeBlock> composeBlocks = Arrays.asList(
-				getMockComposeBlock( new CompositionInfo( "0" ) ),
-				getMockComposeBlock( new CompositionInfo( "1" ) ),
-				getMockComposeBlock( new CompositionInfo( "0" ) ),
-				getMockComposeBlock( new CompositionInfo( "0" ) ),
-				getMockComposeBlock( new CompositionInfo( "2" ) )
-		);
-		List<CompositionStep> mockComposeSteps = getMockComposeSteps();
+		List<MusicBlock> mockComposeSteps = getMockSteps();
 
-		ComposeBlockVarietyFilter composeBlockVarietyFilter0 = new ComposeBlockVarietyFilter( 4 );
-		List<ComposeBlock> filtered0 = composeBlockVarietyFilter0.filter( composeBlocks, mockComposeSteps );
-		assertEquals( 2, filtered0.size() );
-		assertTrue( filtered0.get( 0 ).getCompositionInfo().getTitle().equals( "1" ) );
-		assertTrue( filtered0.get( 1 ).getCompositionInfo().getTitle().equals( "2" ) );
+		ComposeStepVarietyFilter composeBlockVarietyFilter0 = new ComposeStepVarietyFilter( 4 );
+		assertFalse( composeBlockVarietyFilter0.filterIt( getMockBlock( new CompositionInfo( "0" ) ), mockComposeSteps ) );
+		assertTrue( composeBlockVarietyFilter0.filterIt( getMockBlock( new CompositionInfo( "1" ) ), mockComposeSteps ) );
+		assertFalse( composeBlockVarietyFilter0.filterIt( getMockBlock( new CompositionInfo( "0" ) ), mockComposeSteps ) );
+		assertFalse( composeBlockVarietyFilter0.filterIt( getMockBlock( new CompositionInfo( "0" ) ), mockComposeSteps ) );
+		assertTrue( composeBlockVarietyFilter0.filterIt( getMockBlock( new CompositionInfo( "2" ) ), mockComposeSteps ) );
 
-		ComposeBlockVarietyFilter composeBlockVarietyFilter1 = new ComposeBlockVarietyFilter( 5 );
-		List<ComposeBlock> filtered1 = composeBlockVarietyFilter1.filter( composeBlocks, mockComposeSteps );
-		assertEquals( 5, filtered1.size() );
+		ComposeStepVarietyFilter composeBlockVarietyFilter1 = new ComposeStepVarietyFilter( 5 );
+		assertTrue( composeBlockVarietyFilter1.filterIt( getMockBlock( new CompositionInfo( "0" ) ), mockComposeSteps ) );
+		assertTrue( composeBlockVarietyFilter1.filterIt( getMockBlock( new CompositionInfo( "1" ) ), mockComposeSteps ) );
+		assertTrue( composeBlockVarietyFilter1.filterIt( getMockBlock( new CompositionInfo( "0" ) ), mockComposeSteps ) );
+		assertTrue( composeBlockVarietyFilter1.filterIt( getMockBlock( new CompositionInfo( "0" ) ), mockComposeSteps ) );
+		assertTrue( composeBlockVarietyFilter1.filterIt( getMockBlock( new CompositionInfo( "2" ) ), mockComposeSteps ) );
 
-		ComposeBlockVarietyFilter composeBlockVarietyFilter2 = new ComposeBlockVarietyFilter( 4 );
-		List<ComposeBlock> filtered2 = composeBlockVarietyFilter2.filter( composeBlocks, mockComposeSteps.subList( 5, mockComposeSteps.size() ) );
-		assertEquals( 5, filtered2.size() );
-
+		ComposeStepVarietyFilter composeBlockVarietyFilter2 = new ComposeStepVarietyFilter( 4 );
+		List<MusicBlock> mockSteps1 = mockComposeSteps.subList( 5, mockComposeSteps.size() );
+		assertTrue( composeBlockVarietyFilter2.filterIt( getMockBlock( new CompositionInfo( "0" ) ), mockSteps1 ) );
+		assertTrue( composeBlockVarietyFilter2.filterIt( getMockBlock( new CompositionInfo( "1" ) ), mockSteps1 ) );
+		assertTrue( composeBlockVarietyFilter2.filterIt( getMockBlock( new CompositionInfo( "0" ) ), mockSteps1 ) );
+		assertTrue( composeBlockVarietyFilter2.filterIt( getMockBlock( new CompositionInfo( "0" ) ), mockSteps1 ) );
+		assertTrue( composeBlockVarietyFilter2.filterIt( getMockBlock( new CompositionInfo( "2" ) ), mockSteps1 ) );
 	}
 
-	private List<CompositionStep> getMockComposeSteps() {
+	private List<MusicBlock> getMockSteps() {
 		CompositionInfo compositionInfo0 = new CompositionInfo( "0" );
 		CompositionInfo compositionInfo1 = new CompositionInfo( "1" );
-		List<CompositionStep> compositionSteps = Arrays.asList(
-				getMockComposeStep( compositionInfo0 ),
-				getMockComposeStep( compositionInfo1 ),
-				getMockComposeStep( compositionInfo0 ),
-				getMockComposeStep( compositionInfo0 ),
-				getMockComposeStep( compositionInfo1 ),
-				getMockComposeStep( compositionInfo0 ),
-				getMockComposeStep( compositionInfo0 ),
-				getMockComposeStep( compositionInfo0 ),
-				getMockComposeStep( compositionInfo0 )
+		List<MusicBlock> compositionSteps = Arrays.asList(
+				getMockBlock( compositionInfo0 ),
+				getMockBlock( compositionInfo1 ),
+				getMockBlock( compositionInfo0 ),
+				getMockBlock( compositionInfo0 ),
+				getMockBlock( compositionInfo1 ),
+				getMockBlock( compositionInfo0 ),
+				getMockBlock( compositionInfo0 ),
+				getMockBlock( compositionInfo0 ),
+				getMockBlock( compositionInfo0 )
 		);
 		return compositionSteps;
 	}
 
-	private CompositionStep getMockComposeStep( CompositionInfo compositionInfo ) {
-		CompositionStep compositionStep = mock( CompositionStep.class, RETURNS_DEEP_STUBS );
-		when( compositionStep.getOriginComposeBlock().getCompositionInfo() ).thenReturn( compositionInfo );
-		return compositionStep;
-	}
-
-	private ComposeBlock getMockComposeBlock( CompositionInfo compositionInfo ) {
-		ComposeBlock composeBlock = mock( ComposeBlock.class );
-		when( composeBlock.getCompositionInfo() ).thenReturn( compositionInfo );
-		return composeBlock;
+	private MusicBlock getMockBlock( CompositionInfo compositionInfo ) {
+		MusicBlock block = mock( MusicBlock.class );
+		when( block.getCompositionInfo() ).thenReturn( compositionInfo );
+		return block;
 	}
 }

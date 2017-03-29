@@ -12,9 +12,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeBlockFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.NextBlockProviderImpl;
+import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
@@ -101,13 +101,13 @@ public class ComposeService implements ApplicationContextAware {
 	 */
 	private ComposeBlockProvider getDefaultComposeBlockProvider() {
 		if ( defaultComposeBlockProvider == null ) {
-			ComposeBlockFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
+			ComposeStepFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
 
-			NextBlockProviderImpl nextFormBlockProvider = applicationContext.getBean( NextBlockProviderImpl.class );
-			nextFormBlockProvider.setComposeBlockFilter( bachChoralFilter );
+			NextStepProviderImpl nextFormBlockProvider = applicationContext.getBean( NextStepProviderImpl.class );
+			nextFormBlockProvider.setComposeStepFilter( bachChoralFilter );
 
 			defaultComposeBlockProvider = applicationContext.getBean( ComposeBlockProvider.class );
-			defaultComposeBlockProvider.setNextBlockProvider( nextFormBlockProvider );
+			defaultComposeBlockProvider.setNextStepProvider( nextFormBlockProvider );
 		}
 		return defaultComposeBlockProvider;
 	}

@@ -1,7 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 import java.util.ArrayList;
@@ -17,22 +16,19 @@ import static ru.pavelyurkin.musiccomposer.core.utils.Utils.compare;
 /**
  * Filters out blocks including whom will cause repetition
  */
-public class ComposeBlockRepetitionFilter extends AbstractComposeBlockFilter {
+public class ComposeStepRepetitionFilter extends AbstractComposeStepFilter {
 
 	@Override
-	public List<ComposeBlock> filterIt( List<ComposeBlock> possibleNextComposeBlocks, List<CompositionStep> previousCompositionSteps ) {
-		List<MusicBlock> previousBlocks = previousCompositionSteps.stream().map( CompositionStep::getTransposedBlock ).collect( Collectors.toList() );
-		return possibleNextComposeBlocks.stream().filter( composeBlock -> {
-			List<MusicBlock> musicBlocksToCheck = new ArrayList<>( previousBlocks );
-			musicBlocksToCheck.add( composeBlock.getMusicBlock() );
-			Map<Double, Integer> rhythmValueRepetitions = getRepetitions( musicBlocksToCheck, 2 * WHOLE_NOTE );
-			for ( Map.Entry<Double, Integer> rhythmValueRepetition : rhythmValueRepetitions.entrySet() ) {
-				if ( rhythmValueRepetition.getValue() > getMaxNumberOfRepetitions( rhythmValueRepetition.getKey() ) ) {
-					return false;
-				}
+	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {
+		List<MusicBlock> musicBlocksToCheck = new ArrayList<>( previousBlocks );
+		musicBlocksToCheck.add( block );
+		Map<Double, Integer> rhythmValueRepetitions = getRepetitions( musicBlocksToCheck, 2 * WHOLE_NOTE );
+		for ( Map.Entry<Double, Integer> rhythmValueRepetition : rhythmValueRepetitions.entrySet() ) {
+			if ( rhythmValueRepetition.getValue() > getMaxNumberOfRepetitions( rhythmValueRepetition.getKey() ) ) {
+				return false;
 			}
-			return true;
-		} ).collect( Collectors.toList() );
+		}
+		return true;
 	}
 
 	/**

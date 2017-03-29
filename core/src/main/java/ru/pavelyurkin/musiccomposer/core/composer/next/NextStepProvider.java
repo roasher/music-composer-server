@@ -15,9 +15,9 @@ import static com.google.common.collect.Iterables.getLast;
 /**
  * Parent class getting Next Block
  */
-public abstract class NextBlockProvider {
+public abstract class NextStepProvider {
 
-	public Optional<ComposeBlock> getNextBlock( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form,
+	public Optional<CompositionStep> getNext( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form,
 			double length ) {
 
 		CompositionStep lastCompositionStep = getLast( previousCompositionSteps );
@@ -29,10 +29,14 @@ public abstract class NextBlockProvider {
 		List<ComposeBlock> blocksToChooseFrom = possibleNextComposeBlocks.stream().filter( composeBlock -> previouslyComposedRhythmValue + composeBlock.getRhythmValue() <= length )
 				.collect( Collectors.toList() );
 
-		return getNextBlock( blocksToChooseFrom, previousCompositionSteps, previousFormCompositionSteps, form, length );
+		List<CompositionStep> compositionStepsToChooseFrom = blocksToChooseFrom.stream().map( composeBlock -> {
+			CompositionStep compositionStep = new CompositionStep( composeBlock, composeBlock.getMusicBlock().transposeClone( lastCompositionStep.getTransposedBlock() ) );
+			return compositionStep;
+		} ).collect( Collectors.toList() );
+		return getNext( compositionStepsToChooseFrom, previousCompositionSteps, previousFormCompositionSteps, form, length );
 
 	}
 
-	public abstract Optional<ComposeBlock> getNextBlock( List<ComposeBlock> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
+	public abstract Optional<CompositionStep> getNext( List<CompositionStep> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
 			List<FormCompositionStep> formCompositionSteps, Optional<Form> form, double length );
 }

@@ -25,10 +25,10 @@ import static jm.JMC.*;
 /**
  * Created by night wish on 05.03.2016.
  */
-public class NextBlockProviderTest extends AbstractSpringTest {
+public class NextStepProviderTest extends AbstractSpringTest {
 
 	@InjectMocks
-	private NextBlockProviderImpl nextBlockProvider;
+	private NextStepProviderImpl nextBlockProvider;
 
 	@Mock
 	private EqualityMetricAnalyzer<List<Melody>> equalityMetricAnalyzer;
@@ -96,9 +96,9 @@ public class NextBlockProviderTest extends AbstractSpringTest {
                 new CompositionStep( composeBlock2, composeBlock2.getMusicBlock() )
         );
 
-		Optional<ComposeBlock> nextBlock = nextBlockProvider.getNextBlock( previousCompositionSteps, Collections.emptyList(), Optional.empty(), WHOLE_NOTE );
+		Optional<CompositionStep> nextBlock = nextBlockProvider.getNext( previousCompositionSteps, Collections.emptyList(), Optional.empty(), WHOLE_NOTE );
 
-		assertEquals( composeBlock21, nextBlock.get() );
+		assertEquals( composeBlock21, nextBlock.get().getOriginComposeBlock() );
 	}
 
 	private List<Melody> sumMelodies(List<Melody> melodies, List<Melody> melodiesToAdd ) {

@@ -1,7 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
 import ru.pavelyurkin.musiccomposer.core.composer.first.FirstBlockProvider;
-import ru.pavelyurkin.musiccomposer.core.composer.next.NextBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
@@ -26,14 +26,14 @@ public class ComposeBlockProvider {
 	@Qualifier( "simpleFirstBlockProvider" )
 	private FirstBlockProvider firstBlockProvider;
 	@Autowired
-	@Qualifier( "nextBlockProviderImpl" )
-	private NextBlockProvider nextBlockProvider;
+	@Qualifier( "nextStepProviderImpl" )
+	private NextStepProvider nextStepProvider;
 
-	public Optional<ComposeBlock> getNextComposeBlock( double length, List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
-		return nextBlockProvider.getNextBlock( previousCompositionSteps, previousFormCompositionSteps, form, length );
+	public Optional<CompositionStep> getNextComposeBlock( double length, List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
+		return nextStepProvider.getNext( previousCompositionSteps, previousFormCompositionSteps, form, length );
 	}
 
-	public Optional<ComposeBlock> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
+	public Optional<CompositionStep> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
 		return firstBlockProvider.getFirstBlock( lexicon, exclusions );
 	}
 
@@ -45,12 +45,12 @@ public class ComposeBlockProvider {
 		this.firstBlockProvider = firstBlockProvider;
 	}
 
-	public NextBlockProvider getNextBlockProvider() {
-		return nextBlockProvider;
+	public NextStepProvider getNextStepProvider() {
+		return nextStepProvider;
 	}
 
-	public void setNextBlockProvider( NextBlockProvider nextBlockProvider ) {
-		this.nextBlockProvider = nextBlockProvider;
+	public void setNextStepProvider( NextStepProvider nextStepProvider ) {
+		this.nextStepProvider = nextStepProvider;
 	}
 
 }
