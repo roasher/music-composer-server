@@ -18,6 +18,13 @@ import static ru.pavelyurkin.musiccomposer.core.utils.Utils.compare;
  */
 public class ComposeStepRepetitionFilter extends AbstractComposeStepFilter {
 
+	public ComposeStepRepetitionFilter() {
+	}
+
+	public ComposeStepRepetitionFilter( ComposeStepFilter composeStepFilter ) {
+		super( composeStepFilter );
+	}
+
 	@Override
 	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {
 		List<MusicBlock> musicBlocksToCheck = new ArrayList<>( previousBlocks );
