@@ -12,7 +12,7 @@ import java.util.Optional;
  * Created by Wish on 22.12.2015.
  */
 @Component
-public class RandomFirstBlockProvider implements FirstBlockProvider {
+public class RandomFirstStepProvider implements FirstStepProvider {
 
 	/**
 	 * Randomly returns one of the compose blocks witch have no possible previous blocks - it means that they are first blocks in the original composition

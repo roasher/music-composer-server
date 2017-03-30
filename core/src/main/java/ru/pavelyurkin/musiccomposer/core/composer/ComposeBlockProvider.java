@@ -1,20 +1,18 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
-import ru.pavelyurkin.musiccomposer.core.composer.first.FirstBlockProvider;
-import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProvider;
-import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import ru.pavelyurkin.musiccomposer.core.composer.first.FirstStepProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
+import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
+import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
 import java.util.List;
 import java.util.Optional;
-
-import static com.google.common.collect.Iterables.getLast;
 
 /**
  * Created by wish on 28.01.2016.
@@ -23,8 +21,8 @@ import static com.google.common.collect.Iterables.getLast;
 public class ComposeBlockProvider {
 
 	@Autowired
-	@Qualifier( "simpleFirstBlockProvider" )
-	private FirstBlockProvider firstBlockProvider;
+	@Qualifier( "simpleFirstStepProvider" )
+	private FirstStepProvider firstStepProvider;
 	@Autowired
 	@Qualifier( "nextStepProviderImpl" )
 	private NextStepProvider nextStepProvider;
@@ -34,15 +32,15 @@ public class ComposeBlockProvider {
 	}
 
 	public Optional<CompositionStep> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
-		return firstBlockProvider.getFirstBlock( lexicon, exclusions );
+		return firstStepProvider.getFirstBlock( lexicon, exclusions );
 	}
 
-	public FirstBlockProvider getFirstBlockProvider() {
-		return firstBlockProvider;
+	public FirstStepProvider getFirstStepProvider() {
+		return firstStepProvider;
 	}
 
-	public void setFirstBlockProvider( FirstBlockProvider firstBlockProvider ) {
-		this.firstBlockProvider = firstBlockProvider;
+	public void setFirstStepProvider( FirstStepProvider firstStepProvider ) {
+		this.firstStepProvider = firstStepProvider;
 	}
 
 	public NextStepProvider getNextStepProvider() {

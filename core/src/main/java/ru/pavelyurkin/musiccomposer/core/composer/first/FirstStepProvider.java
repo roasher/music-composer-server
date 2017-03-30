@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * Created by Wish on 22.12.2015.
  */
-public interface FirstBlockProvider {
+public interface FirstStepProvider {
 
 	Optional<CompositionStep> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions );
 
