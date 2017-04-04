@@ -18,9 +18,32 @@ public class ComposeStepRepetitionFilterTest {
 	private ComposeStepRepetitionFilter composeBlockRepetitionFilter = new ComposeStepRepetitionFilter();
 
 	@Test
+	public void filterOutRepetitionsLiveExample() {
+		MusicBlock firstBlock = new MusicBlock(
+				Arrays.asList( new Melody( new Note( 69, 0.500 ) ), new Melody( new Note( 64, 0.500 ) ), new Melody( new Note( 60, 0.500 ) ), new Melody( new Note( 45, 0.500 ) ) ),
+				null );
+		List<MusicBlock> blocks = Arrays.asList( firstBlock,
+				new MusicBlock( Arrays.asList( new Melody( new Note( 69, 0.500 ) ), new Melody( new Note( 64, 0.500 ) ), new Melody( new Note( 59, 0.500 ) ), new Melody( new Note( 45, 0.500 ) ) ), null ),
+				new MusicBlock( Arrays.asList( new Melody( new Note( 69, 0.500 ) ), new Melody( new Note( 66, 0.500 ) ), new Melody( new Note( 57, 0.500 ) ), new Melody( new Note( 50, 0.500 ) ) ), null ),
+				new MusicBlock( Arrays.asList( new Melody( new Note( 69, 0.500 ) ), new Melody( new Note( 66, 0.500 ) ), new Melody( new Note( 56, 0.500 ) ), new Melody( new Note( 50, 0.500 ) ) ), null ),
+				new MusicBlock( Arrays.asList( new Melody( new Note( 71, 0.500 ) ), new Melody( new Note( 66, 0.500 ) ), new Melody( new Note( 54, 0.500 ) ), new Melody( new Note( 51, 0.500 ) ) ), null ),
+				new MusicBlock( Arrays.asList( new Melody( new Note( 71, 0.500 ) ), new Melody( new Note( 66, 0.500 ) ), new Melody( new Note( 66, 0.500 ) ), new Melody( new Note( 51, 0.500 ) ) ), null ),
+				new MusicBlock( Arrays.asList( new Melody( new Note( 71, 0.500 ) ), new Melody( new Note( 68, 0.500 ) ), new Melody( new Note( 64, 0.500 ) ), new Melody( new Note( 52, 0.500 ) ) ), null ),
+				new MusicBlock( Arrays.asList( new Melody( new Note( 71, 0.500 ) ), new Melody( new Note( 69, 0.500 ) ), new Melody( new Note( 64, 0.500 ) ), new Melody( new Note( 54, 0.500 ) ) ), null )
+		);
+
+		List<MusicBlock> previousBlocks = new ArrayList<>();
+		previousBlocks.addAll( blocks );
+		previousBlocks.addAll( blocks );
+		previousBlocks.addAll( blocks );
+
+		assertFalse( composeBlockRepetitionFilter.filterIt( firstBlock, previousBlocks ) );
+	}
+
+	@Test
 	public void filterOutEighthNoteRepetition() {
-		List<MusicBlock> blocks = Arrays.asList(
-				new MusicBlock( Collections.singletonList( new Melody( new Note( 24, EIGHTH_NOTE ) ) ), null ),
+		MusicBlock firstBlock = new MusicBlock( Collections.singletonList( new Melody( new Note( 24, EIGHTH_NOTE ) ) ), null );
+		List<MusicBlock> blocks = Arrays.asList( firstBlock,
 				new MusicBlock( Collections.singletonList( new Melody( new Note( 25, EIGHTH_NOTE ) ) ), null ),
 				new MusicBlock( Collections.singletonList( new Melody( new Note( 26, EIGHTH_NOTE ) ) ), null ),
 				new MusicBlock( Collections.singletonList( new Melody( new Note( 27, EIGHTH_NOTE ) ) ), null ),
@@ -33,11 +56,8 @@ public class ComposeStepRepetitionFilterTest {
 		previousBlocks.addAll( blocks );
 		previousBlocks.addAll( blocks );
 		previousBlocks.addAll( blocks );
-		for ( int blockNumber = 0; blockNumber < blocks.size() - 1; blockNumber++ ) {
-			previousBlocks.add( blocks.get( blockNumber ) );
-		}
 
-		assertFalse( composeBlockRepetitionFilter.filterIt( new MusicBlock( Collections.singletonList( new Melody( new Note( 31, EIGHTH_NOTE ) ) ), null ), previousBlocks ) );
+		assertFalse( composeBlockRepetitionFilter.filterIt( firstBlock, previousBlocks ) );
 	}
 
 	// getRepetitions tests

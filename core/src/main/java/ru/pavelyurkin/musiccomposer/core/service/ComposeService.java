@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
-import ru.pavelyurkin.musiccomposer.core.composer.ComposeBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
@@ -42,7 +42,7 @@ public class ComposeService implements ApplicationContextAware {
 	 * Default parameters with lazy init
 	 */
 	private Lexicon defaultLexicon;
-	private ComposeBlockProvider defaultComposeBlockProvider;
+	private ComposeStepProvider defaultComposeStepProvider;
 
 	@Autowired
 	private CompositionComposer compositionComposer;
@@ -66,7 +66,7 @@ public class ComposeService implements ApplicationContextAware {
 			composingParametersMap.put( compositionId, composingParameters );
 		}
 		Pair<Composition, List<CompositionStep>> compose = compositionComposer
-				.compose( composingParameters.getComposeBlockProvider(), composingParameters.getLexicon(), numberOfBars * JMC.WHOLE_NOTE,
+				.compose( composingParameters.getComposeStepProvider(), composingParameters.getLexicon(), numberOfBars * JMC.WHOLE_NOTE,
 						composingParameters.getPreviousCompositionSteps() );
 		if ( compose.getValue() != null ) composingParameters.setPreviousCompositionSteps( compose.getValue() );
 		return compose.getKey();
@@ -78,7 +78,7 @@ public class ComposeService implements ApplicationContextAware {
 	 */
 	public ComposingParameters getDefaultComposingParameters() {
 		ComposingParameters composingParameters = new ComposingParameters();
-		composingParameters.setComposeBlockProvider( getDefaultComposeBlockProvider() );
+		composingParameters.setComposeStepProvider( getDefaultComposeStepProvider() );
 		composingParameters.setLexicon( getDefaultLexicon() );
 		return composingParameters;
 	}
@@ -99,17 +99,17 @@ public class ComposeService implements ApplicationContextAware {
 	 * return Bach chorale compose block provider
 	 * @return
 	 */
-	private ComposeBlockProvider getDefaultComposeBlockProvider() {
-		if ( defaultComposeBlockProvider == null ) {
+	private ComposeStepProvider getDefaultComposeStepProvider() {
+		if ( defaultComposeStepProvider == null ) {
 			ComposeStepFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
 
 			NextStepProviderImpl nextFormBlockProvider = applicationContext.getBean( NextStepProviderImpl.class );
 			nextFormBlockProvider.setComposeStepFilter( bachChoralFilter );
 
-			defaultComposeBlockProvider = applicationContext.getBean( ComposeBlockProvider.class );
-			defaultComposeBlockProvider.setNextStepProvider( nextFormBlockProvider );
+			defaultComposeStepProvider = applicationContext.getBean( ComposeStepProvider.class );
+			defaultComposeStepProvider.setNextStepProvider( nextFormBlockProvider );
 		}
-		return defaultComposeBlockProvider;
+		return defaultComposeStepProvider;
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class ComposeService implements ApplicationContextAware {
 		this.defaultLexicon = defaultLexicon;
 	}
 
-	public void setDefaultComposeBlockProvider( ComposeBlockProvider defaultComposeBlockProvider ) {
-		this.defaultComposeBlockProvider = defaultComposeBlockProvider;
+	public void setDefaultComposeStepProvider( ComposeStepProvider defaultComposeStepProvider ) {
+		this.defaultComposeStepProvider = defaultComposeStepProvider;
 	}
 }

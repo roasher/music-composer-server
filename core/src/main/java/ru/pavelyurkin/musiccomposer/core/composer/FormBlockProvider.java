@@ -1,19 +1,17 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
 import javafx.util.Pair;
-import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
-import ru.pavelyurkin.musiccomposer.core.equality.form.FormEquality;
-import ru.pavelyurkin.musiccomposer.core.equality.form.RelativelyComparable;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
-import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
+import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
+import ru.pavelyurkin.musiccomposer.core.equality.form.FormEquality;
+import ru.pavelyurkin.musiccomposer.core.equality.form.RelativelyComparable;
+import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,10 +41,10 @@ public class FormBlockProvider {
 	 * @param previousSteps
 	 * @return
 	 */
-	public Optional<FormCompositionStep> getFormElement( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, Form form,
+	public Optional<FormCompositionStep> getFormElement( double length, Lexicon lexicon, ComposeStepProvider composeStepProvider, Form form,
 			List<FormCompositionStep> previousSteps ) {
 		logger.info( "Composing form element : {}, length : {}", form.getValue(), length );
-		List<CompositionStep> compositionSteps = composeSteps( length, lexicon, composeBlockProvider, previousSteps , Optional.of( form ) );
+		List<CompositionStep> compositionSteps = composeSteps( length, lexicon, composeStepProvider, previousSteps , Optional.of( form ) );
 		return Optional.ofNullable( !compositionSteps.isEmpty() ? new FormCompositionStep( compositionSteps, form ) : null );
 	}
 
@@ -55,14 +53,16 @@ public class FormBlockProvider {
 	 *
 	 * @param length
 	 * @param lexicon
-	 * @param composeBlockProvider
+	 * @param composeStepProvider
 	 * @param previousFormCompositionSteps
 	 * @return
 	 */
-	public List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, List<CompositionStep> previousFormCompositionSteps ) {
+	public List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeStepProvider composeStepProvider, List<CompositionStep> previousFormCompositionSteps ) {
 		logger.info( "Composing element regardless form, length : {}", length );
-		List<FormCompositionStep> formCompositionSteps = Arrays.asList( new FormCompositionStep( previousFormCompositionSteps, null ) );
-		return composeSteps( length, lexicon, composeBlockProvider, formCompositionSteps, Optional.empty() );
+		List<FormCompositionStep> formCompositionSteps = !previousFormCompositionSteps.isEmpty() ?
+				Collections.singletonList( new FormCompositionStep( previousFormCompositionSteps, null ) ) :
+				Collections.emptyList();
+		return composeSteps( length, lexicon, composeStepProvider, formCompositionSteps, Optional.empty() );
 	}
 
 	/**
@@ -70,14 +70,16 @@ public class FormBlockProvider {
 	 *
 	 * @param length
 	 * @param lexicon
-	 * @param composeBlockProvider
+	 * @param composeStepProvider
 	 * @param previousFormCompositionSteps
 	 * @param form
 	 * @return
 	 */
-	private List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeBlockProvider composeBlockProvider, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
+	private List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeStepProvider composeStepProvider, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
 
-		CompositionStep prefirstCompositionStep = CompositionStep.getEmptyCompositionStep();
+		CompositionStep prefirstCompositionStep = previousFormCompositionSteps.isEmpty() ?
+				CompositionStep.getEmptyCompositionStep() :
+				getLast( getLast( previousFormCompositionSteps ).getCompositionSteps() );
 		List<CompositionStep> compositionSteps = new ArrayList<>();
 		double currentLength = 0;
 
@@ -85,13 +87,14 @@ public class FormBlockProvider {
 			logger.debug( "Current state {}", step );
 			CompositionStep lastCompositionStep = !compositionSteps.isEmpty() ? getLast( compositionSteps ) : prefirstCompositionStep;
 
-			Optional<CompositionStep> nextComposeBlock = step != 0 ?
-					composeBlockProvider.getNextComposeBlock( length, compositionSteps, previousFormCompositionSteps, form ) :
-					composeBlockProvider.getFirstBlock( lexicon, prefirstCompositionStep.getNextMusicBlockExclusions() );
+			Optional<CompositionStep> nextCompositionStep = step != 0 || !previousFormCompositionSteps.isEmpty() ?
+					composeStepProvider.getNext( length, compositionSteps, previousFormCompositionSteps, form ) :
+					composeStepProvider.getFirst( lexicon, prefirstCompositionStep.getNextMusicBlockExclusions() );
 
-			if ( nextComposeBlock.isPresent() && currentLength + nextComposeBlock.get().getTransposedBlock().getRhythmValue() <= length ) {
-				compositionSteps.add( nextComposeBlock.get() );
-				currentLength += nextComposeBlock.get().getTransposedBlock().getRhythmValue();
+			if ( nextCompositionStep.isPresent() && currentLength + nextCompositionStep.get().getTransposedBlock().getRhythmValue() <= length ) {
+				compositionSteps.add( nextCompositionStep.get() );
+				logger.debug( "Composed {}", nextCompositionStep.get().getTransposedBlock().toString() );
+				currentLength += nextCompositionStep.get().getTransposedBlock().getRhythmValue();
 				if ( currentLength == length ) {
 					if ( form.isPresent() ) {
 						// FORM CHECK

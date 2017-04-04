@@ -20,7 +20,9 @@ public abstract class NextStepProvider {
 	public Optional<CompositionStep> getNext( List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form,
 			double length ) {
 
-		CompositionStep lastCompositionStep = getLast( previousCompositionSteps );
+		CompositionStep lastCompositionStep = !previousCompositionSteps.isEmpty() ?
+				getLast( previousCompositionSteps ) :
+				getLast( getLast( previousFormCompositionSteps ).getCompositionSteps() );
 		List<ComposeBlock> possibleNextComposeBlocks = new ArrayList<>( lastCompositionStep.getOriginComposeBlock().getPossibleNextComposeBlocks() );
 		possibleNextComposeBlocks.removeAll( lastCompositionStep.getNextMusicBlockExclusions() );
 
@@ -28,7 +30,7 @@ public abstract class NextStepProvider {
 		double previouslyComposedRhythmValue = previousCompositionSteps.stream().mapToDouble( value -> value.getOriginComposeBlock().getRhythmValue() ).sum();
 		List<ComposeBlock> blocksToChooseFrom = possibleNextComposeBlocks.stream().filter( composeBlock -> previouslyComposedRhythmValue + composeBlock.getRhythmValue() <= length )
 				.collect( Collectors.toList() );
-
+		// Creating steps for further processing
 		List<CompositionStep> compositionStepsToChooseFrom = blocksToChooseFrom.stream().map( composeBlock -> {
 			CompositionStep compositionStep = new CompositionStep( composeBlock, composeBlock.getMusicBlock().transposeClone( lastCompositionStep.getTransposedBlock() ) );
 			return compositionStep;

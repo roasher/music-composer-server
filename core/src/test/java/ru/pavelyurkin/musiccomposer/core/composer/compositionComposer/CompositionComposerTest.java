@@ -1,6 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer.compositionComposer;
 
-import ru.pavelyurkin.musiccomposer.core.composer.ComposeBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposerTest;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
@@ -16,9 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
-import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
@@ -29,7 +26,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static jm.JMC.*;
 import static jm.constants.Durations.WHOLE_NOTE;
@@ -55,13 +51,14 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	private LexiconDAO lexiconDAO;
 
 	@Autowired
-	private ComposeBlockProvider composeBlockProvider;
+	private ComposeStepProvider composeStepProvider;
 
+	@Ignore
 	@Test
 	public void getSimplePieceTest1() {
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resources/simpleMelodies" ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
-		Composition composition = compositionComposer.compose( composeBlockProvider, lexicon, "ABCD", 4 * JMC.WHOLE_NOTE );
+		Composition composition = compositionComposer.compose( composeStepProvider, lexicon, "ABCD", 4 * JMC.WHOLE_NOTE );
 		assertEquals( 16., composition.getEndTime(), 0 );
 	}
 
@@ -143,7 +140,7 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	public void singleVoiceComposingTest() {
 		Composition composition = compositionLoader.getComposition( new File( CompositionDecomposerTest.class.getResource( "gen_1.mid" ).getFile() ) );
 		Lexicon lexicon = compositionDecomposer.decompose( composition, WHOLE_NOTE );
-		Composition composedComposition = compositionComposer.compose( composeBlockProvider, lexicon, "ABCB", WHOLE_NOTE * 4 );
+		Composition composedComposition = compositionComposer.compose( composeStepProvider, lexicon, "ABCB", WHOLE_NOTE * 4 );
 		View.show( composedComposition );
 		Utils.suspend();
 	}

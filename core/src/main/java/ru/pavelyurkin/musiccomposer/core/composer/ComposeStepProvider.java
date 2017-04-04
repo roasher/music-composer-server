@@ -18,7 +18,7 @@ import java.util.Optional;
  * Created by wish on 28.01.2016.
  */
 @Component
-public class ComposeBlockProvider {
+public class ComposeStepProvider {
 
 	@Autowired
 	@Qualifier( "simpleFirstStepProvider" )
@@ -27,11 +27,11 @@ public class ComposeBlockProvider {
 	@Qualifier( "nextStepProviderImpl" )
 	private NextStepProvider nextStepProvider;
 
-	public Optional<CompositionStep> getNextComposeBlock( double length, List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
+	public Optional<CompositionStep> getNext( double length, List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
 		return nextStepProvider.getNext( previousCompositionSteps, previousFormCompositionSteps, form, length );
 	}
 
-	public Optional<CompositionStep> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
+	public Optional<CompositionStep> getFirst( Lexicon lexicon, List<ComposeBlock> exclusions ) {
 		return firstStepProvider.getFirstBlock( lexicon, exclusions );
 	}
 

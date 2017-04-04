@@ -1,10 +1,9 @@
 package ru.pavelyurkin.musiccomposer.core.service;
 
-import ru.pavelyurkin.musiccomposer.core.composer.ComposeBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,7 +13,7 @@ import java.util.List;
 public class ComposingParameters {
 
 	private Lexicon lexicon;
-	private ComposeBlockProvider composeBlockProvider;
+	private ComposeStepProvider composeStepProvider;
 	private List<CompositionStep> previousCompositionSteps = Collections.emptyList();
 
 	public List<CompositionStep> getPreviousCompositionSteps() {
@@ -33,12 +32,12 @@ public class ComposingParameters {
 		this.lexicon = lexicon;
 	}
 
-	public ComposeBlockProvider getComposeBlockProvider() {
-		return composeBlockProvider;
+	public ComposeStepProvider getComposeStepProvider() {
+		return composeStepProvider;
 	}
 
-	public void setComposeBlockProvider( ComposeBlockProvider composeBlockProvider ) {
-		this.composeBlockProvider = composeBlockProvider;
+	public void setComposeStepProvider( ComposeStepProvider composeStepProvider ) {
+		this.composeStepProvider = composeStepProvider;
 	}
 
 }

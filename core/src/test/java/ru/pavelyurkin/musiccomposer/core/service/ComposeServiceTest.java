@@ -2,10 +2,9 @@ package ru.pavelyurkin.musiccomposer.core.service;
 
 import jm.JMC;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.pavelyurkin.musiccomposer.core.composer.ComposeBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
@@ -27,7 +26,7 @@ public class ComposeServiceTest extends AbstractSpringTest {
 	private CompositionComposer compositionComposer;
 
 	@Autowired
-	private ComposeBlockProvider composeBlockProvider;
+	private ComposeStepProvider composeStepProvider;
 
 	@Autowired
 	private CompositionLoader compositionLoader;
@@ -37,7 +36,7 @@ public class ComposeServiceTest extends AbstractSpringTest {
 
 	@Before
 	public void before() {
-		composeService.setDefaultComposeBlockProvider( composeBlockProvider );
+		composeService.setDefaultComposeStepProvider( composeStepProvider );
 
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resources/ru/pavelyurkin/musiccomposer/core/decomposer/" ) );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );

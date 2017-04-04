@@ -40,8 +40,8 @@ public class CompositionComposer {
 	 * @param compositionLength
 	 * @return
 	 */
-	public Pair<Composition, List<CompositionStep>> compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, double compositionLength, List<CompositionStep> previousCompositionSteps ) {
-		List<CompositionStep> compositionSteps = formBlockProvider.composeSteps( compositionLength, lexicon, composeBlockProvider, previousCompositionSteps );
+	public Pair<Composition, List<CompositionStep>> compose( ComposeStepProvider composeStepProvider, Lexicon lexicon, double compositionLength, List<CompositionStep> previousCompositionSteps ) {
+		List<CompositionStep> compositionSteps = formBlockProvider.composeSteps( compositionLength, lexicon, composeStepProvider, previousCompositionSteps );
 		List<List<Melody>> blocks = compositionSteps
 				.stream()
 				.map( compositionStep -> compositionStep.getTransposedBlock().getMelodyList() )
@@ -60,8 +60,8 @@ public class CompositionComposer {
 	 * @param compositionLength
 	 * @return
 	 */
-	public Composition compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, double compositionLength ) {
-		return compose( composeBlockProvider, lexicon, compositionLength, Collections.emptyList() ).getKey();
+	public Composition compose( ComposeStepProvider composeStepProvider, Lexicon lexicon, double compositionLength ) {
+		return compose( composeStepProvider, lexicon, compositionLength, Collections.emptyList() ).getKey();
 	}
 
 	/**
@@ -72,8 +72,8 @@ public class CompositionComposer {
 	 * @param compositionLength
 	 * @return
 	 */
-	public Composition compose( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, String form, double compositionLength ) {
-		List<FormCompositionStep> formCompositionSteps = composeSteps( composeBlockProvider, lexicon, form, compositionLength );
+	public Composition compose( ComposeStepProvider composeStepProvider, Lexicon lexicon, String form, double compositionLength ) {
+		List<FormCompositionStep> formCompositionSteps = composeSteps( composeStepProvider, lexicon, form, compositionLength );
 		List<List<Melody>> blocks = formCompositionSteps
 							.stream()
 							.flatMap( formCompositionStep -> formCompositionStep.getCompositionSteps()
@@ -95,7 +95,7 @@ public class CompositionComposer {
 	 * @param compositionLength
 	 * @return
 	 */
-	public List<FormCompositionStep> composeSteps( ComposeBlockProvider composeBlockProvider, Lexicon lexicon, String form, double compositionLength ) {
+	public List<FormCompositionStep> composeSteps( ComposeStepProvider composeStepProvider, Lexicon lexicon, String form, double compositionLength ) {
 
 		FormCompositionStep prefirstCompositionStep = FormCompositionStep.getEmptyStep();
 		List<FormCompositionStep> compositionSteps = new ArrayList<>();
@@ -105,7 +105,7 @@ public class CompositionComposer {
 
 			FormCompositionStep lastCompositionStep = !compositionSteps.isEmpty() ? getLast( compositionSteps ) : prefirstCompositionStep;
 			Form current = new Form( form.charAt( formElementNumber ) );
-			Optional<FormCompositionStep> nextStep = formBlockProvider.getFormElement( stepLength, lexicon, composeBlockProvider, current, compositionSteps );
+			Optional<FormCompositionStep> nextStep = formBlockProvider.getFormElement( stepLength, lexicon, composeStepProvider, current, compositionSteps );
 
 			if ( nextStep.isPresent() ) {
 				compositionSteps.add( nextStep.get() );
