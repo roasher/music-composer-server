@@ -19,7 +19,7 @@ public abstract class FilteredNextStepProvider extends NextStepProvider {
 
 	@Override
 	public Optional<CompositionStep> getNext( List<CompositionStep> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
-			List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form, double length ) {
+			List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
 
 		List<CompositionStep> allPreviousCompositionSteps = new ArrayList<>( previousCompositionSteps );
 		allPreviousCompositionSteps.addAll( previousFormCompositionSteps
@@ -28,7 +28,7 @@ public abstract class FilteredNextStepProvider extends NextStepProvider {
 		// User filters
 		List<CompositionStep> filtered = composeStepFilter != null ? composeStepFilter.filter( blocksToChooseFrom, allPreviousCompositionSteps ) : blocksToChooseFrom;
 
-		return getNextBlockFiltered( filtered, previousCompositionSteps, previousFormCompositionSteps, form, length );
+		return getNextBlockFiltered( filtered, previousCompositionSteps, previousFormCompositionSteps, form );
 	}
 
 	/**
@@ -38,11 +38,10 @@ public abstract class FilteredNextStepProvider extends NextStepProvider {
 	 * @param previousCompositionSteps
 	 * @param formCompositionSteps
 	 * @param form
-	 * @param length
 	 * @return
 	 */
 	public abstract Optional<CompositionStep> getNextBlockFiltered( List<CompositionStep> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
-			List<FormCompositionStep> formCompositionSteps, Optional<Form> form, double length );
+			List<FormCompositionStep> formCompositionSteps, Optional<Form> form );
 
 	public void setComposeStepFilter( ComposeStepFilter composeStepFilter ) {
 		this.composeStepFilter = composeStepFilter;

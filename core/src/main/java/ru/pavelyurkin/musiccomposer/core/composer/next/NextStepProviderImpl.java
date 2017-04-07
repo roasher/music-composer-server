@@ -6,7 +6,6 @@ import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +24,7 @@ public class NextStepProviderImpl extends FilteredNextStepProvider {
 
 	@Override
 	public Optional<CompositionStep> getNextBlockFiltered( List<CompositionStep> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
-			List<FormCompositionStep> formCompositionSteps, Optional<Form> form, double length ) {
+			List<FormCompositionStep> formCompositionSteps, Optional<Form> form ) {
 
 		if ( form.isPresent() ) {
 

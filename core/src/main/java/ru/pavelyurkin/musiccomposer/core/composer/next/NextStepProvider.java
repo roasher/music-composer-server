@@ -35,10 +35,10 @@ public abstract class NextStepProvider {
 			CompositionStep compositionStep = new CompositionStep( composeBlock, composeBlock.getMusicBlock().transposeClone( lastCompositionStep.getTransposedBlock() ) );
 			return compositionStep;
 		} ).collect( Collectors.toList() );
-		return getNext( compositionStepsToChooseFrom, previousCompositionSteps, previousFormCompositionSteps, form, length );
+		return getNext( compositionStepsToChooseFrom, previousCompositionSteps, previousFormCompositionSteps, form );
 
 	}
 
 	public abstract Optional<CompositionStep> getNext( List<CompositionStep> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
-			List<FormCompositionStep> formCompositionSteps, Optional<Form> form, double length );
+			List<FormCompositionStep> formCompositionSteps, Optional<Form> form );
 }

@@ -2,7 +2,6 @@ package ru.pavelyurkin.musiccomposer.core.composer.next;
 
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
@@ -17,7 +16,7 @@ public class SimpleNextStepProvider extends FilteredNextStepProvider {
 
 	@Override
 	public Optional<CompositionStep> getNextBlockFiltered( List<CompositionStep> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
-			List<FormCompositionStep> formCompositionSteps, Optional<Form> form, double length ) {
+			List<FormCompositionStep> formCompositionSteps, Optional<Form> form ) {
 
 		Optional<CompositionStep> lastOfPossibles = blocksToChooseFrom.stream().reduce( ( composeBlock1, composeBlock2 ) -> composeBlock2 );
 		return lastOfPossibles;
