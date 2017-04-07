@@ -75,7 +75,8 @@ public class FormBlockProvider {
 	 * @param form
 	 * @return
 	 */
-	private List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeStepProvider composeStepProvider, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
+	private List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeStepProvider composeStepProvider
+			, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
 
 		CompositionStep prefirstCompositionStep = previousFormCompositionSteps.isEmpty() ?
 				CompositionStep.getEmptyCompositionStep() :
