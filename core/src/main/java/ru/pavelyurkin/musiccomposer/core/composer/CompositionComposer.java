@@ -6,6 +6,7 @@ import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import jm.music.data.Note;
 import jm.music.data.Part;
+import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
@@ -97,22 +98,27 @@ public class CompositionComposer {
 	 */
 	public List<FormCompositionStep> composeSteps( ComposeStepProvider composeStepProvider, Lexicon lexicon, String form, double compositionLength ) {
 
-		FormCompositionStep prefirstCompositionStep = FormCompositionStep.getEmptyStep();
 		List<FormCompositionStep> compositionSteps = new ArrayList<>();
+		List<ComposeBlock> firstComposeBlockExclusions = new ArrayList<>();
 
 		double stepLength = compositionLength / form.length();
 		for ( int formElementNumber = 0; formElementNumber < form.length(); formElementNumber++ ) {
 
-			FormCompositionStep lastCompositionStep = !compositionSteps.isEmpty() ? getLast( compositionSteps ) : prefirstCompositionStep;
 			Form current = new Form( form.charAt( formElementNumber ) );
-			Optional<FormCompositionStep> nextStep = formBlockProvider.getFormElement( stepLength, lexicon, composeStepProvider, current, compositionSteps );
+			Optional<FormCompositionStep> nextStep = formBlockProvider.getFormElement( stepLength, lexicon, composeStepProvider, current, compositionSteps,
+					firstComposeBlockExclusions );
 
 			if ( nextStep.isPresent() ) {
 				compositionSteps.add( nextStep.get() );
 			} else {
 				if ( formElementNumber != 0 ) {
-					FormCompositionStep preLastCompositionStep = formElementNumber != 1 ? compositionSteps.get( formElementNumber - 2 ) : prefirstCompositionStep;
-					getLast( preLastCompositionStep.getCompositionSteps() ).addNextExclusion( lastCompositionStep.getCompositionSteps().get( 0 ).getOriginComposeBlock() );
+					ComposeBlock exclusionBlock = getLast( compositionSteps ).getCompositionSteps().get( 0 ).getOriginComposeBlock();
+					if ( formElementNumber != 1 ) {
+						FormCompositionStep preLastCompositionStep = compositionSteps.get( formElementNumber - 2 );
+						getLast( preLastCompositionStep.getCompositionSteps() ).addNextExclusion( exclusionBlock );
+					} else {
+						firstComposeBlockExclusions.add( exclusionBlock );
+					}
 					// subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with previous
 					compositionSteps.remove( formElementNumber - 1 );
 					formElementNumber = formElementNumber - 2;

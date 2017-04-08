@@ -31,6 +31,12 @@ public class CompositionStep {
 		return new CompositionStep( null, null );
 	}
 
+	public static CompositionStep getEmptyCompositionStep(List<ComposeBlock> nextMusicBlockExclusions) {
+		CompositionStep compositionStep = getEmptyCompositionStep();
+		compositionStep.setNextMusicBlockExclusions( nextMusicBlockExclusions );
+		return compositionStep;
+	}
+
 	public CompositionStep( ComposeBlock originComposeBlock, MusicBlock transposedBlock ) {
 		this.originComposeBlock = originComposeBlock;
 		this.transposedBlock = transposedBlock;

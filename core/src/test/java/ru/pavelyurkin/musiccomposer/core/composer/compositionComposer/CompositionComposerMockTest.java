@@ -46,7 +46,7 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 
 		List<Optional<FormCompositionStep>> formCompositionSteps = getMockFormCompositionSteps( 10 );
 		when( formBlockProvider
-				.getFormElement( any( Double.class ), any( Lexicon.class ), any( ComposeStepProvider.class ), any( Form.class ), any( List.class ) ) )
+				.getFormElement( any( Double.class ), any( Lexicon.class ), any( ComposeStepProvider.class ), any( Form.class ), any( List.class ), any( List.class ) ) )
 				.thenReturn( formCompositionSteps.get( 0 ) ).thenReturn( formCompositionSteps.get( 1 ) ).thenReturn( formCompositionSteps.get( 2 ) )
 				.thenReturn( Optional.empty() ).thenReturn( Optional.empty() ).thenReturn( formCompositionSteps.get( 3 ) ).thenReturn( Optional.empty() )
 				.thenReturn( Optional.empty() ).thenReturn( formCompositionSteps.get( 4 ) ).thenReturn( formCompositionSteps.get( 5 ) )
@@ -67,7 +67,7 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 		List<Optional<FormCompositionStep>> formCompositionSteps = getMockFormCompositionSteps( 10 );
 
 		when( formBlockProvider
-				.getFormElement( any( Double.class ), any( Lexicon.class ), any( ComposeStepProvider.class ), any( Form.class ), any( List.class ) ) )
+				.getFormElement( any( Double.class ), any( Lexicon.class ), any( ComposeStepProvider.class ), any( Form.class ), any( List.class ), any( List.class ) ) )
 				.thenReturn( formCompositionSteps.get( 0 ) ).thenReturn( formCompositionSteps.get( 1 ) ).thenReturn( formCompositionSteps.get( 2 ) )
 				.thenReturn( Optional.empty() ).thenReturn( formCompositionSteps.get( 3 ) ).thenReturn( Optional.empty() )
 				.thenReturn( formCompositionSteps.get( 4 ) ).thenReturn( formCompositionSteps.get( 5 ) ).thenReturn( formCompositionSteps.get( 6 ) )
@@ -88,7 +88,7 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 		List<Optional<FormCompositionStep>> formCompositionSteps = getMockFormCompositionSteps( 10 );
 
 		when( formBlockProvider
-				.getFormElement( any( Double.class ), any( Lexicon.class ), any( ComposeStepProvider.class ), any( Form.class ), any( List.class ) ) )
+				.getFormElement( any( Double.class ), any( Lexicon.class ), any( ComposeStepProvider.class ), any( Form.class ), any( List.class ), any( List.class ) ) )
 				.thenReturn( formCompositionSteps.get( 0 ) ).thenReturn( formCompositionSteps.get( 1 ) ).thenReturn( formCompositionSteps.get( 2 ) )
 				.thenReturn( Optional.empty() ).thenReturn( Optional.empty() ).thenReturn( Optional.empty() ).thenReturn( Optional.empty() )
 				.thenReturn( formCompositionSteps.get( 3 ) ).thenReturn( Optional.empty() ).thenReturn( Optional.empty() )

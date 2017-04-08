@@ -49,7 +49,7 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 
 		double lenght = JMC.WHOLE_NOTE;
 		Optional<FormCompositionStep> optFormCompositionStep = formBlockProvider
-				.getFormElement( lenght, lexiconFromFirst, composeStepProvider, new Form( 'A' ), Collections.emptyList() );
+				.getFormElement( lenght, lexiconFromFirst, composeStepProvider, new Form( 'A' ), Collections.emptyList(), Collections.emptyList() );
 
 		assertTrue( optFormCompositionStep.isPresent() );
 		optFormCompositionStep.ifPresent( formCompositionStep -> {

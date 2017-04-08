@@ -9,6 +9,7 @@ import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.equality.form.FormEquality;
 import ru.pavelyurkin.musiccomposer.core.equality.form.RelativelyComparable;
+import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
@@ -39,12 +40,14 @@ public class FormBlockProvider {
 	 * @param lexicon
 	 * @param form          - form, from part of witch new Block is going to be generated
 	 * @param previousSteps
+	 * @param firstMusicBlockExclusions - while composing first block it can't be one of them
 	 * @return
 	 */
 	public Optional<FormCompositionStep> getFormElement( double length, Lexicon lexicon, ComposeStepProvider composeStepProvider, Form form,
-			List<FormCompositionStep> previousSteps ) {
+			List<FormCompositionStep> previousSteps, List<ComposeBlock> firstMusicBlockExclusions ) {
 		logger.info( "Composing form element : {}, length : {}", form.getValue(), length );
-		List<CompositionStep> compositionSteps = composeSteps( length, lexicon, composeStepProvider, previousSteps , Optional.of( form ) );
+		List<CompositionStep> compositionSteps = composeSteps( length, lexicon, composeStepProvider, previousSteps , Optional.of( form ),
+				firstMusicBlockExclusions );
 		return Optional.ofNullable( !compositionSteps.isEmpty() ? new FormCompositionStep( compositionSteps, form ) : null );
 	}
 
@@ -62,7 +65,7 @@ public class FormBlockProvider {
 		List<FormCompositionStep> formCompositionSteps = !previousFormCompositionSteps.isEmpty() ?
 				Collections.singletonList( new FormCompositionStep( previousFormCompositionSteps, null ) ) :
 				Collections.emptyList();
-		return composeSteps( length, lexicon, composeStepProvider, formCompositionSteps, Optional.empty() );
+		return composeSteps( length, lexicon, composeStepProvider, formCompositionSteps, Optional.empty(), Collections.emptyList() );
 	}
 
 	/**
@@ -73,13 +76,14 @@ public class FormBlockProvider {
 	 * @param composeStepProvider
 	 * @param previousFormCompositionSteps
 	 * @param form
+	 * @param exclusionsToFirstBlock
 	 * @return
 	 */
-	private List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeStepProvider composeStepProvider
-			, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
+	private List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeStepProvider composeStepProvider, List<FormCompositionStep> previousFormCompositionSteps,
+			Optional<Form> form, List<ComposeBlock> exclusionsToFirstBlock ) {
 
 		CompositionStep prefirstCompositionStep = previousFormCompositionSteps.isEmpty() ?
-				CompositionStep.getEmptyCompositionStep() :
+				CompositionStep.getEmptyCompositionStep( exclusionsToFirstBlock ) :
 				getLast( getLast( previousFormCompositionSteps ).getCompositionSteps() );
 		List<CompositionStep> compositionSteps = new ArrayList<>();
 		double currentLength = 0;

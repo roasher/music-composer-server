@@ -53,7 +53,6 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	@Autowired
 	private ComposeStepProvider composeStepProvider;
 
-	@Ignore
 	@Test
 	public void getSimplePieceTest1() {
 		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resources/simpleMelodies" ) );
