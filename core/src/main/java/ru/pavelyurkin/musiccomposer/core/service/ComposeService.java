@@ -21,6 +21,7 @@ import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -115,6 +116,11 @@ public class ComposeService implements ApplicationContextAware {
 	@Override
 	public void setApplicationContext( ApplicationContext applicationContext ) throws BeansException {
 		this.applicationContext = applicationContext;
+	}
+
+	@PostConstruct
+	public void loadDefaultLexicon() {
+		getDefaultLexicon();
 	}
 
 	public ComposingParameters getComposingParameters( String id ) {
