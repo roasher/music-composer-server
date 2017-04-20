@@ -12,6 +12,8 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.service.ComposeService;
 import ru.pavelyurkin.musiccomposer.rest.dto.CompositionDTO;
 
+import javax.annotation.PostConstruct;
+
 @RestController
 public class MidiController {
 
@@ -34,6 +36,11 @@ public class MidiController {
 			@RequestParam int numberOfBars ) {
 		Composition nextBarsFromComposition = composeService.getNextBarsFromComposition( compositionId, numberOfBars );
 		return compositionConverter.convert( nextBarsFromComposition );
+	}
+
+	@PostConstruct
+	public void init() {
+		composeService.loadDefaultLexicon();
 	}
 
 }

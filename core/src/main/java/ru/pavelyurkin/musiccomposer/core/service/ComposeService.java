@@ -2,8 +2,7 @@ package ru.pavelyurkin.musiccomposer.core.service;
 
 import javafx.util.Pair;
 import jm.JMC;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,16 +11,15 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
+import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -30,10 +28,9 @@ import java.util.Map;
 /**
  * Class provides different composing services
  */
+@Slf4j
 @Component
 public class ComposeService implements ApplicationContextAware {
-
-	private Logger logger  = LoggerFactory.getLogger( getClass() );
 
 	/**
 	 * Map, holding parameters to compose per id (session for example)
@@ -45,20 +42,24 @@ public class ComposeService implements ApplicationContextAware {
 	private Lexicon defaultLexicon;
 	private ComposeStepProvider defaultComposeStepProvider;
 
-	@Autowired
-	private CompositionComposer compositionComposer;
-	@Autowired
-	private CompositionDecomposer compositionDecomposer;
-	@Autowired
-	private CompositionLoader compositionLoader;
+	private final CompositionComposer compositionComposer;
+	private final CompositionDecomposer compositionDecomposer;
+	private final CompositionLoader compositionLoader;
 
 	@Value( "${Bach.chorale.path:}" )
 	private String bachChoralPath;
 
 	private ApplicationContext applicationContext;
 
+	@Autowired
+	public ComposeService( CompositionComposer compositionComposer, CompositionDecomposer compositionDecomposer, CompositionLoader compositionLoader ) {
+		this.compositionComposer = compositionComposer;
+		this.compositionDecomposer = compositionDecomposer;
+		this.compositionLoader = compositionLoader;
+	}
+
 	public Composition getNextBarsFromComposition( String compositionId, int numberOfBars ) {
-		logger.info( "Getting next {} bars of composition for id = {}", numberOfBars, compositionId );
+		log.info( "Getting next {} bars of composition for id = {}", numberOfBars, compositionId );
 		ComposingParameters composingParameters;
 		if ( composingParametersMap.containsKey( compositionId ) ) {
 			composingParameters = composingParametersMap.get( compositionId );
@@ -118,7 +119,6 @@ public class ComposeService implements ApplicationContextAware {
 		this.applicationContext = applicationContext;
 	}
 
-	@PostConstruct
 	public void loadDefaultLexicon() {
 		getDefaultLexicon();
 	}
