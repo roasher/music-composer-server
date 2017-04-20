@@ -1,4 +1,4 @@
-package ru.pavelyurkin.musiccomposer.controller;
+package ru.pavelyurkin.musiccomposer.rest.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.pavelyurkin.musiccomposer.converter.CompositionConverter;
+import ru.pavelyurkin.musiccomposer.rest.converter.CompositionConverter;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.service.ComposeService;
-import ru.pavelyurkin.musiccomposer.dto.CompositionDTO;
+import ru.pavelyurkin.musiccomposer.rest.dto.CompositionDTO;
 
 @RestController
 public class MidiController {

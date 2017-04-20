@@ -1,15 +1,14 @@
-package ru.pavelyurkin.musiccomposer.converter;
+package ru.pavelyurkin.musiccomposer.rest.converter;
 
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import ru.pavelyurkin.musiccomposer.dto.CompositionDTO;
-import ru.pavelyurkin.musiccomposer.dto.NoteDTO;
+import ru.pavelyurkin.musiccomposer.rest.dto.CompositionDTO;
+import ru.pavelyurkin.musiccomposer.rest.dto.NoteDTO;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**

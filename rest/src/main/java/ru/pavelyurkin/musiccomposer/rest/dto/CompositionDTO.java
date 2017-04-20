@@ -1,4 +1,4 @@
-package ru.pavelyurkin.musiccomposer.dto;
+package ru.pavelyurkin.musiccomposer.rest.dto;
 
 import java.util.List;
 

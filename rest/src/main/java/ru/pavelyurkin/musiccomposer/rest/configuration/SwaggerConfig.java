@@ -1,4 +1,4 @@
-package ru.pavelyurkin.musiccomposer.configuration;
+package ru.pavelyurkin.musiccomposer.rest.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

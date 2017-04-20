@@ -1,4 +1,4 @@
-package ru.pavelyurkin.musiccomposer;
+package ru.pavelyurkin.musiccomposer.rest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

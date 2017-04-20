@@ -1,4 +1,4 @@
-package ru.pavelyurkin.musiccomposer.dto;
+package ru.pavelyurkin.musiccomposer.rest.dto;
 
 /**
  * DTO to be send to the front
