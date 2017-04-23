@@ -1,0 +1,11 @@
+server.port: 8888
+
+---
+spring.profiles.active: test_linux
+Bach.chorale.path: ~/Music/Bach chorals cut/
+---
+spring.profiles.active: test_win
+Bach.chorale.path: /home/night_wish/Music/Bach chorals cut/
+---
+spring.profiles.active: prod
+Bach.chorale.path: ~/Music/Bach chorals/
