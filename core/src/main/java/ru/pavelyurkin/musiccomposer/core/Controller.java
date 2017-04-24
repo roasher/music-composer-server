@@ -1,17 +1,17 @@
 package ru.pavelyurkin.musiccomposer.core;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.pavelyurkin.musiccomposer.core.composer.ComposeBlockProvider;
-import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
-import ru.pavelyurkin.musiccomposer.core.composer.next.NextBlockProviderImpl;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeBlockFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
-import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
-import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import jm.JMC;
 import jm.util.Write;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
+import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
+import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
+import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
+import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 
 import java.io.File;
@@ -41,19 +41,19 @@ public class Controller {
 		//				  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\Метания беспокойного разума.mid" )
 		//				);
 
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "/home/night_wish/Music/Bach chorals cut/" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "~/Music/Bach chorals cut/" ) );
 		//		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "C:\\Users\\wish\\Documents\\Bach chorals" ) );
 
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 //		compositionDecomposer.getLexiconDAO().persist( lexicon );
 
-		ComposeBlockFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
+		ComposeStepFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
 
-		NextBlockProviderImpl nextBlockProvider = applicationContext.getBean( NextBlockProviderImpl.class );
-		nextBlockProvider.setComposeBlockFilter( bachChoralFilter );
+		NextStepProviderImpl nextBlockProvider = applicationContext.getBean( NextStepProviderImpl.class );
+		nextBlockProvider.setComposeStepFilter( bachChoralFilter );
 
-		ComposeBlockProvider composeBlockProvider = applicationContext.getBean( ComposeBlockProvider.class );
-		composeBlockProvider.setNextBlockProvider( nextBlockProvider );
+		ComposeStepProvider composeBlockProvider = applicationContext.getBean( ComposeStepProvider.class );
+		composeBlockProvider.setNextStepProvider( nextBlockProvider );
 
 		Composition composition = compositionComposer.compose( composeBlockProvider, lexicon, 8 * JMC.WHOLE_NOTE );
 		//		assertEquals( 16., composition.getEndTime(), 0 );
