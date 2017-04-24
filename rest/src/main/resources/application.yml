@@ -1,5 +1,11 @@
+
 server.port: 8888
 
+spring:
+  application:
+    name: MusicComposer
+
+logging.file: logs/${spring.application.name}.log
 ---
 spring.profiles: test_linux
 Bach.chorale.path: /home/night_wish/Music/Bach chorals cut/

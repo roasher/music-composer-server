@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 import ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl;
 
 @SpringBootApplication
-@PropertySource( value = "classpath:core.properties")
+@PropertySource( value = "classpath:core.yml" )
 @ComponentScan( basePackages = "ru.pavelyurkin.musiccomposer" ,excludeFilters = {
 		// Not using yet
 		@ComponentScan.Filter( type = FilterType.ASSIGNABLE_TYPE, value = MelodyEqualityAnalyzerImpl.class ),
