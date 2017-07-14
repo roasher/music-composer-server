@@ -11,7 +11,7 @@ spring.profiles: test_linux
 Bach.chorale.path: /home/night_wish/Music/Bach chorals cut/
 ---
 spring.profiles: test_win
-Bach.chorale.path: /home/night_wish/Music/Bach chorals cut/
+Bach.chorale.path: D:\YandexDisk\Music\Algorithmic music\Database\Test\Bach chorals cut
 ---
 spring.profiles: prod
 Bach.chorale.path: /home/pavel/Music/Bach chorales

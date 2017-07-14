@@ -2,12 +2,14 @@ package ru.pavelyurkin.musiccomposer.core.utils;
 
 import jm.constants.Pitches;
 import jm.music.data.Note;
+import jm.music.data.Part;
 import jm.music.data.Phrase;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
+import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
@@ -129,18 +131,36 @@ public class ModelUtils {
 		return musicBlocks.stream().mapToDouble( MusicBlock::getRhythmValue ).sum();
 	}
 
+	public static double getRhythmValue( Composition composition ) {
+		return composition.getPartList().stream()
+				.mapToDouble( part -> sumAllRhytmValues( ( List<Note> )
+						( ( Part ) part ).getPhraseList().stream()
+						.flatMap( phrase -> ( ( Phrase ) phrase ).getNoteList().stream() )
+						.collect( Collectors.toList() ) ) )
+				.max()
+				.orElse( 0 );
+	}
+
 	public static String getNoteNameByPitch( int pitch ) {
-		Class claz = Pitches.class;
-		for ( Field field : claz.getDeclaredFields() ) {
-			try {
-				if ( field.getInt( null ) == pitch ) {
-					return field.getName();
-				}
-			} catch ( IllegalAccessException e ) {
-				e.printStackTrace();
-			}
-		}
-		return "";
+		return Arrays.stream( Pitches.class.getDeclaredFields() )
+				.filter( field -> {
+					try {
+						return field.getInt( null ) == pitch;
+					} catch ( IllegalAccessException e ) {
+						return false;
+					}
+				} )
+				.map( Field::getName )
+				.sorted( Comparator.comparingInt( String::length ) )
+				.findFirst()
+				.map( name -> name.charAt( 0 ) == 'F' ?
+						'F' + replace(name.substring( 1 )) :
+						replace( name ) )
+				.orElse( "" );
+	}
+
+	private static String replace(String note) {
+		return note.replace( "F", "b" ).replace( "S", "#" );
 	}
 
 	/**

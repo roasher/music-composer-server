@@ -13,6 +13,9 @@ import java.util.List;
 import static jm.constants.Durations.*;
 import static jm.constants.Pitches.*;
 import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isOneOf;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.trimToTime;
 
 /**
@@ -99,6 +102,9 @@ public class ModelUtilsTest {
 	public void testGetNoteNameByPitch() {
 		Assert.assertEquals( ModelUtils.getNoteNameByPitch( 60 ), "C4" );
 		Assert.assertEquals( ModelUtils.getNoteNameByPitch( 62 ), "D4" );
+		Assert.assertEquals( ModelUtils.getNoteNameByPitch( 64 ), "E4" );
+		Assert.assertEquals( ModelUtils.getNoteNameByPitch( 65 ), "F4" );
+		assertThat( ModelUtils.getNoteNameByPitch( 66 ), isOneOf("F#4", "Gb4") );
 	}
 
 	@Test

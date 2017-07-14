@@ -1,44 +1,28 @@
 package ru.pavelyurkin.musiccomposer.rest.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+
 /**
  * DTO to be send to the front
+ * <p>
+ * {
+ * midi: Number,               // midi number, e.g. 60
+ * time: Number,               // time in seconds
+ * note: String,               // note name, e.g. "C4"
+ * velocity: Number,           // normalized 0-1 velocity
+ * duration: Number,           // duration between noteOn and noteOff
+ * }
  */
+@Data
 public class NoteDTO {
 
+	@JsonProperty("midiNote")
 	private int pitch;
-	private double rhythmValue;
-	private int dynamic;
-	private double pan;
+	@JsonProperty("note")
+	private String stringRepresentation;
 
-	public int getPitch() {
-		return pitch;
-	}
-
-	public void setPitch( int pitch ) {
-		this.pitch = pitch;
-	}
-
-	public double getRhythmValue() {
-		return rhythmValue;
-	}
-
-	public void setRhythmValue( double rhythmValue ) {
-		this.rhythmValue = rhythmValue;
-	}
-
-	public int getDynamic() {
-		return dynamic;
-	}
-
-	public void setDynamic( int dynamic ) {
-		this.dynamic = dynamic;
-	}
-
-	public double getPan() {
-		return pan;
-	}
-
-	public void setPan( double pan ) {
-		this.pan = pan;
-	}
+	private String time;
+	private int velocity;
+	private String duration;
 }

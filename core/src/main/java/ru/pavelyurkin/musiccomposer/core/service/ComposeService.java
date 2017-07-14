@@ -18,7 +18,9 @@ import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
+import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
+import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -58,7 +60,7 @@ public class ComposeService implements ApplicationContextAware {
 		this.compositionLoader = compositionLoader;
 	}
 
-	public Composition getNextBarsFromComposition( String compositionId, int numberOfBars ) {
+	public CompositionFrontDTO getNextBarsFromComposition( String compositionId, int numberOfBars ) {
 		log.info( "Getting next {} bars of composition for id = {}", numberOfBars, compositionId );
 		ComposingParameters composingParameters;
 		if ( composingParametersMap.containsKey( compositionId ) ) {
@@ -67,11 +69,16 @@ public class ComposeService implements ApplicationContextAware {
 			composingParameters = getDefaultComposingParameters();
 			composingParametersMap.put( compositionId, composingParameters );
 		}
+		double previousSumRhythmValue = getPreviousSumRhythmValue( composingParameters.getPreviousCompositionSteps() );
 		Pair<Composition, List<CompositionStep>> compose = compositionComposer
 				.compose( composingParameters.getComposeStepProvider(), composingParameters.getLexicon(), numberOfBars * JMC.WHOLE_NOTE,
 						composingParameters.getPreviousCompositionSteps() );
 		if ( compose.getValue() != null ) composingParameters.setPreviousCompositionSteps( compose.getValue() );
-		return compose.getKey();
+		return new CompositionFrontDTO( compose.getKey(), previousSumRhythmValue );
+	}
+
+	private double getPreviousSumRhythmValue( List<CompositionStep> previousCompositionSteps ) {
+		return previousCompositionSteps.stream().mapToDouble( value -> value.getTransposedBlock().getRhythmValue() ).sum();
 	}
 
 	/**
