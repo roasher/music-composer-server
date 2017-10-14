@@ -6,6 +6,7 @@ import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import jm.music.data.Note;
 import jm.music.data.Part;
+import ru.pavelyurkin.musiccomposer.core.exception.ComposeException;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
@@ -124,8 +125,7 @@ public class CompositionComposer {
 					formElementNumber = formElementNumber - 2;
 					continue;
 				} else {
-					logger.warn( "There is no possible ways to compose new piece considering such parameters" );
-					break;
+					throw new ComposeException("There is no possible ways to compose new piece considering such parameters");
 				}
 			}
 		}
