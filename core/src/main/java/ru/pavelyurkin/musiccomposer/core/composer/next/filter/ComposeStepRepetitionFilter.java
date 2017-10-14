@@ -21,7 +21,7 @@ public class ComposeStepRepetitionFilter extends AbstractComposeStepFilter {
 	public ComposeStepRepetitionFilter() {
 	}
 
-	public ComposeStepRepetitionFilter( ComposeStepFilter composeStepFilter ) {
+	public ComposeStepRepetitionFilter( AbstractComposeStepFilter composeStepFilter ) {
 		super( composeStepFilter );
 	}
 

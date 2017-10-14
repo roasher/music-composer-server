@@ -20,7 +20,7 @@ public class ComposeStepRestFilter extends AbstractComposeStepFilter {
 	public ComposeStepRestFilter() {
 	}
 
-	public ComposeStepRestFilter( double maxRestRhythmValue, ComposeStepFilter composeStepFilter ) {
+	public ComposeStepRestFilter( double maxRestRhythmValue, AbstractComposeStepFilter composeStepFilter ) {
 		super( composeStepFilter );
 		this.maxRestRhythmValue = maxRestRhythmValue;
 	}

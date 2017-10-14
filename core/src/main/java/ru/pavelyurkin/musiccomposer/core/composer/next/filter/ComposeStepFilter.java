@@ -11,4 +11,11 @@ import java.util.List;
 public interface ComposeStepFilter {
 	// we assuming that possibleNexts are already transposed
 	List<CompositionStep> filter( List<CompositionStep> possibleNextComposeSteps, List<CompositionStep> previousCompositionSteps );
+
+	/**
+	 * Replaces existing filter with given one
+	 * @param composeStepFilterToReplaceWith
+	 */
+	void replaceFilter(AbstractComposeStepFilter composeStepFilterToReplaceWith);
+
 }

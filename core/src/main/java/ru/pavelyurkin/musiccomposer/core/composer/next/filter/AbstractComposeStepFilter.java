@@ -1,5 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
@@ -7,14 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
+
 /**
  * Created by wish on 04.02.2016.
  */
+@Slf4j
+@Data
 public abstract class AbstractComposeStepFilter implements ComposeStepFilter {
 
-	private ComposeStepFilter composeStepFilter;
+	private AbstractComposeStepFilter composeStepFilter;
 
-	public AbstractComposeStepFilter( ComposeStepFilter composeStepFilter ) {
+	public AbstractComposeStepFilter( AbstractComposeStepFilter composeStepFilter ) {
 		this.composeStepFilter = composeStepFilter;
 	}
 
@@ -43,4 +49,22 @@ public abstract class AbstractComposeStepFilter implements ComposeStepFilter {
 	 * @return
 	 */
 	public abstract boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks );
+
+	@Override
+	public void replaceFilter(AbstractComposeStepFilter composeStepFilterToReplaceWith) {
+		AbstractComposeStepFilter filterHoldingFilterToReplace = this;
+		AbstractComposeStepFilter filterToBeReplaced = composeStepFilter;
+		while (filterToBeReplaced != null &&
+				!composeStepFilterToReplaceWith.getClass().equals(filterToBeReplaced.getClass())) {
+			// step down
+			filterHoldingFilterToReplace = filterHoldingFilterToReplace.getComposeStepFilter();
+			filterToBeReplaced = filterHoldingFilterToReplace.getComposeStepFilter();
+		};
+		if (filterToBeReplaced != null) {
+			filterHoldingFilterToReplace.setComposeStepFilter(composeStepFilterToReplaceWith);
+			composeStepFilterToReplaceWith.setComposeStepFilter(filterToBeReplaced.getComposeStepFilter());
+		} else {
+			log.warn("Didn't find inner filter with such type to replace {}", composeStepFilterToReplaceWith.getClass());
+		}
+	}
 }

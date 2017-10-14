@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
@@ -17,6 +18,7 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
  * Filter restricts going out of range for compose block's melodies
  */
 @Component
+@Data
 public class ComposeStepVoiceRangeFilter extends AbstractComposeStepFilter {
 
 	private List<Range> melodyRange;
@@ -32,7 +34,7 @@ public class ComposeStepVoiceRangeFilter extends AbstractComposeStepFilter {
 		}
 	}
 
-	public ComposeStepVoiceRangeFilter( ComposeStepFilter composeStepFilter, List<Range> melodyRange ) {
+	public ComposeStepVoiceRangeFilter( AbstractComposeStepFilter composeStepFilter, List<Range> melodyRange ) {
 		super( composeStepFilter );
 		this.melodyRange = melodyRange;
 	}

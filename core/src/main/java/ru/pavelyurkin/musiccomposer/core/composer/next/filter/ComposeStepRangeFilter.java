@@ -21,7 +21,7 @@ public class ComposeStepRangeFilter extends AbstractComposeStepFilter {
 	public ComposeStepRangeFilter() {
 	}
 
-	public ComposeStepRangeFilter( int lowestNotePitch, int highestNotePitch, ComposeStepFilter composeStepFilter ) {
+	public ComposeStepRangeFilter( int lowestNotePitch, int highestNotePitch, AbstractComposeStepFilter composeStepFilter ) {
 		super( composeStepFilter );
 		this.lowestNotePitch = lowestNotePitch;
 		this.highestNotePitch = highestNotePitch;

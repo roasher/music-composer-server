@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
+import lombok.Data;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
  * x + 1 blocks from same composition in the result
  */
 @Component
+@Data
 public class ComposeStepVarietyFilter extends AbstractComposeStepFilter {
 
 	private int possibleBlockNumberFromSameCompositionOneByOne;
@@ -25,7 +27,7 @@ public class ComposeStepVarietyFilter extends AbstractComposeStepFilter {
 	public ComposeStepVarietyFilter() {
 	}
 
-	public ComposeStepVarietyFilter( int possibleBlockNumberFromSameCompositionOneByOne, ComposeStepFilter composeStepFilter ) {
+	public ComposeStepVarietyFilter( int possibleBlockNumberFromSameCompositionOneByOne, AbstractComposeStepFilter composeStepFilter ) {
 		super( composeStepFilter );
 		this.possibleBlockNumberFromSameCompositionOneByOne = possibleBlockNumberFromSameCompositionOneByOne;
 	}
