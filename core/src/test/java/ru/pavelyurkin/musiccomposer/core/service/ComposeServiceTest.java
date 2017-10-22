@@ -15,7 +15,6 @@ import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 
 import java.io.File;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.number.IsCloseTo.closeTo;
@@ -52,17 +51,17 @@ public class ComposeServiceTest extends AbstractSpringTest {
 	@Test
 	public void getNextBarsFromComposition() throws Exception {
 		String id1 = "id1";
-		CompositionFrontDTO composition1 = composeService.getNextBarsFromComposition( id1, 10 );
+		CompositionFrontDTO composition1 = composeService.getNextBarsFromComposition( id1, 10, null );
 		String id2 = "id2";
-		CompositionFrontDTO composition11 = composeService.getNextBarsFromComposition( id2, 5 );
-		CompositionFrontDTO composition12 = composeService.getNextBarsFromComposition( id2, 5 );
+		CompositionFrontDTO composition11 = composeService.getNextBarsFromComposition( id2, 5, null );
+		CompositionFrontDTO composition12 = composeService.getNextBarsFromComposition( id2, 5, null );
 		String id3 = "id3";
-		CompositionFrontDTO composition21 = composeService.getNextBarsFromComposition( id3, 3 );
-		CompositionFrontDTO composition22 = composeService.getNextBarsFromComposition( id3, 3 );
-		CompositionFrontDTO composition23 = composeService.getNextBarsFromComposition( id3, 4 );
+		CompositionFrontDTO composition21 = composeService.getNextBarsFromComposition( id3, 3, null );
+		CompositionFrontDTO composition22 = composeService.getNextBarsFromComposition( id3, 3, null );
+		CompositionFrontDTO composition23 = composeService.getNextBarsFromComposition( id3, 4, null );
 		// Checking same lexicon
-		assertSame( composeService.getComposingParameters( id1 ).getLexicon(), composeService.getComposingParameters( id2 ).getLexicon() );
-		assertSame( composeService.getComposingParameters( id1 ).getLexicon(), composeService.getComposingParameters( id3 ).getLexicon() );
+		assertSame( composeService.getComposingParametersById( id1 ).getLexicon(), composeService.getComposingParametersById( id2 ).getLexicon() );
+		assertSame( composeService.getComposingParametersById( id1 ).getLexicon(), composeService.getComposingParametersById( id3 ).getLexicon() );
 		// Checking same compose results if sum of bars are equal regardless of number of requests
 		Composition compositionGather1 = compositionComposer.gatherComposition( composition11.getComposition(), composition12.getComposition() );
 		Composition compositionGather2 = compositionComposer.gatherComposition( composition21.getComposition(), composition22.getComposition(), composition23.getComposition() );

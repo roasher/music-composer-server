@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next;
 
+import lombok.Data;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Next Block provider that handles filters
  */
+@Data
 public abstract class FilteredNextStepProvider extends NextStepProvider {
 
 	private ComposeStepFilter composeStepFilter;
@@ -43,7 +45,4 @@ public abstract class FilteredNextStepProvider extends NextStepProvider {
 	public abstract Optional<CompositionStep> getNextBlockFiltered( List<CompositionStep> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,
 			List<FormCompositionStep> formCompositionSteps, Optional<Form> form );
 
-	public void setComposeStepFilter( ComposeStepFilter composeStepFilter ) {
-		this.composeStepFilter = composeStepFilter;
-	}
 }

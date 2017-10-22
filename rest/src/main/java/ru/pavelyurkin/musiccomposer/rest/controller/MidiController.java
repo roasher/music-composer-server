@@ -4,17 +4,20 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepVoiceRangeFilter;
 import ru.pavelyurkin.musiccomposer.core.exception.ComposeException;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 import ru.pavelyurkin.musiccomposer.rest.converter.CompositionConverter;
-import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.service.ComposeService;
+import ru.pavelyurkin.musiccomposer.rest.dto.BachChoralVoiceRangeDTO;
 import ru.pavelyurkin.musiccomposer.rest.dto.CompositionDTO;
 
 import javax.annotation.PostConstruct;
-import javax.jws.WebResult;
+import java.util.Collections;
 
 @RestController
 @Slf4j
@@ -23,11 +26,14 @@ public class MidiController {
 	private final ComposeService composeService;
 
 	private final CompositionConverter compositionConverter;
+	private final Converter<BachChoralVoiceRangeDTO, ComposeStepVoiceRangeFilter> bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter;
 
 	@Autowired
-	public MidiController( ComposeService composeService, CompositionConverter compositionConverter ) {
+	public MidiController( ComposeService composeService, CompositionConverter compositionConverter,
+			Converter<BachChoralVoiceRangeDTO, ComposeStepVoiceRangeFilter> bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter ) {
 		this.composeService = composeService;
 		this.compositionConverter = compositionConverter;
+		this.bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter = bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter;
 	}
 
 	@ApiOperation( "Note generation" )
@@ -37,8 +43,12 @@ public class MidiController {
 			@ApiParam(name = "compositionId", required = true, value = "Unique Id of generation session")
 			@RequestParam String compositionId,
 			@ApiParam(name = "numberOfBars", required = true, value = "Number of bars that you wan't to be generated")
-			@RequestParam int numberOfBars ) {
-		CompositionFrontDTO nextBarsFromComposition = composeService.getNextBarsFromComposition( compositionId, numberOfBars );
+			@RequestParam int numberOfBars,
+			@ApiParam(name = "Voice range settings", value = "Four voice ranges to compose within")
+			@Validated @RequestBody BachChoralVoiceRangeDTO bachChoralVoiceRangeDTO ) {
+		ComposeStepVoiceRangeFilter composeStepVoiceRangeFilter = bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter
+				.convert( bachChoralVoiceRangeDTO );
+		CompositionFrontDTO nextBarsFromComposition = composeService.getNextBarsFromComposition( compositionId, numberOfBars, Collections.singletonList( composeStepVoiceRangeFilter ) );
 		return compositionConverter.convert( nextBarsFromComposition );
 	}
 

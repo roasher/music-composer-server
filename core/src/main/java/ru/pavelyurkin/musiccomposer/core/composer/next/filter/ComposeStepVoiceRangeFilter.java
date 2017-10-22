@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import jm.music.data.Note;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;

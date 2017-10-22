@@ -11,7 +11,10 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
+import ru.pavelyurkin.musiccomposer.core.composer.next.FilteredNextStepProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.AbstractComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
@@ -60,8 +63,20 @@ public class ComposeService implements ApplicationContextAware {
 		this.compositionLoader = compositionLoader;
 	}
 
-	public CompositionFrontDTO getNextBarsFromComposition( String compositionId, int numberOfBars ) {
+	public CompositionFrontDTO getNextBarsFromComposition( String compositionId, int numberOfBars, List<AbstractComposeStepFilter> composeStepFiltersToReplace ) {
 		log.info( "Getting next {} bars of composition for id = {}", numberOfBars, compositionId );
+		ComposingParameters composingParameters = getComposingParameters( compositionId );
+		ComposeStepProvider composeStepProvider = composingParameters.getComposeStepProvider();
+		replaceFilters( composeStepProvider, composeStepFiltersToReplace );
+		double previousSumRhythmValue = getPreviousSumRhythmValue( composingParameters.getPreviousCompositionSteps() );
+		Pair<Composition, List<CompositionStep>> compose = compositionComposer
+				.compose( composeStepProvider, composingParameters.getLexicon(), numberOfBars * JMC.WHOLE_NOTE,
+						composingParameters.getPreviousCompositionSteps() );
+		if ( compose.getValue() != null ) composingParameters.setPreviousCompositionSteps( compose.getValue() );
+		return new CompositionFrontDTO( compose.getKey(), previousSumRhythmValue );
+	}
+
+	private ComposingParameters getComposingParameters( String compositionId ) {
 		ComposingParameters composingParameters;
 		if ( composingParametersMap.containsKey( compositionId ) ) {
 			composingParameters = composingParametersMap.get( compositionId );
@@ -69,12 +84,20 @@ public class ComposeService implements ApplicationContextAware {
 			composingParameters = getDefaultComposingParameters();
 			composingParametersMap.put( compositionId, composingParameters );
 		}
-		double previousSumRhythmValue = getPreviousSumRhythmValue( composingParameters.getPreviousCompositionSteps() );
-		Pair<Composition, List<CompositionStep>> compose = compositionComposer
-				.compose( composingParameters.getComposeStepProvider(), composingParameters.getLexicon(), numberOfBars * JMC.WHOLE_NOTE,
-						composingParameters.getPreviousCompositionSteps() );
-		if ( compose.getValue() != null ) composingParameters.setPreviousCompositionSteps( compose.getValue() );
-		return new CompositionFrontDTO( compose.getKey(), previousSumRhythmValue );
+		return composingParameters;
+	}
+
+	private void replaceFilters( ComposeStepProvider composeStepProvider,
+			List<AbstractComposeStepFilter> composeStepFiltersToReplace ) {
+		if ( composeStepFiltersToReplace == null || composeStepFiltersToReplace.isEmpty() ) return;
+		NextStepProvider nextStepProvider = composeStepProvider.getNextStepProvider();
+		if ( nextStepProvider instanceof FilteredNextStepProvider ) {
+			composeStepFiltersToReplace.forEach( filter -> {
+				( ( FilteredNextStepProvider ) nextStepProvider ).getComposeStepFilter().replaceFilter( filter );
+			} );
+		} else {
+			throw new IllegalStateException( "Can't replace filter because provider isn't filtered type" );
+		}
 	}
 
 	private double getPreviousSumRhythmValue( List<CompositionStep> previousCompositionSteps ) {
@@ -130,7 +153,7 @@ public class ComposeService implements ApplicationContextAware {
 		getDefaultLexicon();
 	}
 
-	public ComposingParameters getComposingParameters( String id ) {
+	public ComposingParameters getComposingParametersById( String id ) {
 		return composingParametersMap.get( id );
 	}
 
