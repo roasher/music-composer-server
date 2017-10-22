@@ -57,25 +57,6 @@ public class MelodyTest {
     }
 
 	@Test
-	public void testEqualityByStartTime() {
-		Note[] notes0 = new Note[] {
-		  new Note( 76, 0.5 ),
-		  new Note( 74, 0.5 ),
-		  new Note( 71, 0.5 ),
-		};
-
-		Melody melody1 = new Melody( notes0 );
-		melody1.setStartTime( 0 );
-		Melody melody2 = new Melody( notes0 );
-		melody2.setStartTime( 0 );
-		Melody melody3 = new Melody( notes0 );
-		melody3.setStartTime( 1 );
-
-		assertEquals( melody1, melody2 );
-		assertFalse( melody1.equals( melody3 ) );
-	}
-
-	@Test
 	public void isParallelTest() throws Exception {
 		Melody etalonMelody = new Melody(
 				new Rest(QUARTER_NOTE), new Note( 60, SIXTEENTH_NOTE ), new Note( 70, EIGHTH_NOTE ), new Note( 80, HALF_NOTE )
