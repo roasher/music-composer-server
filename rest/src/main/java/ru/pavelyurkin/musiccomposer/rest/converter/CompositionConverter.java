@@ -3,6 +3,7 @@ package ru.pavelyurkin.musiccomposer.rest.converter;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
@@ -14,7 +15,9 @@ import ru.pavelyurkin.musiccomposer.rest.dto.NoteDTO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Converts composition to compositionDTO
@@ -23,14 +26,15 @@ import java.util.stream.Collectors;
 public class CompositionConverter {
 
 	public CompositionDTO convert( CompositionFrontDTO compositionFrontDTO ) {
-		List<NoteDTO> noteDTOs = (List<NoteDTO>) compositionFrontDTO.getPartList()
-				.stream()
-				.flatMap( part -> convert( (List<Note>)
-						( ( Part ) part ).getPhraseList()
+		Vector partList = compositionFrontDTO.getPartList();
+		List<NoteDTO> noteDTOs = IntStream.range( 0, partList.size() )
+				.mapToObj( i -> Pair.of(i, partList.get( i ) ) )
+				.flatMap( pair -> convert( (List<Note>)
+						( ( Part ) pair.getSecond() ).getPhraseList()
 								.stream()
 								.flatMap( phrase -> ( ( Phrase ) phrase ).getNoteList().stream() )
 								.collect( Collectors.toList() ),
-						compositionFrontDTO.getPreviousSumRhythmValues() )
+						compositionFrontDTO.getPreviousSumRhythmValues(), pair.getFirst() )
 						.stream())
 				.collect( Collectors.toList() );
 		CompositionDTO compositionDTO = new CompositionDTO();
@@ -42,11 +46,12 @@ public class CompositionConverter {
 		return compositionDTO;
 	}
 
-	private List<NoteDTO> convert( List<Note> compositionNotes, double previousRhythmValueWhereToStartFrom ) {
+	private List<NoteDTO> convert( List<Note> compositionNotes, double previousRhythmValueWhereToStartFrom,
+			int partNumber ) {
 		List<NoteDTO> noteDTOs = new ArrayList<>();
 		for ( int noteNumber = 0; noteNumber < compositionNotes.size(); noteNumber++ ) {
 			Note compositionNote = compositionNotes.get( noteNumber );
-			NoteDTO noteDTO = convert( compositionNote, previousRhythmValueWhereToStartFrom);
+			NoteDTO noteDTO = convert( compositionNote, previousRhythmValueWhereToStartFrom, partNumber );
 			noteDTOs.add( noteDTO );
 			previousRhythmValueWhereToStartFrom += compositionNote.getRhythmValue();
 		}
@@ -57,13 +62,14 @@ public class CompositionConverter {
 		return Math.round( duration * 24 ) + "i";
 	}
 
-	private NoteDTO convert( Note note, double previousSumRhythmValues ) {
+	private NoteDTO convert( Note note, double previousSumRhythmValues, int partNumber ) {
 		NoteDTO noteDTO = new NoteDTO();
 		noteDTO.setPitch( note.getPitch() );
 		noteDTO.setVelocity( 1 );
 		noteDTO.setStringRepresentation( ModelUtils.getNoteNameByPitch( note.getPitch() ) );
 		noteDTO.setTime( convertDurationToStringDuration( previousSumRhythmValues ) );
 		noteDTO.setDuration( convertDurationToStringDuration( note.getRhythmValue() ) );
+		noteDTO.setPartNumber( partNumber );
 		return noteDTO;
 	}
 }

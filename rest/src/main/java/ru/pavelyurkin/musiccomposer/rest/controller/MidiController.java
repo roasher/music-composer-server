@@ -37,7 +37,7 @@ public class MidiController {
 	}
 
 	@ApiOperation( "Note generation" )
-	@RequestMapping( path = "/getBars", method = RequestMethod.GET )
+	@PostMapping( path = "/getBars")
 	@CrossOrigin
 	public CompositionDTO getNotes(
 			@ApiParam(name = "compositionId", required = true, value = "Unique Id of generation session")
@@ -59,9 +59,9 @@ public class MidiController {
 		return throwable.getMessage();
 	}
 
-	@ExceptionHandler(Throwable.class)
+	@ExceptionHandler(ComposeException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public String compseException(ComposeException exception) {
+	public String composeException(ComposeException exception) {
 		log.warn("Exception during composing", exception);
 		return exception.getMessage();
 	}

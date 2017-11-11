@@ -25,4 +25,5 @@ public class NoteDTO {
 	private String time;
 	private int velocity;
 	private String duration;
+	private int partNumber;
 }

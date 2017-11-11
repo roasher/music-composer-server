@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import jm.music.data.Note;
@@ -22,15 +24,14 @@ public class ComposeStepVoiceRangeFilter extends AbstractComposeStepFilter {
 
 	private List<Range> melodyRange;
 
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Data
 	public static class Range {
 
-		int lowPitch;
-		int highPitch;
+		private int lowPitch;
+		private int highPitch;
 
-		public Range( int lowPitch, int highPitch ) {
-			this.lowPitch = lowPitch;
-			this.highPitch = highPitch;
-		}
 	}
 
 	public ComposeStepVoiceRangeFilter( AbstractComposeStepFilter composeStepFilter, List<Range> melodyRange ) {
