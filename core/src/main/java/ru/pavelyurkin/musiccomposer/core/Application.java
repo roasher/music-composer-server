@@ -16,7 +16,6 @@ import ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEquali
 		@ComponentScan.Filter( type = FilterType.ASSIGNABLE_TYPE, value = MelodyEqualityAnalyzerImpl.class ),
 		@ComponentScan.Filter( type = FilterType.REGEX, pattern = "ru.pavelyurkin.musiccomposer.core.equality.melody.*" ) }
 )
-@PropertySource( "classpath:core.yml" )
 @EnableJpaRepositories( basePackages = "ru.pavelyurkin.musiccomposer.core.persistance.dao" )
 public class Application {
 

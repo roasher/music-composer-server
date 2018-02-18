@@ -1,0 +1,24 @@
+build.version: @project.version@
+
+spring:
+  datasource:
+    url: jdbc:h2:file:~/Music/prod;AUTO_SERVER=TRUE
+    username: sa
+    driver-class-name: org.h2.Driver
+  jpa:
+    database: db2
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect
+
+MelodyFormEqualityAnalyzer.equalityTestPassThreshold: 0.45
+FormEquality.instrumentEqualityPassThreshold: 0.7
+FormEquality.instrumentEqualityFailThreshold: 0.4
+
+#logging:
+#  level:
+#    ru.pavelyurkin.musiccomposer.core.decomposer.SignatureDecomposer: DEBUG
+#    ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl: DEBUG
+#    ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer: DEBUG
+#    ru.pavelyurkin.musiccomposer.core.composer.FormBlockProvider: DEBUG
+#    ru.pavelyurkin.musiccomposer.core.equality.form.FormEquality: DEBUG

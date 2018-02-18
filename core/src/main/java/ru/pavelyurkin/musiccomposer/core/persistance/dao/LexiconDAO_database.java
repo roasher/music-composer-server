@@ -1,14 +1,10 @@
 package ru.pavelyurkin.musiccomposer.core.persistance.dao;
 
-import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
-import org.hibernate.Criteria;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import ru.pavelyurkin.musiccomposer.core.persistance.jpa.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.persistance.PersistConverter;
+import ru.pavelyurkin.musiccomposer.core.persistance.jpa.ComposeBlock;
 
 import javax.transaction.Transactional;
 import java.io.IOException;

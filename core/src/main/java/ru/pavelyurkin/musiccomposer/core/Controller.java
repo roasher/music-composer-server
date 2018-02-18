@@ -2,7 +2,10 @@ package ru.pavelyurkin.musiccomposer.core;
 
 import jm.JMC;
 import jm.util.Write;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
@@ -23,36 +26,25 @@ import java.util.List;
  */
 public class Controller {
 
-	public static final ApplicationContext applicationContext = new AnnotationConfigApplicationContext( Application.class );
-
-	private CompositionLoader compositionLoader = applicationContext.getBean( CompositionLoader.class );
-	private CompositionComposer compositionComposer = applicationContext.getBean( CompositionComposer.class );
-	private CompositionDecomposer compositionDecomposer = applicationContext.getBean( CompositionDecomposer.class );
-
 	public static void main( String... args ) throws IOException {
-		new Controller().getRealPiece();
-	}
+		ConfigurableApplicationContext context = SpringApplication.run( Application.class );
 
-	public void getRealPiece() throws IOException {
-		//				List< Composition > compositionList = compositionLoader.getCompositions(
-		//				  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Scarecrow's song (midi).mid" ),
-		//				  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.biosphere(midi).mid" ),
-		//				  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\2.Another Phoenix (midi)_2.mid" ),
-		//				  		  new File( "src\\test\\decomposer\\form\\formDecomposer\\quartets\\Метания беспокойного разума.mid" )
-		//				);
+		CompositionLoader compositionLoader = context.getBean( CompositionLoader.class );
+		CompositionComposer compositionComposer = context.getBean( CompositionComposer.class );
+		CompositionDecomposer compositionDecomposer = context.getBean( CompositionDecomposer.class );
 
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "~/Music/Bach chorals cut/" ) );
-		//		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "C:\\Users\\wish\\Documents\\Bach chorals" ) );
+		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "/home/wish/Music/Bach chorals/" ) );
+//		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "/home/wish/Music/Bach chorals cut/" ) );
 
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 //		compositionDecomposer.getLexiconDAO().persist( lexicon );
 
-		ComposeStepFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
+		ComposeStepFilter bachChoralFilter = context.getBean( BachChoralFilter.class );
 
-		NextStepProviderImpl nextBlockProvider = applicationContext.getBean( NextStepProviderImpl.class );
+		NextStepProviderImpl nextBlockProvider = context.getBean( NextStepProviderImpl.class );
 		nextBlockProvider.setComposeStepFilter( bachChoralFilter );
 
-		ComposeStepProvider composeBlockProvider = applicationContext.getBean( ComposeStepProvider.class );
+		ComposeStepProvider composeBlockProvider = context.getBean( ComposeStepProvider.class );
 		composeBlockProvider.setNextStepProvider( nextBlockProvider );
 
 		Composition composition = compositionComposer.compose( composeBlockProvider, lexicon, 8 * JMC.WHOLE_NOTE );
