@@ -1,5 +1,3 @@
-build.version: @project.version@
-
 spring:
   datasource:
     url: jdbc:h2:file:~/Music/prod;AUTO_SERVER=TRUE

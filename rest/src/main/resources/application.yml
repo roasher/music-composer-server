@@ -1,17 +1,30 @@
-
+build.version: @project.version@
 server.port: 8888
 
 spring:
   application:
     name: MusicComposer
+  datasource:
+    url: jdbc:h2:file:~/Music/prod;AUTO_SERVER=TRUE
+    username: sa
+    driver-class-name: org.h2.Driver
+  jpa:
+    database: db2
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect
+
+MelodyFormEqualityAnalyzer.equalityTestPassThreshold: 0.45
+FormEquality.instrumentEqualityPassThreshold: 0.7
+FormEquality.instrumentEqualityFailThreshold: 0.4
 
 logging.file: logs/${spring.application.name}.log
 ---
 spring.profiles: test_linux
-Bach.chorale.path: /home/night_wish/Music/Bach chorals cut/
+Bach.chorale.path: /home/wish/Music/Bach chorals cut/
 ---
 spring.profiles: test_win
 Bach.chorale.path: D:\YandexDisk\Music\Algorithmic music\Database\Test\Bach chorals cut
 ---
 spring.profiles: prod
-Bach.chorale.path: /home/pavel/Music/Bach chorales
+Bach.chorale.path: /home/wish/Music/Bach chorals/
