@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:~/Music/test;AUTO_SERVER=TRUE
+
+composer:
+  pathToCompositions: "/home/pyurkin/Music/Database/Test/Bach chorals cut/"
