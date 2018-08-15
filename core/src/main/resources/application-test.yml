@@ -4,3 +4,7 @@ spring:
 
 composer:
   pathToCompositions: "/home/pyurkin/Music/Database/Test/Bach chorals cut/"
+
+logging:
+  level:
+    ru.pavelyurkin.musiccomposer.core: debug

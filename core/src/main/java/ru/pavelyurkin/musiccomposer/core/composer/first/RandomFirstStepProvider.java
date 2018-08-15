@@ -24,8 +24,8 @@ public class RandomFirstStepProvider implements FirstStepProvider {
 		List<ComposeBlock> allPossibleFirstBlocks = lexicon.getAllPossibleFirst();
 		allPossibleFirstBlocks.removeAll( exclusions );
 		if ( !allPossibleFirstBlocks.isEmpty() ) {
-//			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );
-			int randomNumber = 0;
+			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );
+//			int randomNumber = 0;
 			ComposeBlock composeBlock = allPossibleFirstBlocks.get( randomNumber );
 			return Optional.of( new CompositionStep( composeBlock, composeBlock.getMusicBlock().transposeClone( 0 ) ) );
 		} else {

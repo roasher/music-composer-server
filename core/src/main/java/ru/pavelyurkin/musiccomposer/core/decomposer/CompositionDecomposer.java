@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer;
 
+import lombok.RequiredArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.decomposer.form.FormDecomposer;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
@@ -23,18 +24,12 @@ import java.util.*;
  * Class analyses and decomposes the composition, creating MusicBlocks
  * Created by Pavel Yurkin on 21.07.14.
  */
-@Component
+@RequiredArgsConstructor
 public class CompositionDecomposer {
 
-	@Autowired
-	private FormDecomposer formDecomposer;
-
-	@Autowired
-	private MusicBlockProvider musicBlockProvider;
-
-	@Autowired
-	@Qualifier( "lexiconDAO_database" )
-	private LexiconDAO lexiconDAO;
+	private final FormDecomposer formDecomposer;
+	private final MusicBlockProvider musicBlockProvider;
+	private final LexiconDAO lexiconDAO;
 
 	private Logger logger = LoggerFactory.getLogger( getClass() );
 
@@ -235,11 +230,4 @@ public class CompositionDecomposer {
 		return union;
 	}
 
-	public void setLexiconDAO( LexiconDAO lexiconDAO ) {
-		this.lexiconDAO = lexiconDAO;
-	}
-
-	public LexiconDAO getLexiconDAO() {
-		return lexiconDAO;
-	}
 }

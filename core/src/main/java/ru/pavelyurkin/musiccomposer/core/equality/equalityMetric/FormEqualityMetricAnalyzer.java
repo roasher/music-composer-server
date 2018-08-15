@@ -1,19 +1,16 @@
 package ru.pavelyurkin.musiccomposer.core.equality.equalityMetric;
 
+import lombok.RequiredArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@RequiredArgsConstructor
 public class FormEqualityMetricAnalyzer implements EqualityMetricAnalyzer<List<Melody>> {
 
-	@Autowired
-	@Qualifier("melodyMetricEqualityAnalyzer")
-	private EqualityMetricAnalyzer<Melody> equlityMetricAnalyzer;
+	private final EqualityMetricAnalyzer<Melody> equalityMetricAnalyzer;
 
 	@Override
 	/**
@@ -28,7 +25,7 @@ public class FormEqualityMetricAnalyzer implements EqualityMetricAnalyzer<List<M
 		}
 		List<Double> equalityMetrics = new ArrayList<>(  );
 		for ( int instrumentPartNumber = 0; instrumentPartNumber < firstMusicBlockInstrumentParts.size(); instrumentPartNumber ++ ) {
-			equalityMetrics.add( equlityMetricAnalyzer.getEqualityMetric( firstMusicBlockInstrumentParts.get( instrumentPartNumber ), secondMusicBlockInstrumentParts.get( instrumentPartNumber ) ) );
+			equalityMetrics.add( equalityMetricAnalyzer.getEqualityMetric( firstMusicBlockInstrumentParts.get( instrumentPartNumber ), secondMusicBlockInstrumentParts.get( instrumentPartNumber ) ) );
 		}
 
 		return equalityMetrics.stream().mapToDouble( Double::doubleValue ).average().getAsDouble();

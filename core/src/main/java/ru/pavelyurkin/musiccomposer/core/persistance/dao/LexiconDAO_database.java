@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.persistance.dao;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
@@ -14,13 +15,11 @@ import java.util.List;
  * Created by pyurkin on 29.04.2015.
  */
 @Component
+@RequiredArgsConstructor
 public class LexiconDAO_database implements LexiconDAO {
 
-	@Autowired
-	private ComposeBlockRepository composeBlockRepository;
-
-	@Autowired
-	private PersistConverter persistConverter;
+	private final ComposeBlockRepository composeBlockRepository;
+	private final PersistConverter persistConverter;
 
 	@Override
 	@Transactional

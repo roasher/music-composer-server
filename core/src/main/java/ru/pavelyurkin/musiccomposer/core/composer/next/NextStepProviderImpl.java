@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next;
 
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
@@ -7,7 +8,6 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -16,11 +16,15 @@ import java.util.stream.Collectors;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getRelativeFormBlocks;
 import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
 
-@Component
 public class NextStepProviderImpl extends FilteredNextStepProvider {
 
-	@Autowired
-	private EqualityMetricAnalyzer<List<Melody>> equalityMetricAnalyzer;
+	private final EqualityMetricAnalyzer<List<Melody>> equalityMetricAnalyzer;
+
+	public NextStepProviderImpl( EqualityMetricAnalyzer<List<Melody>> equalityMetricAnalyzer,
+			ComposeStepFilter composeStepFilter ) {
+		super( composeStepFilter );
+		this.equalityMetricAnalyzer = equalityMetricAnalyzer;
+	}
 
 	@Override
 	public Optional<CompositionStep> getNextBlockFiltered( List<CompositionStep> blocksToChooseFrom, List<CompositionStep> previousCompositionSteps,

@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.EqualNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.RhythmEquality;
@@ -21,6 +23,17 @@ import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.OrderMelodyMove
 @EnableJpaRepositories( basePackages = "ru.pavelyurkin.musiccomposer.core.persistance.dao" )
 @ComponentScan( basePackages = "ru.pavelyurkin.musiccomposer.core", excludeFilters = { @ComponentScan.Filter( type = FilterType.ASSIGNABLE_TYPE, value = Application.class ) } )
 public class MyTestConfiguration {
+
+	@Bean
+	public MelodyEqualityAnalyzerImpl melodyEqualityAnalyzer(
+			@Qualifier( "getCountourEquality" ) Equality countourEquality,
+			@Qualifier( "getIntervalsEquality" ) Equality intervalsEquality,
+			@Qualifier( "getInversionEquality" ) Equality inversionEquality,
+			@Qualifier( "getOrderEquality" ) Equality orderEquality,
+			@Qualifier( "getRhythmEquality" ) Equality rhythmEquality ) {
+		return new MelodyEqualityAnalyzerImpl( countourEquality, intervalsEquality, inversionEquality, orderEquality,
+				rhythmEquality );
+	}
 
 	@Bean
 	public Equality getCountourEquality() {

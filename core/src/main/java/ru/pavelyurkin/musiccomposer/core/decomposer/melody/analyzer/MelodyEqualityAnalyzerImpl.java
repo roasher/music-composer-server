@@ -1,5 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
  * Class analyzes if two melodies can be considered equal
  * Created by night wish on 26.07.14.
  */
-@Component
+@RequiredArgsConstructor
 public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 
     /**
@@ -25,16 +27,11 @@ public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 //    private Equality fragmentationEqualityTest;
 //    private Equality interpolationEqualityTest;
 
-	@Autowired @Qualifier( "getCountourEquality" )
-    private Equality countourEquality;
-	@Autowired @Qualifier( "getIntervalsEquality" )
-    private Equality intervalsEquality;
-	@Autowired @Qualifier( "getInversionEquality" )
-    private Equality inversionEquality;
-	@Autowired @Qualifier( "getOrderEquality" )
-    private Equality orderEquality;
-	@Autowired @Qualifier( "getRhythmEquality" )
-    private Equality rhythmEquality;
+    private final Equality countourEquality;
+    private final Equality intervalsEquality;
+    private final Equality inversionEquality;
+    private final Equality orderEquality;
+    private final Equality rhythmEquality;
 
     private Logger logger = LoggerFactory.getLogger( getClass() );
 
@@ -102,61 +99,5 @@ public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 
     public void setEqualityTestPassThreshold( double equalityTestPassThreshold ) {
         this.equalityTestPassThreshold = equalityTestPassThreshold;
-    }
-
-//    public Equality getFragmentationEqualityTest() {
-//        return fragmentationEqualityTest;
-//    }
-//
-//    public void setFragmentationEqualityTest( Equality fragmentationEqualityTest ) {
-//        this.fragmentationEqualityTest = fragmentationEqualityTest;
-//    }
-//
-//    public Equality getInterpolationEqualityTest() {
-//        return interpolationEqualityTest;
-//    }
-//
-//    public void setInterpolationEqualityTest( Equality interpolationEqualityTest ) {
-//        this.interpolationEqualityTest = interpolationEqualityTest;
-//    }
-
-    public Equality getCountourEquality() {
-        return countourEquality;
-    }
-
-    public void setCountourEquality( Equality countourEquality ) {
-        this.countourEquality = countourEquality;
-    }
-
-    public Equality getIntervalsEquality() {
-        return intervalsEquality;
-    }
-
-    public void setIntervalsEquality( Equality intervalsEquality ) {
-        this.intervalsEquality = intervalsEquality;
-    }
-
-    public Equality getInversionEquality() {
-        return inversionEquality;
-    }
-
-    public void setInversionEquality( Equality inversionEquality ) {
-        this.inversionEquality = inversionEquality;
-    }
-
-    public Equality getOrderEquality() {
-        return orderEquality;
-    }
-
-    public void setOrderEquality( Equality orderEquality ) {
-        this.orderEquality = orderEquality;
-    }
-
-    public Equality getRhythmEquality() {
-        return rhythmEquality;
-    }
-
-    public void setRhythmEquality(Equality rhythmEquality ) {
-        this.rhythmEquality = rhythmEquality;
     }
 }

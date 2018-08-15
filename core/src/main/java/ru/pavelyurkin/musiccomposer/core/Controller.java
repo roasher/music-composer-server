@@ -33,29 +33,20 @@ public class Controller {
 		ConfigurableApplicationContext context = SpringApplication.run( Application.class, args );
 
 		CompositionLoader compositionLoader = context.getBean( CompositionLoader.class );
-		CompositionComposer compositionComposer = context.getBean( CompositionComposer.class );
-		CompositionDecomposer compositionDecomposer = context.getBean( CompositionDecomposer.class );
-
 		List<Composition> compositionList = compositionLoader
 				.getCompositionsFromFolder( new File( context.getBean( Config.class ).getPathToCompositions() ) );
+
+		CompositionDecomposer compositionDecomposer = context.getBean( CompositionDecomposer.class );
 
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 		//		compositionDecomposer.getLexiconDAO().persist( lexicon );
 
-		ComposeStepFilter bachChoralFilter = context.getBean( BachChoralFilter.class );
+		ComposeStepProvider composeStepProvider = context.getBean( ComposeStepProvider.class );
 
-		NextStepProviderImpl nextBlockProvider = context.getBean( NextStepProviderImpl.class );
-		nextBlockProvider.setComposeStepFilter( bachChoralFilter );
+		CompositionComposer compositionComposer = context.getBean( CompositionComposer.class );
+		Composition composition = compositionComposer.compose( composeStepProvider, lexicon, 10 * JMC.WHOLE_NOTE );
 
-		ComposeStepProvider composeBlockProvider = context.getBean( ComposeStepProvider.class );
-		composeBlockProvider.setNextStepProvider( nextBlockProvider );
-
-		Composition composition = compositionComposer.compose( composeBlockProvider, lexicon, 10 * JMC.WHOLE_NOTE );
-
-		//				View.notate( composition );
-		//				Utils.suspend();
-		//				Play.midi( composition );
-		Write.midi( composition, "output/2.mid" );
+		Write.midi( composition, "output/1.mid" );
 
 	}
 }

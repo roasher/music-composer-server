@@ -1,5 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -17,14 +20,11 @@ import java.util.Optional;
 /**
  * Created by wish on 28.01.2016.
  */
-@Component
+@AllArgsConstructor
+@Data
 public class ComposeStepProvider {
 
-	@Autowired
-	@Qualifier( "simpleFirstStepProvider" )
-	private FirstStepProvider firstStepProvider;
-	@Autowired
-	@Qualifier( "nextStepProviderImpl" )
+	private final FirstStepProvider firstStepProvider;
 	private NextStepProvider nextStepProvider;
 
 	public Optional<CompositionStep> getNext( double length, List<CompositionStep> previousCompositionSteps, List<FormCompositionStep> previousFormCompositionSteps, Optional<Form> form ) {
@@ -33,22 +33,6 @@ public class ComposeStepProvider {
 
 	public Optional<CompositionStep> getFirst( Lexicon lexicon, List<ComposeBlock> exclusions ) {
 		return firstStepProvider.getFirstBlock( lexicon, exclusions );
-	}
-
-	public FirstStepProvider getFirstStepProvider() {
-		return firstStepProvider;
-	}
-
-	public void setFirstStepProvider( FirstStepProvider firstStepProvider ) {
-		this.firstStepProvider = firstStepProvider;
-	}
-
-	public NextStepProvider getNextStepProvider() {
-		return nextStepProvider;
-	}
-
-	public void setNextStepProvider( NextStepProvider nextStepProvider ) {
-		this.nextStepProvider = nextStepProvider;
 	}
 
 }

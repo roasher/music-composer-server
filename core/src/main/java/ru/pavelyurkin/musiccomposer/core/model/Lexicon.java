@@ -43,7 +43,7 @@ public class Lexicon {
 	public List<ComposeBlock> getAllPossibleFirst() {
 		List<ComposeBlock> firstBlocks = new ArrayList<>(  );
 		for ( ComposeBlock composeBlock : this.composeBlockList ) {
-			if ( composeBlock.getPossiblePreviousComposeBlocks().isEmpty() ) {
+			if ( composeBlock.getPossiblePreviousComposeBlocks().isEmpty() && !composeBlock.isStartsWithRest() ) {
 				firstBlocks.add( composeBlock );
 			}
 		}
@@ -55,7 +55,7 @@ public class Lexicon {
 	}
 
 	public static Lexicon getBlankLexicon() {
-		return new Lexicon( new ArrayList<ComposeBlock>(  ) );
+		return new Lexicon( new ArrayList<>() );
 	}
 
 	public ComposeBlock get( int number ) {
