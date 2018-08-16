@@ -5,7 +5,6 @@ spring:
   application:
     name: MusicComposer
   datasource:
-    url: jdbc:h2:file:~/Music/prod;AUTO_SERVER=TRUE
     username: sa
     driver-class-name: org.h2.Driver
   jpa:
@@ -17,14 +16,3 @@ spring:
 MelodyFormEqualityAnalyzer.equalityTestPassThreshold: 0.45
 FormEquality.instrumentEqualityPassThreshold: 0.7
 FormEquality.instrumentEqualityFailThreshold: 0.4
-
-logging.file: logs/${spring.application.name}.log
----
-spring.profiles: test_linux
-Bach.chorale.path: /home/wish/Music/Bach chorals cut/
----
-spring.profiles: test_win
-Bach.chorale.path: D:\YandexDisk\Music\Algorithmic music\Database\Test\Bach chorals cut
----
-spring.profiles: prod
-Bach.chorale.path: /home/wish/Music/Bach chorals/
