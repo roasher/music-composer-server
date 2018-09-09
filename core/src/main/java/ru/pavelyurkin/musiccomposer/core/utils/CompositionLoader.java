@@ -49,7 +49,7 @@ public class CompositionLoader {
 		List< Composition > compositions = new ArrayList<Composition>(  );
 		List< File > listFiles = listFilesForFolder( folder );
 		for ( File currentFile : listFiles ) {
-			if ( !currentFile.getName().matches( ".*\\.mid" ) ) continue;
+//			if ( !currentFile.getName().matches( ".*\\.mid" ) ) continue;
 			for ( String excludePattern : excludePatternList ) {
 				if ( currentFile.getName().matches( excludePattern ) ) continue;
 				//".*drum.*"

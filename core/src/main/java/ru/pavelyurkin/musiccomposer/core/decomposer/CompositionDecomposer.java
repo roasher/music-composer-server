@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.decomposer.form.FormDecomposer;
@@ -25,6 +26,7 @@ import java.util.*;
  * Created by Pavel Yurkin on 21.07.14.
  */
 @RequiredArgsConstructor
+@Data
 public class CompositionDecomposer {
 
 	private final FormDecomposer formDecomposer;

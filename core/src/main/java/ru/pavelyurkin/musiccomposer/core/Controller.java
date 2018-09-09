@@ -39,14 +39,14 @@ public class Controller {
 		CompositionDecomposer compositionDecomposer = context.getBean( CompositionDecomposer.class );
 
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
-		//		compositionDecomposer.getLexiconDAO().persist( lexicon );
+//		compositionDecomposer.getLexiconDAO().persist( lexicon );
 
 		ComposeStepProvider composeStepProvider = context.getBean( ComposeStepProvider.class );
 
 		CompositionComposer compositionComposer = context.getBean( CompositionComposer.class );
-		Composition composition = compositionComposer.compose( composeStepProvider, lexicon, 10 * JMC.WHOLE_NOTE );
+		Composition composition = compositionComposer.compose( composeStepProvider, lexicon, 20 * JMC.WHOLE_NOTE );
 
-		Write.midi( composition, "output/1.mid" );
+		Write.midi( composition, "output/mozart-3.mid" );
 
 	}
 }

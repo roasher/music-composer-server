@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:~/Music/test-mozart;AUTO_SERVER=TRUE
+
+composer:
+  pathToCompositions: /home/pyurkin/Music/Database/Test/mozart/
+
+logging:
+  level:
+    ru.pavelyurkin.musiccomposer.core: debug
