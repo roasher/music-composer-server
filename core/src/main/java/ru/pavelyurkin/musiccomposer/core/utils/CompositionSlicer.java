@@ -5,6 +5,7 @@ import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Rest;
+import lombok.extern.slf4j.Slf4j;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import java.util.List;
  * Created by night wish on 08.11.14.
  */
 @Component
+@Slf4j
 public class CompositionSlicer {
 
 	Logger logger = LoggerFactory.getLogger( getClass() );
@@ -32,7 +34,7 @@ public class CompositionSlicer {
 	 * @return
 	 */
 	public List< List< Melody > > slice( Composition composition, double timePeriod ) {
-
+		log.info( "Slicing {} by time period {}", composition.getTitle(), timePeriod );
 		List< List< Melody > > compositionList = new ArrayList<>(  );
 
         adjustToUnifiedEndTime( composition );
