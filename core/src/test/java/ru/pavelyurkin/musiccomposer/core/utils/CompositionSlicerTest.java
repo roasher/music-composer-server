@@ -1,10 +1,10 @@
 package ru.pavelyurkin.musiccomposer.core.utils;
 
-import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import jm.music.data.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
+import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 import java.io.File;
