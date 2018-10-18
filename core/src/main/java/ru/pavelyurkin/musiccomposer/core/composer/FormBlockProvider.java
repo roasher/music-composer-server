@@ -9,6 +9,7 @@ import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.equality.form.FormEquality;
 import ru.pavelyurkin.musiccomposer.core.equality.form.RelativelyComparable;
+import ru.pavelyurkin.musiccomposer.core.exception.ComposeException;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
@@ -65,7 +66,7 @@ public class FormBlockProvider {
 		List<FormCompositionStep> formCompositionSteps = !previousFormCompositionSteps.isEmpty() ?
 				Collections.singletonList( new FormCompositionStep( previousFormCompositionSteps, null ) ) :
 				Collections.emptyList();
-		return composeSteps( length, lexicon, composeStepProvider, formCompositionSteps, Optional.empty(), Collections.emptyList() );
+		return composeSteps( length, lexicon, composeStepProvider, formCompositionSteps, Optional.empty(), new ArrayList<>() );
 	}
 
 	/**
@@ -140,8 +141,7 @@ public class FormBlockProvider {
 					step = step - 2;
 					continue;
 				} else {
-					logger.warn( "There is no possible ways to compose new piece considering such parameters" );
-					break;
+					throw new ComposeException( "There is no possible ways to compose new piece considering such parameters" );
 				}
 			}
 		}

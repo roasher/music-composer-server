@@ -1,39 +1,32 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer;
 
-import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import jm.music.data.Note;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
+import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CompositionDecomposerMockTest extends AbstractSpringTest {
+@RunWith( MockitoJUnitRunner.class )
+public class CompositionDecomposerMockTest {
 
 	@InjectMocks
 	private CompositionDecomposer compositionDecomposer;
 
 	@Mock
 	private MusicBlockProvider musicBlockProvider;
-
-	@Before
-	public void init() {
-		MockitoAnnotations.initMocks( this );
-	}
 
 	@Test
 	public void isTwoLinked() {
@@ -108,7 +101,7 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 		map.put( 3, Arrays.asList( 0, 2 ) );
 		map.put( 4, Arrays.asList( 0, 1, 2 ) );
 
-		when( musicBlockProvider.getAllPossibleNextVariants( any( List.class ) ) ).thenReturn( map );
+		when( musicBlockProvider.getAllPossibleNextVariants( any() ) ).thenReturn( map );
 
 		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock ).getComposeBlockList();
 		assertEquals( inputMusicBlock.size(), composeBlockList.size() );

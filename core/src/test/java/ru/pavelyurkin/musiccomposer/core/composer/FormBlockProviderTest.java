@@ -1,32 +1,31 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
-import org.junit.Assert;
-import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
-import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
-import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import jm.JMC;
 import jm.music.data.Note;
 import jm.music.data.Rest;
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
+import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
+import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
+import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
+import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
 import static jm.JMC.*;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -49,7 +48,7 @@ public class FormBlockProviderTest extends AbstractSpringTest {
 
 		double lenght = JMC.WHOLE_NOTE;
 		Optional<FormCompositionStep> optFormCompositionStep = formBlockProvider
-				.getFormElement( lenght, lexiconFromFirst, composeStepProvider, new Form( 'A' ), Collections.emptyList(), Collections.emptyList() );
+				.getFormElement( lenght, lexiconFromFirst, composeStepProvider, new Form( 'A' ), new ArrayList<>(), new ArrayList<>() );
 
 		assertTrue( optFormCompositionStep.isPresent() );
 		optFormCompositionStep.ifPresent( formCompositionStep -> {
