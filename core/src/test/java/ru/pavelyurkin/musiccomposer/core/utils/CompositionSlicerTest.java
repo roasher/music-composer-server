@@ -511,6 +511,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
         compositionSlicer.adjustToUnifiedEndTime( composition );
         for ( Part part : composition.getPartArray() ) {
             assertEquals( phrase3.getEndTime(), part.getPhrase( 0 ).getEndTime(), 0 );
+            assertEquals( 0, part.getPhrase( 0 ).getStartTime(), 0 );
         }
     }
 }

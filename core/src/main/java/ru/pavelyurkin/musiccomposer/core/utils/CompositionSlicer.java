@@ -39,9 +39,10 @@ public class CompositionSlicer {
 
         adjustToUnifiedEndTime( composition );
 		for ( Part part : composition.getPartArray() ) {
-			Phrase phrase = part.getPhraseArray()[0];
-			List< Melody > noteList = slice( phrase, timePeriod );
-			compositionList.add( noteList );
+			for ( Phrase phrase : part.getPhraseArray() ) {
+				List< Melody > noteList = slice( phrase, timePeriod );
+				compositionList.add( noteList );
+			}
 		}
 
 		// Composition list should has equal number of slices in each instrument
@@ -164,11 +165,16 @@ public class CompositionSlicer {
      */
     public void adjustToUnifiedEndTime( Composition composition ) {
         double compositionEndTime = composition.getEndTime();
-        for ( Part part : composition.getPartArray() ) {
-            Phrase phrase = part.getPhrase( 0 );
-            if ( phrase.getEndTime() != compositionEndTime ) {
-                phrase.add( new Rest( compositionEndTime - phrase.getEndTime() ) );
-            }
-        }
+		for ( Part part : composition.getPartArray() ) {
+			for ( Phrase phrase : part.getPhraseArray() ) {
+				if ( phrase.getEndTime() != compositionEndTime ) {
+					phrase.add( new Rest( compositionEndTime - phrase.getEndTime() ) );
+				}
+				if (Double.compare( phrase.getStartTime(), 0.0 ) != 0) {
+					phrase.getNoteList().add( 0, new Rest( phrase.getStartTime() ) );
+					phrase.setStartTime( 0 );
+				}
+			}
+		}
     }
 }
