@@ -8,6 +8,7 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static jm.constants.Durations.*;
@@ -24,7 +25,7 @@ import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.trimToTime;
 public class ModelUtilsTest {
 
 	@Test
-    public void testGetIntervalPattern() throws Exception {
+    public void intervalPatternCalculatedNoMatterNotesOrder() throws Exception {
         List< Integer > pitches = new ArrayList< Integer >( );
         // 60 62 64 64 70 89 100
         pitches.add( 100 );
@@ -38,7 +39,6 @@ public class ModelUtilsTest {
 
         List< Integer > intervalPattern = new ArrayList< Integer >( pitches.size() - 1 );
         // REST <REST> 60 <2> 62 <2> 64 <0> 64 <6> 70 <19> 89 <11> 100
-		intervalPattern.add( Note.REST );
         intervalPattern.add( 2 );
         intervalPattern.add( 2 );
         intervalPattern.add( 0 );
@@ -50,7 +50,7 @@ public class ModelUtilsTest {
     }
 
 	@Test
-	public void testGetIntervalPattern1() throws Exception {
+	public void intervalPatternIsCalculatedWithoutRests() throws Exception {
 		List< Integer > pitches = new ArrayList< Integer >( );
 		// 60 62 89 100
 		pitches.add( 100 );
@@ -62,9 +62,6 @@ public class ModelUtilsTest {
 		pitches.add( Note.REST );
 
 		List< Integer > intervalPattern = new ArrayList< Integer >( pitches.size() - 1 );
-		intervalPattern.add( 0 );
-		intervalPattern.add( 0 );
-		intervalPattern.add( Note.REST );
 		intervalPattern.add( 2 );
 		intervalPattern.add( 27 );
 		intervalPattern.add( 11 );
@@ -73,17 +70,13 @@ public class ModelUtilsTest {
 	}
 
 	@Test
-	public void testGetIntervalPatternAllRests() throws Exception {
+	public void getEmptyIntervalPatternIfAllRests() throws Exception {
 		List< Integer > pitches = new ArrayList< Integer >( );
 		pitches.add( Note.REST );
 		pitches.add( Note.REST );
 		pitches.add( Note.REST );
 
-		List< Integer > intervalPattern = new ArrayList< Integer >( pitches.size() - 1 );
-		intervalPattern.add( 0 );
-		intervalPattern.add( 0 );
-
-		Assert.assertEquals( intervalPattern, ModelUtils.retrieveIntervalPattern( pitches ) );
+		assertThat( ModelUtils.retrieveIntervalPattern( pitches ), is( Collections.emptyList()) );
 	}
 
 	@Test

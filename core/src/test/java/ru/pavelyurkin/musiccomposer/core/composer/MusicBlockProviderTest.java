@@ -1,32 +1,27 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
-import org.mockito.Mockito;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import jm.music.data.Note;
 import jm.music.data.Rest;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mockito;
 import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static jm.constants.Durations.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
+import static ru.pavelyurkin.musiccomposer.core.model.BlockMovement.MOVEMENT_FROM_REST;
 
 /**
  * Created by pyurkin on 16.02.15.
  */
-public class MusicBlockProviderTest extends AbstractSpringTest {
+public class MusicBlockProviderTest {
 
-	@Autowired
-	private MusicBlockProvider musicBlockProvider;
+	private MusicBlockProvider musicBlockProvider = new MusicBlockProvider();
 
 	@Test
 	public void getAllPossibleNextMapTest() {
@@ -104,7 +99,7 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 						new Rest(QUARTER_NOTE)
 				));
 		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -1, 1, -1 ) );
-		assertEquals( Arrays.asList( Note.REST, 4 ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
+		assertEquals( Arrays.asList( 4 ), musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
 	}
 
 	@Test
@@ -123,7 +118,7 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 						new Note(1, QUARTER_NOTE)
 				));
 		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -1, 1, 1, -1 ) );
-		assertEquals( Arrays.asList( 0, Note.REST, 4 ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
+		assertEquals( Arrays.asList( 4 ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
 	}
 
 	@Test
@@ -141,7 +136,7 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 						new Note(0, QUARTER_NOTE)
 				));
 		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -10, 100, -100 ) );
-		assertEquals( Arrays.asList( 0, 0 ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
+		assertEquals( Collections.emptyList(), musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
 	}
 
 	@Test
@@ -153,8 +148,31 @@ public class MusicBlockProviderTest extends AbstractSpringTest {
 				new Melody( new Note( 69, 1 ) ),
 				new Melody( new Note( 57, 1 ) )
 		);
-		BlockMovement blockMovements = new BlockMovement( 2147483647, 2147483647, 2147483647, 2147483647 );
+		BlockMovement blockMovements = new BlockMovement( MOVEMENT_FROM_REST, MOVEMENT_FROM_REST, MOVEMENT_FROM_REST, MOVEMENT_FROM_REST );
 		musicBlock.setBlockMovementFromPreviousToThis( blockMovements );
 		assertFalse( musicBlockProvider.isPossibleNext( musicBlock, musicBlock ) );
+	}
+
+	@Test
+	public void possibleNextIfDifferentMelodyNumbersButEqualsByRests() throws Exception {
+		MusicBlock possibleNext = new MusicBlock(
+				null,
+				new Melody( new Note( 76, 1 ) ),
+				new Melody( new Note( 72, 1 ) ),
+				new Melody( new Note( 70, 1 ) )
+		);
+		BlockMovement blockMovements = new BlockMovement( -1, MOVEMENT_FROM_REST, +1 );
+		possibleNext.setBlockMovementFromPreviousToThis( blockMovements );
+
+		MusicBlock musicBlock = new MusicBlock(
+				null,
+				new Melody( new Note( 77, 1 ) ),
+				new Melody( new Note( 69, 1 ) ),
+				new Melody( new Rest( QUARTER_NOTE ) ),
+				new Melody( new Rest( QUARTER_NOTE ) ),
+				new Melody( new Rest( QUARTER_NOTE ) )
+		);
+
+		assertFalse( musicBlockProvider.isPossibleNext( possibleNext, musicBlock ) );
 	}
 }

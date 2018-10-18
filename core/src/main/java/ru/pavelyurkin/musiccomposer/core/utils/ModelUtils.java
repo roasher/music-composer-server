@@ -7,7 +7,6 @@ import jm.music.data.Phrase;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
@@ -88,14 +87,16 @@ public class ModelUtils {
      */
     public static List< Integer > retrieveIntervalPattern( List<Integer> notePitches ) {
         // To prevent input List changing we will create a copy
-        List< Integer > copyInputNotePitches = new ArrayList< Integer >( notePitches );
+		List<Integer> copyInputNotePitchesWithoutRests = notePitches.stream()
+				.filter( pitch -> pitch != Note.REST )
+				.collect( Collectors.toList());
 
-        Collections.sort( copyInputNotePitches );
+        Collections.sort( copyInputNotePitchesWithoutRests );
 
-        List< Integer > intervalPattern = new ArrayList<Integer>( copyInputNotePitches.size() - 1 );
-        for ( int currentPitchNumber = 0; currentPitchNumber < copyInputNotePitches.size() - 1; currentPitchNumber++ ) {
-			Integer currentPitch = copyInputNotePitches.get(currentPitchNumber);
-			Integer nextPitch = copyInputNotePitches.get( currentPitchNumber + 1 );
+        List<Integer> intervalPattern = new ArrayList<>();
+        for ( int currentPitchNumber = 0; currentPitchNumber < copyInputNotePitchesWithoutRests.size() - 1; currentPitchNumber++ ) {
+			Integer currentPitch = copyInputNotePitchesWithoutRests.get(currentPitchNumber);
+			Integer nextPitch = copyInputNotePitchesWithoutRests.get( currentPitchNumber + 1 );
 			if ( ( currentPitch != Note.REST && nextPitch == Note.REST ) || ( currentPitch == Note.REST && nextPitch != Note.REST ) ) {
 				intervalPattern.add( Note.REST );
 			} else {
