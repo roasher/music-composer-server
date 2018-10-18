@@ -149,7 +149,8 @@ public class MusicBlock implements Serializable {
 				stringBuilder.append( "[" ).append( this.getBlockMovementFromPreviousToThis().getVoiceMovements().get( melodyNumber ).toString() ).append( "]" );
 			}
 			stringBuilder.append( melody.toString() );
-			stringBuilder.append(" & ");
+			stringBuilder.append(" from ");
+			stringBuilder.append( this.compositionInfo.getTitle() );
 		}
 		return stringBuilder.toString();
 	}
