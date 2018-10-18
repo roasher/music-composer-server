@@ -85,6 +85,7 @@ public class CompositionLoader {
 
 		Composition composition = new Composition();
 		composition.setCompositionInfo( compositionInfo );
+		composition.setTitle( file.getName() );
 
 		Read.midi( composition, file.getAbsolutePath() );
 		roundAllRhythmValues( composition );
