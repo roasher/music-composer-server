@@ -2,4 +2,4 @@ spring:
   datasource:
     url: jdbc:h2:file:~/Music/test-mozart;AUTO_SERVER=TRUE
 
-Bach.chorale.path: /home/pyurkin/Music/Database/Test/mozart/
+Bach.chorale.path: /home/pyurkin/Music/Database/Test/Classical music/mozart/
