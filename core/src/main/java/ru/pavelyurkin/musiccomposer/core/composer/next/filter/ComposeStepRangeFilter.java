@@ -39,7 +39,7 @@ public class ComposeStepRangeFilter extends AbstractComposeStepFilter {
 				.max();
 		OptionalInt min = block.getInstrumentParts().stream()
 				.filter( instrumentPart -> !instrumentPart.isRest() )
-				.mapToInt( InstrumentPart::getMinPitch )
+				.mapToInt( InstrumentPart::getMinNonRestPitch )
 				.min();
 		if (!max.isPresent() && !min.isPresent()) return true;
 		return max.getAsInt() <= highestNotePitch && min.getAsInt() >= lowestNotePitch;

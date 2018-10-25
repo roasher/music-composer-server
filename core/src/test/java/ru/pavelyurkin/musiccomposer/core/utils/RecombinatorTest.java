@@ -3,7 +3,6 @@ package ru.pavelyurkin.musiccomposer.core.utils;
 import jm.music.data.Note;
 import jm.music.data.Rest;
 import org.junit.Test;
-import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
@@ -19,7 +18,7 @@ import static org.hamcrest.Matchers.is;
 /**
  * Created by pyurkin on 25.11.14.
  */
-public class RecombinatorTest extends AbstractSpringTest {
+public class RecombinatorTest {
 
 	@Test
 	public void testRebuildingMelodyBlockList() {
