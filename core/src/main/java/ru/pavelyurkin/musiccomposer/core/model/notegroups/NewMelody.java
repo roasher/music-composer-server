@@ -4,10 +4,7 @@ import jm.music.data.Note;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Iterables.getLast;
@@ -68,5 +65,29 @@ public class NewMelody extends NoteGroup {
 				.map( note -> new Note( note.getPitch() + transposePitch, note.getRhythmValue() ) )
 				.collect( Collectors.toList() );
 		return new NewMelody( transposedNotes );
+	}
+
+	public void addNoteToTheEnd( Note note ) {
+		this.getNotes().add( note );
+	}
+
+	@Override
+	public boolean equals( Object o ) {
+		if ( this == o )
+			return true;
+		if ( o == null || getClass() != o.getClass() )
+			return false;
+		NewMelody melody = ( NewMelody ) o;
+		if (this.notes.size() != melody.notes.size()) return false;
+		for ( int noteNumber = 0; noteNumber < this.notes.size(); noteNumber++ ) {
+			if ( !this.notes.get( noteNumber ).equals( melody.notes.get( noteNumber ) ) )
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash( notes );
 	}
 }
