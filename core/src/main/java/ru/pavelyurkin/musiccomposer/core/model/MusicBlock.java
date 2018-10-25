@@ -28,9 +28,6 @@ public class MusicBlock implements Serializable {
 	private double startTime;
 
 	// Derivative Self Information
-	// TODO delete?
-	private List<Integer> startIntervalPattern;
-	private List<Integer> endIntervalPattern;
 	private double rhythmValue;
 
 	public MusicBlock( double startTime, List<InstrumentPart> instrumentParts, CompositionInfo compositionInfo, List<Integer> previousBlockEndPitches ) {
@@ -46,10 +43,6 @@ public class MusicBlock implements Serializable {
 		this.compositionInfo = inputCompositionInfo;
 		// Computing derivative information
 		{
-			// Computing interval patterns
-			this.startIntervalPattern = ModelUtils.retrieveFirstIntervalPattern( instrumentParts );
-			this.endIntervalPattern = ModelUtils.retrieveLastIntervalPattern( instrumentParts );
-
 			// rhytmValue && start time
 			this.rhythmValue = ModelUtils.retrieveRhythmValue( instrumentParts );
 			this.startTime = startTime;
@@ -80,9 +73,6 @@ public class MusicBlock implements Serializable {
 		this.compositionInfo = null;
 
 		this.previousBlockEndPitches = musicBlocks.get( 0 ).getPreviousBlockEndPitches();
-
-		this.startIntervalPattern = musicBlocks.get( 0 ).getStartIntervalPattern();
-		this.endIntervalPattern = musicBlocks.get( musicBlocks.size() - 1 ).getEndIntervalPattern();
 
 		this.rhythmValue = rhythmValue;
 		this.startTime = musicBlocks.get( 0 ).getStartTime();
@@ -129,9 +119,7 @@ public class MusicBlock implements Serializable {
 
 	public boolean isStartsWithRest() {
 		return this.instrumentParts.stream()
-				.filter( instrumentPart -> !instrumentPart.startsWithRest() )
-				.findAny()
-				.isPresent();
+				.allMatch( InstrumentPart::startsWithRest );
 	}
 
 
