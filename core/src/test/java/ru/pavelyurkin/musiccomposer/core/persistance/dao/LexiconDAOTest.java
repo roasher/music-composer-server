@@ -4,30 +4,32 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import com.github.springtestdbunit.assertion.DatabaseAssertionMode;
+import jm.JMC;
 import jm.music.data.Note;
-import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
-import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
-import jm.JMC;
-import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
-import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
+import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
+import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
+import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static jm.JMC.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static jm.JMC.*;
 
 /**
  * Created by pyurkin on 15.04.2015.
@@ -79,22 +81,30 @@ public class LexiconDAOTest extends AbstractSpringTest {
 		Note note4 = new Note( DS4, EIGHTH_NOTE, 0, 0 );
 		Note note5 = new Note( B4, WHOLE_NOTE, 0, 0 );
 
-		Melody melody1 = new Melody( 'A', note1, note2 );
-		Melody melody2 = new Melody( 'B', note3, note4, note3, note4, note5 );
-		Melody melody3 = new Melody( 'C', note2, note2, note2 );
-		Melody melody4 = new Melody( 'A', note2, note5 );
+		InstrumentPart melody1 = new InstrumentPart( Arrays.asList(
+				new Chord( Arrays.asList( note3.getPitch(), note4.getPitch() ), note3.getRhythmValue() ),
+				new NewMelody( note2 ),
+				new NewMelody( note2 )
+		) );
+
+		InstrumentPart melody2 = new InstrumentPart( note3, note4, note3, note4, note5 );
+		InstrumentPart melody3 = new InstrumentPart( note2, note2, note2 );
+		InstrumentPart melody4 = new InstrumentPart( Arrays.asList(
+				new Chord( Arrays.asList( C4, C5 ), WHOLE_NOTE ),
+				new NewMelody( note2, note1 )
+		) );
 
 		CompositionInfo compositionInfo = new CompositionInfo();
 		compositionInfo.setAuthor( "TEST_AUTHOR" );
 		compositionInfo.setTitle( "TEST_TITLE" );
 		compositionInfo.setTempo( 4.0 );
 
-		BlockMovement blockMovement1 = new BlockMovement( 30, 20 );
-		BlockMovement blockMovement2 = new BlockMovement( 32, 22 );
+		List<Integer> previousMusicBlockPitches1 = Arrays.asList( 30, 20 );
+		List<Integer> previousMusicBlockPitches2 = Arrays.asList( 32, 22 );
 
-		ComposeBlock composeBlock0 = new ComposeBlock( 0, compositionInfo, Arrays.asList( melody1, melody2 ), blockMovement1 );
-		ComposeBlock composeBlock1 = new ComposeBlock( 0, compositionInfo, Arrays.asList( melody1, melody3 ), blockMovement1 );
-		ComposeBlock composeBlock2 = new ComposeBlock( 0, compositionInfo, Arrays.asList( melody3, melody4 ), blockMovement2 );
+		ComposeBlock composeBlock0 = new ComposeBlock( new MusicBlock( 0, Arrays.asList( melody1, melody2 ), compositionInfo, previousMusicBlockPitches1 ) );
+		ComposeBlock composeBlock1 = new ComposeBlock( new MusicBlock( 0, Arrays.asList( melody1, melody3 ), compositionInfo, previousMusicBlockPitches1 ) );
+		ComposeBlock composeBlock2 = new ComposeBlock( new MusicBlock( 0, Arrays.asList( melody3, melody4 ), compositionInfo, previousMusicBlockPitches2 ) );
 
 		composeBlock0.setPossibleNextComposeBlocks( Arrays.asList( composeBlock2 ) );
 		composeBlock2.setPossiblePreviousComposeBlocks( Arrays.asList( composeBlock0 ) );

@@ -1,12 +1,11 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
-import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
-import jm.music.data.Note;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import org.springframework.stereotype.Component;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.OptionalInt;
 
 /**
  * Created by wish on 02.02.2016.
@@ -34,13 +33,15 @@ public class ComposeStepRangeFilter extends AbstractComposeStepFilter {
 
 	@Override
 	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {
-		List<Integer> pitches = block.getMelodyList()
-				.stream()
-				.flatMap( melody -> melody.getNoteList().stream() )
-				.mapToInt( value -> ( ( Note ) value ).getPitch() )
-				.filter( value -> value != Note.REST )
-				.boxed()
-				.collect( Collectors.toList() );
-		return pitches.isEmpty() || ( Collections.max( pitches ) <= highestNotePitch && Collections.min( pitches ) >= lowestNotePitch );
+		OptionalInt max = block.getInstrumentParts().stream()
+				.filter( instrumentPart -> !instrumentPart.isRest() )
+				.mapToInt( InstrumentPart::getMaxPitch )
+				.max();
+		OptionalInt min = block.getInstrumentParts().stream()
+				.filter( instrumentPart -> !instrumentPart.isRest() )
+				.mapToInt( InstrumentPart::getMinPitch )
+				.min();
+		if (!max.isPresent() && !min.isPresent()) return true;
+		return max.getAsInt() <= highestNotePitch && min.getAsInt() >= lowestNotePitch;
 	}
 }

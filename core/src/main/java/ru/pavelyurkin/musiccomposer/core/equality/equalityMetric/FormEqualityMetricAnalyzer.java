@@ -1,16 +1,15 @@
 package ru.pavelyurkin.musiccomposer.core.equality.equalityMetric;
 
 import lombok.RequiredArgsConstructor;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
-import org.springframework.stereotype.Component;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class FormEqualityMetricAnalyzer implements EqualityMetricAnalyzer<List<Melody>> {
+public class FormEqualityMetricAnalyzer implements EqualityMetricAnalyzer<List<InstrumentPart>> {
 
-	private final EqualityMetricAnalyzer<Melody> equalityMetricAnalyzer;
+	private final EqualityMetricAnalyzer<InstrumentPart> equalityMetricAnalyzer;
 
 	@Override
 	/**
@@ -19,7 +18,7 @@ public class FormEqualityMetricAnalyzer implements EqualityMetricAnalyzer<List<M
 	 * @param secondMusicBlockInstrumentParts
 	 * @return
 	 */
-	public double getEqualityMetric( List<Melody> firstMusicBlockInstrumentParts, List<Melody> secondMusicBlockInstrumentParts ) {
+	public double getEqualityMetric( List<InstrumentPart> firstMusicBlockInstrumentParts, List<InstrumentPart> secondMusicBlockInstrumentParts ) {
 		if ( firstMusicBlockInstrumentParts.size() != secondMusicBlockInstrumentParts.size() ) {
 			throw new RuntimeException( "Input collections of melodies has different sizes" );
 		}

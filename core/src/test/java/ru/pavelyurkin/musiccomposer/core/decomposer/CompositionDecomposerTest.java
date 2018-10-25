@@ -31,7 +31,7 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 			//	if time correlation is disabled
 			assertEquals( 6, lexicon.getComposeBlockList().size() );
 			lexicon.getComposeBlockList().forEach( composeBlock -> {
-				if ( composeBlock.getBlockMovementFromPreviousToThis() != null ) {
+				if ( composeBlock.getPreviousBlockEndPitches().isPresent() ) {
 					assertEquals( 6, composeBlock.getPossiblePreviousComposeBlocks().size() );
 					assertEquals( 5, composeBlock.getPossibleNextComposeBlocks().size() );
 				} else {
@@ -43,7 +43,7 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 			//	if time correlation is enabled
 			assertEquals( 11, lexicon.getComposeBlockList().size() );
 			lexicon.getComposeBlockList().forEach( composeBlock -> {
-				if ( composeBlock.getBlockMovementFromPreviousToThis() != null ) {
+				if ( composeBlock.getPreviousBlockEndPitches().isPresent() ) {
 					if ( composeBlock.getPossiblePreviousComposeBlocks().contains( lexicon.get( 0 ) ) ) {
 						assertEquals( 6, composeBlock.getPossiblePreviousComposeBlocks().size() );
 					} else {

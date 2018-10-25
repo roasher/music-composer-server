@@ -1,7 +1,5 @@
 package ru.pavelyurkin.musiccomposer.core.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -9,8 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static jm.constants.Durations.*;
-import static jm.constants.Durations.THIRTYSECOND_NOTE;
-import static jm.constants.Durations.THIRTYSECOND_NOTE_TRIPLET;
 
 /**
  * Class aggregates logic of rounding rhythm values after loading the composition
@@ -18,8 +14,6 @@ import static jm.constants.Durations.THIRTYSECOND_NOTE_TRIPLET;
  */
 @Component
 public class RhythmValueHandler {
-
-	private Logger logger = LoggerFactory.getLogger( Utils.class );
 
 	private final double maxRhythmValue;
 	public final List<Double> rhythmValues = new ArrayList<>();

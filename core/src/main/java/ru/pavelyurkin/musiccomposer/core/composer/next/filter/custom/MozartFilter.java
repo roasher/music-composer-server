@@ -4,10 +4,9 @@ import lombok.experimental.Delegate;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.*;
 
-import java.util.Arrays;
-
 import static jm.constants.Durations.QUARTER_NOTE;
-import static jm.constants.Pitches.*;
+import static jm.constants.Pitches.C2;
+import static jm.constants.Pitches.C5;
 
 /**
  * Created by wish on 18.02.2016.
@@ -15,10 +14,10 @@ import static jm.constants.Pitches.*;
 @Component
 public class MozartFilter implements ComposeStepFilter {
 
-    @Delegate
+	@Delegate
 	private ComposeStepFilter composeStepFilter = new ComposeStepRepetitionFilter(
 			new ComposeStepVarietyFilter( 6,
 					new ComposeStepRestFilter( QUARTER_NOTE,
-							new ComposeStepRangeFilter( C1, C6 ) ) ) );
+							new ComposeStepRangeFilter( C2, C5 ) ) ) );
 
 }

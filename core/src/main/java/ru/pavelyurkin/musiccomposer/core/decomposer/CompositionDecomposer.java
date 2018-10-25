@@ -2,22 +2,19 @@ package ru.pavelyurkin.musiccomposer.core.decomposer;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.decomposer.form.FormDecomposer;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
-import ru.pavelyurkin.musiccomposer.core.utils.Recombinator;
-import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
+import ru.pavelyurkin.musiccomposer.core.utils.CompositionSlicer;
+import ru.pavelyurkin.musiccomposer.core.utils.Recombinator;
 
 import java.util.*;
 
@@ -30,6 +27,7 @@ import java.util.*;
 public class CompositionDecomposer {
 
 	private final FormDecomposer formDecomposer;
+	private final CompositionSlicer compositionSlicer;
 	private final MusicBlockProvider musicBlockProvider;
 	private final LexiconDAO lexiconDAO;
 
@@ -43,18 +41,21 @@ public class CompositionDecomposer {
 	 * @return
 	 */
 	public List<MusicBlock> decomposeIntoMusicBlocks( Composition composition, double rhythmValue ) {
+		List<List<InstrumentPart>> instrumentPartsCollection = compositionSlicer.slice( composition, rhythmValue );
 		// analyzing form
-		List<List<Melody>> melodyBlockList = formDecomposer.decompose( composition, rhythmValue );
+//		List<List<InstrumentPart>> instrumentPartsCollection = formDecomposer.decompose( composition, rhythmValue );
 		// recombining result melodies into composeBlockList
-		List<List<Melody>> recombineList = Recombinator.recombine( melodyBlockList );
+		List<List<InstrumentPart>> recombineList = Recombinator.recombine( instrumentPartsCollection );
 		// filling composition information
 		List<MusicBlock> lexiconMusicBlocks = new ArrayList<MusicBlock>();
 		for ( int melodyBlockNumber = 0; melodyBlockNumber < recombineList.size(); melodyBlockNumber++ ) {
-			MusicBlock musicBlock = new MusicBlock( recombineList.get( melodyBlockNumber ), composition.getCompositionInfo() );
+			MusicBlock musicBlock = new MusicBlock();
+			musicBlock.setInstrumentParts( recombineList.get( melodyBlockNumber ) );
+			musicBlock.setCompositionInfo( composition.getCompositionInfo() );
 			// binding with previous Music Block
 			if ( melodyBlockNumber != 0 ) {
 				MusicBlock previousMusicBlock = lexiconMusicBlocks.get( melodyBlockNumber - 1 );
-				musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( previousMusicBlock.getMelodyList(), musicBlock.getMelodyList() ) );
+				musicBlock.setPreviousBlockEndPitches( Optional.of( previousMusicBlock.getEndPitches() ) );
 			}
 			lexiconMusicBlocks.add( musicBlock );
 		}

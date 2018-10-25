@@ -4,15 +4,21 @@ import jm.music.data.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static jm.JMC.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 public class CompositionSlicerTest extends AbstractSpringTest {
 
@@ -22,353 +28,99 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 	private CompositionLoader compositionLoader;
 
 	@Test
-	public void testCase1() {
-		Melody noteListToSlice = new Melody();
-		noteListToSlice.add( new Note( C0, WHOLE_NOTE ) );
-		noteListToSlice.add( new Note( C0, HALF_NOTE ) );
-		noteListToSlice.add( new Note( C0, WHOLE_NOTE ) );
-		noteListToSlice.add( new Note( C0, EIGHTH_NOTE ) );
-		noteListToSlice.add( new Note( C0, EIGHTH_NOTE ) );
-		noteListToSlice.add( new Note( C0, EIGHTH_NOTE ) );
-		noteListToSlice.add( new Note( C0, EIGHTH_NOTE ) );
-
-		noteListToSlice.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
-		noteListToSlice.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
-		noteListToSlice.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
-
-		noteListToSlice.add( new Note( C0, HALF_NOTE ) );
-		noteListToSlice.add( new Note( C0, WHOLE_NOTE ) );
-
-		noteListToSlice.add( new Note( C0, SIXTEENTH_NOTE ) );
-		noteListToSlice.add( new Note( C0, SIXTEENTH_NOTE ) );
-		noteListToSlice.add( new Note( C0, SIXTEENTH_NOTE ) );
-		noteListToSlice.add( new Note( C0, SIXTEENTH_NOTE ) );
-
-		// HALF NOTE
-		List<Melody> sliceHalfNote = new ArrayList<>();
-
-		Melody slice1 = new Melody();
-		slice1.add( new Note( C0, HALF_NOTE ) );
-		sliceHalfNote.add( slice1 );
-
-		Melody slice2 = new Melody();
-		slice2.add( new Note( C0, HALF_NOTE ) );
-		slice2.setStartTime( slice1.getEndTime() );
-		sliceHalfNote.add( slice2 );
-
-		Melody slice3 = new Melody();
-		slice3.add( new Note( C0, HALF_NOTE ) );
-		slice3.setStartTime( slice2.getEndTime() );
-		sliceHalfNote.add( slice3 );
-
-		Melody slice4 = new Melody();
-		slice4.add( new Note( C0, HALF_NOTE ) );
-		slice4.setStartTime( slice3.getEndTime() );
-		sliceHalfNote.add( slice4 );
-
-		Melody slice5 = new Melody();
-		slice5.add( new Note( C0, HALF_NOTE ) );
-		slice5.setStartTime( slice4.getEndTime() );
-		sliceHalfNote.add( slice5 );
-
-		Melody slice6 = new Melody();
-		slice6.add( new Note( C0, EIGHTH_NOTE ) );
-		slice6.add( new Note( C0, EIGHTH_NOTE ) );
-		slice6.add( new Note( C0, EIGHTH_NOTE ) );
-		slice6.add( new Note( C0, EIGHTH_NOTE ) );
-		slice6.setStartTime( slice5.getEndTime() );
-		sliceHalfNote.add( slice6 );
-
-		Melody slice7 = new Melody();
-		slice7.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
-		slice7.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
-		slice7.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
-		slice7.add( new Note( C0, QUARTER_NOTE ) );
-		slice7.setStartTime( slice6.getEndTime() );
-		sliceHalfNote.add( slice7 );
-
-		Melody slice8 = new Melody();
-		slice8.add( new Note( C0, QUARTER_NOTE ) );
-		slice8.add( new Note( C0, QUARTER_NOTE ) );
-		slice8.setStartTime( slice7.getStartTime() + EIGHTH_NOTE_TRIPLET * 3 + QUARTER_NOTE );
-		sliceHalfNote.add( slice8 );
-
-		Melody slice9 = new Melody();
-		slice9.add( new Note( C0, HALF_NOTE ) );
-		slice9.setStartTime( slice8.getEndTime() );
-		sliceHalfNote.add( slice9 );
-
-		Melody slice10 = new Melody();
-		slice10.add( new Note( C0, QUARTER_NOTE ) );
-		slice10.add( new Note( C0, SIXTEENTH_NOTE ) );
-		slice10.add( new Note( C0, SIXTEENTH_NOTE ) );
-		slice10.add( new Note( C0, SIXTEENTH_NOTE ) );
-		slice10.add( new Note( C0, SIXTEENTH_NOTE ) );
-		slice10.setStartTime( slice9.getEndTime() );
-		sliceHalfNote.add( slice10 );
-
-		Phrase phrase = new Phrase();
-		for ( Note note : ( List<Note> ) noteListToSlice.getNoteList() ) {
-			phrase.add( note );
-		}
-		List<Melody> sliceToTest = compositionSlicer.slice( phrase, HALF_NOTE );
-		assertEquals( sliceToTest, sliceHalfNote );
-
-		// QUARTER NOTE
-		List<Melody> sliceQuarterNote = new ArrayList<>();
-
-		Melody slice11 = new Melody();
-		slice11.add( new Note( C0, QUARTER_NOTE ) );
-		sliceQuarterNote.add( slice11 );
-
-		Melody slice12 = new Melody();
-		slice12.add( new Note( C0, QUARTER_NOTE ) );
-		slice12.setStartTime( slice11.getEndTime() );
-		sliceQuarterNote.add( slice12 );
-
-		Melody slice13 = new Melody();
-		slice13.add( new Note( C0, QUARTER_NOTE ) );
-		slice13.setStartTime( slice12.getEndTime() );
-		sliceQuarterNote.add( slice13 );
-
-		Melody slice14 = new Melody();
-		slice14.add( new Note( C0, QUARTER_NOTE ) );
-		slice14.setStartTime( slice13.getEndTime() );
-		sliceQuarterNote.add( slice14 );
-
-		Melody slice21 = new Melody();
-		slice21.add( new Note( C0, QUARTER_NOTE ) );
-		slice21.setStartTime( slice14.getEndTime() );
-		sliceQuarterNote.add( slice21 );
-
-		Melody slice22 = new Melody();
-		slice22.add( new Note( C0, QUARTER_NOTE ) );
-		slice22.setStartTime( slice21.getEndTime() );
-		sliceQuarterNote.add( slice22 );
-
-		Melody slice31 = new Melody();
-		slice31.add( new Note( C0, QUARTER_NOTE ) );
-		slice31.setStartTime( slice22.getEndTime() );
-		sliceQuarterNote.add( slice31 );
-
-		Melody slice32 = new Melody();
-		slice32.add( new Note( C0, QUARTER_NOTE ) );
-		slice32.setStartTime( slice31.getEndTime() );
-		sliceQuarterNote.add( slice32 );
-
-		Melody slice41 = new Melody();
-		slice41.add( new Note( C0, QUARTER_NOTE ) );
-		slice41.setStartTime( slice32.getEndTime() );
-		sliceQuarterNote.add( slice41 );
-
-		Melody slice42 = new Melody();
-		slice42.add( new Note( C0, QUARTER_NOTE ) );
-		slice42.setStartTime( slice41.getEndTime() );
-		sliceQuarterNote.add( slice42 );
-
-		Melody slice61 = new Melody();
-		slice61.add( new Note( C0, EIGHTH_NOTE ) );
-		slice61.add( new Note( C0, EIGHTH_NOTE ) );
-		slice61.setStartTime( slice42.getEndTime() );
-		sliceQuarterNote.add( slice61 );
-
-		Melody slice62 = new Melody();
-		slice62.add( new Note( C0, EIGHTH_NOTE ) );
-		slice62.add( new Note( C0, EIGHTH_NOTE ) );
-		slice62.setStartTime( slice61.getEndTime() );
-		sliceQuarterNote.add( slice62 );
-
-		Melody slice71 = new Melody();
-		slice71.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
-		slice71.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
-		slice71.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
-		slice71.setStartTime( slice62.getEndTime() );
-		sliceQuarterNote.add( slice71 );
-
-		Melody slice72 = new Melody();
-		slice72.add( new Note( C0, QUARTER_NOTE ) );
-		slice72.setStartTime( slice71.getStartTime() + EIGHTH_NOTE_TRIPLET * 3 );
-		sliceQuarterNote.add( slice72 );
-
-		Melody slice81 = new Melody();
-		slice81.add( new Note( C0, QUARTER_NOTE ) );
-		slice81.setStartTime( slice72.getEndTime() );
-		sliceQuarterNote.add( slice81 );
-
-		Melody slice82 = new Melody();
-		slice82.add( new Note( C0, QUARTER_NOTE ) );
-		slice82.setStartTime( slice81.getEndTime() );
-		sliceQuarterNote.add( slice82 );
-
-		Melody slice91 = new Melody();
-		slice91.add( new Note( C0, QUARTER_NOTE ) );
-		slice91.setStartTime( slice82.getEndTime() );
-		sliceQuarterNote.add( slice91 );
-
-		Melody slice92 = new Melody();
-		slice92.add( new Note( C0, QUARTER_NOTE ) );
-		slice92.setStartTime( slice91.getEndTime() );
-		sliceQuarterNote.add( slice92 );
-
-		Melody slice93 = new Melody();
-		slice93.add( new Note( C0, QUARTER_NOTE ) );
-		slice93.setStartTime( slice92.getEndTime() );
-		sliceQuarterNote.add( slice93 );
-
-		Melody slice101 = new Melody();
-		slice101.add( new Note( C0, SIXTEENTH_NOTE ) );
-		slice101.add( new Note( C0, SIXTEENTH_NOTE ) );
-		slice101.add( new Note( C0, SIXTEENTH_NOTE ) );
-		slice101.add( new Note( C0, SIXTEENTH_NOTE ) );
-		slice101.setStartTime( slice93.getEndTime() );
-		sliceQuarterNote.add( slice101 );
-
-		Phrase phraseQuarter = new Phrase();
-		for ( Note note : ( List<Note> ) noteListToSlice.getNoteList() ) {
-			phraseQuarter.add( note );
-		}
-		List<Melody> sliceToTestQuarter = compositionSlicer.slice( phraseQuarter, QUARTER_NOTE );
-		assertEquals( sliceToTestQuarter, sliceQuarterNote );
-
-		// WHOLE NOTE
-		List<Melody> sliceWholefNote = new ArrayList<>(  );
-
-		Melody sliceW1 = new Melody();
-		sliceW1.add( new Note( C0, WHOLE_NOTE ) );
-		sliceWholefNote.add( sliceW1 );
-
-		Melody sliceW3 = new Melody();
-		sliceW3.add( new Note( C0, HALF_NOTE ) );
-		sliceW3.add( new Note( C0, HALF_NOTE ) );
-		sliceW3.setStartTime( sliceW1.getEndTime() );
-		sliceWholefNote.add( sliceW3 );
-
-		Melody sliceW5 = new Melody();
-		sliceW5.add( new Note( C0, HALF_NOTE ) );
-		sliceW5.add( new Note( C0, EIGHTH_NOTE ) );
-		sliceW5.add( new Note( C0, EIGHTH_NOTE ) );
-		sliceW5.add( new Note( C0, EIGHTH_NOTE ) );
-		sliceW5.add( new Note( C0, EIGHTH_NOTE ) );
-		sliceW5.setStartTime( sliceW3.getEndTime() );
-		sliceWholefNote.add( sliceW5 );
-
-		Melody sliceW7 = new Melody();
-		sliceW7.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
-		sliceW7.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
-		sliceW7.add( new Note( C0, EIGHTH_NOTE_TRIPLET ) );
-		sliceW7.add( new Note( C0, HALF_NOTE ) );
-		sliceW7.add( new Note( C0, QUARTER_NOTE ) );
-		sliceW7.setStartTime( sliceW5.getEndTime() );
-		sliceWholefNote.add( sliceW7 );
-
-		Melody sliceW9 = new Melody();
-		sliceW9.add( new Note( C0, DOTTED_HALF_NOTE ) );
-		sliceW9.add( new Note( C0, SIXTEENTH_NOTE ) );
-		sliceW9.add( new Note( C0, SIXTEENTH_NOTE ) );
-		sliceW9.add( new Note( C0, SIXTEENTH_NOTE ) );
-		sliceW9.add( new Note( C0, SIXTEENTH_NOTE ) );
-		sliceW9.setStartTime( sliceW7.getEndTime() );
-		sliceWholefNote.add( sliceW9 );
-
-		Phrase phraseW = new Phrase();
-		for ( Note note : ( List<Note> ) noteListToSlice.getNoteList() ) {
-			phraseW.add( note );
-		}
-		List<Melody> sliceToTestW = compositionSlicer.slice( phraseW, WHOLE_NOTE );
-		assertEquals( sliceToTestW, sliceWholefNote );
-
-		phraseW.getNote( 0 ).setRhythmValue( HALF_NOTE );
-		List<Melody> sliceToTestW1 = compositionSlicer.slice( phraseW, WHOLE_NOTE );
-		assertNotEquals( sliceToTestW1, sliceWholefNote );
-	}
-
-	@Test
-	public void testCase2() {
+	public void sliceSingleVoiceComposition() throws Exception {
 		Score score = new Score();
 
 		Phrase firstInstr = new Phrase();
 		firstInstr.add( new Note( C5, WHOLE_NOTE ) );
 		firstInstr.add( new Note( D5, DOTTED_HALF_NOTE ) );
-		firstInstr.add( new Note( E5, HALF_NOTE ) );
-		Part firstPart = new Part( firstInstr );
-		score.add( firstPart );
+		firstInstr.add( new Note( E5, DOTTED_HALF_NOTE ) );
+		Part part = new Part( firstInstr );
+		score.add( part );
+		Composition composition = new Composition( score );
 
-		Phrase secondInstr = new Phrase();
-		secondInstr.add( new Note( C4, WHOLE_NOTE ) );
-		secondInstr.add( new Note( B3, HALF_NOTE ) );
-		secondInstr.add( new Note( A3, DOTTED_HALF_NOTE ) );
-		Part secondPart = new Part( secondInstr );
-		score.add( secondPart );
+		assertThat( compositionSlicer.slice( composition, HALF_NOTE ), is( Arrays.asList(
+				Arrays.asList(
+						new InstrumentPart(
+								new Note( C5, HALF_NOTE ),
+								new Note( C5, HALF_NOTE ),
+								new Note( D5, HALF_NOTE ),
+								new Note( D5, QUARTER_NOTE ),
+								new Note( E5, QUARTER_NOTE ),
+								new Note( E5, HALF_NOTE )
+								)
+				)
+				)
+		) );
+	}
 
-		Phrase thirdInstr = new Phrase();
-		thirdInstr.add( new Note( C3, HALF_NOTE ) );
-		thirdInstr.add( new Note( C3, DOTTED_HALF_NOTE ) );
-		thirdInstr.add( new Note( C3, WHOLE_NOTE ) );
-		Part thirdPart = new Part( thirdInstr );
-		score.add( thirdPart );
+	@Test
+	public void sliceIfPhrasesFormChord() throws Exception {
+		Score score = new Score();
 
-		List<List<Melody>> testList = compositionSlicer.slice( new Composition( score ), DOTTED_HALF_NOTE );
+		Phrase firstPhrase = new Phrase();
+		firstPhrase.add( new Note( C5, WHOLE_NOTE ) );
+		firstPhrase.add( new Note( D5, DOTTED_HALF_NOTE ) );
+		firstPhrase.add( new Note( E5, DOTTED_HALF_NOTE ) );
 
-		// first
-		Melody firstBlockfirstList = new Melody();
-		firstBlockfirstList.add( new Note( C5, DOTTED_HALF_NOTE ) );
-		Melody firstBlocksecondList = new Melody();
-		firstBlocksecondList.add( new Note( C4, DOTTED_HALF_NOTE ) );
-		Melody firstBlockthirdList = new Melody();
-		firstBlockthirdList.add( new Note( C3, HALF_NOTE ) );
-		firstBlockthirdList.add( new Note( C3, QUARTER_NOTE ) );
+		Phrase secondPhrase = new Phrase();
+		secondPhrase.add( new Note( C1, QUARTER_NOTE + WHOLE_NOTE + QUARTER_NOTE ) );
+		secondPhrase.setStartTime( DOTTED_HALF_NOTE );
 
-		List<Melody> firstBlock = new ArrayList<>();
-		firstBlock.add( firstBlockfirstList );
-		firstBlock.add( firstBlocksecondList );
-		firstBlock.add( firstBlockthirdList );
+		Part part = new Part();
+		part.add( firstPhrase );
+		part.add( secondPhrase );
+		score.add( part );
+		Composition composition = new Composition( score );
 
-		// second
-		Melody secondBlockfirstList = new Melody();
-		secondBlockfirstList.add( new Note( C5, QUARTER_NOTE ) );
-		secondBlockfirstList.add( new Note( D5, HALF_NOTE ) );
-		secondBlockfirstList.setStartTime( firstBlockfirstList.getEndTime() );
+		assertThat( compositionSlicer.slice( composition, HALF_NOTE ), is( Arrays.asList(
+				Arrays.asList(
+						new InstrumentPart( Arrays.asList(
+								new NewMelody( new Note( C5, HALF_NOTE ) ),
+								new NewMelody( new Note( C5, QUARTER_NOTE ) ),
+								new Chord( Arrays.asList( C5, C1 ), QUARTER_NOTE ),
 
-		Melody secondBlocksecondList = new Melody();
-		secondBlocksecondList.add( new Note( C4, QUARTER_NOTE ) );
-		secondBlocksecondList.add( new Note( B3, HALF_NOTE ) );
-		secondBlocksecondList.setStartTime( firstBlocksecondList.getEndTime() );
+								new Chord( Arrays.asList( D5, C1 ), HALF_NOTE ),
+								new Chord( Arrays.asList( D5, C1 ), QUARTER_NOTE ),
+								new Chord( Arrays.asList( E5, C1 ), QUARTER_NOTE ),
 
-		Melody secondBlockthirdList = new Melody();
-		secondBlockthirdList.add( new Note( C3, HALF_NOTE ) );
-		secondBlockthirdList.add( new Note( C3, QUARTER_NOTE ) );
-		secondBlockthirdList.setStartTime( firstBlockthirdList.getEndTime() );
+								new Chord( Arrays.asList( E5, C1 ), QUARTER_NOTE ),
+								new NewMelody( new Note( E5, QUARTER_NOTE ) )
+						)
+						)
+				)
+				)
+		) );
+	}
 
-		List<Melody> secondBlock = new ArrayList<>();
-		secondBlock.add( secondBlockfirstList );
-		secondBlock.add( secondBlocksecondList );
-		secondBlock.add( secondBlockthirdList );
+	@Test
+	public void sliceIfPhraseIsChord() throws Exception {
+		Score score = new Score();
 
-		// third
-		Melody thirdBlockfirstList = new Melody();
-		thirdBlockfirstList.add( new Note( D5, QUARTER_NOTE ) );
-		thirdBlockfirstList.add( new Note( E5, HALF_NOTE ) );
-		thirdBlockfirstList.setStartTime( secondBlockfirstList.getEndTime() );
+		Phrase firstPhrase = new Phrase();
+		firstPhrase.add( new Note( D5, DOTTED_HALF_NOTE ) );
 
-		Melody thirdBlocksecondList = new Melody();
-		thirdBlocksecondList.add( new Note( A3, DOTTED_HALF_NOTE ) );
-		thirdBlocksecondList.setStartTime( secondBlocksecondList.getEndTime() );
+		Phrase secondPhrase = new Phrase();
+		secondPhrase.addChord( new int[] {C1, C2} ,QUARTER_NOTE );
+		secondPhrase.setStartTime( DOTTED_HALF_NOTE );
 
-		Melody thirdBlockthirdList = new Melody();
-		thirdBlockthirdList.add( new Note( C3, DOTTED_HALF_NOTE ) );
-		thirdBlockthirdList.setStartTime( secondBlockthirdList.getEndTime() );
+		Part part = new Part();
+		part.add( firstPhrase );
+		part.add( secondPhrase );
+		score.add( part );
+		Composition composition = new Composition( score );
 
-		List<Melody> thirdBlock = new ArrayList<>();
-		thirdBlock.add( thirdBlockfirstList );
-		thirdBlock.add( thirdBlocksecondList );
-		thirdBlock.add( thirdBlockthirdList );
-
-		List<List<Melody>> etalonList = new ArrayList<>();
-		etalonList.add( firstBlock );
-		etalonList.add( secondBlock );
-		etalonList.add( thirdBlock );
-
-		assertEquals( etalonList, testList );
+		assertThat( compositionSlicer.slice( composition, HALF_NOTE ), is( Arrays.asList(
+				Arrays.asList(
+						new InstrumentPart( Arrays.asList(
+								new NewMelody( new Note( C5, HALF_NOTE ) ),
+								new NewMelody( new Note( C5, QUARTER_NOTE ) ),
+								new Chord( Arrays.asList( C1, C2 ), QUARTER_NOTE )
+						)
+						)
+				)
+				)
+		) );
 	}
 
 	@Test
@@ -407,7 +159,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		}
 		List<Melody> sliceToTest = compositionSlicer.slice( phrase, WHOLE_NOTE );
 
-		assertEquals( sliceToTest, sliceEtalon );
+		assertThat( sliceToTest, is( sliceEtalon ) );
 	}
 
 	@Test
@@ -421,7 +173,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		phrase.add( new Note( REST, EIGHTH_NOTE ) );
 
 		List<Melody> sliceToTest = compositionSlicer.slice( phrase, WHOLE_NOTE );
-		assertEquals( sliceToTest.size(), 3 );
+		assertThat( sliceToTest, hasSize( 3 ) );
 	}
 
 	@Test
@@ -437,7 +189,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		phrase.add( new Note( 60, 0.08333333333333333 ) );
 
 		List<Melody> sliceToTest = compositionSlicer.slice( phrase, WHOLE_NOTE );
-		assertEquals( sliceToTest.size(), 2 );
+		assertThat( sliceToTest, hasSize( 2 ) );
 	}
 
 	@Test
@@ -447,10 +199,9 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 //		View.notate( composition );
 //		suspend();
 
-		List<List<Melody>> musicBlockList = compositionSlicer.slice( composition, WHOLE_NOTE );
+		List<List<InstrumentPart>> musicBlockList = compositionSlicer.slice( composition, WHOLE_NOTE );
 
-		assertEquals( musicBlockList.get( 0 ).get( 3 ).size(), 1 );
-		assertTrue( musicBlockList.get( 0 ).get( 3 ).getNote( 0 ).equals( new Rest( WHOLE_NOTE ) ) );
+		assertThat( musicBlockList.get( 0 ).get( 3 ).getNoteGroups(), is( Collections.singleton( new NewMelody( new Rest( WHOLE_NOTE ) ) ) ) );
 	}
 
 	@Test
@@ -483,7 +234,7 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 		slice3.setStartTime( slice2.getEndTime() );
 		etalonSlice.add( slice3 );
 
-		assertEquals( sliceToTest, etalonSlice );
+		assertThat( sliceToTest, is( etalonSlice ) );
 	}
 
     @Test
@@ -510,8 +261,8 @@ public class CompositionSlicerTest extends AbstractSpringTest {
 
         compositionSlicer.adjustToUnifiedEndTime( composition );
         for ( Part part : composition.getPartArray() ) {
-            assertEquals( phrase3.getEndTime(), part.getPhrase( 0 ).getEndTime(), 0 );
-            assertEquals( 0, part.getPhrase( 0 ).getStartTime(), 0 );
+            assertThat( phrase3.getEndTime(), is( part.getPhrase( 0 ).getEndTime() ) );
+			assertThat( 0, is( part.getPhrase( 0 ).getStartTime() ) );
         }
     }
 }

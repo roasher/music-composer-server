@@ -1,8 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.service;
 
-import javafx.util.Pair;
 import jm.JMC;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +23,6 @@ import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
-import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
 import java.io.File;
 import java.util.HashMap;

@@ -1,15 +1,11 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 /**
  * Class analyzes if two melodies can be considered equal

@@ -6,11 +6,10 @@ import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Rest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -25,20 +24,19 @@ import java.util.List;
 @Slf4j
 public class CompositionSlicer {
 
-	Logger logger = LoggerFactory.getLogger( getClass() );
-
 	/**
 	 * Slices composition into melodies, having certain timePeriod each.
 	 * @param composition
 	 * @param timePeriod
 	 * @return
 	 */
-	public List< List< Melody > > slice( Composition composition, double timePeriod ) {
+	public List< List<InstrumentPart> > slice( Composition composition, double timePeriod ) {
 		log.info( "Slicing {} by time period {}", composition.getTitle(), timePeriod );
 		List< List< Melody > > compositionList = new ArrayList<>(  );
 
         adjustToUnifiedEndTime( composition );
 		for ( Part part : composition.getPartArray() ) {
+			InstrumentPart instrumentPart = new InstrumentPart();
 			for ( Phrase phrase : part.getPhraseArray() ) {
 				List< Melody > noteList = slice( phrase, timePeriod );
 				compositionList.add( noteList );
@@ -60,7 +58,9 @@ public class CompositionSlicer {
 			compositionMelodies.add( melodyBlock );
 		}
 
-		return compositionMelodies;
+//		return compositionMelodies;
+		// TODO change implementation
+		return null;
 	}
 
 	/**

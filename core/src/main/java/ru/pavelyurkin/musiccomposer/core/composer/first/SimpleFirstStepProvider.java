@@ -17,6 +17,6 @@ public class SimpleFirstStepProvider implements FirstStepProvider {
 	public Optional<CompositionStep> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
 		Optional<ComposeBlock> firstBlock = lexicon.getComposeBlockList().stream().filter( composeBlock -> !exclusions.contains( composeBlock ) && !composeBlock.isStartsWithRest() )
 				.findFirst();
-		return firstBlock.map( composeBlock -> new CompositionStep( composeBlock, composeBlock.getMusicBlock().transposeClone( 0 ) ) );
+		return firstBlock.map( composeBlock -> new CompositionStep( composeBlock, composeBlock.getMusicBlock().clone() ) );
 	}
 }

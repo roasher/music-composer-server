@@ -92,16 +92,20 @@ public class PersistConverter {
 	}
 
 	public ru.pavelyurkin.musiccomposer.core.model.ComposeBlock convertComposeBlock( ComposeBlock persistanceComposeBlock ) {
-		ru.pavelyurkin.musiccomposer.core.model.ComposeBlock musicBlock = new ru.pavelyurkin.musiccomposer.core.model.ComposeBlock( persistanceComposeBlock.startTime,
-				convertCompositionInfo( persistanceComposeBlock.compositionInfo ), convertMelodyList( persistanceComposeBlock.melodies ),
-				convertBlockMovement( persistanceComposeBlock.blockMovementFromPreviousToThis ) );
-		return musicBlock;
+		// todo
+//		ru.pavelyurkin.musiccomposer.core.model.ComposeBlock musicBlock = new ru.pavelyurkin.musiccomposer.core.model.ComposeBlock( persistanceComposeBlock.startTime,
+//				convertCompositionInfo( persistanceComposeBlock.compositionInfo ), convertMelodyList( persistanceComposeBlock.melodies ),
+//				convertBlockMovement( persistanceComposeBlock.blockMovementFromPreviousToThis ) );
+//		return musicBlock;
+		return null;
 	}
 
 	public ComposeBlock convertComposeBlock( ru.pavelyurkin.musiccomposer.core.model.ComposeBlock composeBlock ) {
-		ComposeBlock persistanceMusicBlock = new ComposeBlock( composeBlock.getStartTime(), convertCompositionInfo( composeBlock.getCompositionInfo() ),
-				convertToPersistMelodyList( composeBlock.getMelodyList() ), convertBlockMovement( composeBlock.getBlockMovementFromPreviousToThis() ) );
-		return persistanceMusicBlock;
+		// todo
+//		ComposeBlock persistanceMusicBlock = new ComposeBlock( composeBlock.getStartTime(), convertCompositionInfo( composeBlock.getCompositionInfo() ),
+//				convertToPersistMelodyList( composeBlock.getInstrumentParts() ), convertBlockMovement( composeBlock.getBlockMovementFromPreviousToThis() ) );
+//		return persistanceMusicBlock;
+		return null;
 	}
 
 	public BlockMovement convertBlockMovement( ru.pavelyurkin.musiccomposer.core.model.BlockMovement blockMovement ) {
@@ -132,12 +136,14 @@ public class PersistConverter {
 		return melodyList;
 	}
 
-	public List<Melody> convertToPersistMelodyList( List<ru.pavelyurkin.musiccomposer.core.model.melody.Melody> melodyList ) {
-		List<Melody> persistanceMelodyList = new ArrayList<>();
-		for ( ru.pavelyurkin.musiccomposer.core.model.melody.Melody melody : melodyList ) {
-			persistanceMelodyList.add( convertMelody( melody ) );
-		}
-		return persistanceMelodyList;
+	public List<InstrumentPart> convertToPersistMelodyList( List<ru.pavelyurkin.musiccomposer.core.model.InstrumentPart> melodyList ) {
+//		List<Melody> persistanceMelodyList = new ArrayList<>();
+//		for ( ru.pavelyurkin.musiccomposer.core.model.melody.Melody melody : melodyList ) {
+//			persistanceMelodyList.add( convertMelody( melody ) );
+//		}
+//		return persistanceMelodyList;
+		// TODO impl
+		return null;
 	}
 
 	public CompositionInfo convertCompositionInfo( ru.pavelyurkin.musiccomposer.core.persistance.jpa.CompositionInfo persistanceCompositionInfo ) {

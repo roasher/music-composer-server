@@ -4,6 +4,8 @@ import jm.music.data.Note;
 import jm.music.data.Rest;
 import junit.framework.Assert;
 import org.junit.Test;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isOneOf;
+import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getTransposePitch;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.trimToTime;
 
 /**
@@ -102,45 +105,46 @@ public class ModelUtilsTest {
 
 	@Test
 	public void testTrimToTimeSingleMelody() {
-		Melody melody = new Melody(
+		InstrumentPart melody = new InstrumentPart(
 				new Rest( WHOLE_NOTE ),
 				new Note( C4, HALF_NOTE),
 				new Note( CS4, EIGHTH_NOTE )
 		);
-		Melody trimmedMelody = trimToTime( melody, 2, 6.25 );
+		InstrumentPart trimmedMelody = trimToTime( melody, 2, 6.25 );
 
-		Melody etalonMelody = new Melody(
+		InstrumentPart etalonMelody = new InstrumentPart(
 				new Rest( 2 ),
 				new Note( C4, 2 ),
 				new Note( CS4, 0.25 )
 		);
 
-		assertEquals( etalonMelody, trimmedMelody );
+		assertThat( etalonMelody, is( trimmedMelody ) );
 
-		List<Melody> melodies = trimToTime( Arrays.asList( melody ), 2, 6.25 );
+		List<InstrumentPart> melodies = trimToTime( Arrays.asList( melody ), 2, 6.25 );
 		assertEquals( Arrays.asList( etalonMelody ), melodies );
 
-		Melody melody1 = new Melody( new Note( C4, 0.5 ), new Note( DF4, 0.1 ), new Note( D4, 0.3 ), new Note( EF4, 0.1 ), new Note( FF4, 0.5 ) );
-		List<Melody> trimmedMelodies = trimToTime( Arrays.asList( melody1 ), 0.0, 0.5 );
+		InstrumentPart melody1 = new InstrumentPart( new Note( C4, 0.5 ), new Note( DF4, 0.1 ), new Note( D4, 0.3 ), new Note( EF4, 0.1 ), new Note( FF4, 0.5 ) );
+		List<InstrumentPart> trimmedMelodies = trimToTime( Arrays.asList( melody1 ), 0.0, 0.5 );
 		assertEquals( new Melody( new Note( C4, 0.5 ) ), trimToTime( melody1, 0.0, 0.5 ) );
 		assertEquals( Arrays.asList( new Melody( new Note( C4, 0.5 ) ) ), trimmedMelodies );
 
 		assertEquals( new Melody( new Note( DF4, 0.1 ), new Note( D4, 0.3 ), new Note( EF4, 0.1 ) ), trimToTime( melody1, 0.5, 1 ) );
 		assertEquals( new Melody( new Note( FF4, 0.5 ) ), trimToTime( melody1, 1, 1.5 ) );
 
-		Melody melody2 = new Melody(
+		InstrumentPart melody2 = new InstrumentPart(
 				new Note( F5, HALF_NOTE ),
 				new Note( EF5, QUARTER_NOTE ),
 				new Note( D5, QUARTER_NOTE ),
 				new Note( G5, QUARTER_NOTE ),
 				new Note( A5, QUARTER_NOTE )
 		);
-		Melody trimmedMelody2 = trimToTime( melody2, 0.0, 1.0 );
+		InstrumentPart trimmedMelody2 = trimToTime( melody2, 0.0, 1.0 );
 
-		Melody etalonMelody2 = new Melody(
+		InstrumentPart etalonMelody2 = new InstrumentPart(
 				new Note( F5, 1.0 )
 		);
 
 		assertEquals( etalonMelody2, trimmedMelody2 );
 	}
+
 }

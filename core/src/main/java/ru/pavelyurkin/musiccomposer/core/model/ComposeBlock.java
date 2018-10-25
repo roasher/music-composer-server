@@ -1,20 +1,20 @@
 package ru.pavelyurkin.musiccomposer.core.model;
 
-import jm.music.data.Note;
-import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import lombok.Data;
+import lombok.experimental.Delegate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
+@Data
 /**
  * Class represents blocks which can be used in composing process
  * Created by pyurkin on 05.03.2015.
  */
 public class ComposeBlock {
 
+	@Delegate
 	private MusicBlock musicBlock;
 
     // Lists of possible next and previous Compose Blocks that has convenient voice leading in the original composition
@@ -26,15 +26,11 @@ public class ComposeBlock {
 		this.musicBlock = musicBlock;
 	}
 
-	public ComposeBlock( double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, BlockMovement blockMovementFromPreviousToThis ) {
-		this.musicBlock = new MusicBlock( startTime, compositionInfo, melodyList, blockMovementFromPreviousToThis );
-	}
-
 	public ComposeBlock( List<ComposeBlock> composeBlockList ) {
 		this.musicBlock = new MusicBlock( composeBlockList
 				.stream()
 				.map( ComposeBlock::getMusicBlock )
-				.collect( Collectors.toList())
+				.collect( Collectors.toList() )
 		);
 		this.possiblePreviousComposeBlocks = composeBlockList.get( 0 ).getPossiblePreviousComposeBlocks();
 		this.possibleNextComposeBlocks = composeBlockList.get( composeBlockList.size() - 1 ).getPossibleNextComposeBlocks();
@@ -42,11 +38,6 @@ public class ComposeBlock {
 
 	public boolean hasEqualsMusicBlock( ComposeBlock composeBlock ) {
 		return this.musicBlock.equals( composeBlock.getMusicBlock() );
-	}
-
-	public boolean isStartsWithRest() {
-		OptionalInt firstNonRestPitch = this.musicBlock.getMelodyList().stream().mapToInt( melody -> melody.getNote( 0 ).getPitch() ).filter( value -> value != Note.REST ).findFirst();
-		return !firstNonRestPitch.isPresent();
 	}
 
 	@Override
@@ -101,57 +92,5 @@ public class ComposeBlock {
 			}
 		}
 		return true;
-	}
-
-	public void setPossibleNextComposeBlocks( List<ComposeBlock> possibleNextComposeBlocks ) {
-		this.possibleNextComposeBlocks = possibleNextComposeBlocks;
-	}
-
-	public void setPossiblePreviousComposeBlocks( List<ComposeBlock> possiblePreviousComposeBlocks ) {
-		this.possiblePreviousComposeBlocks = possiblePreviousComposeBlocks;
-	}
-
-	public double getRhythmValue() {
-		return this.musicBlock.getRhythmValue();
-	}
-
-	public double getStartTime() {
-		return this.musicBlock.getStartTime();
-	}
-
-	public CompositionInfo getCompositionInfo() {
-		return this.musicBlock.getCompositionInfo();
-	}
-
-	public List<Melody> getMelodyList() {
-		return this.musicBlock.getMelodyList();
-	}
-
-	public List<Integer> getStartIntervalPattern() {
-		return this.musicBlock.getStartIntervalPattern();
-	}
-
-	public List<Integer> getEndIntervalPattern() {
-		return this.musicBlock.getEndIntervalPattern();
-	}
-
-	public BlockMovement getBlockMovementFromPreviousToThis() {
-		return this.musicBlock.getBlockMovementFromPreviousToThis();
-	}
-
-	public List<ComposeBlock> getPossibleNextComposeBlocks() {
-		return possibleNextComposeBlocks;
-	}
-
-	public List<ComposeBlock> getPossiblePreviousComposeBlocks() {
-		return possiblePreviousComposeBlocks;
-	}
-
-	public MusicBlock getMusicBlock() {
-		return musicBlock;
-	}
-
-	public void setMusicBlock( MusicBlock musicBlock ) {
-		this.musicBlock = musicBlock;
 	}
 }

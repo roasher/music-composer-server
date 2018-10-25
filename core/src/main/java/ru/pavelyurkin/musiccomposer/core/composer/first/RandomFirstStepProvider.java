@@ -27,7 +27,7 @@ public class RandomFirstStepProvider implements FirstStepProvider {
 			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );
 //			int randomNumber = 0;
 			ComposeBlock composeBlock = allPossibleFirstBlocks.get( randomNumber );
-			return Optional.of( new CompositionStep( composeBlock, composeBlock.getMusicBlock().transposeClone( 0 ) ) );
+			return Optional.of( new CompositionStep( composeBlock, composeBlock.getMusicBlock().clone() ) );
 		} else {
 			return Optional.empty();
 		}

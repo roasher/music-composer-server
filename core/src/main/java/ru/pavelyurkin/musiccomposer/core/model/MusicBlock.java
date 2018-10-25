@@ -1,82 +1,85 @@
 package ru.pavelyurkin.musiccomposer.core.model;
 
-import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getTransposePitch;
-import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
 
+@Data
+@NoArgsConstructor
 /**
  * Class represents music MusicBlock Music Block is the cut from the one's partition with some characteristics - the blocks with which new generated composition
  * will be made from. Created by Pavel Yurkin on 18.07.14.
  */
 public class MusicBlock implements Serializable {
+
 	// Origin Self Information
-	private List<Melody> melodyList;
+	private List<InstrumentPart> instrumentParts;
 	private CompositionInfo compositionInfo;
-	private BlockMovement blockMovementFromPreviousToThis;
+	private Optional<List<Integer>> previousBlockEndPitches;
+	private double startTime;
+
 	// Derivative Self Information
+	// TODO delete?
 	private List<Integer> startIntervalPattern;
 	private List<Integer> endIntervalPattern;
 	private double rhythmValue;
-	private double startTime;
 
-	public MusicBlock( double startTime, CompositionInfo compositionInfo, List<Melody> melodyList, BlockMovement blockMovementFromPreviousToThis ) {
-		this( melodyList, compositionInfo, blockMovementFromPreviousToThis );
-		this.startTime = startTime;
+	public MusicBlock( double startTime, List<InstrumentPart> instrumentParts, CompositionInfo compositionInfo, List<Integer> previousBlockEndPitches ) {
+		this( startTime, instrumentParts, compositionInfo );
+		this.previousBlockEndPitches = Optional.of( previousBlockEndPitches );
 	}
 
-	public MusicBlock( List<Melody> melodyList, CompositionInfo compositionInfo, BlockMovement blockMovementFromPreviousToThis ) {
-		this( melodyList, compositionInfo );
-		this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
-	}
-
-	public MusicBlock( List<Melody> inputMelodyList, CompositionInfo inputCompositionInfo ) {
+	public MusicBlock( double startTime, List<InstrumentPart> instrumentParts, CompositionInfo inputCompositionInfo ) {
 		// check if inputMelody have same rhythm value
-		if ( inputMelodyList.stream().mapToDouble( Melody::getRythmValue ).distinct().count() != 1 )
+		if ( instrumentParts.stream().mapToDouble( InstrumentPart::getRythmValue ).distinct().count() != 1 )
 			throw new IllegalArgumentException( "Can't create Music Block: input melody list has melodies with different rhythm value" );
-		this.melodyList = inputMelodyList;
+		this.instrumentParts = instrumentParts;
 		this.compositionInfo = inputCompositionInfo;
 		// Computing derivative information
 		{
 			// Computing interval patterns
-			this.startIntervalPattern = ModelUtils.retrieveFirstIntervalPattern( inputMelodyList );
-			this.endIntervalPattern = ModelUtils.retrieveLastIntervalPattern( inputMelodyList );
+			this.startIntervalPattern = ModelUtils.retrieveFirstIntervalPattern( instrumentParts );
+			this.endIntervalPattern = ModelUtils.retrieveLastIntervalPattern( instrumentParts );
 
 			// rhytmValue && start time
-			this.rhythmValue = ModelUtils.retrieveRhythmValue( inputMelodyList );
-			this.startTime = ModelUtils.retrieveStartTime( inputMelodyList );
+			this.rhythmValue = ModelUtils.retrieveRhythmValue( instrumentParts );
+			this.startTime = startTime;
 		}
-	}
-
-	public MusicBlock( CompositionInfo compositionInfo, Melody... melodies ) {
-		this( Arrays.asList( melodies ), compositionInfo );
+		this.previousBlockEndPitches = Optional.empty();
 	}
 
 	public MusicBlock( List<MusicBlock> musicBlocks ) {
-		List<Melody> melodyList = new ArrayList<>();
-		for ( int melodyNubmer = 0; melodyNubmer < musicBlocks.get( 0 ).getMelodyList().size(); melodyNubmer++ ) {
-			melodyList.add( new Melody() );
+		long count = musicBlocks.stream()
+				.mapToInt( musicBlock -> musicBlock.instrumentParts.size() )
+				.distinct()
+				.count();
+		if (count != 1) throw new RuntimeException( "Music blocks has different part numbers" );
+
+		List<InstrumentPart> instrumentParts = new ArrayList<>();
+		for ( int instrumentPartNumber = 0; instrumentPartNumber < musicBlocks.get( 0 ).getInstrumentParts().size(); instrumentPartNumber++ ) {
+			instrumentParts.add( new InstrumentPart() );
 		}
 		double rhythmValue = 0;
-		for ( MusicBlock currentComposeBlock : musicBlocks ) {
-			for ( int melodyNumber = 0; melodyNumber < currentComposeBlock.getMelodyList().size(); melodyNumber++ ) {
-				melodyList.get( melodyNumber ).addNoteList( currentComposeBlock.getMelodyList().get( melodyNumber ).getNoteList(), true );
+		for ( MusicBlock musicBlock : musicBlocks ) {
+			for ( int instrumentPartNumber = 0; instrumentPartNumber < musicBlock.getInstrumentParts().size(); instrumentPartNumber++ ) {
+				instrumentParts.get( instrumentPartNumber ).add( musicBlock.getInstrumentParts().get( instrumentPartNumber ) );
 			}
-			rhythmValue += currentComposeBlock.getRhythmValue();
+			rhythmValue += musicBlock.getRhythmValue();
 		}
 
-		this.melodyList = melodyList;
+		this.instrumentParts = instrumentParts;
 		this.compositionInfo = null;
 
-		this.blockMovementFromPreviousToThis = musicBlocks.get( 0 ).getBlockMovementFromPreviousToThis();
+		this.previousBlockEndPitches = musicBlocks.get( 0 ).getPreviousBlockEndPitches();
 
 		this.startIntervalPattern = musicBlocks.get( 0 ).getStartIntervalPattern();
 		this.endIntervalPattern = musicBlocks.get( musicBlocks.size() - 1 ).getEndIntervalPattern();
@@ -86,124 +89,61 @@ public class MusicBlock implements Serializable {
 
 	}
 
-	public String getForm() {
-		StringBuilder stringBuilder = new StringBuilder();
-		for ( Melody melody : this.getMelodyList() ) {
-			stringBuilder.append( melody.getForm().getValue() );
-		}
-		return stringBuilder.toString();
-	}
-
-	@Override
-	public boolean equals( Object o ) {
-		if ( this == o )
-			return true;
-		if ( o == null || getClass() != o.getClass() )
-			return false;
-
-		MusicBlock that = ( MusicBlock ) o;
-
-		if ( !isEquals( that.rhythmValue, rhythmValue ) )
-			return false;
-		if ( !ModelUtils.isTimeCorrelated( that.startTime, startTime ) )
-			return false;
-		if ( compositionInfo != null ? !compositionInfo.equals( that.compositionInfo ) : that.compositionInfo != null )
-			return false;
-		if ( blockMovementFromPreviousToThis != null ?
-				!blockMovementFromPreviousToThis.equals( that.blockMovementFromPreviousToThis ) :
-				that.blockMovementFromPreviousToThis != null )
-			return false;
-		if ( !startIntervalPattern.equals( that.startIntervalPattern ) )
-			return false;
-		if ( this.getMelodyList().size() != that.getMelodyList().size() )
-			throw new IllegalArgumentException( "different melody numbers: " + this.getMelodyList().size() + " and " + that.getMelodyList().size() );
-		for ( int melodyNumber = 0; melodyNumber < this.getMelodyList().size(); melodyNumber++ ) {
-			if ( !this.getMelodyList().get( melodyNumber ).equals( that.getMelodyList().get( melodyNumber ) ) ) return false;
-		}
-		return endIntervalPattern.equals( that.endIntervalPattern );
-	}
-
-	@Override
-	public int hashCode() {
-		int result;
-		long temp;
-//		result = melodyList.hashCode();
-		result = 1;
-		result = 31 * result + ( compositionInfo != null ? compositionInfo.hashCode() : 0 );
-		result = 31 * result + ( blockMovementFromPreviousToThis != null ? blockMovementFromPreviousToThis.hashCode() : 0 );
-		result = 31 * result + startIntervalPattern.hashCode();
-		result = 31 * result + endIntervalPattern.hashCode();
-		temp = Double.doubleToLongBits( rhythmValue );
-		result = 31 * result + ( int ) ( temp ^ ( temp >>> 32 ) );
-		temp = Double.doubleToLongBits( startTime );
-		result = 31 * result + ( int ) ( temp ^ ( temp >>> 32 ) );
-		return result;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder(  );
-		for ( int melodyNumber = 0; melodyNumber < this.getMelodyList().size(); melodyNumber++ ) {
-			stringBuilder.append( " |melody " + melodyNumber + ": " );
-			Melody melody = this.getMelodyList().get( melodyNumber );
-			if ( this.getBlockMovementFromPreviousToThis() != null ) {
-				stringBuilder.append( "[" ).append( this.getBlockMovementFromPreviousToThis().getVoiceMovements().get( melodyNumber ).toString() ).append( "]" );
-			}
-			stringBuilder.append( melody.toString() );
+		for ( int melodyNumber = 0; melodyNumber < this.getInstrumentParts().size(); melodyNumber++ ) {
+			stringBuilder.append( " |part " + melodyNumber + ": " );
+			InstrumentPart instrumentPart = this.getInstrumentParts().get( melodyNumber );
+			this.previousBlockEndPitches.ifPresent( integers -> stringBuilder.append( "[" ).append( integers ).append( "]" ) );
+			stringBuilder.append( instrumentPart.toString() );
 			stringBuilder.append(" from ");
 			stringBuilder.append( this.compositionInfo.getTitle() );
 		}
 		return stringBuilder.toString();
 	}
 
-	// TODO implement composition info and block movement cloning
-	public MusicBlock transposeClone( int transposePitch ) {
-		List<Melody> cloneMelodies = new ArrayList<>();
-		this.getMelodyList().forEach( melody -> cloneMelodies.add( melody.transposeClone( transposePitch ) ) );
-		MusicBlock clone = new MusicBlock( cloneMelodies, getCompositionInfo() );
-		clone.setStartTime( getStartTime() );
-		clone.setBlockMovementFromPreviousToThis( getBlockMovementFromPreviousToThis() );
+	//TODO get rid of music block here - should return List<InstrumentPart> only
+	public MusicBlock transposeClone( MusicBlock previousBlock ) {
+		int transposePitch = getTransposePitch( previousBlock, this );
+		List<InstrumentPart> transposedInstrumentParts = this.instrumentParts.stream()
+				.map( instrumentPart -> instrumentPart.transposeClone( transposePitch ) )
+				.collect( Collectors.toList() );
+		MusicBlock transposedBlock = new MusicBlock();
+		transposedBlock.setInstrumentParts( transposedInstrumentParts );
+		return transposedBlock;
+	}
+
+	public MusicBlock clone() {
+		MusicBlock clone = new MusicBlock(
+				this.startTime,
+				this.instrumentParts.stream()
+					.map( InstrumentPart::clone )
+					.collect( Collectors.toList()),
+				this.compositionInfo
+		);
+		clone.setPreviousBlockEndPitches( this.previousBlockEndPitches );
+
 		return clone;
 	}
 
-	public MusicBlock transposeClone( MusicBlock previousBlock ) {
-		int transposePitch = getTransposePitch( Optional.of( previousBlock ), this );
-		return this.transposeClone( transposePitch );
+	public boolean isStartsWithRest() {
+		return this.instrumentParts.stream()
+				.filter( instrumentPart -> !instrumentPart.startsWithRest() )
+				.findAny()
+				.isPresent();
 	}
 
-	public void setBlockMovementFromPreviousToThis( BlockMovement blockMovementFromPreviousToThis ) {
-		this.blockMovementFromPreviousToThis = blockMovementFromPreviousToThis;
+
+
+	public List<Integer> getEndPitches() {
+		return this.instrumentParts.stream()
+				.flatMap( instrumentPart -> instrumentPart.getLastVerticalPitches().stream() )
+				.collect( Collectors.toList() );
 	}
 
-	public List<Melody> getMelodyList() {
-		return melodyList;
-	}
-
-	public double getStartTime() {
-		return startTime;
-	}
-
-	public CompositionInfo getCompositionInfo() {
-		return compositionInfo;
-	}
-
-	public List<Integer> getStartIntervalPattern() {
-		return startIntervalPattern;
-	}
-
-	public List<Integer> getEndIntervalPattern() {
-		return endIntervalPattern;
-	}
-
-	public double getRhythmValue() {
-		return rhythmValue;
-	}
-
-	public BlockMovement getBlockMovementFromPreviousToThis() {
-		return blockMovementFromPreviousToThis;
-	}
-
-	public void setStartTime( double startTime ) {
-		this.startTime = startTime;
+	public boolean isRest() {
+		return this.instrumentParts.stream()
+				.allMatch( InstrumentPart::isRest );
 	}
 }

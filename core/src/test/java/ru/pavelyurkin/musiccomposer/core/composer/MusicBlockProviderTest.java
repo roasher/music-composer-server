@@ -4,17 +4,20 @@ import jm.music.data.Note;
 import jm.music.data.Rest;
 import org.junit.Test;
 import org.mockito.Mockito;
-import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
-import static jm.constants.Durations.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
-import static ru.pavelyurkin.musiccomposer.core.model.BlockMovement.MOVEMENT_FROM_REST;
 
 /**
  * Created by pyurkin on 16.02.15.
@@ -65,114 +68,73 @@ public class MusicBlockProviderTest {
 	}
 
 	@Test
-	public void getPreviousEndIntervalPatternWithoutRests() {
-		MusicBlock musicBlock = new MusicBlock( null,
-				new Melody(
-						new Note(14, QUARTER_NOTE),
-						new Rest(QUARTER_NOTE),
-						new Note(135, QUARTER_NOTE)
-				),
-				new Melody(
-						new Note(7, DOTTED_HALF_NOTE)
-				),
-				new Melody(
-						new Note(1, HALF_NOTE),
-						new Rest(QUARTER_NOTE)
-				));
-		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -1, 1, -1 ) );
-		assertEquals( Arrays.asList( 4, 9 ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
-	}
-
-	@Test
-	public void getPreviousEndIntervalPatternSingleRest() {
-		MusicBlock musicBlock = new MusicBlock( null,
-				new Melody(
-						new Note(4, QUARTER_NOTE),
-						new Rest(QUARTER_NOTE),
-						new Note(135, QUARTER_NOTE)
-				),
-				new Melody(
-						new Rest(DOTTED_HALF_NOTE)
-				),
-				new Melody(
-						new Note(0, HALF_NOTE),
-						new Rest(QUARTER_NOTE)
-				));
-		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -1, 1, -1 ) );
-		assertEquals( Arrays.asList( 4 ), musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
-	}
-
-	@Test
-	public void getPreviousEndIntervalPatternTwoRests() {
-		MusicBlock musicBlock = new MusicBlock( null,
-				new Melody(
-						new Note(5, QUARTER_NOTE)
-				),
-				new Melody(
-						new Rest(QUARTER_NOTE)
-				),
-				new Melody(
-						new Rest(QUARTER_NOTE)
-				),
-				new Melody(
-						new Note(1, QUARTER_NOTE)
-				));
-		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -1, 1, 1, -1 ) );
-		assertEquals( Arrays.asList( 4 ),musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
-	}
-
-	@Test
-	public void getPreviousEndIntervalPatternAllRests() {
-		MusicBlock musicBlock = new MusicBlock( null,
-				new Melody(
-						new Rest(QUARTER_NOTE),
-						new Note(135, QUARTER_NOTE)
-				),
-				new Melody(
-						new Rest(HALF_NOTE)
-				),
-				new Melody(
-						new Rest(QUARTER_NOTE),
-						new Note(0, QUARTER_NOTE)
-				));
-		musicBlock.setBlockMovementFromPreviousToThis( new BlockMovement( -10, 100, -100 ) );
-		assertEquals( Collections.emptyList(), musicBlockProvider.getPreviousEndIntervalPattern( musicBlock ) );
-	}
-
-	@Test
-	public void isPossibleNext() throws Exception {
-		MusicBlock musicBlock = new MusicBlock(
-				null,
-				new Melody( new Note( 76, 1 ) ),
-				new Melody( new Note( 72, 1 ) ),
-				new Melody( new Note( 69, 1 ) ),
-				new Melody( new Note( 57, 1 ) )
-		);
-		BlockMovement blockMovements = new BlockMovement( MOVEMENT_FROM_REST, MOVEMENT_FROM_REST, MOVEMENT_FROM_REST, MOVEMENT_FROM_REST );
-		musicBlock.setBlockMovementFromPreviousToThis( blockMovements );
+	public void isPossibleNextIfPreviousWasRests() throws Exception {
+		MusicBlock musicBlock = new MusicBlock( 0, Arrays.asList(
+				new InstrumentPart( new Note( 76, 1 ) ),
+				new InstrumentPart( new Note( 72, 1 ) ),
+				new InstrumentPart( new Note( 69, 1 ) ),
+				new InstrumentPart( new Note( 57, 1 ) )
+		), null, Arrays.asList( Note.REST ) );
 		assertFalse( musicBlockProvider.isPossibleNext( musicBlock, musicBlock ) );
 	}
 
 	@Test
-	public void possibleNextIfDifferentMelodyNumbersButEqualsByRests() throws Exception {
-		MusicBlock possibleNext = new MusicBlock(
-				null,
-				new Melody( new Note( 76, 1 ) ),
-				new Melody( new Note( 72, 1 ) ),
-				new Melody( new Note( 70, 1 ) )
-		);
-		BlockMovement blockMovements = new BlockMovement( -1, MOVEMENT_FROM_REST, +1 );
-		possibleNext.setBlockMovementFromPreviousToThis( blockMovements );
+	public void isPossibleNextIfPreviousPitchesAreParallel() throws Exception {
+		MusicBlock currentMusicBlock = new MusicBlock( 0, Arrays.asList(
+				new InstrumentPart( new Note( 76, 1 ) ),
+				new InstrumentPart( new Note( 72, 1 ) ),
+				new InstrumentPart( new Rest( 1 ) ),
+				new InstrumentPart( new Note( 57, 1 ) )
+		), null );
+		MusicBlock possibleNext = new MusicBlock( 0, Arrays.asList(
+				new InstrumentPart( new Note( 76, 1 ) )
+		), null, Arrays.asList( 76 + 10, 72 + 10, Note.REST, 57 + 10 ) );
+		assertTrue( musicBlockProvider.isPossibleNext( currentMusicBlock, possibleNext ) );
+	}
 
-		MusicBlock musicBlock = new MusicBlock(
-				null,
-				new Melody( new Note( 77, 1 ) ),
-				new Melody( new Note( 69, 1 ) ),
-				new Melody( new Rest( QUARTER_NOTE ) ),
-				new Melody( new Rest( QUARTER_NOTE ) ),
-				new Melody( new Rest( QUARTER_NOTE ) )
-		);
+	@Test
+	public void isPossibleNextIfPreviousPitchesAreParallelInsteadOfChords() throws Exception {
+		MusicBlock currentMusicBlock = new MusicBlock( 0, Arrays.asList(
+				new InstrumentPart( new Note( 10, 1 ) ),
+				new InstrumentPart( Arrays.asList(
+						new Chord( Arrays.asList( 1, 2, 3 ), 0.5 ),
+						new NewMelody( new Note( 11, 0,5 ) ) )
+				),
+				new InstrumentPart( new Rest( 1 ) ),
+				new InstrumentPart( Arrays.asList(
+						new NewMelody( new Note( 72, 0,5 ) ),
+						new Chord( Arrays.asList( 12, 13, 14 ), 0.5 ) )
+				)
+		), null );
+		MusicBlock possibleNext = new MusicBlock( 0, Arrays.asList(
+				new InstrumentPart( new Note( 15, 1 ) )
+		), null, Arrays.asList( 10 - 1, 11 - 1, 12 - 1, 13 - 1, 14 - 1, 15- 1 ) );
+		assertTrue( musicBlockProvider.isPossibleNext( currentMusicBlock, possibleNext ) );
+	}
 
-		assertFalse( musicBlockProvider.isPossibleNext( possibleNext, musicBlock ) );
+	@Test
+	public void canNotBeNextIfNotParallel() throws Exception {
+		MusicBlock currentMusicBlock = new MusicBlock( 0, Arrays.asList(
+				new InstrumentPart( new Note( 76, 1 ) ),
+				new InstrumentPart( new Rest( 1 ) ),
+				new InstrumentPart( new Note( 57, 1 ) )
+		), null );
+		MusicBlock possibleNext = new MusicBlock( 0, Arrays.asList(
+				new InstrumentPart( new Note( 76, 1 ) )
+		), null, Arrays.asList( 76 + 10, Note.REST, 57 + 9 ) );
+		assertFalse( musicBlockProvider.isPossibleNext( currentMusicBlock, possibleNext ) );
+	}
+
+	@Test
+	public void canNotBeNexIfDifferentNumberOfPitches() throws Exception {
+		MusicBlock currentMusicBlock = new MusicBlock( 0, Arrays.asList(
+				new InstrumentPart( new Note( 76, 1 ) ),
+				new InstrumentPart( new Note( 72, 1 ) ),
+				new InstrumentPart( new Note( 57, 1 ) )
+		), null );
+		MusicBlock possibleNext = new MusicBlock( 0, Arrays.asList(
+				new InstrumentPart( new Note( 76, 1 ) )
+		), null, Arrays.asList( 76 + 10, 72 + 10, Note.REST, 57 + 10 ) );
+		assertFalse( musicBlockProvider.isPossibleNext( currentMusicBlock, possibleNext ) );
 	}
 }

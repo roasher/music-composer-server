@@ -1,24 +1,16 @@
 package ru.pavelyurkin.musiccomposer.core;
 
 import jm.JMC;
-import jm.util.View;
 import jm.util.Write;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
-import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
 import ru.pavelyurkin.musiccomposer.core.config.Config;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
-import ru.pavelyurkin.musiccomposer.core.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;

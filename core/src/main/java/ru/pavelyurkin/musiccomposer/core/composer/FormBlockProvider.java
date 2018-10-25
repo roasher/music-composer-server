@@ -1,9 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
-import javafx.util.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
@@ -27,12 +26,11 @@ import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getRelativeForm
  * Created by pyurkin on 16.01.15.
  */
 @Component
+@Slf4j
+@RequiredArgsConstructor
 public class FormBlockProvider {
 
-	private Logger logger = LoggerFactory.getLogger( getClass() );
-
-	@Autowired
-	private FormEquality formEquality;
+	private final FormEquality formEquality;
 
 	/**
 	 * Generates new form block considering previously generated blocks and it's form.
@@ -46,7 +44,7 @@ public class FormBlockProvider {
 	 */
 	public Optional<FormCompositionStep> getFormElement( double length, Lexicon lexicon, ComposeStepProvider composeStepProvider, Form form,
 			List<FormCompositionStep> previousSteps, List<ComposeBlock> firstMusicBlockExclusions ) {
-		logger.info( "Composing form element : {}, length : {}", form.getValue(), length );
+		log.info( "Composing form element : {}, length : {}", form.getValue(), length );
 		List<CompositionStep> compositionSteps = composeSteps( length, lexicon, composeStepProvider, previousSteps , Optional.of( form ),
 				firstMusicBlockExclusions );
 		return Optional.ofNullable( !compositionSteps.isEmpty() ? new FormCompositionStep( compositionSteps, form ) : null );
@@ -62,7 +60,7 @@ public class FormBlockProvider {
 	 * @return
 	 */
 	public List<CompositionStep> composeSteps( double length, Lexicon lexicon, ComposeStepProvider composeStepProvider, List<CompositionStep> previousFormCompositionSteps ) {
-		logger.info( "Composing element regardless form, length : {}", length );
+		log.info( "Composing element regardless form, length : {}", length );
 		List<FormCompositionStep> formCompositionSteps = !previousFormCompositionSteps.isEmpty() ?
 				Collections.singletonList( new FormCompositionStep( previousFormCompositionSteps, null ) ) :
 				Collections.emptyList();
@@ -90,7 +88,7 @@ public class FormBlockProvider {
 		double currentLength = 0;
 
 		for ( int step = 0; step < length / lexicon.getMinRhythmValue(); step++ ) {
-			logger.debug( "Current state {}", step );
+			log.debug( "Current state {}", step );
 			CompositionStep lastCompositionStep = !compositionSteps.isEmpty() ? getLast( compositionSteps ) : prefirstCompositionStep;
 
 			Optional<CompositionStep> nextCompositionStep = step != 0 || !previousFormCompositionSteps.isEmpty() ?
@@ -99,7 +97,7 @@ public class FormBlockProvider {
 
 			if ( nextCompositionStep.isPresent() && currentLength + nextCompositionStep.get().getTransposedBlock().getRhythmValue() <= length ) {
 				compositionSteps.add( nextCompositionStep.get() );
-				logger.debug( "Composed {}", nextCompositionStep.get().getTransposedBlock().toString() );
+				log.debug( "Composed {}", nextCompositionStep.get().getTransposedBlock().toString() );
 				currentLength += nextCompositionStep.get().getTransposedBlock().getRhythmValue();
 				if ( currentLength == length ) {
 					if ( form.isPresent() ) {
@@ -114,7 +112,7 @@ public class FormBlockProvider {
 						);
 						if ( !formCheckPassed.getKey() ) {
 							int stepToRevert = getStepToRevert( step, formCheckPassed.getValue() );
-							logger.debug( "ComposeBlock check failed in terms of form. Reverting to step {}", stepToRevert );
+							log.debug( "ComposeBlock check failed in terms of form. Reverting to step {}", stepToRevert );
 							// ( stepToRevert ) -> ... -> ( step - 1 ) -> ( step )
 							compositionSteps.get( stepToRevert ).addNextExclusion( compositionSteps.get( stepToRevert + 1 ).getOriginComposeBlock() );
 							ListIterator<CompositionStep> iterator = compositionSteps.listIterator( compositionSteps.size() );
@@ -180,22 +178,22 @@ public class FormBlockProvider {
 		double maxDiffMeasure = 0;
 		// checking that new block is different to differentFormSteps
 		for ( MusicBlock differentStep : differentFormSteps ) {
-			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( block.getMelodyList(), differentStep.getMelodyList() );
+			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( block.getInstrumentParts(), differentStep.getInstrumentParts() );
 			if ( comparison.getKey() != RelativelyComparable.ResultOfComparison.DIFFERENT ) {
-				return new Pair<>( false, comparison.getValue() );
+				return Pair.of( false, comparison.getValue() );
 			}
 			if ( maxDiffMeasure < comparison.getValue() )
 				maxDiffMeasure = comparison.getValue();
 		}
 		// checking that new block is similar to similarFormSteps
 		for ( MusicBlock similarStep : similarFormSteps ) {
-			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( block.getMelodyList(), similarStep.getMelodyList() );
+			Pair<RelativelyComparable.ResultOfComparison, Double> comparison = formEquality.isEqual( block.getInstrumentParts(), similarStep.getInstrumentParts() );
 			if ( comparison.getKey() != RelativelyComparable.ResultOfComparison.EQUAL ) {
-				return new Pair<>( false, comparison.getValue() );
+				return Pair.of( false, comparison.getValue() );
 			}
 			if ( maxDiffMeasure < comparison.getValue() )
 				maxDiffMeasure = comparison.getValue();
 		}
-		return new Pair<>( true, maxDiffMeasure );
+		return Pair.of( true, maxDiffMeasure );
 	}
 }

@@ -1,13 +1,13 @@
 package ru.pavelyurkin.musiccomposer.core.model;
 
+import jm.music.data.Note;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
-
-import jm.music.data.Note;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 /**
  * Class represents movement from one musical block to another

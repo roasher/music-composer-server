@@ -1,22 +1,21 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
-import javafx.util.Pair;
-import jm.music.data.Phrase;
-import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import jm.music.data.Note;
 import jm.music.data.Part;
+import jm.music.data.Phrase;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.stereotype.Component;
+import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
+import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.exception.ComposeException;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
+import ru.pavelyurkin.musiccomposer.core.utils.InstrumentPartToPartConverter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,11 +27,12 @@ import static com.google.common.collect.Iterables.getLast;
  * Created by pyurkin on 15.12.14.
  */
 @Component
+@Slf4j
+@RequiredArgsConstructor
 public class CompositionComposer {
-	private Logger logger = LoggerFactory.getLogger( getClass() );
 
-	@Autowired
-	private FormBlockProvider formBlockProvider;
+	private final FormBlockProvider formBlockProvider;
+	private final InstrumentPartToPartConverter instrumentPartToPartConverter;
 
 	/**
 	 * Composing piece considering given lexicon and step to start from.
@@ -44,15 +44,15 @@ public class CompositionComposer {
 	 */
 	public Pair<Composition, List<CompositionStep>> compose( ComposeStepProvider composeStepProvider, Lexicon lexicon, double compositionLength, List<CompositionStep> previousCompositionSteps ) {
 		List<CompositionStep> compositionSteps = formBlockProvider.composeSteps( compositionLength, lexicon, composeStepProvider, previousCompositionSteps );
-		List<List<Melody>> blocks = compositionSteps
+		List<List<InstrumentPart>> blocks = compositionSteps
 				.stream()
-				.map( compositionStep -> compositionStep.getTransposedBlock().getMelodyList() )
+				.map( compositionStep -> compositionStep.getTransposedBlock().getInstrumentParts() )
 				.collect( Collectors.toList() );
 		Composition composition = gatherComposition( blocks );
 		List<CompositionStep> steps = new ArrayList<>();
 		steps.addAll( previousCompositionSteps );
 		steps.addAll( compositionSteps );
-		return new Pair<>( composition, steps );
+		return Pair.of( composition, steps );
 	}
 
 	/**
@@ -76,11 +76,11 @@ public class CompositionComposer {
 	 */
 	public Composition compose( ComposeStepProvider composeStepProvider, Lexicon lexicon, String form, double compositionLength ) {
 		List<FormCompositionStep> formCompositionSteps = composeSteps( composeStepProvider, lexicon, form, compositionLength );
-		List<List<Melody>> blocks = formCompositionSteps
+		List<List<InstrumentPart>> blocks = formCompositionSteps
 							.stream()
 							.flatMap( formCompositionStep -> formCompositionStep.getCompositionSteps()
 									.stream()
-									.map( compositionStep -> compositionStep.getTransposedBlock().getMelodyList() ) )
+									.map( compositionStep -> compositionStep.getTransposedBlock().getInstrumentParts() ) )
 							.collect( Collectors.toList() );
 		return gatherComposition( blocks );
 	}
@@ -133,23 +133,22 @@ public class CompositionComposer {
 	}
 
 	/**
-	 * Creates composition, build on input compose blocks without changing the input
+	 * Creates composition, build on input compose instrumentParts without changing the input
 	 *
-	 * @param blocks
+	 * @param instrumentParts
 	 * @return
 	 */
-	public <T extends Phrase> Composition gatherComposition( List<List<T>> blocks ) {
+	public Composition gatherComposition( List<List<InstrumentPart>> instrumentParts ) {
 		List<Part> parts = new ArrayList<>();
 		// creating parts and add first block
-		for ( int partNumber = 0; partNumber < blocks.get( 0 ).size(); partNumber++ ) {
-			Part part = new Part();
-			part.add( ModelUtils.clone( blocks.get( 0 ).get( partNumber ) ) );
-			parts.add( part );
+		for ( int partNumber = 0; partNumber < instrumentParts.get( 0 ).size(); partNumber++ ) {
+			parts.add( instrumentPartToPartConverter.convert( instrumentParts.get( 0 ).get( partNumber ) ) );
 		}
 		// gluing
-		for ( int blockNumber = 1; blockNumber < blocks.size(); blockNumber++ ) {
+		for ( int blockNumber = 1; blockNumber < instrumentParts.size(); blockNumber++ ) {
 			for ( int partNumber = 0; partNumber < parts.size(); partNumber++ ) {
-				Phrase phrase = ModelUtils.clone( blocks.get( blockNumber ).get( partNumber ) );
+				InstrumentPart instrumentPart = instrumentParts.get( blockNumber ).get( partNumber );
+				Phrase phrase = instrumentPartToPartConverter.convert( instrumentPart ).getPhrase( 0 );
 				Phrase previousPhrase = ( Phrase ) parts.get( partNumber ).getPhraseList().get( parts.get( partNumber ).getPhraseList().size() - 1 );
 
 				Note previousNote = ( Note ) previousPhrase.getNoteList().get( previousPhrase.size() - 1 );
@@ -178,13 +177,10 @@ public class CompositionComposer {
 	 * @return
 	 */
 	public Composition gatherComposition( Composition... compositions ) {
-		List<List<Melody>> collect = Arrays.stream( compositions )
+		List<List<InstrumentPart>> collect = Arrays.stream( compositions )
 				.map( composition -> ( ( List<Part> ) composition.getPartList() )
 						.stream()
-						.map( part ->  new Melody( ( List<Note> ) part.getPhraseList()
-								.stream()
-								.flatMap( phrase ->  ( ( Phrase ) phrase ).getNoteList().stream() )
-								.collect( Collectors.toList() ) ) )
+						.map( instrumentPartToPartConverter::convertTo )
 						.collect( Collectors.toList() ) )
 				.collect( Collectors.toList() );
 		return gatherComposition( collect );

@@ -1,7 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.utils;
 
-import jm.music.data.Note;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
 
 import java.util.*;
 
@@ -14,13 +14,13 @@ public class Recombinator {
 	/**
 	 * Recombines melody lists.
 	 * In the result, all melodies has only one note within
-	 * @param inputMelodyBlockList
+	 * @param instrumentPartsCollection
 	 * @return
 	 */
-	public static List< List< Melody > > recombine( List< List< Melody > > inputMelodyBlockList ) {
-		List< List< Melody > > recombineList = new ArrayList<>();
-		for ( List< Melody > melodyBlock : inputMelodyBlockList ) {
-			List< List< Melody > > melodyBlockList = recombineMelodyBlock( melodyBlock );
+	public static List< List< InstrumentPart > > recombine( List< List<InstrumentPart> > instrumentPartsCollection ) {
+		List< List< InstrumentPart > > recombineList = new ArrayList<>();
+		for ( List< InstrumentPart > melodyBlock : instrumentPartsCollection ) {
+			List< List< InstrumentPart > > melodyBlockList = recombineMelodyBlock( melodyBlock );
 			recombineList.addAll( melodyBlockList );
 		}
 		return recombineList;
@@ -34,50 +34,50 @@ public class Recombinator {
 	 * @param inputMelodyBlock
 	 * @return
 	 */
-	public static List<List< Melody >> recombineMelodyBlock( List<Melody> inputMelodyBlock ) {
+	public static List<List< InstrumentPart >> recombineMelodyBlock( List<InstrumentPart> inputMelodyBlock ) {
 
 		// The edge set
 		Set< Double > edgeSet = new HashSet<>(  );
-		for ( Melody melody : inputMelodyBlock ) {
-			edgeSet.addAll( getEdgeList( melody.getNoteList() ) );
+		for ( InstrumentPart instrumentPart : inputMelodyBlock ) {
+			edgeSet.addAll( getRhythmEdgeList( instrumentPart.getNoteGroups() ) );
 		}
 
 		Double[] edgeArray = edgeSet.toArray( new Double[0] );
 		Arrays.sort( edgeArray );
 
-		List< List< Melody > > melodyBlockList = new ArrayList<>(  );
-		double prevoiusEdge = 0;
+		List< List< InstrumentPart > > melodyBlockList = new ArrayList<>(  );
+		double previousEdge = 0;
 		for ( double edge : edgeArray ) {
-			List< Melody > melodyBlock = new ArrayList<>(  );
-			for ( Melody melody : inputMelodyBlock ) {
-				int noteNumber = getNoteNumber( melody.getNoteList(), edge );
-				Note notePlayingAtThisMoment = melody.getNote( noteNumber );
+			List< InstrumentPart > instrumentPartsBlock = new ArrayList<>(  );
+			for ( InstrumentPart instrumentPart : inputMelodyBlock ) {
+				int noteGroupNumber = getNoteNumber( instrumentPart.getNoteGroups(), edge );
+				NoteGroup noteGroupPlayingAtThisMoment = instrumentPart.getNoteGroups().get( noteGroupNumber );
+				NoteGroup newNoteGroup = noteGroupPlayingAtThisMoment.cloneWithRhythmValue( edge - previousEdge );
 
-				Melody newMelody = new Melody( new Note[]{ new Note( notePlayingAtThisMoment.getPitch(), edge - prevoiusEdge ) } );
-				newMelody.setForm( melody.getForm() );
-				newMelody.setStartTime( prevoiusEdge + melody.getStartTime() );
-				melodyBlock.add( newMelody );
+				ArrayList<NoteGroup> newNoteGroups = new ArrayList<>();
+				newNoteGroups.add( newNoteGroup );
+				instrumentPartsBlock.add( new InstrumentPart( newNoteGroups, instrumentPart.getInstrument() ) );
 			}
-			prevoiusEdge = edge;
-			melodyBlockList.add( melodyBlock );
+			previousEdge = edge;
+			melodyBlockList.add( instrumentPartsBlock );
 		}
 
 		return melodyBlockList;
 	}
 
 	/**
-	 * Returns the edge list of melody notes
+	 * Returns the edge list of melody noteGroups
 	 * Sets first edge to rhythm value of the first note, and incrementing this value by
-	 * rhythm value of all notes one by one
-	 * @param notes
+	 * rhythm value of all noteGroups one by one
+	 * @param noteGroups
 	 * @return
 	 */
-	public static List< Double > getEdgeList( List<Note> notes ) {
+	public static List< Double > getRhythmEdgeList( List<NoteGroup> noteGroups ) {
 		List< Double > edgeList = new ArrayList<>();
 		double lastEdge = 0;
-		for ( int noteNumber = 0; noteNumber < notes.size(); noteNumber ++ ) {
-			Note note = notes.get( noteNumber );
-			edgeList.add( lastEdge + note.getRhythmValue() );
+		for ( int noteGroupNumber = 0; noteGroupNumber < noteGroups.size(); noteGroupNumber ++ ) {
+			NoteGroup noteGroup = noteGroups.get( noteGroupNumber );
+			edgeList.add( lastEdge + noteGroup.getRhythmValue() );
 			lastEdge = edgeList.get( edgeList.size() - 1 );
 		}
 		return edgeList;
@@ -86,20 +86,20 @@ public class Recombinator {
 	/**
 	 * Returns number of the note in the Note Array that sounds in particular time
 	 * If input time is finish time to one and start time to another, the first one will be returned
-	 * @param notes - note array
+	 * @param noteGroups - note array
 	 * @param time
 	 * @return
 	 * TODO refactor using binary search
 	 */
-	public static int getNoteNumber( List<Note> notes, double time ) {
+	public static int getNoteNumber( List<NoteGroup> noteGroups, double time ) {
 		double startTime = 0;
-		for ( int currentNoteNumber = 0; currentNoteNumber < notes.size(); currentNoteNumber ++ ) {
-			double rhythm = notes.get( currentNoteNumber ).getRhythmValue();
+		for ( int currentNoteNumber = 0; currentNoteNumber < noteGroups.size(); currentNoteNumber ++ ) {
+			double rhythm = noteGroups.get( currentNoteNumber ).getRhythmValue();
 			if ( startTime < time && time <= startTime + rhythm ) {
 				return currentNoteNumber;
 			}
 			startTime += rhythm;
 		}
-		return notes.size() + 1;
+		return noteGroups.size() + 1;
 	}
 }

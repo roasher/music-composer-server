@@ -8,8 +8,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -81,11 +81,11 @@ public class CompositionDecomposerMockTest {
 	@Test
 	public void getComposeBlocksTest() {
 
-		MusicBlock musicBlock0 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 60, 0 ) )} ), null );
-		MusicBlock musicBlock1 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 61, 1 ) )} ), null );
-		MusicBlock musicBlock2 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 62, 2 ) )} ), null );
-		MusicBlock musicBlock3 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 63, 3 ) )} ), null );
-		MusicBlock musicBlock4 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 64, 4 ) )} ), null );
+		MusicBlock musicBlock0 = new MusicBlock( 0, Arrays.asList( new InstrumentPart( new Note( 60, 0 ) ) ), null );
+		MusicBlock musicBlock1 = new MusicBlock( 0, Arrays.asList( new InstrumentPart( new Note( 61, 0 ) ) ), null );
+		MusicBlock musicBlock2 = new MusicBlock( 0, Arrays.asList( new InstrumentPart( new Note( 62, 0 ) ) ), null );
+		MusicBlock musicBlock3 = new MusicBlock( 0, Arrays.asList( new InstrumentPart( new Note( 63, 0 ) ) ), null );
+		MusicBlock musicBlock4 = new MusicBlock( 0, Arrays.asList( new InstrumentPart( new Note( 64, 0 ) ) ), null );
 
 		List<MusicBlock> inputMusicBlock = new ArrayList<MusicBlock>(  );
 		inputMusicBlock.add( musicBlock0 );

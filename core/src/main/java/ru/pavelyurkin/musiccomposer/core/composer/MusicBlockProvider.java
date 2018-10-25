@@ -1,16 +1,15 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
+import org.springframework.stereotype.Component;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
+import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.stereotype.Component;
-
-import jm.music.data.Note;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
-import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Class handles routine to decide possible nexts from each of input blocks
@@ -19,7 +18,7 @@ import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
 public class MusicBlockProvider {
 
 	/**
-	 * Retruns Map<Integer, List<Integer>> where Integer - music block number from input collection, corresponding list - collection of possible next music
+	 * Returns Map<Integer, List<Integer>> where Integer - music block number from input collection, corresponding list - collection of possible next music
 	 * block numbers
 	 */
 	public Map<Integer, List<Integer>> getAllPossibleNextVariants( List<MusicBlock> musicBlocks ) {
@@ -39,23 +38,29 @@ public class MusicBlockProvider {
 		return map;
 	}
 
-
 	public boolean isPossibleNext( MusicBlock musicBlock, MusicBlock possibleNext ) {
-		if ( possibleNext.getBlockMovementFromPreviousToThis() == null ) return false;
-		boolean intervalPatternEquality = musicBlock.getEndIntervalPattern().equals( getPreviousEndIntervalPattern( possibleNext ) );
+		if ( !possibleNext.getPreviousBlockEndPitches().isPresent() ) return false;
+		boolean patternEquality = isEndPitchesTransposable(musicBlock.getEndPitches(), possibleNext.getPreviousBlockEndPitches().get());
 		boolean correlatingTime = ModelUtils.isTimeCorrelated( musicBlock.getStartTime() + musicBlock.getRhythmValue(), possibleNext.getStartTime() );
-		return intervalPatternEquality && correlatingTime;
+		return patternEquality && correlatingTime;
 	}
 
-	public List<Integer> getPreviousEndIntervalPattern( MusicBlock musicBlock ) {
-		List<Integer> voiceMovements = musicBlock.getBlockMovementFromPreviousToThis().getVoiceMovements();
-		List<Integer> preFirstVertical = new ArrayList<>();
-		for ( int melodyNumber = 0; melodyNumber < musicBlock.getMelodyList().size(); melodyNumber++ ) {
-			int pitch = musicBlock.getMelodyList().get( melodyNumber ).getNote( 0 ).getPitch();
-			int voiceMovement = voiceMovements.get( melodyNumber );
-			preFirstVertical.add( pitch != Note.REST && voiceMovement != BlockMovement.MOVEMENT_FROM_REST ? pitch - voiceMovement : Note.REST );
+	private boolean isEndPitchesTransposable( List<Integer> firstPitches, List<Integer> secondPitches ) {
+
+		if ( firstPitches.size() != secondPitches.size() ) {
+			return false;
 		}
-		return ModelUtils.retrieveIntervalPattern( preFirstVertical );
-	}
 
+		List<Integer> subtractions = IntStream.range( 0, firstPitches.size() )
+				.map( operand -> secondPitches.get( operand ) - firstPitches.get( operand ) )
+				.distinct()
+				.boxed()
+				.collect( Collectors.toList() );
+
+		// subtractions may consist of transpose pitches and may be zeros if there was rests
+		if ( subtractions.size() > 2 ) {
+			return false;
+		}
+		return true;
+	}
 }
