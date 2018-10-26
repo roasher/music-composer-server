@@ -25,4 +25,6 @@ public abstract class NoteGroup {
 	public abstract Pair<NoteGroup, NoteGroup> divideByRhythmValue( double rhythmValue );
 
 	public abstract NoteGroup cloneRange( double startTime, double endTime );
+
+	public abstract List<Double> getRhythmEdgeList();
 }

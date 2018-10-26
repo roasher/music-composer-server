@@ -12,7 +12,6 @@ import java.util.List;
 
 import static jm.JMC.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 /**
@@ -21,137 +20,66 @@ import static org.hamcrest.Matchers.is;
 public class RecombinatorTest {
 
 	@Test
-	public void testRebuildingMelodyBlockList() {
-		// input
-		List< InstrumentPart > inputMelodyBlock = Arrays.asList(
-				new InstrumentPart(
-						new Rest( QUARTER_NOTE ),
-						new Note( 60, DOTTED_QUARTER_NOTE ),
-						new Note( 62, SIXTEENTH_NOTE ),
-						new Note( 60, SIXTEENTH_NOTE ),
-						new Note( 64, QUARTER_NOTE )
-				),
-				new InstrumentPart(
-						new Note( 58, HALF_NOTE ),
-						new Note( 56, EIGHTH_NOTE ),
-						new Note( 58, EIGHTH_NOTE ),
-						new Note( 50, DOTTED_EIGHTH_NOTE ),
-						new Note( 51, SIXTEENTH_NOTE )
-				)
-		);
-
-		// testList
-		List< List< InstrumentPart > > testList = Recombinator.recombineMelodyBlock( inputMelodyBlock );
-
-		// etalon output
-		List< InstrumentPart > melodyList0 = Arrays.asList(
-				new InstrumentPart( new Rest( QUARTER_NOTE ) ),
-				new InstrumentPart( new Note( 58, QUARTER_NOTE ) )
-		);
-
-		List< InstrumentPart > melodyList1 = Arrays.asList(
-				new InstrumentPart( new Note( 60, QUARTER_NOTE ) ),
-				new InstrumentPart( new Note( 58, QUARTER_NOTE ) )
-		);
-
-		List< InstrumentPart > melodyList10 = Arrays.asList(
-				new InstrumentPart( new Note( 60, EIGHTH_NOTE ) ),
-				new InstrumentPart( new Note( 56, EIGHTH_NOTE ) )
-		);
-
-		List< InstrumentPart > melodyList2 = Arrays.asList(
-				new InstrumentPart( new Note( 62, SIXTEENTH_NOTE ) ),
-				new InstrumentPart( new Note( 58, SIXTEENTH_NOTE ) )
-		);
-
-		List< InstrumentPart > melodyList3 = Arrays.asList(
-				new InstrumentPart( new Note( 60, SIXTEENTH_NOTE ) ),
-				new InstrumentPart( new Note( 58, SIXTEENTH_NOTE ) )
-		);
-
-		List< InstrumentPart > melodyList4 = Arrays.asList(
-				new InstrumentPart( new Note( 64, DOTTED_EIGHTH_NOTE ) ),
-				new InstrumentPart( new Note( 50, DOTTED_EIGHTH_NOTE ) )
-		);
-
-		List< InstrumentPart > melodyList5 = Arrays.asList(
-				new InstrumentPart( new Note( 64, SIXTEENTH_NOTE ) ),
-				new InstrumentPart( new Note( 51, SIXTEENTH_NOTE ) )
-		);
-
-		List< List< InstrumentPart > > etalonList = Arrays.asList(
-			melodyList0,
-			melodyList1,
-			melodyList10,
-			melodyList2,
-			melodyList3,
-			melodyList4,
-			melodyList5
-		);
-
-		assertThat( etalonList, is( testList ) );
-	}
-
-	@Test
 	public void testRecombine() {
 		List< InstrumentPart > melodyList0 = Arrays.asList(
 				new InstrumentPart(
-						new Rest( QUARTER_NOTE ),
-						new Note( 60, DOTTED_QUARTER_NOTE ),
-						new Note( 62, SIXTEENTH_NOTE ),
-						new Note( 60, SIXTEENTH_NOTE )
+						new Rest( HALF_NOTE ),
+						new Note( 11, QUARTER_NOTE ),
+						new Note( 12, EIGHTH_NOTE ),
+						new Note( 13, EIGHTH_NOTE )
 				),
-				new InstrumentPart(
-						new Note( 58, HALF_NOTE ),
-						new Note( 56, EIGHTH_NOTE ),
-						new Note( 58, EIGHTH_NOTE )
+				new InstrumentPart( Arrays.asList(
+						new NewMelody( new Note( 21, EIGHTH_NOTE ) ),
+						new Chord( Arrays.asList( 221, 222 ), EIGHTH_NOTE ),
+						new NewMelody( new Note( 23, DOTTED_HALF_NOTE ) )
 				)
-		);
-
-		List< InstrumentPart > melodyList1 = Arrays.asList(
-				new InstrumentPart( new Note( 64, QUARTER_NOTE ) ),
-				new InstrumentPart(
-						new Note( 50, DOTTED_EIGHTH_NOTE ),
-						new Note( 51, SIXTEENTH_NOTE )
-				)
-		);
-
-		List< InstrumentPart > melodyList2 = Arrays.asList(
-				new InstrumentPart(
-						new Note( 67, SIXTEENTH_NOTE ),
-						new Note( 65, SIXTEENTH_NOTE ),
-						new Note( 67, SIXTEENTH_NOTE ),
-						new Note( 65, SIXTEENTH_NOTE )
 				),
+				new InstrumentPart( Arrays.asList( new Chord( Arrays.asList( 31, 32, 33 ), WHOLE_NOTE ) ) ),
 				new InstrumentPart(
-						new Note( 60, EIGHTH_NOTE ),
-						new Note( 62, EIGHTH_NOTE )
+						new Note( 41, HALF_NOTE ),
+						new Note( 42, HALF_NOTE )
 				)
 		);
 
-		List< InstrumentPart > melodyList3 = Arrays.asList(
-				new InstrumentPart(
-						new Note( 67, SIXTEENTH_NOTE ),
-						new Note( 68, DOUBLE_DOTTED_QUARTER_NOTE ),
-						new Rest( QUARTER_NOTE )
+		assertThat( Recombinator.recombine( melodyList0 ), is( Arrays.asList(
+				Arrays.asList(
+						new InstrumentPart( new Rest( EIGHTH_NOTE ) ),
+						new InstrumentPart( new Note( 21, EIGHTH_NOTE ) ),
+						new InstrumentPart( Arrays.asList( new Chord( Arrays.asList( 31, 32, 33 ), EIGHTH_NOTE ) ) ),
+						new InstrumentPart( new Note( 41, EIGHTH_NOTE ) )
 				),
-				new InstrumentPart(
-						new Note( 60, QUARTER_NOTE ),
-						new Note( 60, QUARTER_NOTE ),
-						new Rest( QUARTER_NOTE )
+				Arrays.asList(
+						new InstrumentPart( new Rest( EIGHTH_NOTE ) ),
+						new InstrumentPart( Arrays.asList( new Chord( Arrays.asList( 221, 222 ), EIGHTH_NOTE ) ) ),
+						new InstrumentPart( Arrays.asList( new Chord( Arrays.asList( 31, 32, 33 ), EIGHTH_NOTE ) ) ),
+						new InstrumentPart( new Note( 41, EIGHTH_NOTE ) )
+				),
+				Arrays.asList(
+						new InstrumentPart( new Rest( QUARTER_NOTE ) ),
+						new InstrumentPart( new Note( 23, QUARTER_NOTE ) ),
+						new InstrumentPart( Arrays.asList( new Chord( Arrays.asList( 31, 32, 33 ), QUARTER_NOTE ) ) ),
+						new InstrumentPart( new Note( 41, QUARTER_NOTE ) )
+				),
+				Arrays.asList(
+						new InstrumentPart( new Note( 11, QUARTER_NOTE ) ),
+						new InstrumentPart( new Note( 23, QUARTER_NOTE ) ),
+						new InstrumentPart( Arrays.asList( new Chord( Arrays.asList( 31, 32, 33 ), QUARTER_NOTE ) ) ),
+						new InstrumentPart( new Note( 42, QUARTER_NOTE ) )
+				),
+				Arrays.asList(
+						new InstrumentPart( new Note( 12, EIGHTH_NOTE ) ),
+						new InstrumentPart( new Note( 23, EIGHTH_NOTE ) ),
+						new InstrumentPart( Arrays.asList( new Chord( Arrays.asList( 31, 32, 33 ), EIGHTH_NOTE ) ) ),
+						new InstrumentPart( new Note( 42, EIGHTH_NOTE ) )
+				),
+				Arrays.asList(
+						new InstrumentPart( new Note( 13, EIGHTH_NOTE ) ),
+						new InstrumentPart( new Note( 23, EIGHTH_NOTE ) ),
+						new InstrumentPart( Arrays.asList( new Chord( Arrays.asList( 31, 32, 33 ), EIGHTH_NOTE ) ) ),
+						new InstrumentPart( new Note( 42, EIGHTH_NOTE ) )
 				)
-		);
+		) ) );
 
-		List< List< InstrumentPart > > melodyBlockList = Arrays.asList(
-				melodyList0,
-				melodyList1,
-				melodyList2,
-				melodyList3
-		);
-
-		List< List < InstrumentPart > > recombineList = Recombinator.recombine( melodyBlockList );
-
-		assertThat( recombineList, hasSize( 15 ) );
 	}
 
 	@Test
@@ -167,7 +95,7 @@ public class RecombinatorTest {
 				)
 		);
 
-		assertThat( Recombinator.recombineMelodyBlock( inputMelodyBlock ), is( Arrays.asList(
+		assertThat( Recombinator.recombine( inputMelodyBlock ), is( Arrays.asList(
 				Arrays.asList(
 						new InstrumentPart( new NewMelody( new Rest( QUARTER_NOTE ) ) ),
 						new InstrumentPart( new Note( 58, QUARTER_NOTE ) )

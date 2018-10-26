@@ -192,8 +192,10 @@ public class ModelUtils {
 		throw new RuntimeException( "Can't calculate tranpose pitch. Unexpected error." );
 	}
 
-	public static List<InstrumentPart> trimToTime( List<InstrumentPart> melodies, double startTime, double endTime ) {
-		return melodies.stream().map( melody -> trimToTime( melody, startTime, endTime ) ).collect( Collectors.toList() );
+	public static List<InstrumentPart> trimToTime( List<InstrumentPart> instrumentParts, double startTime, double endTime ) {
+		return instrumentParts.stream()
+				.map( melody -> trimToTime( melody, startTime, endTime ) )
+				.collect( Collectors.toList() );
 	}
 
 	/**

@@ -124,6 +124,18 @@ public class NewMelody extends NoteGroup {
 		return new NewMelody( cloneNotes );
 	}
 
+	@Override
+	public List<Double> getRhythmEdgeList() {
+		List<Double> out = new ArrayList<>(  );
+		double previousRhythmEdge = 0;
+		for ( int currentNoteNumber = 0; currentNoteNumber < notes.size(); currentNoteNumber ++ ) {
+			double rhythm = notes.get( currentNoteNumber ).getRhythmValue();
+			out.add( previousRhythmEdge + rhythm );
+			previousRhythmEdge += rhythm;
+		}
+		return out;
+	}
+
 	/**
 	 * Glues note to the end. If last note has same pitch - it's rhythm value increasing
 	 * @param note
