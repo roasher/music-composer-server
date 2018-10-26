@@ -2,8 +2,7 @@ package ru.pavelyurkin.musiccomposer.core.decomposer;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
@@ -23,14 +22,13 @@ import java.util.*;
  */
 @RequiredArgsConstructor
 @Data
+@Slf4j
 public class CompositionDecomposer {
 
 	private final CompositionSlicer compositionSlicer;
 	private final CompositionParser compositionParser;
 	private final MusicBlockProvider musicBlockProvider;
 	private final LexiconDAO lexiconDAO;
-
-	private Logger logger = LoggerFactory.getLogger( getClass() );
 
 	/**
 	 * Decomposes composition into music block list
@@ -112,24 +110,24 @@ public class CompositionDecomposer {
 	 * @return
 	 */
 	public Lexicon decompose( List<Composition> compositionList, double rhythmValue ) {
-		logger.info( "Getting persisted blocks" );
+		log.info( "Getting persisted blocks" );
 		Lexicon dataBaseLexicon = lexiconDAO.fetch();
-		logger.info( dataBaseLexicon.getComposeBlockList().size() != 0 ? "Fetched Lexicon is NOT empty" : "Fetched Lexicon IS empty" );
+		log.info( dataBaseLexicon.getComposeBlockList().size() != 0 ? "Fetched Lexicon is NOT empty" : "Fetched Lexicon IS empty" );
 
-		logger.info( "Deleting all blocks, build from other than input list compositions" );
+		log.info( "Deleting all blocks, build from other than input list compositions" );
 		trimToCompositions( dataBaseLexicon.getComposeBlockList(), compositionList );
 
-		logger.info( "Combining blocks from new compositions" );
+		log.info( "Combining blocks from new compositions" );
 		List<MusicBlock> musicBlockList = new ArrayList<>();
 		for ( Composition composition : compositionList ) {
 			if ( !dataBaseLexicon.getCompositionsInLexicon().contains( composition.getCompositionInfo() ) ) {
-				logger.info( "Fetching blocks from composition: {}", composition.getCompositionInfo() );
+				log.info( "Fetching blocks from composition: {}", composition.getCompositionInfo() );
 				musicBlockList.addAll( decomposeIntoMusicBlocks( composition, rhythmValue ) );
 			}
 		}
 		Lexicon lexiconFromComposition = getComposeBlocks( musicBlockList );
 
-		logger.info( "Combining blocks from compositions and blocks persistance" );
+		log.info( "Combining blocks from compositions and blocks persistance" );
 		Lexicon combinedLexicon = union( dataBaseLexicon, lexiconFromComposition );
 
 		return combinedLexicon;

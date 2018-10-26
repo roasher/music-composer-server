@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -77,6 +78,13 @@ public class Chord extends NoteGroup {
 		Chord right = this.clone();
 		right.setRhythmValue( this.rhythmValue - rhythmValue );
 		return Pair.of( left, right );
+	}
+
+	@Override
+	public NoteGroup cloneRange( double startTime, double endTime ) {
+		if ( startTime < 0 || endTime > this.getRhythmValue() || startTime >= endTime )
+			throw new IllegalArgumentException("Can't clone range");
+		return new Chord( this.getPitches(), BigDecimal.valueOf( endTime ).subtract( BigDecimal.valueOf( startTime ) ).doubleValue() );
 	}
 
 	@Override

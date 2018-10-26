@@ -156,7 +156,8 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Inst
 			NoteGroup noteGroup = notes.get( notesRhythmValueCounter );
 			double rhythmValue = newRhythmValues.get( newRhythmValuesCounter );
 			sumRhythmValue += rhythmValue;
-			out.add( noteGroup.cloneWithRhythmValue( rhythmValue ) );
+			// todo
+//			out.add( noteGroup.cloneRange( rhythmValue ) );
 			if ( isEquals(noteGroup.getRhythmValue(), sumRhythmValue) ) {
 				notesRhythmValueCounter++;
 				sumRhythmValue = 0;

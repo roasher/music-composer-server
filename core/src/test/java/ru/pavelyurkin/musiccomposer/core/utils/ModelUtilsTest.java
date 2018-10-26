@@ -5,8 +5,8 @@ import jm.music.data.Rest;
 import junit.framework.Assert;
 import org.junit.Test;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +19,6 @@ import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isOneOf;
-import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getTransposePitch;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.trimToTime;
 
 /**
@@ -110,26 +109,28 @@ public class ModelUtilsTest {
 				new Note( C4, HALF_NOTE),
 				new Note( CS4, EIGHTH_NOTE )
 		);
-		InstrumentPart trimmedMelody = trimToTime( melody, 2, 6.25 );
 
-		InstrumentPart etalonMelody = new InstrumentPart(
+		assertThat( trimToTime( melody, 2, 6.25 ), is( new InstrumentPart(
 				new Rest( 2 ),
 				new Note( C4, 2 ),
 				new Note( CS4, 0.25 )
+		) ) );
+
+		InstrumentPart melody1 = new InstrumentPart(
+				new Note( C4, 0.5 ),
+				new Note( DF4, 0.1 ),
+				new Note( D4, 0.3 ),
+				new Note( EF4, 0.1 ),
+				new Note( FF4, 0.5 )
 		);
+		assertEquals( new InstrumentPart( new Note( C4, 0.5 ) ), trimToTime( melody1, 0.0, 0.5 ) );
+		assertEquals( new InstrumentPart(
+				new Note( DF4, 0.1 ),
+				new Note( D4, 0.3 ),
+				new Note( EF4, 0.1 )
+		), trimToTime( melody1, 0.5, 1 ) );
 
-		assertThat( etalonMelody, is( trimmedMelody ) );
-
-		List<InstrumentPart> melodies = trimToTime( Arrays.asList( melody ), 2, 6.25 );
-		assertEquals( Arrays.asList( etalonMelody ), melodies );
-
-		InstrumentPart melody1 = new InstrumentPart( new Note( C4, 0.5 ), new Note( DF4, 0.1 ), new Note( D4, 0.3 ), new Note( EF4, 0.1 ), new Note( FF4, 0.5 ) );
-		List<InstrumentPart> trimmedMelodies = trimToTime( Arrays.asList( melody1 ), 0.0, 0.5 );
-		assertEquals( new Melody( new Note( C4, 0.5 ) ), trimToTime( melody1, 0.0, 0.5 ) );
-		assertEquals( Arrays.asList( new Melody( new Note( C4, 0.5 ) ) ), trimmedMelodies );
-
-		assertEquals( new Melody( new Note( DF4, 0.1 ), new Note( D4, 0.3 ), new Note( EF4, 0.1 ) ), trimToTime( melody1, 0.5, 1 ) );
-		assertEquals( new Melody( new Note( FF4, 0.5 ) ), trimToTime( melody1, 1, 1.5 ) );
+		assertEquals( new InstrumentPart( new Note( FF4, 0.5 ) ), trimToTime( melody1, 1, 1.5 ) );
 
 		InstrumentPart melody2 = new InstrumentPart(
 				new Note( F5, HALF_NOTE ),
@@ -138,13 +139,38 @@ public class ModelUtilsTest {
 				new Note( G5, QUARTER_NOTE ),
 				new Note( A5, QUARTER_NOTE )
 		);
-		InstrumentPart trimmedMelody2 = trimToTime( melody2, 0.0, 1.0 );
 
-		InstrumentPart etalonMelody2 = new InstrumentPart(
-				new Note( F5, 1.0 )
-		);
-
-		assertEquals( etalonMelody2, trimmedMelody2 );
+		assertEquals( new InstrumentPart( new Note( F5, 1.0 )  ), trimToTime( melody2, 0.0, 1.0 ) );
 	}
 
+	@Test
+	public void testTrimToTimeChords() throws Exception {
+		InstrumentPart melody = new InstrumentPart( Arrays.asList(
+				new NewMelody( new Note( 1, 1 ), new Note( 2, 1 ) ),
+				new Chord( Arrays.asList( 3, 4 ), 1 ),
+				new NewMelody( new Note( 5, 1 ) ),
+				new Chord( Arrays.asList( 6, 7 ), 1 )
+		), 1 );
+
+		assertThat( trimToTime( melody, 0, 2.5 ), is( new InstrumentPart(
+				Arrays.asList(
+						new NewMelody( new Note( 1, 1 ), new Note( 2, 1 ) ),
+						new Chord( Arrays.asList( 3, 4 ), 0.5 )
+				), 1 )
+		) );
+
+		assertThat( trimToTime( melody, 2.5, 3.5 ), is( new InstrumentPart(
+				Arrays.asList(
+						new Chord( Arrays.asList( 3, 4 ), 0.5 ),
+						new NewMelody( new Note( 5, 0.5 ) )
+				), 1 )
+		) );
+
+		assertThat( trimToTime( melody, 3.5, 4.5 ), is( new InstrumentPart(
+				Arrays.asList(
+						new NewMelody( new Note( 5, 0.5 ) ),
+						new Chord( Arrays.asList( 6, 7 ), 0.5 )
+				), 1 )
+		) );
+	}
 }

@@ -4,13 +4,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
-public abstract class NoteGroup implements Cloneable {
+public abstract class NoteGroup {
 
 	public abstract double getRhythmValue();
-
-	public NoteGroup cloneWithRhythmValue( double doubleValue ) {
-		throw new RuntimeException( "Unsupported operation" );
-	}
 
 	public abstract NoteGroup clone();
 
@@ -27,4 +23,6 @@ public abstract class NoteGroup implements Cloneable {
 	public abstract NoteGroup transposeClone( int transposePitch );
 
 	public abstract Pair<NoteGroup, NoteGroup> divideByRhythmValue( double rhythmValue );
+
+	public abstract NoteGroup cloneRange( double startTime, double endTime );
 }

@@ -207,6 +207,9 @@ public class ModelUtils {
 			throw new IllegalArgumentException( "Cant trim with this parameters: startTime = " + startTime + " ,endTime = " + endTime );
 		}
 		BigDecimal noteGroupStartTime = BigDecimal.ZERO;
+		BigDecimal startTimeBD = BigDecimal.valueOf( startTime );
+		BigDecimal endTimeBD = BigDecimal.valueOf( endTime );
+
 		List<NoteGroup> noteGroups = new ArrayList<>(  );
 		InstrumentPart out = new InstrumentPart(noteGroups, instrumentPart.getInstrument());
 		for ( int noteGroupNumber = 0; noteGroupNumber < instrumentPart.getNoteGroups().size(); noteGroupNumber++ ) {
@@ -217,20 +220,20 @@ public class ModelUtils {
 			// ------<>--------|------------<>------------------|----------<>-------
 			//	 			startTime		  				endTime
 			if ( noteGroupStartTime.doubleValue() <= startTime && noteGroupEndTime.doubleValue() > startTime ) {
-				BigDecimal min = BigDecimal.valueOf( Math.min( endTime, noteGroupEndTime.doubleValue() ) );
-				noteGroups.add( noteGroup.cloneWithRhythmValue( min.subtract( BigDecimal.valueOf( startTime ) ).doubleValue() ) );
+				noteGroups.add( noteGroup.cloneRange( startTimeBD.subtract( noteGroupStartTime ).doubleValue(),
+						( endTimeBD.min( noteGroupEndTime )).subtract( noteGroupStartTime ).doubleValue() ) );
 			} else
 				//             noteStTime     noteEndTime
 				// ------|--------<>------------<>------------------|-------------------
 				//	 startTime		  				              endTime
 				if ( noteGroupStartTime.doubleValue() >= startTime && noteGroupEndTime.doubleValue() <= endTime ) {
-				noteGroups.add( noteGroup );
+				noteGroups.add( noteGroup.clone() );
 			} else
 				//             noteStTime     								noteEndTime
 				// ------|--------<>---------------------------------|-----------<>-------
 				//	 startTime		  				              endTime
 				if ( noteGroupStartTime.doubleValue() < endTime && noteGroupEndTime.doubleValue() > endTime ) {
-				noteGroups.add( noteGroup.cloneWithRhythmValue( BigDecimal.valueOf( endTime ).subtract( noteGroupStartTime ).doubleValue() ) );
+				noteGroups.add( noteGroup.cloneRange( 0, endTimeBD.subtract( noteGroupStartTime ).doubleValue() ) );
 				return out;
 			}
 			noteGroupStartTime = noteGroupStartTime.add( rhythmValue );

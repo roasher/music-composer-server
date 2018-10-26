@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -97,6 +98,30 @@ public class NewMelody extends NoteGroup {
 			noteStartTime = noteEndTime;
 		}
 		return Pair.of( left, right );
+	}
+
+	@Override
+	public NoteGroup cloneRange( double edgeLeft, double edgeRight ) {
+		if ( edgeLeft < 0 || edgeRight > this.getRhythmValue() || edgeLeft >= edgeRight )
+			throw new IllegalArgumentException("Can't clone range");
+
+		List<Note> cloneNotes =  new ArrayList<>(  );
+		BigDecimal noteStartTime = BigDecimal.ZERO;
+		for ( Note note : notes ) {
+			BigDecimal rhythmValue = BigDecimal.valueOf( note.getRhythmValue() );
+			BigDecimal noteEndTime = noteStartTime.add( rhythmValue );
+			if ( noteStartTime.doubleValue() <= edgeLeft && noteEndTime.doubleValue() > edgeLeft ) {
+				BigDecimal min = BigDecimal.valueOf( Math.min( edgeRight, noteEndTime.doubleValue() ) );
+				cloneNotes.add( new Note( note.getPitch(), min.subtract( BigDecimal.valueOf( edgeLeft ) ).doubleValue() ) );
+			} else if ( noteStartTime.doubleValue() >= edgeLeft && noteEndTime.doubleValue() <= edgeRight ) {
+				cloneNotes.add( new Note( note.getPitch(), rhythmValue.doubleValue() ) );
+			} else if ( noteStartTime.doubleValue() < edgeRight && noteEndTime.doubleValue() > edgeRight ) {
+				cloneNotes.add( new Note( note.getPitch(), BigDecimal.valueOf( edgeRight ).subtract( noteStartTime ).doubleValue() ) );
+				break;
+			}
+			noteStartTime = noteStartTime.add( rhythmValue );
+		}
+		return new NewMelody( cloneNotes );
 	}
 
 	/**
