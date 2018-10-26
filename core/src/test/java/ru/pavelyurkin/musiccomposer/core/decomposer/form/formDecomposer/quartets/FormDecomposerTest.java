@@ -1,6 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer.form.formDecomposer.quartets;
 
 import jm.JMC;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pavelyurkin.musiccomposer.core.decomposer.form.FormDecomposer;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+@Ignore
 public class FormDecomposerTest extends AbstractSpringTest {
 
 	@Autowired

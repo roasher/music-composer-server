@@ -12,7 +12,6 @@ import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.MozartFilter;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
-import ru.pavelyurkin.musiccomposer.core.decomposer.form.FormDecomposer;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.FormEqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
@@ -40,12 +39,11 @@ public class ComposerConfiguration {
 
 	@Bean
 	public CompositionDecomposer compositionDecomposer(
-			FormDecomposer formDecomposer,
 			MusicBlockProvider musicBlockProvider,
 			CompositionSlicer compositionSlicer,
 			CompositionParser compositionParser,
 			@Qualifier( "lexiconDAO_stub" ) LexiconDAO lexiconDAO ) {
-		return new CompositionDecomposer( formDecomposer, compositionSlicer, compositionParser, musicBlockProvider, lexiconDAO );
+		return new CompositionDecomposer( compositionSlicer, compositionParser, musicBlockProvider, lexiconDAO );
 	}
 
 	@Bean(name = "nextStepProvider")

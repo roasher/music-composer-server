@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
-import ru.pavelyurkin.musiccomposer.core.decomposer.form.FormDecomposer;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
@@ -26,7 +25,6 @@ import java.util.*;
 @Data
 public class CompositionDecomposer {
 
-	private final FormDecomposer formDecomposer;
 	private final CompositionSlicer compositionSlicer;
 	private final CompositionParser compositionParser;
 	private final MusicBlockProvider musicBlockProvider;

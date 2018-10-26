@@ -93,22 +93,22 @@ public class MusicBlockProviderTest {
 	}
 
 	@Test
-	public void isPossibleNextIfPreviousPitchesAreParallelInsteadOfChords() throws Exception {
+	public void isPossibleNextIfPreviousPitchesAreParallelWithChords() throws Exception {
 		MusicBlock currentMusicBlock = new MusicBlock( 0, Arrays.asList(
 				new InstrumentPart( new Note( 10, 1 ) ),
 				new InstrumentPart( Arrays.asList(
 						new Chord( Arrays.asList( 1, 2, 3 ), 0.5 ),
-						new NewMelody( new Note( 11, 0,5 ) ) )
+						new NewMelody( new Note( 11, 0.5,5 ) ) )
 				),
 				new InstrumentPart( new Rest( 1 ) ),
 				new InstrumentPart( Arrays.asList(
-						new NewMelody( new Note( 72, 0,5 ) ),
+						new NewMelody( new Note( 72, 0.5,5 ) ),
 						new Chord( Arrays.asList( 12, 13, 14 ), 0.5 ) )
 				)
 		), null );
 		MusicBlock possibleNext = new MusicBlock( 0, Arrays.asList(
 				new InstrumentPart( new Note( 15, 1 ) )
-		), null, Arrays.asList( 10 - 1, 11 - 1, 12 - 1, 13 - 1, 14 - 1, 15- 1 ) );
+		), null, Arrays.asList( 10 - 1, 11 - 1, Note.REST, 12 - 1, 13 - 1, 14 - 1 ) );
 		assertTrue( musicBlockProvider.isPossibleNext( currentMusicBlock, possibleNext ) );
 	}
 

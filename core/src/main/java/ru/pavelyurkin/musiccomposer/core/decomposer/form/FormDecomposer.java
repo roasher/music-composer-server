@@ -1,7 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer.form;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.equality.form.MelodyFormEqualityAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
@@ -16,7 +15,7 @@ import java.util.List;
  * Provides form analyses
  * Created by night wish on 08.11.14.
  */
-@Component
+//@Component
 @RequiredArgsConstructor
 public class FormDecomposer {
 

@@ -3,7 +3,6 @@ package ru.pavelyurkin.musiccomposer.core.equality.form;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEqualityAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
@@ -12,7 +11,7 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
  * Class analyzes if two melodies can belong to one form element
  * Created by night wish on 26.07.14.
  */
-@Component
+//@Component
 @Slf4j
 @RequiredArgsConstructor
 public class MelodyFormEqualityAnalyzer implements MelodyEqualityAnalyzer {

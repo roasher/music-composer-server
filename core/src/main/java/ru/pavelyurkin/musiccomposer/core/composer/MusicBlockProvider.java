@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Class handles routine to decide possible nexts from each of input blocks
@@ -40,27 +38,14 @@ public class MusicBlockProvider {
 
 	public boolean isPossibleNext( MusicBlock musicBlock, MusicBlock possibleNext ) {
 		if ( !possibleNext.getPreviousBlockEndPitches().isPresent() ) return false;
-		boolean patternEquality = isEndPitchesTransposable(musicBlock.getEndPitches(), possibleNext.getPreviousBlockEndPitches().get());
+		boolean canBeTransposed = false;
+		try {
+			possibleNext.transposeClone( musicBlock );
+			canBeTransposed = true;
+		} catch ( Exception exception ) {
+		}
 		boolean correlatingTime = ModelUtils.isTimeCorrelated( musicBlock.getStartTime() + musicBlock.getRhythmValue(), possibleNext.getStartTime() );
-		return patternEquality && correlatingTime;
+		return canBeTransposed && correlatingTime;
 	}
 
-	private boolean isEndPitchesTransposable( List<Integer> firstPitches, List<Integer> secondPitches ) {
-
-		if ( firstPitches.size() != secondPitches.size() ) {
-			return false;
-		}
-
-		List<Integer> subtractions = IntStream.range( 0, firstPitches.size() )
-				.map( operand -> secondPitches.get( operand ) - firstPitches.get( operand ) )
-				.distinct()
-				.boxed()
-				.collect( Collectors.toList() );
-
-		// subtractions may consist of transpose pitches and may be zeros if there was rests
-		if ( subtractions.size() > 2 ) {
-			return false;
-		}
-		return true;
-	}
 }
