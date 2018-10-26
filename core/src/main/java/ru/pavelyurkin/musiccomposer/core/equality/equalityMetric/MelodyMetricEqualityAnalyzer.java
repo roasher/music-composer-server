@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.equality.equalityMetric;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
@@ -16,8 +17,10 @@ import static jm.constants.Durations.WHOLE_NOTE;
 import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
 
 @Component
+@AllArgsConstructor
 public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<InstrumentPart> {
 
+	private final Recombinator recombinator;
 	/**
 	 * Main idea of getting this metrics - is how many operations should be performed to change second melody
 	 * to be like first.
@@ -177,8 +180,8 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Inst
 	 * @return
 	 */
 	List<Double> getUnionRhythmValues( List<NoteGroup> firstNotes, List<NoteGroup> secondNotes ) {
-		Set<Double> firstEdges = new HashSet<>( Recombinator.getRhythmEdgeList( firstNotes ) );
-		List<Double> secondEdges = Recombinator.getRhythmEdgeList( secondNotes );
+		Set<Double> firstEdges = new HashSet<>( recombinator.getRhythmEdgeList( firstNotes ) );
+		List<Double> secondEdges = recombinator.getRhythmEdgeList( secondNotes );
 		firstEdges.addAll( secondEdges );
 		List<Double> unionEdges = firstEdges.stream().sorted().collect( Collectors.toList() );
 		List<Double> out = new ArrayList<>();

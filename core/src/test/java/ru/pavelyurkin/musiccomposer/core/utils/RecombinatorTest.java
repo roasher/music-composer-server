@@ -19,6 +19,8 @@ import static org.hamcrest.Matchers.is;
  */
 public class RecombinatorTest {
 
+	private Recombinator recombinator = new Recombinator();
+
 	@Test
 	public void testRecombine() {
 		List< InstrumentPart > melodyList0 = Arrays.asList(
@@ -41,7 +43,7 @@ public class RecombinatorTest {
 				)
 		);
 
-		assertThat( Recombinator.recombine( melodyList0 ), is( Arrays.asList(
+		assertThat( recombinator.recombine( melodyList0 ), is( Arrays.asList(
 				Arrays.asList(
 						new InstrumentPart( new Rest( EIGHTH_NOTE ) ),
 						new InstrumentPart( new Note( 21, EIGHTH_NOTE ) ),
@@ -95,7 +97,7 @@ public class RecombinatorTest {
 				)
 		);
 
-		assertThat( Recombinator.recombine( inputMelodyBlock ), is( Arrays.asList(
+		assertThat( recombinator.recombine( inputMelodyBlock ), is( Arrays.asList(
 				Arrays.asList(
 						new InstrumentPart( new NewMelody( new Rest( QUARTER_NOTE ) ) ),
 						new InstrumentPart( new Note( 58, QUARTER_NOTE ) )

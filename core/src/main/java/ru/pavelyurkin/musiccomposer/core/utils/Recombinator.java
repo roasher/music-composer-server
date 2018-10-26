@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.utils;
 
+import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
 
@@ -13,6 +14,7 @@ import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.trimToTime;
  * Class handles all recombination between melody lists
  * Created by pyurkin on 10.12.14.
  */
+@Component
 public class Recombinator {
 
 	/**
@@ -21,7 +23,7 @@ public class Recombinator {
 	 * @param instrumentParts
 	 * @return
 	 */
-	public static List< List< InstrumentPart > > recombine( List<InstrumentPart> instrumentParts ) {
+	public List< List< InstrumentPart > > recombine( List<InstrumentPart> instrumentParts ) {
 		List<Double> rhythmEdges = instrumentParts.stream().map( InstrumentPart::getNoteGroups )
 				.flatMap( noteGroups -> getRhythmEdgeList( noteGroups ).stream() )
 				.distinct()
@@ -44,7 +46,7 @@ public class Recombinator {
 	 * @param noteGroups
 	 * @return
 	 */
-	public static List< Double > getRhythmEdgeList( List<NoteGroup> noteGroups ) {
+	public List< Double > getRhythmEdgeList( List<NoteGroup> noteGroups ) {
 		List< Double > edgeList = new ArrayList<>();
 		double lastEdge = 0;
 		for ( int noteGroupNumber = 0; noteGroupNumber < noteGroups.size(); noteGroupNumber ++ ) {

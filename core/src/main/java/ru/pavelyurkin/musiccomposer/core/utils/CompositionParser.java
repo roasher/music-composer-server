@@ -3,33 +3,37 @@ package ru.pavelyurkin.musiccomposer.core.utils;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
+import jm.music.data.Rest;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
-import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Slices composition into smallest parts
- * Created by pyurkin on 10.12.14.
- */
+
 @Component
 public class CompositionParser {
 
 	/**
-	 * Recombines melody lists.
-	 * In the result, all melodies has only one note within
+	 * Parses composition to Instrument Part model
 	 * @param composition
 	 * @return
 	 */
 	public List< InstrumentPart > parse( Composition composition ) {
-		return (List< InstrumentPart >) composition.getPartList().stream()
-				.map( part -> convert( ( Part ) part ) )
+		List<InstrumentPart> instrumentParts = ( List<InstrumentPart> ) composition.getPartList().stream()
+				.map( part -> {
+					InstrumentPart instrumentPart = convert( ( Part ) part );
+					if ( composition.getEndTime() > instrumentPart.getRythmValue() ) {
+						instrumentPart.addNoteToTheEnd( new Rest( composition.getEndTime() - instrumentPart.getRythmValue() ) );
+					}
+					return instrumentPart;
+				} )
 				.collect( Collectors.toList() );
+
+		return instrumentParts;
 	}
 
 	private InstrumentPart convert( Part part ) {
@@ -46,7 +50,6 @@ public class CompositionParser {
 			List<Note> notesAtATime = phrases.stream()
 					.flatMap( phrase -> getNotesAtTheEdge( phrase, edge ).stream() )
 					.collect( Collectors.toList() );
-			List<NoteGroup> noteGroups = instrumentPart.getNoteGroups();
 			if (notesAtATime.size() == 1) {
 				Note note = notesAtATime.get( 0 );
 				instrumentPart.addNoteToTheEnd( new Note( note.getPitch(), edge - previousEdge ) );

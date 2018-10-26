@@ -12,7 +12,7 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionParser;
-import ru.pavelyurkin.musiccomposer.core.utils.CompositionSlicer;
+import ru.pavelyurkin.musiccomposer.core.utils.Recombinator;
 
 import java.util.*;
 
@@ -25,7 +25,7 @@ import java.util.*;
 @Slf4j
 public class CompositionDecomposer {
 
-	private final CompositionSlicer compositionSlicer;
+	private final Recombinator recombinator;
 	private final CompositionParser compositionParser;
 	private final MusicBlockProvider musicBlockProvider;
 	private final LexiconDAO lexiconDAO;
@@ -41,7 +41,7 @@ public class CompositionDecomposer {
 		// Parsing composition to our model
 		List<InstrumentPart> instrumentParts = compositionParser.parse( composition );
 		// recombining result melodies into composeBlockList
-		List<List<InstrumentPart>> recombineList = compositionSlicer.slice( instrumentParts, rhythmValue );
+		List<List<InstrumentPart>> recombineList = recombinator.recombine( instrumentParts );
 		// filling composition information
 		List<MusicBlock> lexiconMusicBlocks = new ArrayList<MusicBlock>();
 		for ( int melodyBlockNumber = 0; melodyBlockNumber < recombineList.size(); melodyBlockNumber++ ) {
