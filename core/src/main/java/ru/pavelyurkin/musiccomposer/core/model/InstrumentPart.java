@@ -4,6 +4,7 @@ import jm.music.data.Note;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
 
@@ -91,5 +92,25 @@ public class InstrumentPart {
 
 	public boolean isRest() {
 		return noteGroups.stream().allMatch( NoteGroup::isRest );
+	}
+
+	public void addNoteToTheEnd( Note noteToAdd ) {
+		if ( noteGroups.isEmpty() || getLast( noteGroups ) instanceof Chord ) {
+			noteGroups.add( new NewMelody( noteToAdd ) );
+		} else {
+			NewMelody melody = ( NewMelody ) getLast( noteGroups );
+			melody.glueNoteToTheEnd( noteToAdd );
+		}
+	}
+
+	public void addChordToTheEnd( Chord chordToAdd ) {
+		if ( noteGroups.isEmpty() ||
+				getLast( noteGroups ) instanceof NewMelody ||
+				!( ( Chord ) getLast( noteGroups ) ).samePitches( chordToAdd.getPitches() ) ) {
+			noteGroups.add( chordToAdd );
+		} else {
+			Chord lastChord = ( Chord ) getLast( noteGroups );
+			lastChord.setRhythmValue( lastChord.getRhythmValue() + chordToAdd.getRhythmValue() );
+		}
 	}
 }

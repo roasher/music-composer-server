@@ -3,7 +3,7 @@ package ru.pavelyurkin.musiccomposer.core.model.notegroups;
 import jm.music.data.Note;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 import java.util.Objects;
@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 public class Chord extends NoteGroup {
 
 	private List<Integer> pitches;
@@ -20,6 +19,11 @@ public class Chord extends NoteGroup {
 	@Override
 	public double getRhythmValue() {
 		return rhythmValue;
+	}
+
+	@Override
+	public Chord clone() {
+		return new Chord( pitches, rhythmValue );
 	}
 
 	@Override
@@ -60,6 +64,19 @@ public class Chord extends NoteGroup {
 				.map( integer -> integer + transposePitch )
 				.collect( Collectors.toList() );
 		return new Chord( tranposedPitches, this.rhythmValue );
+	}
+
+	@Override
+	public Pair<NoteGroup, NoteGroup> divideByRhythmValue( double rhythmValue ) {
+		if ( rhythmValue >= this.rhythmValue ) {
+			throw new IllegalArgumentException( "Input rhythmValue can't be greater or equal than chords rhythmValue" );
+		}
+		Chord left = this.clone();
+		left.setRhythmValue( rhythmValue );
+
+		Chord right = this.clone();
+		right.setRhythmValue( this.rhythmValue - rhythmValue );
+		return Pair.of( left, right );
 	}
 
 	@Override

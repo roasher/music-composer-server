@@ -17,9 +17,9 @@ import static jm.JMC.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class CompositionRecombinatorTest {
+public class CompositionParserTest {
 
-	private CompositionRecombinator compositionRecombinator = new CompositionRecombinator();
+	private CompositionParser compositionParser = new CompositionParser();
 
 	@Test
 	public void sliceSingleVoiceComposition() throws Exception {
@@ -33,7 +33,7 @@ public class CompositionRecombinatorTest {
 		score.add( part );
 		Composition composition = new Composition( score );
 
-		assertThat( compositionRecombinator.slice( composition ), is( Arrays.asList(
+		assertThat( compositionParser.parse( composition ), is( Arrays.asList(
 						new InstrumentPart( Arrays.asList( new NewMelody(
 								new Note( C5, WHOLE_NOTE ),
 								new Note( D5, DOTTED_HALF_NOTE ),
@@ -62,7 +62,7 @@ public class CompositionRecombinatorTest {
 		score.add( part );
 		Composition composition = new Composition( score );
 
-		assertThat( compositionRecombinator.slice( composition ), is( Arrays.asList(
+		assertThat( compositionParser.parse( composition ), is( Arrays.asList(
 						new InstrumentPart( Arrays.asList(
 								new NewMelody( new Note( C5, DOTTED_HALF_NOTE ) ),
 								new Chord( Arrays.asList( C5, C1 ), QUARTER_NOTE ),
@@ -95,7 +95,7 @@ public class CompositionRecombinatorTest {
 		score.add( part );
 		Composition composition = new Composition( score );
 
-		assertThat( compositionRecombinator.slice( composition ), is( Arrays.asList(
+		assertThat( compositionParser.parse( composition ), is( Arrays.asList(
 						new InstrumentPart( Arrays.asList(
 								new NewMelody( new Note( D5, DOTTED_HALF_NOTE ) ),
 								new Chord( Arrays.asList( C1, C2 ), QUARTER_NOTE )
@@ -124,7 +124,7 @@ public class CompositionRecombinatorTest {
 		score.add( part );
 		Composition composition = new Composition( score );
 
-		assertThat( compositionRecombinator.slice( composition ), is( Arrays.asList(
+		assertThat( compositionParser.parse( composition ), is( Arrays.asList(
 				new InstrumentPart( Arrays.asList(
 						new Chord( Arrays.asList( D5, C1, C2 ), QUARTER_NOTE ),
 						new NewMelody( new Note( D5, HALF_NOTE ) )

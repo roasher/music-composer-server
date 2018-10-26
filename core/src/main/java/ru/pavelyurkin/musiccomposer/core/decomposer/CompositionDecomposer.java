@@ -13,8 +13,8 @@ import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
+import ru.pavelyurkin.musiccomposer.core.utils.CompositionParser;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionSlicer;
-import ru.pavelyurkin.musiccomposer.core.utils.Recombinator;
 
 import java.util.*;
 
@@ -28,6 +28,7 @@ public class CompositionDecomposer {
 
 	private final FormDecomposer formDecomposer;
 	private final CompositionSlicer compositionSlicer;
+	private final CompositionParser compositionParser;
 	private final MusicBlockProvider musicBlockProvider;
 	private final LexiconDAO lexiconDAO;
 
@@ -41,11 +42,10 @@ public class CompositionDecomposer {
 	 * @return
 	 */
 	public List<MusicBlock> decomposeIntoMusicBlocks( Composition composition, double rhythmValue ) {
-		List<List<InstrumentPart>> instrumentPartsCollection = compositionSlicer.slice( composition, rhythmValue );
-		// analyzing form
-//		List<List<InstrumentPart>> instrumentPartsCollection = formDecomposer.decompose( composition, rhythmValue );
+		// Parsing composition to our model
+		List<InstrumentPart> instrumentParts = compositionParser.parse( composition );
 		// recombining result melodies into composeBlockList
-		List<List<InstrumentPart>> recombineList = Recombinator.recombine( instrumentPartsCollection );
+		List<List<InstrumentPart>> recombineList = compositionSlicer.slice( instrumentParts, rhythmValue );
 		// filling composition information
 		List<MusicBlock> lexiconMusicBlocks = new ArrayList<MusicBlock>();
 		for ( int melodyBlockNumber = 0; melodyBlockNumber < recombineList.size(); melodyBlockNumber++ ) {

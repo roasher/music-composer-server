@@ -2,14 +2,12 @@ package ru.pavelyurkin.musiccomposer.core.utils;
 
 import jm.JMC;
 import jm.music.data.Note;
-import jm.music.data.Part;
-import jm.music.data.Phrase;
 import jm.music.data.Rest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
-import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -25,71 +23,57 @@ import java.util.List;
 public class CompositionSlicer {
 
 	/**
-	 * Slices composition into melodies, having certain timePeriod each.
-	 * @param composition
+	 * Slices instrumentParts into melodies, having certain timePeriod each.
+	 * @param instrumentParts
 	 * @param timePeriod
 	 * @return
 	 */
-	public List< List<InstrumentPart> > slice( Composition composition, double timePeriod ) {
-		log.info( "Slicing {} by time period {}", composition.getTitle(), timePeriod );
-		List< List< Melody > > compositionList = new ArrayList<>(  );
+	public List< List<InstrumentPart> > slice( List<InstrumentPart> instrumentParts, double timePeriod ) {
+		List< List< InstrumentPart > > compositionList = new ArrayList<>(  );
 
-        adjustToUnifiedEndTime( composition );
-		for ( Part part : composition.getPartArray() ) {
-			InstrumentPart instrumentPart = new InstrumentPart();
-			for ( Phrase phrase : part.getPhraseArray() ) {
-				List< Melody > noteList = slice( phrase, timePeriod );
-				compositionList.add( noteList );
-			}
+        adjustToUnifiedEndTime( instrumentParts );
+		for ( InstrumentPart instrumentPart : instrumentParts ) {
+			List< InstrumentPart > noteList = slice( instrumentPart, timePeriod );
+			compositionList.add( noteList );
 		}
 
 		// Composition list should has equal number of slices in each instrument
 		int numberOfSlices = compositionList.get( 0 ).size();
-		for ( List<Melody> slices : compositionList ) {
-			if ( slices.size() != numberOfSlices ) throw new RuntimeException( "Sliced composition has differed number of slices for different instrument." );
+		for ( List<InstrumentPart> slices : compositionList ) {
+			if ( slices.size() != numberOfSlices ) throw new RuntimeException( "Sliced instrumentParts has differed number of slices for different instrument." );
 		}
 
-		List< List< Melody > > compositionMelodies = new ArrayList<>();
+		List< List< InstrumentPart > > compositionMelodies = new ArrayList<>();
 		for ( int melodyBlockNumber = 0; melodyBlockNumber < compositionList.get( 0 ).size(); melodyBlockNumber ++ ) {
-			List<Melody> melodyBlock = new ArrayList<>();
-			for ( List< Melody > instrumentPart : compositionList ) {
+			List< InstrumentPart > melodyBlock = new ArrayList<>();
+			for ( List< InstrumentPart > instrumentPart : compositionList ) {
 				melodyBlock.add( instrumentPart.get( melodyBlockNumber ) );
 			}
 			compositionMelodies.add( melodyBlock );
 		}
 
-//		return compositionMelodies;
-		// TODO change implementation
-		return null;
+		return compositionMelodies;
 	}
 
 	/**
-	 * Slice phrase into parts of timePeriod length
-	 * @param phrase
+	 * Slice instrumentPart into parts of timePeriod length
+	 * @param instrumentPart
 	 * @param timePeriod
 	 * @return
 	 */
-	public List< Melody > slice( Phrase phrase, double timePeriod ) {
+	public List< InstrumentPart > slice( InstrumentPart instrumentPart, double timePeriod ) {
 
-		State state = new State( timePeriod );
-		// Adding rests if phrase starts not from the beginning
-		if ( !Utils.isEquals( phrase.getStartTime(), 0 ) ) {
-			state.add( new Note( JMC.REST, phrase.getStartTime() ) );
-		}
-
-        for ( int noteNumber = 0; noteNumber < phrase.size(); noteNumber ++ ) {
-            Note note = phrase.getNote( noteNumber );
-            state.add( phrase.getNote( noteNumber ) );
+		State state = new State( timePeriod, instrumentPart.getInstrument() );
+        for ( int noteGroupNumber = 0; noteGroupNumber < instrumentPart.getNoteGroups().size(); noteGroupNumber ++ ) {
+            NoteGroup noteGroup = instrumentPart.getNoteGroups().get( noteGroupNumber );
+            state.add( noteGroup );
         }
 
-//		for( Note note : phrase.getNoteArray() ) {
-//			state.add( note );
-//		}
 		// Filling last slice with rests if it shorter than time period
-		Melody lastSlice = state.slices.get( state.slices.size() - 1 );
-		double lastSliceRhythmValue = ModelUtils.sumAllRhytmValues( lastSlice );
+		InstrumentPart lastSlice = state.slices.get( state.slices.size() - 1 );
+		double lastSliceRhythmValue = lastSlice.getRythmValue();
 		if ( lastSliceRhythmValue < timePeriod ) {
-			lastSlice.add( new Note( JMC.REST, timePeriod - lastSliceRhythmValue ) );
+			lastSlice.addNoteToTheEnd( new Note( JMC.REST, timePeriod - lastSliceRhythmValue ) );
 		}
 
 		checkSlicesOccupancy( state.slices, timePeriod );
@@ -100,44 +84,43 @@ public class CompositionSlicer {
 	 * Class consumes notes and divide them into slices timePeriod length
 	 */
 	private class State {
-		private List< Melody > slices = new ArrayList<>();
+		private List< InstrumentPart > slices = new ArrayList<>();
+		private int instrument;
 		private double timePeriod;
-		private State( double timePeriod ) { this.timePeriod = timePeriod; }
+		private State( double timePeriod, int instrument ) { this.timePeriod = timePeriod; this.instrument = instrument; }
 
-		public void add( Note note ) {
-			// Finding current state: slice and it's last note time
-			Melody slice = null;
+		public void add( NoteGroup noteGroup ) {
+			// Finding current state: slice and it's last noteGroup time
+			InstrumentPart slice = null;
 			double lastNoteEndTime = 0;
 			if ( slices.size() == 0 ) {
-				slice = new Melody();
+				slice = new InstrumentPart();
+				slice.setInstrument( instrument );
 				slices.add( slice );
 				lastNoteEndTime = 0;
 			} else {
 				slice = slices.get( slices.size() - 1 );
-				for ( Note currentSliceNote : ( List<Note> ) slice.getNoteList() ) {
+				for ( NoteGroup currentSliceNote : slice.getNoteGroups() ) {
 					lastNoteEndTime += currentSliceNote.getRhythmValue();
 				}
 				// fulfill slice check
 				if ( lastNoteEndTime == timePeriod ) {
 					lastNoteEndTime = 0;
-					slice = new Melody();
-					slice.setStartTime( slices.get( slices.size() - 1 ).getStartTime() + timePeriod );
+					slice = new InstrumentPart();
+					slice.setInstrument( instrument );
 					slices.add( slice );
 				}
 			}
 
-			// Adding note
-			if ( lastNoteEndTime + note.getRhythmValue() <= timePeriod ) {
-				Note newNote = new Note( note.getPitch(), note.getRhythmValue() );
-				slice.add( newNote );
+			// Adding noteGroup
+			if ( lastNoteEndTime + noteGroup.getRhythmValue() <= timePeriod ) {
+				slice.getNoteGroups().add( noteGroup.clone() );
 			} else {
-				Note newNote = new Note( note.getPitch(), timePeriod - lastNoteEndTime );
-				slice.add( newNote );
+				Pair<NoteGroup, NoteGroup> dividedNoteGroup = noteGroup.divideByRhythmValue( timePeriod - lastNoteEndTime );
+				slice.getNoteGroups().add( dividedNoteGroup.getLeft() );
 
-				Note newNoteToAdd = new Note( note.getPitch(), note.getRhythmValue() - newNote.getRhythmValue() );
 				// Recursive call
-//				logger.info( "pitch {}, rhythm value {}", newNoteToAdd.getPitch(), newNoteToAdd.getRhythmValue() );
-				add( newNoteToAdd );
+				add( dividedNoteGroup.getRight() );
 			}
 		}
 	}
@@ -147,10 +130,10 @@ public class CompositionSlicer {
 	 * @param slices
 	 * @param timePeriod
 	 */
-	public void checkSlicesOccupancy( List<Melody> slices, double timePeriod ) {
-		for ( Melody slice : slices ) {
+	public void checkSlicesOccupancy( List<InstrumentPart> slices, double timePeriod ) {
+		for ( InstrumentPart slice : slices ) {
 			BigDecimal rhythmValuesSum = BigDecimal.ZERO;
-			for ( Note sliceNote : ( List<Note> ) slice.getNoteList() ) {
+			for ( NoteGroup sliceNote : slice.getNoteGroups() ) {
 				rhythmValuesSum = rhythmValuesSum.add( BigDecimal.valueOf( sliceNote.getRhythmValue() ) );
 			}
 			if ( rhythmValuesSum.round( MathContext.DECIMAL32 ).compareTo( BigDecimal.valueOf( timePeriod ) ) != 0 ) {
@@ -161,19 +144,17 @@ public class CompositionSlicer {
 
     /**
      * Makes all phrases has equal end time by adding rests if needed
-     * @param composition
+     * @param instrumentParts
      */
-    public void adjustToUnifiedEndTime( Composition composition ) {
-        double compositionEndTime = composition.getEndTime();
-		for ( Part part : composition.getPartArray() ) {
-			for ( Phrase phrase : part.getPhraseArray() ) {
-				if ( phrase.getEndTime() != compositionEndTime ) {
-					phrase.add( new Rest( compositionEndTime - phrase.getEndTime() ) );
-				}
-				if (Double.compare( phrase.getStartTime(), 0.0 ) != 0) {
-					phrase.getNoteList().add( 0, new Rest( phrase.getStartTime() ) );
-					phrase.setStartTime( 0 );
-				}
+    public void adjustToUnifiedEndTime( List<InstrumentPart> instrumentParts ) {
+        double compositionEndTime = instrumentParts.stream()
+				.mapToDouble( InstrumentPart::getRythmValue )
+				.max()
+				.getAsDouble();
+		for ( InstrumentPart instrumentPart : instrumentParts ) {
+			double rythmValue = instrumentPart.getRythmValue();
+			if ( rythmValue != compositionEndTime ) {
+					instrumentPart.addNoteToTheEnd( new Rest( compositionEndTime - rythmValue ) );
 			}
 		}
     }

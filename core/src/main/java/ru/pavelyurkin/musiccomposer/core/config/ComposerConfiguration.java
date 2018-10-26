@@ -17,6 +17,7 @@ import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricA
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.FormEqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
+import ru.pavelyurkin.musiccomposer.core.utils.CompositionParser;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionSlicer;
 
 import java.util.List;
@@ -39,10 +40,12 @@ public class ComposerConfiguration {
 
 	@Bean
 	public CompositionDecomposer compositionDecomposer(
-			FormDecomposer formDecomposer, MusicBlockProvider musicBlockProvider,
+			FormDecomposer formDecomposer,
+			MusicBlockProvider musicBlockProvider,
 			CompositionSlicer compositionSlicer,
+			CompositionParser compositionParser,
 			@Qualifier( "lexiconDAO_stub" ) LexiconDAO lexiconDAO ) {
-		return new CompositionDecomposer( formDecomposer, compositionSlicer, musicBlockProvider, lexiconDAO );
+		return new CompositionDecomposer( formDecomposer, compositionSlicer, compositionParser, musicBlockProvider, lexiconDAO );
 	}
 
 	@Bean(name = "nextStepProvider")

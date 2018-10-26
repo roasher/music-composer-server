@@ -7,21 +7,18 @@ import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
-import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.Iterables.getLast;
-
 /**
  * Slices composition into smallest parts
  * Created by pyurkin on 10.12.14.
  */
 @Component
-public class CompositionRecombinator {
+public class CompositionParser {
 
 	/**
 	 * Recombines melody lists.
@@ -29,7 +26,7 @@ public class CompositionRecombinator {
 	 * @param composition
 	 * @return
 	 */
-	public List< InstrumentPart > slice( Composition composition ) {
+	public List< InstrumentPart > parse( Composition composition ) {
 		return (List< InstrumentPart >) composition.getPartList().stream()
 				.map( part -> convert( ( Part ) part ) )
 				.collect( Collectors.toList() );
@@ -52,26 +49,10 @@ public class CompositionRecombinator {
 			List<NoteGroup> noteGroups = instrumentPart.getNoteGroups();
 			if (notesAtATime.size() == 1) {
 				Note note = notesAtATime.get( 0 );
-				if ( noteGroups.isEmpty() || getLast( noteGroups ) instanceof Chord ) {
-					noteGroups.add( new NewMelody( new Note( note.getPitch(), edge - previousEdge ) ) );
-				} else {
-					NewMelody melody = ( NewMelody ) getLast( noteGroups );
-					melody.addNoteToTheEnd( note );
-				}
+				instrumentPart.addNoteToTheEnd( new Note( note.getPitch(), edge - previousEdge ) );
 			} else {
 				List<Integer> chordToAdd = notesAtATime.stream().map( Note::getPitch ).collect( Collectors.toList() );
-				if ( noteGroups.isEmpty() ||
-						getLast( noteGroups ) instanceof NewMelody ||
-						!( ( Chord ) getLast( noteGroups ) ).samePitches( chordToAdd ) ) {
-
-					instrumentPart.getNoteGroups().add( new Chord(
-							chordToAdd,
-							edge - previousEdge ) );
-
-				} else {
-					Chord lastChord = ( Chord ) getLast( noteGroups );
-					lastChord.setRhythmValue( lastChord.getRhythmValue() + edge - previousEdge );
-				}
+				instrumentPart.addChordToTheEnd( new Chord(  chordToAdd,  edge - previousEdge ) );
 			}
 			previousEdge = edge;
 		}

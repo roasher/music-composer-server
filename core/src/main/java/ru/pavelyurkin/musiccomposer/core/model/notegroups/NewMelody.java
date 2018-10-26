@@ -3,6 +3,7 @@ package ru.pavelyurkin.musiccomposer.core.model.notegroups;
 import jm.music.data.Note;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,6 +25,13 @@ public class NewMelody extends NoteGroup {
 		return notes.stream()
 				.mapToDouble( Note::getRhythmValue )
 				.sum();
+	}
+
+	@Override
+	public NewMelody clone() {
+		return new NewMelody( notes.stream()
+				.map( note -> new Note( note.getPitch(), note.getRhythmValue() ) )
+				.collect( Collectors.toList() ) );
 	}
 
 	@Override
@@ -67,8 +75,41 @@ public class NewMelody extends NoteGroup {
 		return new NewMelody( transposedNotes );
 	}
 
-	public void addNoteToTheEnd( Note note ) {
-		this.getNotes().add( note );
+	@Override
+	public Pair<NoteGroup, NoteGroup> divideByRhythmValue( double rhythmValue ) {
+		if ( rhythmValue >= this.getRhythmValue() ) {
+			throw new IllegalArgumentException( "Input rhythmValue can't be greater or equal than Melody rhythmValue" );
+		}
+		NewMelody left = new NewMelody(  );
+		NewMelody right = new NewMelody();
+
+		double noteStartTime = 0;
+		for ( Note note : this.notes ) {
+			double noteEndTime = noteStartTime + note.getRhythmValue();
+			if ( noteEndTime <= rhythmValue ) {
+				left.getNotes().add( note );
+			} else if ( noteStartTime < rhythmValue && noteEndTime > rhythmValue ) {
+				left.getNotes().add( new Note( note.getPitch(), rhythmValue - noteStartTime ) );
+				right.getNotes().add( new Note( note.getPitch(), noteEndTime - rhythmValue ) );
+			} else {
+				right.getNotes().add( note );
+			}
+			noteStartTime = noteEndTime;
+		}
+		return Pair.of( left, right );
+	}
+
+	/**
+	 * Glues note to the end. If last note has same pitch - it's rhythm value increasing
+	 * @param note
+	 */
+	public void glueNoteToTheEnd( Note note ) {
+		if ( this.notes.isEmpty() || !getLast( this.notes ).samePitch( note ) ) {
+			this.getNotes().add( note );
+		} else {
+			Note lastNote = getLast( this.notes );
+			lastNote.setRhythmValue( lastNote.getRhythmValue() + note.getRhythmValue(), true );
+		}
 	}
 
 	@Override
