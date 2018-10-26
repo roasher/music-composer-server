@@ -24,7 +24,7 @@ public class MusicBlock implements Serializable {
 	// Origin Self Information
 	private List<InstrumentPart> instrumentParts;
 	private CompositionInfo compositionInfo;
-	private Optional<List<Integer>> previousBlockEndPitches;
+	private Optional<List<Integer>> previousBlockEndPitches = Optional.empty();
 	private double startTime;
 
 	// Derivative Self Information

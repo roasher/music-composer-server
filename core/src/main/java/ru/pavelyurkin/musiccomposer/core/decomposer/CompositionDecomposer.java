@@ -44,6 +44,7 @@ public class CompositionDecomposer {
 		List<List<InstrumentPart>> recombineList = recombinator.recombine( instrumentParts );
 		// filling composition information
 		List<MusicBlock> lexiconMusicBlocks = new ArrayList<MusicBlock>();
+		double startTime = 0;
 		for ( int melodyBlockNumber = 0; melodyBlockNumber < recombineList.size(); melodyBlockNumber++ ) {
 			MusicBlock musicBlock = new MusicBlock();
 			musicBlock.setInstrumentParts( recombineList.get( melodyBlockNumber ) );
@@ -54,6 +55,8 @@ public class CompositionDecomposer {
 				musicBlock.setPreviousBlockEndPitches( Optional.of( previousMusicBlock.getEndPitches() ) );
 			}
 			lexiconMusicBlocks.add( musicBlock );
+
+			startTime += musicBlock.getRhythmValue();
 		}
 		// removing duplicates
 		List<MusicBlock> uniqueMusicBlocks = new ArrayList<>(  );

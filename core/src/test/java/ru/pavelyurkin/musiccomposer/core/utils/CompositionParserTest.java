@@ -1,9 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.utils;
 
-import jm.music.data.Note;
-import jm.music.data.Part;
-import jm.music.data.Phrase;
-import jm.music.data.Score;
+import jm.music.data.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
@@ -74,6 +71,24 @@ public class CompositionParserTest {
 				)
 				)
 		);
+	}
+
+	@Test
+	public void manyRestsClashToRestMelody() throws Exception {
+		Phrase phrase1 = new Phrase( new Rest( WHOLE_NOTE ) );
+		phrase1.setAppend( false );
+		Phrase phrase2 = new Phrase( new Rest( HALF_NOTE ) );
+		phrase2.setAppend( false );
+		Phrase phrase3 = new Phrase( new Rest( HALF_NOTE ) );
+		phrase3.setAppend( false );
+		Part part = new Part();
+		part.add( phrase1 );
+		part.add( phrase2 );
+		part.add( phrase3 );
+
+		assertThat( compositionParser.convert( part ), is(
+				new InstrumentPart( Arrays.asList( new NewMelody( new Rest( WHOLE_NOTE ) ) ), 0 )
+		) );
 	}
 
 	@Test

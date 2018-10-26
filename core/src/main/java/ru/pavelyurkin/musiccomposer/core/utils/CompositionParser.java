@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.utils;
 
+import com.google.common.annotations.VisibleForTesting;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
@@ -36,7 +37,8 @@ public class CompositionParser {
 		return instrumentParts;
 	}
 
-	private InstrumentPart convert( Part part ) {
+	@VisibleForTesting
+	public InstrumentPart convert( Part part ) {
 		List<Phrase> phrases = part.getPhraseList();
 		List<Double> rhythmEdges = phrases.stream()
 				.flatMap( phrase -> getRhythmEdgeList( phrase ).stream() )
@@ -47,15 +49,15 @@ public class CompositionParser {
 		InstrumentPart instrumentPart = new InstrumentPart();
 		instrumentPart.setInstrument( part.getInstrument() );
 		for ( double edge : rhythmEdges ) {
-			List<Note> notesAtATime = phrases.stream()
+			List<Integer> notePitches = phrases.stream()
 					.flatMap( phrase -> getNotesAtTheEdge( phrase, edge ).stream() )
+					.map( Note::getPitch )
+					.distinct()
 					.collect( Collectors.toList() );
-			if (notesAtATime.size() == 1) {
-				Note note = notesAtATime.get( 0 );
-				instrumentPart.addNoteToTheEnd( new Note( note.getPitch(), edge - previousEdge ) );
+			if (notePitches.size() == 1) {
+				instrumentPart.addNoteToTheEnd( new Note( notePitches.get( 0 ), edge - previousEdge ) );
 			} else {
-				List<Integer> chordToAdd = notesAtATime.stream().map( Note::getPitch ).collect( Collectors.toList() );
-				instrumentPart.addChordToTheEnd( new Chord(  chordToAdd,  edge - previousEdge ) );
+				instrumentPart.addChordToTheEnd( new Chord( notePitches,edge - previousEdge ) );
 			}
 			previousEdge = edge;
 		}
