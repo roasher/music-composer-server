@@ -3,7 +3,6 @@ package ru.pavelyurkin.musiccomposer.core.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
-import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,9 +26,6 @@ public class MusicBlock implements Serializable {
 	private Optional<List<Integer>> previousBlockEndPitches = Optional.empty();
 	private double startTime;
 
-	// Derivative Self Information
-	private double rhythmValue;
-
 	public MusicBlock( double startTime, List<InstrumentPart> instrumentParts, CompositionInfo compositionInfo, List<Integer> previousBlockEndPitches ) {
 		this( startTime, instrumentParts, compositionInfo );
 		this.previousBlockEndPitches = Optional.of( previousBlockEndPitches );
@@ -41,12 +37,7 @@ public class MusicBlock implements Serializable {
 			throw new IllegalArgumentException( "Can't create Music Block: input melody list has melodies with different rhythm value" );
 		this.instrumentParts = instrumentParts;
 		this.compositionInfo = inputCompositionInfo;
-		// Computing derivative information
-		{
-			// rhytmValue && start time
-			this.rhythmValue = ModelUtils.retrieveRhythmValue( instrumentParts );
-			this.startTime = startTime;
-		}
+		this.startTime = startTime;
 		this.previousBlockEndPitches = Optional.empty();
 	}
 
@@ -66,15 +57,11 @@ public class MusicBlock implements Serializable {
 			for ( int instrumentPartNumber = 0; instrumentPartNumber < musicBlock.getInstrumentParts().size(); instrumentPartNumber++ ) {
 				instrumentParts.get( instrumentPartNumber ).add( musicBlock.getInstrumentParts().get( instrumentPartNumber ) );
 			}
-			rhythmValue += musicBlock.getRhythmValue();
 		}
 
 		this.instrumentParts = instrumentParts;
 		this.compositionInfo = null;
-
 		this.previousBlockEndPitches = musicBlocks.get( 0 ).getPreviousBlockEndPitches();
-
-		this.rhythmValue = rhythmValue;
 		this.startTime = musicBlocks.get( 0 ).getStartTime();
 
 	}
@@ -133,5 +120,17 @@ public class MusicBlock implements Serializable {
 	public boolean isRest() {
 		return this.instrumentParts.stream()
 				.allMatch( InstrumentPart::isRest );
+	}
+
+	public double getRhythmValue() {
+		List<Double> rhythmValues = this.getInstrumentParts()
+				.stream()
+				.map( InstrumentPart::getRythmValue ).distinct()
+				.collect( Collectors.toList() );
+
+		if ( rhythmValues.size() != 1 ) {
+			throw new RuntimeException( "Several instrument parts has different rhytmValues" );
+		}
+		return rhythmValues.get( 0 );
 	}
 }

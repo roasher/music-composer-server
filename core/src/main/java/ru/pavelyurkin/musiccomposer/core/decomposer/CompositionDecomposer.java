@@ -49,6 +49,7 @@ public class CompositionDecomposer {
 			MusicBlock musicBlock = new MusicBlock();
 			musicBlock.setInstrumentParts( recombineList.get( melodyBlockNumber ) );
 			musicBlock.setCompositionInfo( composition.getCompositionInfo() );
+			musicBlock.setStartTime( startTime );
 			// binding with previous Music Block
 			if ( melodyBlockNumber != 0 ) {
 				MusicBlock previousMusicBlock = lexiconMusicBlocks.get( melodyBlockNumber - 1 );
