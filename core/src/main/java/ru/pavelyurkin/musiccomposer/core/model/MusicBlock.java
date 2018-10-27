@@ -82,7 +82,10 @@ public class MusicBlock implements Serializable {
 
 	//TODO get rid of music block here - should return List<InstrumentPart> only
 	public MusicBlock transposeClone( MusicBlock previousBlock ) {
-		int transposePitch = getTransposePitch( previousBlock, this );
+		if ( !this.getPreviousBlockEndPitches().isPresent() ) {
+			throw new RuntimeException( "Can't calculate transpose pitch. Previous block end pitches does not exist" );
+		}
+		int transposePitch = getTransposePitch( this.getPreviousBlockEndPitches().get(), previousBlock.getEndPitches() );
 		List<InstrumentPart> transposedInstrumentParts = this.instrumentParts.stream()
 				.map( instrumentPart -> instrumentPart.transposeClone( transposePitch ) )
 				.collect( Collectors.toList() );

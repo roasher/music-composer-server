@@ -151,45 +151,38 @@ public class ModelUtils {
 	}
 
 	/**
-	 * Returns pitch on which second block should be transposed according to first
-     * To be able to calculate transpose pitch there should be at least one pair of non rest notes
-     * in lastNoteOfFirst and firstNoteOfSecond blocks and also firstNoteOfSecond movementFromPreviousToThis
-     * shouldn't be movement from rest
-	 * @param previousBlock
-	 * @param currentBlock
+	 * Return pitch that could be added to pitches asIs to make it toBe
+	 * @param pitchesAsIs
+	 * @param pitchesToBe
 	 * @return
 	 */
-	public static int getTransposePitch( MusicBlock previousBlock, MusicBlock currentBlock ) {
-		if ( !currentBlock.getPreviousBlockEndPitches().isPresent() ) {
-			throw new RuntimeException( "Can't calculate transpose pitch. Previous block end pitches does not exist" );
+	public static int getTransposePitch( List<Integer> pitchesAsIs, List<Integer> pitchesToBe  ) {
+		if (pitchesToBe.size() != pitchesAsIs.size()) {
+			throw new RuntimeException( "Can't capreviousEndPitcheslculate transpose pitch. Desired end pitches and fact previous end pitches has different amount of notes" );
 		}
-		List<Integer> desiredEndPitches = currentBlock.getPreviousBlockEndPitches().get();
-		List<Integer> previousEndPitches = previousBlock.getEndPitches();
+//		Collections.sort( pitchesToBe );
+//		Collections.sort( pitchesAsIs );
 
-		if (desiredEndPitches.size() != previousEndPitches.size()) {
-			throw new RuntimeException( "Can't calculate transpose pitch. Desired end pitches and fact previous end pitches has different amount of notes" );
-		}
-//		Collections.sort( desiredEndPitches );
-//		Collections.sort( previousEndPitches );
-
-		List<Integer> subtractions = IntStream.range( 0, desiredEndPitches.size() )
-				.map( operand -> previousEndPitches.get( operand ) - desiredEndPitches.get( operand ) )
+		List<Integer> subtractions = IntStream.range( 0, pitchesToBe.size() )
+				.filter( operand -> {
+					boolean isRest1 = pitchesAsIs.get( operand ) == Note.REST;
+					boolean isRest2 = pitchesToBe.get( operand ) == Note.REST;
+					// exclude rests
+					return !( isRest1 && isRest2 );
+				} )
+				.map( operand -> pitchesToBe.get( operand ) - pitchesAsIs.get( operand ) )
 				.distinct()
 				.boxed()
 				.collect( Collectors.toList() );
 
-		// subtractions may consist of transpose pitches and may be zeros if there was rests
-		if ( subtractions.size() > 2 ) {
+		// all are rests
+		if ( subtractions.isEmpty() ) return 0;
+
+		if ( subtractions.size() > 1 ) {
 			throw new RuntimeException( "Can't calculate transpose pitch. Desired end pitches and fact previous end pitches are not compatible." );
 		}
 
-		if (subtractions.size() == 1) return subtractions.get( 0 );
-
-		if (subtractions.size() == 2) {
-			// returning that is not zero
-			return subtractions.get( 0 ) == 0 ? subtractions.get( 1 ) : subtractions.get( 0 );
-		}
-		throw new RuntimeException( "Can't calculate tranpose pitch. Unexpected error." );
+		return subtractions.get( 0 );
 	}
 
 	public static List<InstrumentPart> trimToTime( List<InstrumentPart> instrumentParts, double startTime, double endTime ) {
