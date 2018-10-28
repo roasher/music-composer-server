@@ -1,7 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.utils;
 
 import jm.music.data.*;
-import org.junit.Ignore;
 import org.junit.Test;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
@@ -92,21 +91,18 @@ public class CompositionParserTest {
 	}
 
 	@Test
-	@Ignore
-	// can't hanlde that
 	public void sliceIfPhraseIsChord() throws Exception {
 		Score score = new Score();
 
 		Phrase firstPhrase = new Phrase();
 		firstPhrase.add( new Note( D5, DOTTED_HALF_NOTE ) );
 
-		Phrase secondPhrase = new Phrase();
+		CPhrase secondPhrase = new CPhrase();
 		secondPhrase.addChord( new int[] {C1, C2} ,QUARTER_NOTE );
-		secondPhrase.setStartTime( DOTTED_HALF_NOTE );
 
 		Part part = new Part();
 		part.add( firstPhrase );
-		part.add( secondPhrase );
+		part.addCPhrase( secondPhrase );
 		score.add( part );
 		Composition composition = new Composition( score );
 
@@ -122,20 +118,20 @@ public class CompositionParserTest {
 	}
 
 	@Test
-	@Ignore
-	// can't hanlde that
 	public void sliceIfPhraseIsChordOnTopOfMelody() throws Exception {
 		Score score = new Score();
 
 		Phrase firstPhrase = new Phrase();
 		firstPhrase.add( new Note( D5, DOTTED_HALF_NOTE ) );
 
-		Phrase secondPhrase = new Phrase();
+		CPhrase secondPhrase = new CPhrase();
 		secondPhrase.addChord( new int[] {C1, C2} ,QUARTER_NOTE );
+		secondPhrase.setStartTime( 0 );
+		secondPhrase.setAppend( false );
 
 		Part part = new Part();
 		part.add( firstPhrase );
-		part.add( secondPhrase );
+		part.addCPhrase( secondPhrase );
 		score.add( part );
 		Composition composition = new Composition( score );
 
