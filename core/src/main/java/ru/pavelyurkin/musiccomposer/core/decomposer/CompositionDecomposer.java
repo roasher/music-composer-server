@@ -38,6 +38,7 @@ public class CompositionDecomposer {
 	 * @return
 	 */
 	public List<MusicBlock> decomposeIntoMusicBlocks( Composition composition, double rhythmValue ) {
+		log.info( "Decomposing composition {}", composition.getTitle() );
 		// Parsing composition to our model
 		List<InstrumentPart> instrumentParts = compositionParser.parse( composition );
 		// recombining result melodies into composeBlockList
@@ -60,10 +61,13 @@ public class CompositionDecomposer {
 			startTime += musicBlock.getRhythmValue();
 		}
 		// removing duplicates
-		List<MusicBlock> uniqueMusicBlocks = new ArrayList<>(  );
+		List<MusicBlock> uniqueMusicBlocks = new ArrayList<>();
 		lexiconMusicBlocks.forEach( musicBlock -> {
-			if ( !uniqueMusicBlocks.contains( musicBlock ) ) uniqueMusicBlocks.add( musicBlock );
+			if ( !uniqueMusicBlocks.contains( musicBlock ) )
+				uniqueMusicBlocks.add( musicBlock );
 		} );
+
+		log.info( "Decomposing done" );
 		return uniqueMusicBlocks;
 	}
 
@@ -80,6 +84,7 @@ public class CompositionDecomposer {
 	 * @return
 	 */
 	public Lexicon getComposeBlocks( List<MusicBlock> musicBlockList ) {
+		log.info( "Calculating compose blocks" );
 
 		List<ComposeBlock> composeBlocks = new ArrayList<>();
 		Map<Integer, List<Integer>> possibleNextMusicBlockNumbers = musicBlockProvider.getAllPossibleNextVariants( musicBlockList );
@@ -103,6 +108,8 @@ public class CompositionDecomposer {
 		}
 
 		Lexicon lexicon = new Lexicon( composeBlocks, possibleNextMusicBlockNumbers );
+
+		log.info( "Compose blocks calculation done." );
 		return lexicon;
 	}
 
@@ -125,7 +132,6 @@ public class CompositionDecomposer {
 		List<MusicBlock> musicBlockList = new ArrayList<>();
 		for ( Composition composition : compositionList ) {
 			if ( !dataBaseLexicon.getCompositionsInLexicon().contains( composition.getCompositionInfo() ) ) {
-				log.info( "Fetching blocks from composition: {}", composition.getCompositionInfo() );
 				musicBlockList.addAll( decomposeIntoMusicBlocks( composition, rhythmValue ) );
 			}
 		}
