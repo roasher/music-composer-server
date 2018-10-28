@@ -44,8 +44,7 @@ public class InstrumentPart {
 	}
 
 	public void add( InstrumentPart instrumentPartToAdd ) {
-		if ( !( this.instrument == null && instrumentPartToAdd.instrument == null ) ||
-				!Objects.equals( this.instrument, instrumentPartToAdd.getInstrument() ) ) {
+		if ( !Objects.equals( this.instrument, instrumentPartToAdd.getInstrument() ) ) {
 			throw new RuntimeException( "Adding parts for different instruments is forbidden" );
 		}
 		this.noteGroups.addAll( instrumentPartToAdd.getNoteGroups() );
