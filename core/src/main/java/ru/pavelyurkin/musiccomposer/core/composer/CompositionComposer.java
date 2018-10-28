@@ -149,6 +149,7 @@ public class CompositionComposer {
 			for ( int partNumber = 0; partNumber < parts.size(); partNumber++ ) {
 				InstrumentPart instrumentPart = instrumentParts.get( blockNumber ).get( partNumber );
 				Phrase phrase = instrumentPartToPartConverter.convert( instrumentPart ).getPhrase( 0 );
+				phrase.setAppend( true );
 				Phrase previousPhrase = ( Phrase ) parts.get( partNumber ).getPhraseList().get( parts.get( partNumber ).getPhraseList().size() - 1 );
 
 				Note previousNote = ( Note ) previousPhrase.getNoteList().get( previousPhrase.size() - 1 );
