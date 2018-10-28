@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,21 +47,24 @@ public class MusicBlock implements Serializable {
 				.count();
 		if (count != 1) throw new RuntimeException( "Music blocks has different part numbers" );
 
-		List<InstrumentPart> instrumentParts = new ArrayList<>();
-		for ( int instrumentPartNumber = 0; instrumentPartNumber < musicBlocks.get( 0 ).getInstrumentParts().size(); instrumentPartNumber++ ) {
-			instrumentParts.add( new InstrumentPart() );
-		}
-		double rhythmValue = 0;
-		for ( MusicBlock musicBlock : musicBlocks ) {
-			for ( int instrumentPartNumber = 0; instrumentPartNumber < musicBlock.getInstrumentParts().size(); instrumentPartNumber++ ) {
-				instrumentParts.get( instrumentPartNumber ).add( musicBlock.getInstrumentParts().get( instrumentPartNumber ) );
+		MusicBlock firstMusicBlock = musicBlocks.get( 0 );
+		// Cloning instrument parts from first block
+		List<InstrumentPart> instrumentParts = firstMusicBlock.getInstrumentParts()
+				.stream()
+				.map( InstrumentPart::clone )
+				.collect( Collectors.toList() );
+
+		for ( int musicBlockNumber = 1; musicBlockNumber < musicBlocks.size(); musicBlockNumber++ ) {
+			MusicBlock currentMusicBlock = musicBlocks.get( musicBlockNumber );
+			for ( int instrumentPartNumber = 0; instrumentPartNumber < currentMusicBlock.getInstrumentParts().size(); instrumentPartNumber++ ) {
+				instrumentParts.get( instrumentPartNumber ).add( currentMusicBlock.getInstrumentParts().get( instrumentPartNumber ) );
 			}
 		}
 
 		this.instrumentParts = instrumentParts;
 		this.compositionInfo = null;
-		this.previousBlockEndPitches = musicBlocks.get( 0 ).getPreviousBlockEndPitches();
-		this.startTime = musicBlocks.get( 0 ).getStartTime();
+		this.previousBlockEndPitches = firstMusicBlock.getPreviousBlockEndPitches();
+		this.startTime = firstMusicBlock.getStartTime();
 
 	}
 
@@ -74,8 +76,10 @@ public class MusicBlock implements Serializable {
 			InstrumentPart instrumentPart = this.getInstrumentParts().get( melodyNumber );
 			this.previousBlockEndPitches.ifPresent( integers -> stringBuilder.append( "[" ).append( integers ).append( "]" ) );
 			stringBuilder.append( instrumentPart.toString() );
-			stringBuilder.append(" from ");
-			stringBuilder.append( this.compositionInfo.getTitle() );
+			if ( this.compositionInfo != null ) {
+				stringBuilder.append(" from ");
+				stringBuilder.append( this.compositionInfo.getTitle() );
+			}
 		}
 		return stringBuilder.toString();
 	}

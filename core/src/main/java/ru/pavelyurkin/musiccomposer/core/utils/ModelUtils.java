@@ -183,7 +183,7 @@ public class ModelUtils {
 		}
 
 		Integer transposePitch = subtractions.get( 0 );
-		if ( transposePitch > Note.MAX_PITCH || transposePitch < Note.MIN_PITCH ) {
+		if ( Math.abs( transposePitch ) > Note.MAX_PITCH ) {
 			throw new RuntimeException( "Calculated pitch is out of range" );
 		}
 		return transposePitch;
