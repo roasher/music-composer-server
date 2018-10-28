@@ -1,6 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.model.notegroups;
 
 import jm.music.data.Note;
+import jm.music.data.Rest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang3.tuple.Pair;
@@ -71,7 +72,9 @@ public class NewMelody extends NoteGroup {
 	@Override
 	public NoteGroup transposeClone( int transposePitch ) {
 		List<Note> transposedNotes = this.notes.stream()
-				.map( note -> new Note( note.getPitch() + transposePitch, note.getRhythmValue() ) )
+				.map( note -> !note.isRest() ?
+						new Note( note.getPitch() + transposePitch, note.getRhythmValue() ) :
+						new Rest( note.getRhythmValue() ) )
 				.collect( Collectors.toList() );
 		return new NewMelody( transposedNotes );
 	}

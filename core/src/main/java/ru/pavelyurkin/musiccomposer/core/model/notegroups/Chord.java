@@ -63,7 +63,7 @@ public class Chord extends NoteGroup {
 	@Override
 	public NoteGroup transposeClone( int transposePitch ) {
 		List<Integer> tranposedPitches = pitches.stream()
-				.map( integer -> integer + transposePitch )
+				.map( integer -> integer != Note.REST ? integer + transposePitch: integer )
 				.collect( Collectors.toList() );
 		return new Chord( tranposedPitches, this.rhythmValue );
 	}
