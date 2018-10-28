@@ -182,7 +182,11 @@ public class ModelUtils {
 			throw new RuntimeException( "Can't calculate transpose pitch. Desired end pitches and fact previous end pitches are not compatible." );
 		}
 
-		return subtractions.get( 0 );
+		Integer transposePitch = subtractions.get( 0 );
+		if ( transposePitch > Note.MAX_PITCH || transposePitch < Note.MIN_PITCH ) {
+			throw new RuntimeException( "Calculated pitch is out of range" );
+		}
+		return transposePitch;
 	}
 
 	public static List<InstrumentPart> trimToTime( List<InstrumentPart> instrumentParts, double startTime, double endTime ) {
