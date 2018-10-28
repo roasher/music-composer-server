@@ -95,6 +95,7 @@ public class MusicBlock implements Serializable {
 				.collect( Collectors.toList() );
 		MusicBlock transposedBlock = new MusicBlock();
 		transposedBlock.setInstrumentParts( transposedInstrumentParts );
+		transposedBlock.setCompositionInfo( this.compositionInfo );
 		return transposedBlock;
 	}
 
