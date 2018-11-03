@@ -152,6 +152,10 @@ public class NewMelody extends NoteGroup {
 		}
 	}
 
+	public void addNoteToTheEnd( Note note ) {
+		this.getNotes().add( note );
+	}
+
 	@Override
 	public boolean equals( Object o ) {
 		if ( this == o )

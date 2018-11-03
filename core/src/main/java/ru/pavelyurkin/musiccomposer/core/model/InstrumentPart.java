@@ -51,7 +51,7 @@ public class InstrumentPart {
 
 		NoteGroup firstNoteGroupToAdd = instrumentPartToAdd.getNoteGroups().get( 0 );
 		if ( firstNoteGroupToAdd instanceof NewMelody ) {
-			( ( NewMelody ) firstNoteGroupToAdd ).getNotes().forEach( this::glueNoteToTheEnd );
+			( ( NewMelody ) firstNoteGroupToAdd ).getNotes().forEach( this::addNoteToTheEnd );
 		} else {
 			this.addChordToTheEnd( ( Chord ) firstNoteGroupToAdd );
 		}
@@ -109,6 +109,15 @@ public class InstrumentPart {
 		} else {
 			NewMelody melody = ( NewMelody ) getLast( noteGroups );
 			melody.glueNoteToTheEnd( noteToAdd );
+		}
+	}
+
+	public void addNoteToTheEnd( Note noteToAdd ) {
+		if ( noteGroups.isEmpty() || getLast( noteGroups ) instanceof Chord ) {
+			noteGroups.add( new NewMelody( noteToAdd ) );
+		} else {
+			NewMelody melody = ( NewMelody ) getLast( noteGroups );
+			melody.addNoteToTheEnd( noteToAdd );
 		}
 	}
 
