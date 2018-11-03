@@ -47,7 +47,17 @@ public class InstrumentPart {
 		if ( !Objects.equals( this.instrument, instrumentPartToAdd.getInstrument() ) ) {
 			throw new RuntimeException( "Adding parts for different instruments is forbidden" );
 		}
-		this.noteGroups.addAll( instrumentPartToAdd.getNoteGroups() );
+		if ( instrumentPartToAdd.getNoteGroups().isEmpty() ) return;
+
+		NoteGroup firstNoteGroupToAdd = instrumentPartToAdd.getNoteGroups().get( 0 );
+		if ( firstNoteGroupToAdd instanceof NewMelody ) {
+			( ( NewMelody ) firstNoteGroupToAdd ).getNotes().forEach( this::addNoteToTheEnd );
+		} else {
+			this.addChordToTheEnd( ( Chord ) firstNoteGroupToAdd );
+		}
+
+		// adding others
+		this.noteGroups.addAll( instrumentPartToAdd.getNoteGroups().subList( 1, instrumentPartToAdd.getNoteGroups().size() ) );
 	}
 
 	public InstrumentPart transposeClone( int transposePitch ) {

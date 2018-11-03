@@ -96,8 +96,7 @@ public class MusicBlockTest {
 
 		assertThat( new MusicBlock( Arrays.asList( musicBlock1, musicBlock2 ) ), is(
 				new MusicBlock( 0, Arrays.asList(
-						new InstrumentPart( Arrays.asList( new NewMelody( new Note( C5, QUARTER_NOTE ) ),
-								new NewMelody( new Note( C6, WHOLE_NOTE ) ) ) ),
+						new InstrumentPart( Arrays.asList( new NewMelody( new Note( C5, QUARTER_NOTE ), new Note( C6, WHOLE_NOTE ) ) ) ),
 						new InstrumentPart( Arrays.asList( new NewMelody( new Note( B4, QUARTER_NOTE ) ),
 								new Chord( Arrays.asList( 55, 56 ), WHOLE_NOTE ) ) ) ),
 						null,
