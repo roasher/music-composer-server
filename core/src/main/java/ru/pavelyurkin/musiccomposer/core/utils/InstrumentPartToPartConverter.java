@@ -24,7 +24,7 @@ public class InstrumentPartToPartConverter implements Converter<InstrumentPart, 
 				.forEach( noteGroup -> {
 					if ( noteGroup instanceof NewMelody ) {
 						NewMelody newMelody = ( NewMelody ) noteGroup;
-						Phrase phrase = new Phrase( newMelody.getNotes().toArray( new Note[] {} ) );
+						Phrase phrase = new Phrase( newMelody.clone().getNotes().toArray( new Note[] {} ) );
 						phrase.setAppend( true );
 						part.add( phrase );
 					} else {
