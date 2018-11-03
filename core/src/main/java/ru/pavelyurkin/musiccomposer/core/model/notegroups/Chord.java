@@ -6,6 +6,7 @@ import lombok.Data;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +26,7 @@ public class Chord extends NoteGroup {
 
 	@Override
 	public Chord clone() {
-		return new Chord( pitches, rhythmValue );
+		return new Chord( new ArrayList<>( pitches ), rhythmValue );
 	}
 
 	@Override

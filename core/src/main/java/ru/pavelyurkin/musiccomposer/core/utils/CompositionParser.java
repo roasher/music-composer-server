@@ -58,7 +58,7 @@ public class CompositionParser {
 			if (notePitches.size() == 1) {
 				instrumentPart.glueNoteToTheEnd( new Note( notePitches.get( 0 ), edge - previousEdge ) );
 			} else {
-				instrumentPart.addChordToTheEnd( new Chord( notePitches,edge - previousEdge ) );
+				instrumentPart.glueChordToTheEnd( new Chord( notePitches,edge - previousEdge ) );
 			}
 			previousEdge = edge;
 		}

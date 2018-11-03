@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.utils;
 
+import com.google.common.annotations.VisibleForTesting;
 import jm.constants.Pitches;
 import jm.music.data.Note;
 import jm.music.data.Part;
@@ -319,6 +320,7 @@ public class ModelUtils {
 		return true;
 	}
 
+	@VisibleForTesting
 	static InstrumentPart normalizeInstrumentPart( InstrumentPart instrumentPartNoNormalize ) {
 		InstrumentPart instrumentPart = new InstrumentPart();
 		instrumentPart.setInstrument( instrumentPartNoNormalize.getInstrument() );
@@ -326,7 +328,7 @@ public class ModelUtils {
 		instrumentPart.getNoteGroups().add( instrumentPartNoNormalize.getNoteGroups().get( 0 ).clone() );
 
 		for ( int noteGroupNumber = 1; noteGroupNumber < instrumentPartNoNormalize.getNoteGroups().size(); noteGroupNumber++ ) {
-			NoteGroup noteGroupToAdd = instrumentPartNoNormalize.getNoteGroups().get( noteGroupNumber );
+			NoteGroup noteGroupToAdd = instrumentPartNoNormalize.getNoteGroups().get( noteGroupNumber ).clone();
 			NoteGroup lastGroupNote = getLast( instrumentPart.getNoteGroups() );
 
 			if ( lastGroupNote instanceof NewMelody && noteGroupToAdd instanceof NewMelody ) {

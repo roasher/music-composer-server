@@ -20,6 +20,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isOneOf;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getTransposePitch;
+import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.normalizeInstrumentPart;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.trimToTime;
 
 /**
@@ -209,5 +210,46 @@ public class ModelUtilsTest {
 	public void calculateTransposePitchIfParallelWithRests() throws Exception {
 		assertThat( getTransposePitch( Arrays.asList( 10, Note.REST, 11 ),
 				Arrays.asList( 20, Note.REST, 21 ) ), is( 10  ) );
+	}
+
+	@Test
+	public void equalObjIfNothingToNormalize() throws Exception {
+		InstrumentPart instrumentPart = new InstrumentPart( Arrays.asList(
+				new NewMelody( new Note( C4, WHOLE_NOTE ), new Note( C5, WHOLE_NOTE ) ),
+				new Chord( Arrays.asList( C1, C2 ), QUARTER_NOTE ),
+				new NewMelody( new Note( C4, WHOLE_NOTE ) )
+		) );
+
+		assertThat( normalizeInstrumentPart( instrumentPart ), is( instrumentPart ) );
+	}
+
+	@Test
+	public void reduceMelodiesWhileNormalizing() throws Exception {
+		InstrumentPart instrumentPart = new InstrumentPart( Arrays.asList(
+				new NewMelody( new Note( C4, WHOLE_NOTE ), new Note( C5, WHOLE_NOTE ) ),
+				new NewMelody( new Note( C4, WHOLE_NOTE ) ),
+				new Chord( Arrays.asList( C1, C2 ), QUARTER_NOTE )
+		) );
+
+		assertThat( normalizeInstrumentPart( instrumentPart ), is( new InstrumentPart( Arrays.asList(
+				new NewMelody( new Note( C4, WHOLE_NOTE ), new Note( C5, WHOLE_NOTE ), new Note( C4, WHOLE_NOTE  ) ),
+				new Chord( Arrays.asList( C1, C2 ), QUARTER_NOTE )
+		) ) ) );
+	}
+
+	@Test
+	public void inputObjectRemainIntactWhileNormalising() throws Exception {
+		InstrumentPart instrumentPart = new InstrumentPart( Arrays.asList(
+				new NewMelody( new Note( C4, WHOLE_NOTE ), new Note( C5, WHOLE_NOTE ) ),
+				new NewMelody( new Note( C4, WHOLE_NOTE ) ),
+				new Chord( Arrays.asList( C1, C2 ), QUARTER_NOTE ),
+				new Chord( Arrays.asList( C1, C2 ), HALF_NOTE )
+		) );
+
+		InstrumentPart clone = instrumentPart.clone();
+
+		normalizeInstrumentPart( instrumentPart );
+
+		assertThat( clone, is( instrumentPart ) );
 	}
 }

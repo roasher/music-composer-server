@@ -84,7 +84,7 @@ public class CompositionDecomposer {
 	 * @return
 	 */
 	public Lexicon getComposeBlocks( List<MusicBlock> musicBlockList ) {
-		log.info( "Calculating compose blocks" );
+		log.info( "Calculating Lexicon" );
 
 		List<ComposeBlock> composeBlocks = new ArrayList<>();
 		Map<Integer, List<Integer>> possibleNextMusicBlockNumbers = musicBlockProvider.getAllPossibleNextVariants( musicBlockList );
@@ -109,7 +109,7 @@ public class CompositionDecomposer {
 
 		Lexicon lexicon = new Lexicon( composeBlocks, possibleNextMusicBlockNumbers );
 
-		log.info( "Compose blocks calculation done." );
+		log.info( "Lexicon calculation done." );
 		return lexicon;
 	}
 

@@ -121,7 +121,7 @@ public class InstrumentPart {
 		}
 	}
 
-	public void addChordToTheEnd( Chord chordToAdd ) {
+	public void glueChordToTheEnd( Chord chordToAdd ) {
 		if ( noteGroups.isEmpty() ||
 				getLast( noteGroups ) instanceof NewMelody ||
 				!( ( Chord ) getLast( noteGroups ) ).samePitches( chordToAdd.getPitches() ) ) {
@@ -130,5 +130,9 @@ public class InstrumentPart {
 			Chord lastChord = ( Chord ) getLast( noteGroups );
 			lastChord.setRhythmValue( lastChord.getRhythmValue() + chordToAdd.getRhythmValue() );
 		}
+	}
+
+	public void addChordToTheEnd( Chord chordToAdd ) {
+		noteGroups.add( chordToAdd );
 	}
 }
