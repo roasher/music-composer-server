@@ -11,6 +11,7 @@ import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
 
 import java.lang.reflect.Field;
@@ -18,6 +19,8 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static com.google.common.collect.Iterables.getLast;
 
 /**
  * Class aggregates useful utilities upon Model objects
@@ -304,13 +307,36 @@ public class ModelUtils {
 				.collect( Collectors.toList());
 	}
 
-	public static boolean isExactEquals( List<InstrumentPart> firstMelodies, List<InstrumentPart> secondMelodies ) {
-		if ( firstMelodies.size() != secondMelodies.size() ) return false;
-		for ( int melodyNumber = 0; melodyNumber < firstMelodies.size(); melodyNumber++ ) {
-			if ( !firstMelodies.get( melodyNumber ).equals( secondMelodies.get( melodyNumber ) ) ) {
+	public static boolean isExactEquals( List<InstrumentPart> firstInstrumentParts, List<InstrumentPart> secondIntrumentParts ) {
+		if ( firstInstrumentParts.size() != secondIntrumentParts.size() ) return false;
+		for ( int melodyNumber = 0; melodyNumber < firstInstrumentParts.size(); melodyNumber++ ) {
+			InstrumentPart normalizedFirst = normalizeInstrumentPart( firstInstrumentParts.get( melodyNumber ) );
+			InstrumentPart normalizedSecond = normalizeInstrumentPart( secondIntrumentParts.get( melodyNumber ) );
+			if ( !normalizedFirst.equals( normalizedSecond ) ) {
 				return false;
 			}
 		}
 		return true;
 	}
+
+	static InstrumentPart normalizeInstrumentPart( InstrumentPart instrumentPartNoNormalize ) {
+		InstrumentPart instrumentPart = new InstrumentPart();
+		instrumentPart.setInstrument( instrumentPartNoNormalize.getInstrument() );
+
+		instrumentPart.getNoteGroups().add( instrumentPartNoNormalize.getNoteGroups().get( 0 ).clone() );
+
+		for ( int noteGroupNumber = 1; noteGroupNumber < instrumentPartNoNormalize.getNoteGroups().size(); noteGroupNumber++ ) {
+			NoteGroup noteGroupToAdd = instrumentPartNoNormalize.getNoteGroups().get( noteGroupNumber );
+			NoteGroup lastGroupNote = getLast( instrumentPart.getNoteGroups() );
+
+			if ( lastGroupNote instanceof NewMelody && noteGroupToAdd instanceof NewMelody ) {
+				( ( NewMelody ) lastGroupNote ).addNotesToTheEnd( ( ( NewMelody ) noteGroupToAdd ).getNotes() );
+			} else {
+				instrumentPart.getNoteGroups().add( noteGroupToAdd );
+			}
+		}
+
+		return instrumentPart;
+	}
+
 }
