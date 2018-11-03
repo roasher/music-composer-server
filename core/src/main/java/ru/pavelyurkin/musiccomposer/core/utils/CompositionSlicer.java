@@ -73,7 +73,7 @@ public class CompositionSlicer {
 		InstrumentPart lastSlice = state.slices.get( state.slices.size() - 1 );
 		double lastSliceRhythmValue = lastSlice.getRythmValue();
 		if ( lastSliceRhythmValue < timePeriod ) {
-			lastSlice.addNoteToTheEnd( new Note( JMC.REST, timePeriod - lastSliceRhythmValue ) );
+			lastSlice.glueNoteToTheEnd( new Note( JMC.REST, timePeriod - lastSliceRhythmValue ) );
 		}
 
 		checkSlicesOccupancy( state.slices, timePeriod );
@@ -154,7 +154,7 @@ public class CompositionSlicer {
 		for ( InstrumentPart instrumentPart : instrumentParts ) {
 			double rythmValue = instrumentPart.getRythmValue();
 			if ( rythmValue != compositionEndTime ) {
-					instrumentPart.addNoteToTheEnd( new Rest( compositionEndTime - rythmValue ) );
+					instrumentPart.glueNoteToTheEnd( new Rest( compositionEndTime - rythmValue ) );
 			}
 		}
     }

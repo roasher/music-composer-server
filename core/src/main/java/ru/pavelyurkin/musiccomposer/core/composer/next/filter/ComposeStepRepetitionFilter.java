@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
+import lombok.NoArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 import java.util.ArrayList;
@@ -14,10 +15,8 @@ import static ru.pavelyurkin.musiccomposer.core.utils.Utils.compare;
 /**
  * Filters out blocks including whom will cause repetition
  */
+@NoArgsConstructor
 public class ComposeStepRepetitionFilter extends AbstractComposeStepFilter {
-
-	public ComposeStepRepetitionFilter() {
-	}
 
 	public ComposeStepRepetitionFilter( AbstractComposeStepFilter composeStepFilter ) {
 		super( composeStepFilter );

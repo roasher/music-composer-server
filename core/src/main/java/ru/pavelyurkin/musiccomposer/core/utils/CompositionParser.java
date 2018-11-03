@@ -27,8 +27,9 @@ public class CompositionParser {
 		List<InstrumentPart> instrumentParts = ( List<InstrumentPart> ) composition.getPartList().stream()
 				.map( part -> {
 					InstrumentPart instrumentPart = convert( ( Part ) part );
+					// add rest to the end
 					if ( composition.getEndTime() > instrumentPart.getRythmValue() ) {
-						instrumentPart.addNoteToTheEnd( new Rest( composition.getEndTime() - instrumentPart.getRythmValue() ) );
+						instrumentPart.glueNoteToTheEnd( new Rest( composition.getEndTime() - instrumentPart.getRythmValue() ) );
 					}
 					return instrumentPart;
 				} )
@@ -55,7 +56,7 @@ public class CompositionParser {
 					.distinct()
 					.collect( Collectors.toList() );
 			if (notePitches.size() == 1) {
-				instrumentPart.addNoteToTheEnd( new Note( notePitches.get( 0 ), edge - previousEdge ) );
+				instrumentPart.glueNoteToTheEnd( new Note( notePitches.get( 0 ), edge - previousEdge ) );
 			} else {
 				instrumentPart.addChordToTheEnd( new Chord( notePitches,edge - previousEdge ) );
 			}
