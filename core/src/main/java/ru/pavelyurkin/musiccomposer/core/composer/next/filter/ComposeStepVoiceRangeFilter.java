@@ -43,9 +43,10 @@ public class ComposeStepVoiceRangeFilter extends AbstractComposeStepFilter {
 	@Override
 	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {
 		if ( block.getInstrumentParts().size() > melodyRange.size() ) throw new RuntimeException( "Number of melodies is greater than number of ranges" );
-		for ( int melodyNumber = 0; melodyNumber < block.getInstrumentParts().size(); melodyNumber++ ) {
-			InstrumentPart instrumentPart = block.getInstrumentParts().get( melodyNumber );
-			if ( instrumentPart.getMaxPitch() > melodyRange.get( melodyNumber ).highPitch || instrumentPart.getMinNonRestPitch() < melodyRange.get( melodyNumber ).lowPitch ) {
+		for ( int instrumentPartNumber = 0; instrumentPartNumber < block.getInstrumentParts().size(); instrumentPartNumber++ ) {
+			InstrumentPart instrumentPart = block.getInstrumentParts().get( instrumentPartNumber );
+			if ( instrumentPart.isRest() ) continue;
+			if ( instrumentPart.getMaxPitch() > melodyRange.get( instrumentPartNumber ).highPitch || instrumentPart.getMinNonRestPitch() < melodyRange.get( instrumentPartNumber ).lowPitch ) {
 				return false;
 			}
 		}
