@@ -18,6 +18,7 @@ import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
 public class NextStepProviderImpl extends FilteredNextStepProvider {
 
 	private final EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer;
+	private final Random random = new Random(  );
 
 	public NextStepProviderImpl( EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer,
 			ComposeStepFilter composeStepFilter ) {
@@ -45,7 +46,7 @@ public class NextStepProviderImpl extends FilteredNextStepProvider {
 
 			return lastOfPossibles;
 		} else {
-			return blocksToChooseFrom.stream().reduce( ( composeStep1, composeStep2 ) -> composeStep2 );
+			return !blocksToChooseFrom.isEmpty() ? Optional.of( blocksToChooseFrom.get( random.nextInt( blocksToChooseFrom.size() ) ) ) : Optional.empty();
 		}
 	}
 
