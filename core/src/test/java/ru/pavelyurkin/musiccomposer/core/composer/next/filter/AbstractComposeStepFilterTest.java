@@ -52,7 +52,7 @@ public class AbstractComposeStepFilterTest {
 	@Test
 	public void correctFilterReplacement() {
 		ComposeStepFilter composeStepFilter = new ComposeStepRepetitionFilter(
-				new ComposeStepVarietyFilter( 6,
+				new ComposeStepVarietyFilter( -1, 6,
 						new ComposeStepRestFilter( QUARTER_NOTE,
 								new ComposeStepVoiceRangeFilter( Arrays.asList(
 										new ComposeStepVoiceRangeFilter.Range( C4, C6 ),
@@ -61,10 +61,10 @@ public class AbstractComposeStepFilterTest {
 										new ComposeStepVoiceRangeFilter.Range( F2, F4 )
 								) ) ) ) );
 
-		composeStepFilter.replaceFilter(new ComposeStepVarietyFilter(1));
+		composeStepFilter.replaceFilter(new ComposeStepVarietyFilter(-1, 1));
 		AbstractComposeStepFilter abstractComposeStepFilter = (AbstractComposeStepFilter) composeStepFilter;
 		assertThat(((ComposeStepVarietyFilter) abstractComposeStepFilter.getComposeStepFilter())
-				.getPossibleBlockNumberFromSameCompositionOneByOne(), is (1));
+				.getMaxSequentialBlocksFromSameComposition(), is (1));
 
 		composeStepFilter.replaceFilter(new ComposeStepVoiceRangeFilter(Collections.emptyList()));
 		assertTrue(((ComposeStepVoiceRangeFilter) abstractComposeStepFilter.getComposeStepFilter().getComposeStepFilter().getComposeStepFilter())
@@ -80,7 +80,7 @@ public class AbstractComposeStepFilterTest {
 				new ComposeStepVoiceRangeFilter.Range(F2, F4)
 		));
 		ComposeStepRestFilter composeStepFilter2 = new ComposeStepRestFilter(QUARTER_NOTE, composeStepFilter1);
-		ComposeStepVarietyFilter composeStepFilter3 = new ComposeStepVarietyFilter(6,
+		ComposeStepVarietyFilter composeStepFilter3 = new ComposeStepVarietyFilter(-1, 6,
 				composeStepFilter2);
 		ComposeStepFilter composeStepFilter = new ComposeStepRepetitionFilter(composeStepFilter3);
 

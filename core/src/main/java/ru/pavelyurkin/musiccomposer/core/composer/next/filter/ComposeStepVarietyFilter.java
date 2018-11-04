@@ -1,15 +1,15 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
 import lombok.Data;
-import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
+import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
-import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.google.common.collect.Iterables.getLast;
 
 /**
  * Created by wish on 02.02.2016.
@@ -22,30 +22,58 @@ import java.util.stream.Collectors;
 @Data
 public class ComposeStepVarietyFilter extends AbstractComposeStepFilter {
 
-	private int possibleBlockNumberFromSameCompositionOneByOne;
+	private int maxSequentialBlocksFromSameComposition;
+	private int minSequentialBlocksFromSameComposition;
 
 	public ComposeStepVarietyFilter() {
 	}
 
-	public ComposeStepVarietyFilter( int possibleBlockNumberFromSameCompositionOneByOne, AbstractComposeStepFilter composeStepFilter ) {
+	public ComposeStepVarietyFilter( int minSequentialBlocksFromSameComposition,
+			int maxSequentialBlocksFromSameComposition,
+			AbstractComposeStepFilter composeStepFilter ) {
 		super( composeStepFilter );
-		this.possibleBlockNumberFromSameCompositionOneByOne = possibleBlockNumberFromSameCompositionOneByOne;
+		this.maxSequentialBlocksFromSameComposition = maxSequentialBlocksFromSameComposition;
+		this.minSequentialBlocksFromSameComposition = minSequentialBlocksFromSameComposition;
 	}
 
-	public ComposeStepVarietyFilter( int possibleBlockNumberFromSameCompositionOneByOne ) {
-		this.possibleBlockNumberFromSameCompositionOneByOne = possibleBlockNumberFromSameCompositionOneByOne;
+	public ComposeStepVarietyFilter( int minSequentialBlocksFromSameComposition, int maxSequentialBlocksFromSameComposition ) {
+		this.maxSequentialBlocksFromSameComposition = maxSequentialBlocksFromSameComposition;
+		this.minSequentialBlocksFromSameComposition = minSequentialBlocksFromSameComposition;
 	}
 
 	@Override
 	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {
-		if ( previousBlocks.size() > possibleBlockNumberFromSameCompositionOneByOne ) {
+		return isOkMaxSequentialBlocksFromSameComposition( block, previousBlocks ) &&
+				isOkMinSequentialBlocksFromSameComposition( block, previousBlocks );
+	}
+
+	private boolean isOkMaxSequentialBlocksFromSameComposition( MusicBlock block, List<MusicBlock> previousBlocks ) {
+		if ( maxSequentialBlocksFromSameComposition <= 0 ) return true;
+		if ( previousBlocks.size() >= maxSequentialBlocksFromSameComposition ) {
 			Set<CompositionInfo> compositionInfos = previousBlocks.stream()
-					.skip( previousBlocks.size() - possibleBlockNumberFromSameCompositionOneByOne )
+					.skip( previousBlocks.size() - maxSequentialBlocksFromSameComposition )
 					.map( MusicBlock::getCompositionInfo ).collect( Collectors.toSet() );
 			return compositionInfos.size() != 1 || !compositionInfos.contains( block.getCompositionInfo() );
 		} else {
 			return true;
 		}
+	}
+
+	private boolean isOkMinSequentialBlocksFromSameComposition( MusicBlock musicBlock, List<MusicBlock> previousBlocks ) {
+		if ( minSequentialBlocksFromSameComposition <= 0 ) return true;
+		if ( previousBlocks.isEmpty() ) return true;
+		if ( getLast( previousBlocks ).getCompositionInfo().equals( musicBlock.getCompositionInfo() ) ) {
+			return true;
+		} else {
+			if ( previousBlocks.size() < minSequentialBlocksFromSameComposition ) return false;
+			long countDifferentCompositionInfos = previousBlocks.stream()
+					.map( MusicBlock::getCompositionInfo )
+					.skip( previousBlocks.size() - minSequentialBlocksFromSameComposition )
+					.distinct()
+					.count();
+			return countDifferentCompositionInfos == 1;
+		}
+
 	}
 
 }

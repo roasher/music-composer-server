@@ -16,7 +16,7 @@ public class MozartFilter implements ComposeStepFilter {
 
 	@Delegate
 	private ComposeStepFilter composeStepFilter = new ComposeStepRepetitionFilter(
-			new ComposeStepVarietyFilter( 6,
+			new ComposeStepVarietyFilter( -1, 6,
 					new ComposeStepRestFilter( QUARTER_NOTE,
 							new ComposeStepRangeFilter( C2, C7 ) ) ) );
 
