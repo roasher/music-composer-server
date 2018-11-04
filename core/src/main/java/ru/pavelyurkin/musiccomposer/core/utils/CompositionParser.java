@@ -57,8 +57,11 @@ public class CompositionParser {
 					.collect( Collectors.toList() );
 			if (notePitches.size() == 1) {
 				instrumentPart.glueNoteToTheEnd( new Note( notePitches.get( 0 ), edge - previousEdge ) );
+			} else if ( notePitches.size() > 1 ) {
+				instrumentPart.glueChordToTheEnd( new Chord( notePitches, edge - previousEdge ) );
 			} else {
-				instrumentPart.glueChordToTheEnd( new Chord( notePitches,edge - previousEdge ) );
+				// add rest if delay on start
+				instrumentPart.glueNoteToTheEnd( new Rest( edge - previousEdge ) );
 			}
 			previousEdge = edge;
 		}

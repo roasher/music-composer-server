@@ -150,7 +150,8 @@ public class CompositionComposer {
 				InstrumentPart instrumentPart = instrumentParts.get( blockNumber ).get( partNumber );
 				Phrase phrase = instrumentPartToPartConverter.convert( instrumentPart ).getPhrase( 0 );
 				phrase.setAppend( true );
-				Phrase previousPhrase = ( Phrase ) parts.get( partNumber ).getPhraseList().get( parts.get( partNumber ).getPhraseList().size() - 1 );
+				Part part = parts.get( partNumber );
+				Phrase previousPhrase = ( Phrase ) part.getPhraseList().get( part.getPhraseList().size() - 1 );
 
 				Note previousNote = ( Note ) previousPhrase.getNoteList().get( previousPhrase.size() - 1 );
 				Note firstNote = ( Note ) phrase.getNoteList().get( 0 );
@@ -162,7 +163,7 @@ public class CompositionComposer {
 				}
 
 				if ( !phrase.getNoteList().isEmpty() ) {
-					parts.get( partNumber ).add( phrase );
+					part.add( phrase );
 				}
 			}
 		}

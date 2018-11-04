@@ -1,7 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.model.notegroups;
 
 import jm.music.data.Note;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -13,11 +12,18 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Data
-@AllArgsConstructor
 public class Chord extends NoteGroup {
 
 	private List<Integer> pitches;
 	private double rhythmValue;
+
+	public Chord( List<Integer> pitches, double rhythmValue ) {
+		this.pitches = pitches;
+		this.rhythmValue = rhythmValue;
+		if (pitches.isEmpty()) {
+			throw new IllegalArgumentException( "Pitches array can't be empty" );
+		}
+	}
 
 	@Override
 	public double getRhythmValue() {

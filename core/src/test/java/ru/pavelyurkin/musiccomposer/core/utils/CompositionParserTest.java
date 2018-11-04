@@ -145,4 +145,24 @@ public class CompositionParserTest {
 				)
 		);
 	}
+
+	@Test
+	public void cropIfCompositionStartsWithDelay() throws Exception {
+		Score score = new Score();
+
+		Phrase firstPhrase = new Phrase();
+		firstPhrase.add( new Note( D5, DOTTED_HALF_NOTE ) );
+		firstPhrase.setStartTime( QUARTER_NOTE );
+
+		Part part = new Part();
+		part.add( firstPhrase );
+		score.add( part );
+
+		Composition composition = new Composition( score );
+
+		assertThat( compositionParser.parse( composition ), is( Arrays.asList(
+					new InstrumentPart( Arrays.asList( new NewMelody( new Rest(QUARTER_NOTE), new Note( D5, DOTTED_HALF_NOTE ) ) ), 0 ) )
+				)
+		);
+	}
 }
