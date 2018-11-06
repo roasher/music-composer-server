@@ -4,7 +4,6 @@ import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,7 +19,6 @@ import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.InversionMelody
 import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.OrderMelodyMovementEquality;
 
 @TestConfiguration
-@EnableAutoConfiguration
 @PropertySource( "classpath:test-application.properties" )
 @ComponentScan( basePackages = "ru.pavelyurkin.musiccomposer.core", excludeFilters = { @ComponentScan.Filter( type = FilterType.ASSIGNABLE_TYPE, value = Application.class ) } )
 // todo refactor
