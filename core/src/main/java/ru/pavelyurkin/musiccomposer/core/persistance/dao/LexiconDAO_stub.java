@@ -2,7 +2,6 @@ package ru.pavelyurkin.musiccomposer.core.persistance.dao;
 
 import org.springframework.stereotype.Repository;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -12,6 +11,11 @@ import java.io.IOException;
 @Repository
 public class LexiconDAO_stub implements LexiconDAO {
 	@Override public void persist( Lexicon lexicon ) throws IOException {
+		// doing nothing
+	}
+
+	@Override
+	public void clear() {
 		// doing nothing
 	}
 

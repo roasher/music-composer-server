@@ -1,11 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
-import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
-import jm.music.data.Note;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,11 +29,7 @@ public class ComposeStepRestFilter extends AbstractComposeStepFilter {
 
 	@Override
 	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {
-		boolean hasNonRestInIt = block.getMelodyList()
-				.stream()
-				.flatMap( melody -> melody.getNoteList().stream() )
-				.anyMatch( note -> !( ( Note ) note ).isRest() );
-		return hasNonRestInIt || block.getRhythmValue() <= maxRestRhythmValue;
+		return !block.isRest() || block.getRhythmValue() <= maxRestRhythmValue;
 	}
 
 }

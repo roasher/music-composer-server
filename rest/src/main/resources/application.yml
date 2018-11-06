@@ -4,14 +4,6 @@ server.port: 8888
 spring:
   application:
     name: MusicComposer
-  datasource:
-    username: sa
-    driver-class-name: org.h2.Driver
-  jpa:
-    database: db2
-    hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.H2Dialect
 
 MelodyFormEqualityAnalyzer.equalityTestPassThreshold: 0.45
 FormEquality.instrumentEqualityPassThreshold: 0.7

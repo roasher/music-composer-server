@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
-
 /**
  * Created by wish on 04.02.2016.
  */

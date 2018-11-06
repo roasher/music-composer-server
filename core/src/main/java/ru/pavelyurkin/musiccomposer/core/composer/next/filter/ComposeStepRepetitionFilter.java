@@ -1,13 +1,12 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
-import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
+import lombok.NoArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static jm.constants.Durations.*;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.isExactEquals;
@@ -16,10 +15,8 @@ import static ru.pavelyurkin.musiccomposer.core.utils.Utils.compare;
 /**
  * Filters out blocks including whom will cause repetition
  */
+@NoArgsConstructor
 public class ComposeStepRepetitionFilter extends AbstractComposeStepFilter {
-
-	public ComposeStepRepetitionFilter() {
-	}
 
 	public ComposeStepRepetitionFilter( AbstractComposeStepFilter composeStepFilter ) {
 		super( composeStepFilter );
@@ -29,7 +26,7 @@ public class ComposeStepRepetitionFilter extends AbstractComposeStepFilter {
 	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {
 		List<MusicBlock> musicBlocksToCheck = new ArrayList<>( previousBlocks );
 		musicBlocksToCheck.add( block );
-		Map<Double, Integer> rhythmValueRepetitions = getRepetitions( musicBlocksToCheck, 2 * WHOLE_NOTE );
+		Map<Double, Integer> rhythmValueRepetitions = getRepetitions( musicBlocksToCheck, 4 * WHOLE_NOTE );
 		for ( Map.Entry<Double, Integer> rhythmValueRepetition : rhythmValueRepetitions.entrySet() ) {
 			if ( rhythmValueRepetition.getValue() > getMaxNumberOfRepetitions( rhythmValueRepetition.getKey() ) ) {
 				return false;
@@ -85,7 +82,7 @@ public class ComposeStepRepetitionFilter extends AbstractComposeStepFilter {
 	}
 
 	private boolean melodyExactEquality( List<MusicBlock> firstMusicBlocks, List<MusicBlock> secondMusicBlocks ) {
-		return isExactEquals( new MusicBlock( firstMusicBlocks ).getMelodyList(), new MusicBlock( secondMusicBlocks ).getMelodyList() );
+		return isExactEquals( new MusicBlock( firstMusicBlocks ).getInstrumentParts(), new MusicBlock( secondMusicBlocks ).getInstrumentParts() );
 	}
 
 	// TODO parametrise it

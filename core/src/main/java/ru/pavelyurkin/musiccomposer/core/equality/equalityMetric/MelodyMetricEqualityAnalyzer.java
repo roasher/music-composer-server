@@ -1,10 +1,11 @@
 package ru.pavelyurkin.musiccomposer.core.equality.equalityMetric;
 
-import jm.music.data.Note;
-import ru.pavelyurkin.musiccomposer.core.utils.Recombinator;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
+import ru.pavelyurkin.musiccomposer.core.utils.Recombinator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,13 +13,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static jm.constants.Durations.QUARTER_NOTE;
 import static jm.constants.Durations.WHOLE_NOTE;
 import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
 
 @Component
-public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melody> {
+@AllArgsConstructor
+public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<InstrumentPart> {
 
+	private final Recombinator recombinator;
 	/**
 	 * Main idea of getting this metrics - is how many operations should be performed to change second melody
 	 * to be like first.
@@ -27,29 +29,29 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melo
 	 *
 	 * // TODO made output between 0 and 1
 	 *
-	 * @param firstMelody
-	 * @param secondMelody
+	 * @param firstInstrumentPart
+	 * @param secondInstrumentPart
 	 * @return
 	 */
 	@Override
-	public double getEqualityMetric( Melody firstMelody, Melody secondMelody ) {
-		if ( !isEquals( firstMelody.getRythmValue(), secondMelody.getRythmValue() ) ) {
+	public double getEqualityMetric( InstrumentPart firstInstrumentPart, InstrumentPart secondInstrumentPart ) {
+		if ( !isEquals( firstInstrumentPart.getRythmValue(), secondInstrumentPart.getRythmValue() ) ) {
 			throw new IllegalArgumentException( "Input melodies have different rhythm values." );
 		}
-		List<Double> unionRhythmValues = getUnionRhythmValues( firstMelody.getNoteList(), secondMelody.getNoteList() );
-		List<Note> transformedFirst = transformMelodyToNewRhythmValues( firstMelody.getNoteList(), unionRhythmValues );
-		List<Note> transformedSecond = transformMelodyToNewRhythmValues( secondMelody.getNoteList(), unionRhythmValues );
+		List<Double> unionRhythmValues = getUnionRhythmValues( firstInstrumentPart.getNoteGroups(), secondInstrumentPart.getNoteGroups() );
+		List<NoteGroup> transformedFirst = transformMelodyToNewRhythmValues( firstInstrumentPart.getNoteGroups(), unionRhythmValues );
+		List<NoteGroup> transformedSecond = transformMelodyToNewRhythmValues( secondInstrumentPart.getNoteGroups(), unionRhythmValues );
 		Assert.isTrue( transformedFirst.size() == transformedSecond.size() );
 		/**
 		 * Calculating rhythm difference metric
-		 * To transform secondMelody into first in rhythmical way two operations should be preformed - cutting some notes
+		 * To transform secondInstrumentPart into first in rhythmical way two operations should be preformed - cutting some notes
 		 * and joining some.
-		 * numberOfCuttedNotes is the number of notes that should be cutted in firstMelody to get it unionRhythm-like
-		 * this is exact number of cuttings that should be performed on secondMelody to get it firstMelody rhythmic like
+		 * numberOfCuttedNotes is the number of notes that should be cutted in firstInstrumentPart to get it unionRhythm-like
+		 * this is exact number of cuttings that should be performed on secondInstrumentPart to get it firstInstrumentPart rhythmic like
 		 * Secondally we are getting number of needed joins.
 		 */
-		int numberOfCuttedNotes = unionRhythmValues.size() - firstMelody.size();
-		int numberOfJoinedNotes = unionRhythmValues.size() - secondMelody.size();
+		int numberOfCuttedNotes = unionRhythmValues.size() - firstInstrumentPart.getNoteGroups().size();
+		int numberOfJoinedNotes = unionRhythmValues.size() - secondInstrumentPart.getNoteGroups().size();
 		double rhythmDiffMetric = 0.5*numberOfCuttedNotes + 0.5*numberOfJoinedNotes;
 		/*
 		Calculating stong/weak time ( changed notes of strong time are more different than others )
@@ -59,53 +61,55 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melo
 		/*
 		Next, we are going to count pitch different metric.
 		Taking into consideration that it should be done regardless transposition we will count several metrics and choose min
-		We are going to use brute force - counting metric considering transposition of first note of secondMelody
-		to first note of the firstMelody, than second to second and so on...
+		We are going to use brute force - counting metric considering transposition of first note of secondInstrumentPart
+		to first note of the firstInstrumentPart, than second to second and so on...
 		 */
 		double minPitchDiffMetric = Integer.MAX_VALUE;
-		for ( int numberOfNoteThatWeAreSettingEqual = 0;
-			  numberOfNoteThatWeAreSettingEqual < transformedFirst.size(); numberOfNoteThatWeAreSettingEqual++ ) {
-			Note note1 = transformedFirst.get( numberOfNoteThatWeAreSettingEqual );
-			Note note2 = transformedSecond.get( numberOfNoteThatWeAreSettingEqual );
-			if ( note1.isRest() || note2.isRest() ) {
-				continue;
-			}
-			int pitchToTransposeSecond = note1.getPitch() - note2.getPitch();
-
-			double pitchDiffMetric = 0;
-			for ( int currentNote = 0; currentNote < transformedFirst.size(); currentNote++ ) {
-				// All logic of calculating pitch diff metric goes here
-				int transposedSecondMelodyNotePitch = !transformedSecond.get( currentNote ).isRest() ?
-						transformedSecond.get( currentNote ).getPitch() + pitchToTransposeSecond: Note.REST;
-				int firstMelodyNotePitch = transformedFirst.get( currentNote ).getPitch();
-				if ( firstMelodyNotePitch != transposedSecondMelodyNotePitch ) {
-					// Different note penalty
-					pitchDiffMetric += 0.8*unionRhythmValues.get( currentNote )/QUARTER_NOTE;
-					// Penalty for pitch difference
-					if (firstMelodyNotePitch != Note.REST && transposedSecondMelodyNotePitch != Note.REST) {
-						int diff = Math.abs( firstMelodyNotePitch - transposedSecondMelodyNotePitch );
-						pitchDiffMetric += ( 10.0 * diff ) / Note.MAX_PITCH;
-					} else if (firstMelodyNotePitch == Note.REST && transposedSecondMelodyNotePitch != Note.REST) {
-						// penalty for inserting note while in the origin is rest
-						pitchDiffMetric += 0.4;
-					} else if (firstMelodyNotePitch != Note.REST && transposedSecondMelodyNotePitch == Note.REST) {
-						// penalty for eliminating origin note to rest
-						pitchDiffMetric += 0.1;
-					}
-					// Penalty for strong time
-					if ( isStrongTime.get( currentNote ) ) {
-						pitchDiffMetric += 0.2;
-					}
-				}
-			}
-			if ( pitchDiffMetric < minPitchDiffMetric ) {
-				minPitchDiffMetric = pitchDiffMetric;
-			}
-		}
-		/*
-		Now we will combine pitch diff metric with rhythmValue diff metric
-		 */
-		return 1 - ( rhythmDiffMetric + minPitchDiffMetric ) / secondMelody.size();
+		// TODO implements this according to new data model
+		return 0;
+//		for ( int numberOfNoteThatWeAreSettingEqual = 0;
+//			  numberOfNoteThatWeAreSettingEqual < transformedFirst.size(); numberOfNoteThatWeAreSettingEqual++ ) {
+//			NoteGroup note1 = transformedFirst.get( numberOfNoteThatWeAreSettingEqual );
+//			NoteGroup note2 = transformedSecond.get( numberOfNoteThatWeAreSettingEqual );
+//			if ( note1.isRest() || note2.isRest() ) {
+//				continue;
+//			}
+//			int pitchToTransposeSecond = note1.getPitch() - note2.getPitch();
+//
+//			double pitchDiffMetric = 0;
+//			for ( int currentNote = 0; currentNote < transformedFirst.size(); currentNote++ ) {
+//				// All logic of calculating pitch diff metric goes here
+//				int transposedSecondMelodyNotePitch = !transformedSecond.get( currentNote ).isRest() ?
+//						transformedSecond.get( currentNote ).getPitch() + pitchToTransposeSecond: Note.REST;
+//				int firstMelodyNotePitch = transformedFirst.get( currentNote ).getPitch();
+//				if ( firstMelodyNotePitch != transposedSecondMelodyNotePitch ) {
+//					// Different note penalty
+//					pitchDiffMetric += 0.8*unionRhythmValues.get( currentNote )/QUARTER_NOTE;
+//					// Penalty for pitch difference
+//					if (firstMelodyNotePitch != Note.REST && transposedSecondMelodyNotePitch != Note.REST) {
+//						int diff = Math.abs( firstMelodyNotePitch - transposedSecondMelodyNotePitch );
+//						pitchDiffMetric += ( 10.0 * diff ) / Note.MAX_PITCH;
+//					} else if (firstMelodyNotePitch == Note.REST && transposedSecondMelodyNotePitch != Note.REST) {
+//						// penalty for inserting note while in the origin is rest
+//						pitchDiffMetric += 0.4;
+//					} else if (firstMelodyNotePitch != Note.REST && transposedSecondMelodyNotePitch == Note.REST) {
+//						// penalty for eliminating origin note to rest
+//						pitchDiffMetric += 0.1;
+//					}
+//					// Penalty for strong time
+//					if ( isStrongTime.get( currentNote ) ) {
+//						pitchDiffMetric += 0.2;
+//					}
+//				}
+//			}
+//			if ( pitchDiffMetric < minPitchDiffMetric ) {
+//				minPitchDiffMetric = pitchDiffMetric;
+//			}
+//		}
+//		/*
+//		Now we will combine pitch diff metric with rhythmValue diff metric
+//		 */
+//		return 1 - ( rhythmDiffMetric + minPitchDiffMetric ) / secondInstrumentPart.size();
 	}
 
 	/**
@@ -146,17 +150,18 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melo
 	 * @param newRhythmValues rhythm values that output notes will have
 	 * @return
 	 */
-	List<Note> transformMelodyToNewRhythmValues( List<Note> notes, List<Double> newRhythmValues ) {
-		List<Note> out = new ArrayList<>();
+	List<NoteGroup> transformMelodyToNewRhythmValues( List<NoteGroup> notes, List<Double> newRhythmValues ) {
+		List<NoteGroup> out = new ArrayList<>();
 		int notesRhythmValueCounter = 0;
 		int newRhythmValuesCounter = 0;
 		double sumRhythmValue = 0;
 		while ( notesRhythmValueCounter != notes.size() ) {
-			Note note = notes.get( notesRhythmValueCounter );
+			NoteGroup noteGroup = notes.get( notesRhythmValueCounter );
 			double rhythmValue = newRhythmValues.get( newRhythmValuesCounter );
 			sumRhythmValue += rhythmValue;
-			out.add( new Note( note.getPitch(), rhythmValue ) );
-			if ( isEquals(note.getRhythmValue(), sumRhythmValue) ) {
+			// todo
+//			out.add( noteGroup.cloneRange( rhythmValue ) );
+			if ( isEquals(noteGroup.getRhythmValue(), sumRhythmValue) ) {
 				notesRhythmValueCounter++;
 				sumRhythmValue = 0;
 			}
@@ -174,9 +179,9 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Melo
 	 * @param secondNotes
 	 * @return
 	 */
-	List<Double> getUnionRhythmValues( List<Note> firstNotes, List<Note> secondNotes ) {
-		Set<Double> firstEdges = new HashSet<>( Recombinator.getEdgeList( firstNotes ) );
-		List<Double> secondEdges = Recombinator.getEdgeList( secondNotes );
+	List<Double> getUnionRhythmValues( List<NoteGroup> firstNotes, List<NoteGroup> secondNotes ) {
+		Set<Double> firstEdges = new HashSet<>( recombinator.getRhythmEdgeList( firstNotes ) );
+		List<Double> secondEdges = recombinator.getRhythmEdgeList( secondNotes );
 		firstEdges.addAll( secondEdges );
 		List<Double> unionEdges = firstEdges.stream().sorted().collect( Collectors.toList() );
 		List<Double> out = new ArrayList<>();

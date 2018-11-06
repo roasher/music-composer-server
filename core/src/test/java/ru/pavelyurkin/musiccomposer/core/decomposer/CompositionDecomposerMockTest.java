@@ -1,39 +1,33 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer;
 
-import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
+import com.google.common.collect.ImmutableSet;
 import jm.music.data.Note;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
+import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CompositionDecomposerMockTest extends AbstractSpringTest {
+@RunWith( MockitoJUnitRunner.class )
+public class CompositionDecomposerMockTest {
 
 	@InjectMocks
 	private CompositionDecomposer compositionDecomposer;
 
 	@Mock
 	private MusicBlockProvider musicBlockProvider;
-
-	@Before
-	public void init() {
-		MockitoAnnotations.initMocks( this );
-	}
 
 	@Test
 	public void isTwoLinked() {
@@ -57,7 +51,7 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 
 		when( musicBlockProvider.getAllPossibleNextVariants( any( List.class ) ) ).thenReturn( map );
 
-		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock ).getComposeBlockList();
+		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock ).getComposeBlocks();
 
 		ComposeBlock composeBlock0 = composeBlockList.get( 0 );
 		ComposeBlock composeBlock1 = composeBlockList.get( 1 );
@@ -88,11 +82,11 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 	@Test
 	public void getComposeBlocksTest() {
 
-		MusicBlock musicBlock0 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 60, 0 ) )} ), null );
-		MusicBlock musicBlock1 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 61, 1 ) )} ), null );
-		MusicBlock musicBlock2 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 62, 2 ) )} ), null );
-		MusicBlock musicBlock3 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 63, 3 ) )} ), null );
-		MusicBlock musicBlock4 = new MusicBlock( Arrays.asList( new Melody[]{ new Melody( new Note( 64, 4 ) )} ), null );
+		MusicBlock musicBlock0 = new MusicBlock( 0, Arrays.asList( new InstrumentPart( new Note( 60, 0 ) ) ), null );
+		MusicBlock musicBlock1 = new MusicBlock( 0, Arrays.asList( new InstrumentPart( new Note( 61, 0 ) ) ), null );
+		MusicBlock musicBlock2 = new MusicBlock( 0, Arrays.asList( new InstrumentPart( new Note( 62, 0 ) ) ), null );
+		MusicBlock musicBlock3 = new MusicBlock( 0, Arrays.asList( new InstrumentPart( new Note( 63, 0 ) ) ), null );
+		MusicBlock musicBlock4 = new MusicBlock( 0, Arrays.asList( new InstrumentPart( new Note( 64, 0 ) ) ), null );
 
 		List<MusicBlock> inputMusicBlock = new ArrayList<MusicBlock>(  );
 		inputMusicBlock.add( musicBlock0 );
@@ -101,16 +95,16 @@ public class CompositionDecomposerMockTest extends AbstractSpringTest {
 		inputMusicBlock.add( musicBlock3 );
 		inputMusicBlock.add( musicBlock4 );
 
-		Map<Integer, List<Integer>> map = new HashMap<>();
-		map.put( 0, Arrays.asList( 1, 3, 4 ) );
-		map.put( 1, Arrays.asList( 0, 4 ) );
-		map.put( 2, Arrays.asList( 0, 3, 4 ) );
-		map.put( 3, Arrays.asList( 0, 2 ) );
-		map.put( 4, Arrays.asList( 0, 1, 2 ) );
+		Map<Integer, Set<Integer>> map = new HashMap<>();
+		map.put( 0, ImmutableSet.of( 1, 3, 4 ) );
+		map.put( 1, ImmutableSet.of( 0, 4 ) );
+		map.put( 2, ImmutableSet.of( 0, 3, 4 ) );
+		map.put( 3, ImmutableSet.of( 0, 2 ) );
+		map.put( 4, ImmutableSet.of( 0, 1, 2 ) );
 
-		when( musicBlockProvider.getAllPossibleNextVariants( any( List.class ) ) ).thenReturn( map );
+		when( musicBlockProvider.getAllPossibleNextVariants( any() ) ).thenReturn( map );
 
-		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock ).getComposeBlockList();
+		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock ).getComposeBlocks();
 		assertEquals( inputMusicBlock.size(), composeBlockList.size() );
 
 		assertEquals( 3, composeBlockList.get( 0 ).getPossibleNextComposeBlocks().size() );

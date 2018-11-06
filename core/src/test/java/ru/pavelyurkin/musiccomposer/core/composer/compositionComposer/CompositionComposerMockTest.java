@@ -1,7 +1,5 @@
 package ru.pavelyurkin.musiccomposer.core.composer.compositionComposer;
 
-import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import jm.JMC;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +9,9 @@ import org.mockito.MockitoAnnotations;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.composer.FormBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
+import ru.pavelyurkin.musiccomposer.core.exception.ComposeException;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by pyurkin on 15.12.14.
  */
-public class CompositionComposerMockTest extends AbstractSpringTest {
+public class CompositionComposerMockTest {
 
 	@InjectMocks
 	private CompositionComposer compositionComposer;
@@ -82,7 +82,7 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 
 	}
 
-	@Test
+	@Test(expected = ComposeException.class )
 	public void composeStepsFailing() {
 
 		List<Optional<FormCompositionStep>> formCompositionSteps = getMockFormCompositionSteps( 10 );
@@ -96,7 +96,6 @@ public class CompositionComposerMockTest extends AbstractSpringTest {
 				.thenReturn( formCompositionSteps.get( 7 ) ).thenReturn( formCompositionSteps.get( 8 ) );
 
 		List<FormCompositionStep> compositionSteps = compositionComposer.composeSteps( null, null, "ABCD", JMC.WHOLE_NOTE );
-		assertEquals( 0, compositionSteps.size() );
 	}
 
 	private List<Optional<FormCompositionStep>> getMockFormCompositionSteps( int number ) {

@@ -2,11 +2,13 @@ package ru.pavelyurkin.musiccomposer.core.model.composition;
 
 import ru.pavelyurkin.musiccomposer.core.utils.Utils;
 
+import java.io.Serializable;
+
 /**
  * Class represents CompositionInfo
  * Created by Pavel Yurkin on 18.07.14.
  */
-public class CompositionInfo {
+public class CompositionInfo implements Serializable {
     private String author;
     private String title;
     private double tempo;

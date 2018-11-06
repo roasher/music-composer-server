@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer.first;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
@@ -12,6 +13,7 @@ import java.util.Optional;
  * Created by Wish on 22.12.2015.
  */
 @Component
+@Slf4j
 public class RandomFirstStepProvider implements FirstStepProvider {
 
 	/**
@@ -21,13 +23,14 @@ public class RandomFirstStepProvider implements FirstStepProvider {
 	 */
 	@Override
 	public Optional<CompositionStep> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
-		List<ComposeBlock> allPossibleFirstBlocks = lexicon.getAllPossibleFirst();
+		List<ComposeBlock> allPossibleFirstBlocks = lexicon.getAllPossibleFirsts();
 		allPossibleFirstBlocks.removeAll( exclusions );
 		if ( !allPossibleFirstBlocks.isEmpty() ) {
 			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );
-//			int randomNumber = 0;
+//			int randomNumber = 27;
+			log.info( "First block number {}", randomNumber );
 			ComposeBlock composeBlock = allPossibleFirstBlocks.get( randomNumber );
-			return Optional.of( new CompositionStep( composeBlock, composeBlock.getMusicBlock().transposeClone( 0 ) ) );
+			return Optional.of( new CompositionStep( composeBlock, composeBlock.getMusicBlock().clone() ) );
 		} else {
 			return Optional.empty();
 		}

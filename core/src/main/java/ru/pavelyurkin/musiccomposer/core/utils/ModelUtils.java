@@ -1,22 +1,27 @@
 package ru.pavelyurkin.musiccomposer.core.utils;
 
+import com.google.common.annotations.VisibleForTesting;
 import jm.constants.Pitches;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.BlockMovement;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
+import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static com.google.common.collect.Iterables.getLast;
 
 /**
  * Class aggregates useful utilities upon Model objects
@@ -25,29 +30,14 @@ import java.util.stream.Collectors;
 public class ModelUtils {
 
 	/**
-	 * Checking that all melodies starts from the same time and returning that time
-	 * @param melodyList
-	 * @return
-	 */
-	public static double retrieveStartTime( List<Melody> melodyList ) {
-		double currentStartTime = melodyList.get( 0 ).getStartTime();
-		for ( int currentInstrument = 1; currentInstrument < melodyList.size(); currentInstrument++ ) {
-			if ( currentStartTime != melodyList.get( currentInstrument ).getStartTime() ) {
-				throw new IllegalArgumentException( String.format( "Several instrument parts has different start times, for example: 0 and %s ", currentInstrument ) );
-			}
-		}
-		return currentStartTime;
-	}
-
-	/**
 	 * Checking that all melodies has same rhythm value and returns this value
-	 * @param melodyList
+	 * @param instrumentParts
 	 * @return
 	 */
-	public static double retrieveRhythmValue( List<Melody> melodyList ) {
-		double currentRhytmValue = sumAllRhytmValues( melodyList.get( 0 ) );
-		for ( int currentInstrument = 1; currentInstrument < melodyList.size(); currentInstrument++ ) {
-			if ( currentRhytmValue != sumAllRhytmValues( melodyList.get( currentInstrument ) ) ) {
+	public static double retrieveRhythmValue( List<InstrumentPart> instrumentParts ) {
+		double currentRhytmValue = instrumentParts.get( 0 ).getRythmValue();
+		for ( int currentInstrument = 1; currentInstrument < instrumentParts.size(); currentInstrument++ ) {
+			if ( currentRhytmValue != instrumentParts.get( currentInstrument ).getRythmValue() ) {
 				throw new IllegalArgumentException( String.format( "Several instruments has different rhytmValues, for example: 0 and %s ", currentInstrument ) );
 			}
 		}
@@ -56,27 +46,26 @@ public class ModelUtils {
 
 	/**
 	 * Retrieves interval pattern between first notes of melodies.
-	 * @param melodyList
+	 * @param instrumentParts
 	 * @return
 	 */
-	public static List<Integer> retrieveFirstIntervalPattern( List<Melody> melodyList ) {
+	public static List<Integer> retrieveFirstIntervalPattern( List<InstrumentPart> instrumentParts ) {
 		List<Integer> firstVertical = new ArrayList<Integer>();
-		for ( int currentInstrument = 0; currentInstrument < melodyList.size(); currentInstrument++ ) {
-			firstVertical.add( melodyList.get( currentInstrument ).getPitchArray()[0] );
+		for ( int currentInstrument = 0; currentInstrument < instrumentParts.size(); currentInstrument++ ) {
+			firstVertical.addAll( instrumentParts.get( currentInstrument ).getFirstVerticalPitches() );
 		}
 		return retrieveIntervalPattern( firstVertical );
 	}
 
 	/**
 	 * Retrieves interval pattern between last notes of melodies.
-	 * @param melodyList
+	 * @param instrumentParts
 	 * @return
 	 */
-	public static List<Integer> retrieveLastIntervalPattern( List<Melody> melodyList ) {
+	public static List<Integer> retrieveLastIntervalPattern( List<InstrumentPart> instrumentParts ) {
 		List<Integer> lastVertical = new ArrayList<Integer>();
-		for ( int currentInstrument = 0; currentInstrument < melodyList.size(); currentInstrument++ ) {
-			int lastNoteNumber = melodyList.get( currentInstrument ).size() - 1;
-			lastVertical.add( melodyList.get( currentInstrument ).getPitchArray()[lastNoteNumber] );
+		for ( int currentInstrument = 0; currentInstrument < instrumentParts.size(); currentInstrument++ ) {
+			lastVertical.addAll( instrumentParts.get( currentInstrument ).getLastVerticalPitches() );
 		}
 		return retrieveIntervalPattern( lastVertical );
 	}
@@ -88,14 +77,16 @@ public class ModelUtils {
      */
     public static List< Integer > retrieveIntervalPattern( List<Integer> notePitches ) {
         // To prevent input List changing we will create a copy
-        List< Integer > copyInputNotePitches = new ArrayList< Integer >( notePitches );
+		List<Integer> copyInputNotePitchesWithoutRests = notePitches.stream()
+				.filter( pitch -> pitch != Note.REST )
+				.collect( Collectors.toList());
 
-        Collections.sort( copyInputNotePitches );
+        Collections.sort( copyInputNotePitchesWithoutRests );
 
-        List< Integer > intervalPattern = new ArrayList<Integer>( copyInputNotePitches.size() - 1 );
-        for ( int currentPitchNumber = 0; currentPitchNumber < copyInputNotePitches.size() - 1; currentPitchNumber++ ) {
-			Integer currentPitch = copyInputNotePitches.get(currentPitchNumber);
-			Integer nextPitch = copyInputNotePitches.get( currentPitchNumber + 1 );
+        List<Integer> intervalPattern = new ArrayList<>();
+        for ( int currentPitchNumber = 0; currentPitchNumber < copyInputNotePitchesWithoutRests.size() - 1; currentPitchNumber++ ) {
+			Integer currentPitch = copyInputNotePitchesWithoutRests.get(currentPitchNumber);
+			Integer nextPitch = copyInputNotePitchesWithoutRests.get( currentPitchNumber + 1 );
 			if ( ( currentPitch != Note.REST && nextPitch == Note.REST ) || ( currentPitch == Note.REST && nextPitch != Note.REST ) ) {
 				intervalPattern.add( Note.REST );
 			} else {
@@ -164,75 +155,91 @@ public class ModelUtils {
 	}
 
 	/**
-	 * Returns pitch on which second block should be transposed according to first
-     * To be able to calculate transpose pitch there should be at least one pair of non rest notes
-     * in lastNoteOfFirst and firstNoteOfSecond blocks and also firstNoteOfSecond movementFromPreviousToThis
-     * shouldn't be movement from rest
-	 * @param firstBlock
-	 * @param secondBlock
+	 * Return pitch that could be added to pitches asIs to make it toBe
+	 * @param pitchesAsIs
+	 * @param pitchesToBe
 	 * @return
 	 */
-	public static int getTransposePitch( Optional<MusicBlock> firstBlock, MusicBlock secondBlock ) {
-		if ( !firstBlock.isPresent() ) return 0;
-		// check if all pauses
-		if ( secondBlock.getMelodyList()
-				.stream()
-				.flatMap( melody -> melody.getNoteList().stream() )
-				.filter( note ->  !( ( Note ) note ).isRest() ).count() == 0 ) return 0;
-		for ( int melodyNumber = 0; melodyNumber < firstBlock.get().getMelodyList().size(); melodyNumber++ ) {
-			Note lastNoteOfFirst = firstBlock.get().getMelodyList().get( melodyNumber )
-					.getNote( firstBlock.get().getMelodyList().get( melodyNumber ).size() - 1 );
-			Note firstNoteOfSecond = secondBlock.getMelodyList().get( melodyNumber ).getNote( 0 );
-			int noteMovement = secondBlock.getBlockMovementFromPreviousToThis().getVoiceMovements().get(melodyNumber);
-			if ( lastNoteOfFirst.getPitch() != Note.REST && firstNoteOfSecond.getPitch() != Note.REST &&
-                    noteMovement != BlockMovement.MOVEMENT_FROM_REST) {
-				return lastNoteOfFirst.getPitch() + noteMovement - firstNoteOfSecond.getPitch();
-			}
+	public static int getTransposePitch( List<Integer> pitchesAsIs, List<Integer> pitchesToBe  ) {
+		if (pitchesToBe.size() != pitchesAsIs.size()) {
+			throw new RuntimeException( "Can't capreviousEndPitcheslculate transpose pitch. Desired end pitches and fact previous end pitches has different amount of notes" );
 		}
-		throw new IllegalArgumentException("Can't calculate pitch to transpose");
+//		Collections.sort( pitchesToBe );
+//		Collections.sort( pitchesAsIs );
+
+		List<Integer> subtractions = IntStream.range( 0, pitchesToBe.size() )
+				.filter( operand -> {
+					boolean isRest1 = pitchesAsIs.get( operand ) == Note.REST;
+					boolean isRest2 = pitchesToBe.get( operand ) == Note.REST;
+					// exclude rests
+					return !( isRest1 && isRest2 );
+				} )
+				.map( operand -> pitchesToBe.get( operand ) - pitchesAsIs.get( operand ) )
+				.distinct()
+				.boxed()
+				.collect( Collectors.toList() );
+
+		// all are rests
+		if ( subtractions.isEmpty() ) return 0;
+
+		if ( subtractions.size() > 1 ) {
+			throw new RuntimeException( "Can't calculate transpose pitch. Desired end pitches and fact previous end pitches are not compatible." );
+		}
+
+		Integer transposePitch = subtractions.get( 0 );
+		if ( Math.abs( transposePitch ) > Note.MAX_PITCH ) {
+			throw new RuntimeException( "Calculated pitch is out of range" );
+		}
+		return transposePitch;
 	}
 
-	public static List<Melody> trimToTime( List<Melody> melodies, double startTime, double endTime ) {
-		return melodies.stream().map( melody -> trimToTime( melody, startTime, endTime ) ).collect( Collectors.toList() );
+	public static List<InstrumentPart> trimToTime( List<InstrumentPart> instrumentParts, double startTime, double endTime ) {
+		return instrumentParts.stream()
+				.map( melody -> trimToTime( melody, startTime, endTime ) )
+				.collect( Collectors.toList() );
 	}
 
 	/**
-	 * @param melody
+	 * @param instrumentPart
 	 * @param startTime
 	 * @param endTime
 	 * @return
 	 */
-	public static Melody trimToTime( Melody melody, double startTime, double endTime ) {
-		if ( startTime < 0 || endTime > melody.getRythmValue()  || startTime > endTime ) {
+	public static InstrumentPart trimToTime( InstrumentPart instrumentPart, double startTime, double endTime ) {
+		if ( startTime < 0 || endTime > instrumentPart.getRythmValue()  || startTime > endTime ) {
 			throw new IllegalArgumentException( "Cant trim with this parameters: startTime = " + startTime + " ,endTime = " + endTime );
 		}
-		BigDecimal noteStartTime = BigDecimal.ZERO;
-		Melody out = new Melody(  );
-		for ( int noteNumber = 0; noteNumber < melody.size(); noteNumber++ ) {
-			Note currentNote = melody.getNote( noteNumber );
-			BigDecimal rhythmValue = BigDecimal.valueOf( currentNote.getRhythmValue() );
-			BigDecimal noteEndTime = noteStartTime.add( rhythmValue );
+		BigDecimal noteGroupStartTime = BigDecimal.ZERO;
+		BigDecimal startTimeBD = BigDecimal.valueOf( startTime );
+		BigDecimal endTimeBD = BigDecimal.valueOf( endTime );
+
+		List<NoteGroup> noteGroups = new ArrayList<>(  );
+		InstrumentPart out = new InstrumentPart(noteGroups, instrumentPart.getInstrument());
+		for ( int noteGroupNumber = 0; noteGroupNumber < instrumentPart.getNoteGroups().size(); noteGroupNumber++ ) {
+			NoteGroup noteGroup = instrumentPart.getNoteGroups().get( noteGroupNumber );
+			BigDecimal rhythmValue = BigDecimal.valueOf( noteGroup.getRhythmValue() );
+			BigDecimal noteGroupEndTime = noteGroupStartTime.add( rhythmValue );
 			//   noteStTime             noteEndTime					noteEndTime may be after endTime
 			// ------<>--------|------------<>------------------|----------<>-------
 			//	 			startTime		  				endTime
-			if ( noteStartTime.doubleValue() <= startTime && noteEndTime.doubleValue() > startTime ) {
-				BigDecimal min = BigDecimal.valueOf( Math.min( endTime, noteEndTime.doubleValue() ) );
-				out.add( new Note( currentNote.getPitch(), min.subtract( BigDecimal.valueOf( startTime ) ).doubleValue() ) );
+			if ( noteGroupStartTime.doubleValue() <= startTime && noteGroupEndTime.doubleValue() > startTime ) {
+				noteGroups.add( noteGroup.cloneRange( startTimeBD.subtract( noteGroupStartTime ).doubleValue(),
+						( endTimeBD.min( noteGroupEndTime )).subtract( noteGroupStartTime ).doubleValue() ) );
 			} else
 				//             noteStTime     noteEndTime
 				// ------|--------<>------------<>------------------|-------------------
 				//	 startTime		  				              endTime
-				if ( noteStartTime.doubleValue() >= startTime && noteEndTime.doubleValue() <= endTime ) {
-				out.add( currentNote );
+				if ( noteGroupStartTime.doubleValue() >= startTime && noteGroupEndTime.doubleValue() <= endTime ) {
+				noteGroups.add( noteGroup.clone() );
 			} else
 				//             noteStTime     								noteEndTime
 				// ------|--------<>---------------------------------|-----------<>-------
 				//	 startTime		  				              endTime
-				if ( noteStartTime.doubleValue() < endTime && noteEndTime.doubleValue() > endTime ) {
-				out.add( new Note( currentNote.getPitch(), BigDecimal.valueOf( endTime ).subtract( noteStartTime ).doubleValue() ) );
+				if ( noteGroupStartTime.doubleValue() < endTime && noteGroupEndTime.doubleValue() > endTime ) {
+				noteGroups.add( noteGroup.cloneRange( 0, endTimeBD.subtract( noteGroupStartTime ).doubleValue() ) );
 				return out;
 			}
-			noteStartTime = noteStartTime.add( rhythmValue );
+			noteGroupStartTime = noteGroupStartTime.add( rhythmValue );
 		}
 		return out;
 	}
@@ -301,13 +308,37 @@ public class ModelUtils {
 				.collect( Collectors.toList());
 	}
 
-	public static boolean isExactEquals( List<Melody> firstMelodies, List<Melody> secondMelodies ) {
-		if ( firstMelodies.size() != secondMelodies.size() ) return false;
-		for ( int melodyNumber = 0; melodyNumber < firstMelodies.size(); melodyNumber++ ) {
-			if ( !firstMelodies.get( melodyNumber ).isExactEquals( secondMelodies.get( melodyNumber ) ) ) {
+	public static boolean isExactEquals( List<InstrumentPart> firstInstrumentParts, List<InstrumentPart> secondIntrumentParts ) {
+		if ( firstInstrumentParts.size() != secondIntrumentParts.size() ) return false;
+		for ( int melodyNumber = 0; melodyNumber < firstInstrumentParts.size(); melodyNumber++ ) {
+			InstrumentPart normalizedFirst = normalizeInstrumentPart( firstInstrumentParts.get( melodyNumber ) );
+			InstrumentPart normalizedSecond = normalizeInstrumentPart( secondIntrumentParts.get( melodyNumber ) );
+			if ( !normalizedFirst.equals( normalizedSecond ) ) {
 				return false;
 			}
 		}
 		return true;
 	}
+
+	@VisibleForTesting
+	static InstrumentPart normalizeInstrumentPart( InstrumentPart instrumentPartNoNormalize ) {
+		InstrumentPart instrumentPart = new InstrumentPart();
+		instrumentPart.setInstrument( instrumentPartNoNormalize.getInstrument() );
+
+		instrumentPart.getNoteGroups().add( instrumentPartNoNormalize.getNoteGroups().get( 0 ).clone() );
+
+		for ( int noteGroupNumber = 1; noteGroupNumber < instrumentPartNoNormalize.getNoteGroups().size(); noteGroupNumber++ ) {
+			NoteGroup noteGroupToAdd = instrumentPartNoNormalize.getNoteGroups().get( noteGroupNumber ).clone();
+			NoteGroup lastGroupNote = getLast( instrumentPart.getNoteGroups() );
+
+			if ( lastGroupNote instanceof NewMelody && noteGroupToAdd instanceof NewMelody ) {
+				( ( NewMelody ) lastGroupNote ).addNotesToTheEnd( ( ( NewMelody ) noteGroupToAdd ).getNotes() );
+			} else {
+				instrumentPart.getNoteGroups().add( noteGroupToAdd );
+			}
+		}
+
+		return instrumentPart;
+	}
+
 }

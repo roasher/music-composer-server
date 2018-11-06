@@ -1,39 +1,40 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer;
 
-import com.github.springtestdbunit.DbUnitTestExecutionListener;
-import com.github.springtestdbunit.annotation.DatabaseSetup;
+import jm.JMC;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
-import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
-import jm.JMC;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by pyurkin on 17.04.2015.
  */
-@TestExecutionListeners( { DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class } )
-@DatabaseSetup( "/persistance/dao/LexiconDAOTest-blank.xml" )
 public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 	@Autowired
 	private CompositionDecomposer compositionDecomposer;
 	@Autowired
 	private CompositionLoader compositionLoader;
 	@Autowired
-	@Qualifier( "lexiconDAO_database" )
+	@Qualifier( "lexiconDAO_mapdb" )
 	private LexiconDAO lexiconDAO;
+
+	@Before
+	public void init() throws Exception {
+		lexiconDAO.clear();
+	}
 
 	@Test
 	public void decomposeWithOrWithoutStoringEqual() throws IOException {
@@ -44,7 +45,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 		// second decompose with file
 		Lexicon lexiconWithDB = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
-		assertEquals( lexiconWithDB, lexiconWithoutDB );
+		assertThat( lexiconWithDB, is( lexiconWithoutDB ) );
 	}
 
 	@Test
@@ -59,7 +60,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 		// Decompose all melodies using DB with only one melody
 		Lexicon lexiconWithDB = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
-		assertEquals( lexiconWithDB, lexiconFull );
+		assertThat( lexiconWithDB, is( lexiconFull ) );
 	}
 
 	@Test
@@ -74,7 +75,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
 
 		// Decompose second melody using DB with only first melody
 		Lexicon lexiconSecondWithDB = compositionDecomposer.decompose( compositionList.get( 1 ), JMC.WHOLE_NOTE );
-		assertEquals( lexiconSecondWithDB, lexiconSecond );
+		assertThat( lexiconSecondWithDB, is( lexiconSecond ) );
 	}
 
 	@Test

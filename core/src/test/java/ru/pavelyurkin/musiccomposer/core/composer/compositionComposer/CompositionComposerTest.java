@@ -1,9 +1,5 @@
 package ru.pavelyurkin.musiccomposer.core.composer.compositionComposer;
 
-import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
-import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
-import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposerTest;
-import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import jm.JMC;
 import jm.music.data.Note;
 import jm.music.data.Part;
@@ -14,10 +10,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
+import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposerTest;
+import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
+import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 import ru.pavelyurkin.musiccomposer.core.utils.Utils;
@@ -47,7 +47,7 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	private CompositionComposer compositionComposer;
 
 	@Autowired
-	@Qualifier( "lexiconDAO_database" )
+	@Qualifier( "lexiconDAO_mapdb" )
 	private LexiconDAO lexiconDAO;
 
 	@Autowired
@@ -63,20 +63,20 @@ public class CompositionComposerTest extends AbstractSpringTest {
 
 	@Test
 	public void gatherCompositionTest() {
-		List<List<Melody>> blocks = getBlocks();
+		List<List<InstrumentPart>> blocks = getBlocks();
 
 		Composition composition = compositionComposer.gatherComposition( blocks );
 		compositionCheck( composition );
 
-		List<List<Melody>> blocks0 = Arrays.asList(
-				Arrays.asList( new Melody( new Rest( QUARTER_NOTE ) ), new Melody( new Note( C3, QUARTER_NOTE ) ) ) );
-		List<List<Melody>> blocks1 = Arrays.asList(
-				Arrays.asList( new Melody( new Rest( EIGHTH_NOTE ) ), new Melody( new Note( C4, EIGHTH_NOTE ) ) ),
+		List<List<InstrumentPart>> blocks0 = Arrays.asList(
+				Arrays.asList( new InstrumentPart( new Rest( QUARTER_NOTE ) ), new InstrumentPart( new Note( C3, QUARTER_NOTE ) ) ) );
+		List<List<InstrumentPart>> blocks1 = Arrays.asList(
+				Arrays.asList( new InstrumentPart( new Rest( EIGHTH_NOTE ) ), new InstrumentPart( new Note( C4, EIGHTH_NOTE ) ) ),
 				Arrays.asList(
-						new Melody( new Note( D5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ), new Note( F5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ) ),
-						new Melody( new Note( C4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( E4, EIGHTH_NOTE ) ) ) );
-		List<List<Melody>> blocks2 = Arrays.asList(
-				Arrays.asList( new Melody( new Note( B5, QUARTER_NOTE ) ), new Melody( new Rest( QUARTER_NOTE ) ) ) );
+						new InstrumentPart( new Note( D5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ), new Note( F5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ) ),
+						new InstrumentPart( new Note( C4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( E4, EIGHTH_NOTE ) ) ) );
+		List<List<InstrumentPart>> blocks2 = Arrays.asList(
+				Arrays.asList( new InstrumentPart( new Note( B5, QUARTER_NOTE ) ), new InstrumentPart( new Rest( QUARTER_NOTE ) ) ) );
 
 		Composition composition0 = compositionComposer.gatherComposition( blocks0 );
 		Composition composition1 = compositionComposer.gatherComposition( blocks1 );
@@ -88,7 +88,7 @@ public class CompositionComposerTest extends AbstractSpringTest {
 
 	@Test
 	public void gatherCompositionNotChangingInputTest() {
-		List<List<Melody>> blocksBeforeGathering = getBlocks();
+		List<List<InstrumentPart>> blocksBeforeGathering = getBlocks();
 		compositionComposer.gatherComposition( blocksBeforeGathering );
 		assertEquals( blocksBeforeGathering, getBlocks() );
 	}
@@ -115,14 +115,14 @@ public class CompositionComposerTest extends AbstractSpringTest {
 		assertTrue( new Rest( QUARTER_NOTE ).equals( secondListOfNotes.get( 5 ) ) );
 	}
 
-	private List<List<Melody>> getBlocks() {
+	private List<List<InstrumentPart>> getBlocks() {
 		return Arrays.asList(
-				Arrays.asList( new Melody( new Rest( QUARTER_NOTE ) ), new Melody( new Note( C3, QUARTER_NOTE ) ) ),
-				Arrays.asList( new Melody( new Rest( EIGHTH_NOTE ) ), new Melody( new Note( C4, EIGHTH_NOTE ) ) ),
+				Arrays.asList( new InstrumentPart( new Rest( QUARTER_NOTE ) ), new InstrumentPart( new Note( C3, QUARTER_NOTE ) ) ),
+				Arrays.asList( new InstrumentPart( new Rest( EIGHTH_NOTE ) ), new InstrumentPart( new Note( C4, EIGHTH_NOTE ) ) ),
 				Arrays.asList(
-						new Melody( new Note( D5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ), new Note( F5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ) ),
-						new Melody( new Note( C4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( E4, EIGHTH_NOTE ) ) ),
-				Arrays.asList( new Melody( new Note( B5, QUARTER_NOTE ) ), new Melody( new Rest( QUARTER_NOTE ) ) ) );
+						new InstrumentPart( new Note( D5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ), new Note( F5, EIGHTH_NOTE ), new Note( E5, EIGHTH_NOTE ) ),
+						new InstrumentPart( new Note( C4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( D4, EIGHTH_NOTE ), new Note( E4, EIGHTH_NOTE ) ) ),
+				Arrays.asList( new InstrumentPart( new Note( B5, QUARTER_NOTE ) ), new InstrumentPart( new Rest( QUARTER_NOTE ) ) ) );
 	}
 
 	private List<Note> getListOfNotes( Part part ) {

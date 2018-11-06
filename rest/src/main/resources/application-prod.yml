@@ -1,5 +1,1 @@
-spring:
-  datasource:
-    url: jdbc:h2:file:~/Music/prod;AUTO_SERVER=TRUE
-
 Bach.chorale.path: /home/pyurkin/Music/Database/Test/Bach chorals/

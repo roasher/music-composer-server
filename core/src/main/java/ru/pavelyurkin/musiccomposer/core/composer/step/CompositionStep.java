@@ -1,10 +1,13 @@
 package ru.pavelyurkin.musiccomposer.core.composer.step;
 
+import lombok.Data;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
+@Data
 /**
  * Class represents step that program makes in order to create new form block
  * One step - one added originComposeBlock to the form block
@@ -44,30 +47,6 @@ public class CompositionStep {
 
 	public void addNextExclusion( ComposeBlock musicBlock ) {
 		this.nextMusicBlockExclusions.add( musicBlock );
-	}
-
-	public ComposeBlock getOriginComposeBlock() {
-		return originComposeBlock;
-	}
-
-	public void setOriginComposeBlock( ComposeBlock originComposeBlock ) {
-		this.originComposeBlock = originComposeBlock;
-	}
-
-	public List<ComposeBlock> getNextMusicBlockExclusions() {
-		return nextMusicBlockExclusions;
-	}
-
-	public void setNextMusicBlockExclusions( List<ComposeBlock> nextMusicBlockExclusions ) {
-		this.nextMusicBlockExclusions = nextMusicBlockExclusions;
-	}
-
-	public MusicBlock getTransposedBlock() {
-		return transposedBlock;
-	}
-
-	public void setTransposedBlock( MusicBlock transposedBlock ) {
-		this.transposedBlock = transposedBlock;
 	}
 
 }

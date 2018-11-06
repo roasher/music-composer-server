@@ -1,18 +1,13 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import jm.music.data.Note;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+
+import java.util.List;
 
 /**
  * Created by wish on 03.02.2016.
@@ -47,16 +42,11 @@ public class ComposeStepVoiceRangeFilter extends AbstractComposeStepFilter {
 
 	@Override
 	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {
-		if ( block.getMelodyList().size() > melodyRange.size() ) throw new RuntimeException( "Number of melodies is greater than number of ranges" );
-		for ( int melodyNumber = 0; melodyNumber < block.getMelodyList().size(); melodyNumber++ ) {
-			Melody melody = block.getMelodyList().get( melodyNumber );
-			List<Integer> pitches = melody.getNoteList()
-					.stream()
-					.mapToInt( value -> ( ( Note ) value ).getPitch() )
-					.filter( value -> value != Note.REST )
-					.boxed()
-					.collect( Collectors.toList() );
-			if ( pitches.size() != 0 && ( Collections.max( pitches ) > melodyRange.get( melodyNumber ).highPitch || Collections.min( pitches ) < melodyRange.get( melodyNumber ).lowPitch ) ) {
+		if ( block.getInstrumentParts().size() > melodyRange.size() ) throw new RuntimeException( "Number of melodies is greater than number of ranges" );
+		for ( int instrumentPartNumber = 0; instrumentPartNumber < block.getInstrumentParts().size(); instrumentPartNumber++ ) {
+			InstrumentPart instrumentPart = block.getInstrumentParts().get( instrumentPartNumber );
+			if ( instrumentPart.isRest() ) continue;
+			if ( instrumentPart.getMaxPitch() > melodyRange.get( instrumentPartNumber ).highPitch || instrumentPart.getMinNonRestPitch() < melodyRange.get( instrumentPartNumber ).lowPitch ) {
 				return false;
 			}
 		}

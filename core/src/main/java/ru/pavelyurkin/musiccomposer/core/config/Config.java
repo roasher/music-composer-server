@@ -1,6 +1,5 @@
 package ru.pavelyurkin.musiccomposer.core.config;
 
-import com.sun.istack.internal.NotNull;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Config {
 
-    @NotNull
     private String pathToCompositions;
-
 
 }

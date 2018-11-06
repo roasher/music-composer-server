@@ -3,12 +3,11 @@ package ru.pavelyurkin.musiccomposer.core.composer.next;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
+import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
-import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,9 +17,10 @@ import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
 
 public class NextStepProviderImpl extends FilteredNextStepProvider {
 
-	private final EqualityMetricAnalyzer<List<Melody>> equalityMetricAnalyzer;
+	private final EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer;
+	private final Random random = new Random(  );
 
-	public NextStepProviderImpl( EqualityMetricAnalyzer<List<Melody>> equalityMetricAnalyzer,
+	public NextStepProviderImpl( EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer,
 			ComposeStepFilter composeStepFilter ) {
 		super( composeStepFilter );
 		this.equalityMetricAnalyzer = equalityMetricAnalyzer;
@@ -46,7 +46,7 @@ public class NextStepProviderImpl extends FilteredNextStepProvider {
 
 			return lastOfPossibles;
 		} else {
-			return blocksToChooseFrom.stream().reduce( ( composeStep1, composeStep2 ) -> composeStep2 );
+			return !blocksToChooseFrom.isEmpty() ? Optional.of( blocksToChooseFrom.get( random.nextInt( blocksToChooseFrom.size() ) ) ) : Optional.empty();
 		}
 	}
 
@@ -88,10 +88,10 @@ public class NextStepProviderImpl extends FilteredNextStepProvider {
 	 * @return
 	 */
 	public double getEqualityMetrics( MusicBlock block, List<MusicBlock> blocksToCompareWith ) {
-		List<List<Melody>> trimmedCollectionOfMelodies = blocksToCompareWith.stream()
-				.map( blockToCompareWith -> ModelUtils.trimToTime( blockToCompareWith.getMelodyList(), 0, block.getRhythmValue() ) )
+		List<List<InstrumentPart>> trimmedCollectionOfMelodies = blocksToCompareWith.stream()
+				.map( blockToCompareWith -> ModelUtils.trimToTime( blockToCompareWith.getInstrumentParts(), 0, block.getRhythmValue() ) )
 				.collect( Collectors.toList() );
-		OptionalDouble average = trimmedCollectionOfMelodies.stream().mapToDouble( value -> equalityMetricAnalyzer.getEqualityMetric( value, block.getMelodyList() ) )
+		OptionalDouble average = trimmedCollectionOfMelodies.stream().mapToDouble( value -> equalityMetricAnalyzer.getEqualityMetric( value, block.getInstrumentParts() ) )
 				.average();
 		return average.orElse( 0 );
 	}

@@ -1,6 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.equality.form;
 
-import javafx.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Interface that holds triple comparable logic

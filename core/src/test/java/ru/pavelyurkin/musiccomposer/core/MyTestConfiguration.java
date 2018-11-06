@@ -1,13 +1,14 @@
 package ru.pavelyurkin.musiccomposer.core;
 
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.EqualNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.Equality;
@@ -18,10 +19,9 @@ import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.InversionMelody
 import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.OrderMelodyMovementEquality;
 
 @TestConfiguration
-@EnableAutoConfiguration
 @PropertySource( "classpath:test-application.properties" )
-@EnableJpaRepositories( basePackages = "ru.pavelyurkin.musiccomposer.core.persistance.dao" )
 @ComponentScan( basePackages = "ru.pavelyurkin.musiccomposer.core", excludeFilters = { @ComponentScan.Filter( type = FilterType.ASSIGNABLE_TYPE, value = Application.class ) } )
+// todo refactor
 public class MyTestConfiguration {
 
 	@Bean
@@ -60,4 +60,13 @@ public class MyTestConfiguration {
 		return new EqualNumberOfNotesRequired( new RhythmEquality() );
 	}
 
+	@Bean
+	public DB Db(@Value( "${persistance.file}" ) String file) {
+		return DBMaker
+				.fileDB(file)
+				.concurrencyDisable()
+				.closeOnJvmShutdown()
+				.fileDeleteAfterClose()
+				.make();
+	}
 }

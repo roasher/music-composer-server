@@ -3,9 +3,8 @@ package ru.pavelyurkin.musiccomposer.rest.converter;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
-import org.springframework.data.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
-import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 import ru.pavelyurkin.musiccomposer.rest.dto.CompositionDTO;
@@ -28,14 +27,14 @@ public class CompositionConverter {
 	public CompositionDTO convert( CompositionFrontDTO compositionFrontDTO ) {
 		Vector partList = compositionFrontDTO.getPartList();
 		List<NoteDTO> noteDTOs = IntStream.range( 0, partList.size() )
-				.mapToObj( i -> Pair.of(i, partList.get( i ) ) )
-				.flatMap( pair -> convert( (List<Note>)
-						( ( Part ) pair.getSecond() ).getPhraseList()
+				.mapToObj( i -> Pair.of( i, partList.get( i ) ) )
+				.flatMap( pair -> convert( ( List<Note> )
+						( ( Part ) pair.getRight() ).getPhraseList()
 								.stream()
 								.flatMap( phrase -> ( ( Phrase ) phrase ).getNoteList().stream() )
 								.collect( Collectors.toList() ),
-						compositionFrontDTO.getPreviousSumRhythmValues(), pair.getFirst() )
-						.stream())
+						compositionFrontDTO.getPreviousSumRhythmValues(), pair.getLeft() )
+						.stream() )
 				.collect( Collectors.toList() );
 		CompositionDTO compositionDTO = new CompositionDTO();
 		compositionDTO.setNotes( noteDTOs );
