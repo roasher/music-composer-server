@@ -85,7 +85,7 @@ public class CompositionDecomposer {
 	 */
 	public Lexicon getComposeBlocks( List<MusicBlock> musicBlocks ) {
 		log.info( "Calculating Lexicon" );
-		Map<Integer, List<Integer>> possibleNextMusicBlockNumbers = musicBlockProvider.getAllPossibleNextVariants( musicBlocks );
+		Map<Integer, Set<Integer>> possibleNextMusicBlockNumbers = musicBlockProvider.getAllPossibleNextVariants( musicBlocks );
 		Lexicon lexicon = new Lexicon( possibleNextMusicBlockNumbers, musicBlocks );
 		log.info( "Lexicon calculation done." );
 
@@ -185,7 +185,7 @@ public class CompositionDecomposer {
 			return firstLexicon;
 		if ( firstLexicon.getComposeBlocks().isEmpty() )
 			return secondLexicon;
-		Map<Integer, List<Integer>> unionMap = unionMaps( firstLexicon.getPossibleNextMusicBlockNumbers(), secondLexicon.getPossibleNextMusicBlockNumbers() );
+		Map<Integer, Set<Integer>> unionMap = unionMaps( firstLexicon.getPossibleNextMusicBlockNumbers(), secondLexicon.getPossibleNextMusicBlockNumbers() );
 		// adding the possible next/previous
 		List<ComposeBlock> firstComposeBlocks = firstLexicon.getComposeBlocks();
 		List<ComposeBlock> secondComposeBlocks = secondLexicon.getComposeBlocks();
@@ -210,12 +210,12 @@ public class CompositionDecomposer {
 		return new Lexicon( union, unionMap );
 	}
 
-	private Map<Integer, List<Integer>> unionMaps( Map<Integer, List<Integer>> firstMap, Map<Integer, List<Integer>> secondMap ) {
-		Map<Integer, List<Integer>> union = new HashMap<>( firstMap );
-		for ( Map.Entry<Integer, List<Integer>> mapEntry : secondMap.entrySet() ) {
+	private Map<Integer, Set<Integer>> unionMaps( Map<Integer, Set<Integer>> firstMap, Map<Integer, Set<Integer>> secondMap ) {
+		Map<Integer, Set<Integer>> union = new HashMap<>( firstMap );
+		for ( Map.Entry<Integer, Set<Integer>> mapEntry : secondMap.entrySet() ) {
 			union.put( mapEntry.getKey() + firstMap.size(), mapEntry.getValue().stream()
 					.map( integer -> integer + firstMap.size() )
-					.collect( Collectors.toList() )
+					.collect( Collectors.toSet() )
 			);
 		}
 		return union;

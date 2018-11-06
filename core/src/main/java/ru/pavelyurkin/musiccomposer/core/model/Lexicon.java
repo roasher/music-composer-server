@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 public class Lexicon implements Serializable {
 
 	private List<ComposeBlock> composeBlocks;
-	private Map<Integer, List<Integer>> possibleNextMusicBlockNumbers;
+	private Map<Integer, Set<Integer>> possibleNextMusicBlockNumbers;
 
-	public Lexicon( List<ComposeBlock> composeBlocks, Map<Integer, List<Integer>> possibleNextMusicBlockNumbers ) {
+	public Lexicon( List<ComposeBlock> composeBlocks, Map<Integer, Set<Integer>> possibleNextMusicBlockNumbers ) {
 		if (possibleNextMusicBlockNumbers.size() != composeBlocks.size()) {
 			throw new IllegalArgumentException("blocks and possibleNexts has different size");
 		}
@@ -26,7 +26,7 @@ public class Lexicon implements Serializable {
 		this.possibleNextMusicBlockNumbers = possibleNextMusicBlockNumbers;
 	}
 
-	public Lexicon( Map<Integer, List<Integer>> possibleNextMusicBlockNumbers, List<MusicBlock> musicBlocks ) {
+	public Lexicon( Map<Integer, Set<Integer>> possibleNextMusicBlockNumbers, List<MusicBlock> musicBlocks ) {
 		if (possibleNextMusicBlockNumbers.size() != musicBlocks.size()) {
 			throw new IllegalArgumentException("blocks and possibleNexts have different size");
 		}

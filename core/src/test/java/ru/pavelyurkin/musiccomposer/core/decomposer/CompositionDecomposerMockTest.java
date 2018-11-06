@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer;
 
+import com.google.common.collect.ImmutableSet;
 import jm.music.data.Note;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -94,12 +95,12 @@ public class CompositionDecomposerMockTest {
 		inputMusicBlock.add( musicBlock3 );
 		inputMusicBlock.add( musicBlock4 );
 
-		Map<Integer, List<Integer>> map = new HashMap<>();
-		map.put( 0, Arrays.asList( 1, 3, 4 ) );
-		map.put( 1, Arrays.asList( 0, 4 ) );
-		map.put( 2, Arrays.asList( 0, 3, 4 ) );
-		map.put( 3, Arrays.asList( 0, 2 ) );
-		map.put( 4, Arrays.asList( 0, 1, 2 ) );
+		Map<Integer, Set<Integer>> map = new HashMap<>();
+		map.put( 0, ImmutableSet.of( 1, 3, 4 ) );
+		map.put( 1, ImmutableSet.of( 0, 4 ) );
+		map.put( 2, ImmutableSet.of( 0, 3, 4 ) );
+		map.put( 3, ImmutableSet.of( 0, 2 ) );
+		map.put( 4, ImmutableSet.of( 0, 1, 2 ) );
 
 		when( musicBlockProvider.getAllPossibleNextVariants( any() ) ).thenReturn( map );
 

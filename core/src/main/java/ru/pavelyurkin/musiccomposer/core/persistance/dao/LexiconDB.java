@@ -8,6 +8,7 @@ import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -15,6 +16,6 @@ import java.util.Map;
 public class LexiconDB implements Serializable {
 
 	private List<MusicBlock> musicBlocks;
-	private Map<Integer, List<Integer>> possibleNextMusicBlockNumbers;
+	private Map<Integer, Set<Integer>> possibleNextMusicBlockNumbers;
 
 }

@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.persistance.dao;
 
+import com.google.common.collect.ImmutableSet;
 import jm.music.data.Note;
 import jm.music.data.Rest;
 import org.junit.Test;
@@ -73,11 +74,11 @@ public class LexiconDAO_mapdbTest extends AbstractSpringTest {
 
 		List<ComposeBlock> composeBlocks = Arrays.asList( composeBlock0, composeBlock1, composeBlock2 );
 
-		List<Integer> possibleNext0 = Arrays.asList( 2 );
-		List<Integer> possibleNext2 = Arrays.asList( 0 );
-		Map<Integer, List<Integer>> mapOfNexts = new HashMap<>();
+		Set<Integer> possibleNext0 = ImmutableSet.of( 2 );
+		Set<Integer> possibleNext2 = ImmutableSet.of( 0 );
+		Map<Integer, Set<Integer>> mapOfNexts = new HashMap<>();
 		mapOfNexts.put( 0, possibleNext0 );
-		mapOfNexts.put( 1, Collections.emptyList() );
+		mapOfNexts.put( 1, Collections.emptySet() );
 		mapOfNexts.put( 2, possibleNext2 );
 
 		Lexicon lexicon = new Lexicon( composeBlocks, mapOfNexts );

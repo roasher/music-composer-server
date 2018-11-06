@@ -4,10 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class handles routine to decide possible nexts from each of input blocks
@@ -19,11 +16,11 @@ public class MusicBlockProvider {
 	 * Returns Map<Integer, List<Integer>> where Integer - music block number from input collection, corresponding list - collection of possible next music
 	 * block numbers
 	 */
-	public Map<Integer, List<Integer>> getAllPossibleNextVariants( List<MusicBlock> musicBlocks ) {
-		Map<Integer, List<Integer>> map = new HashMap<>( musicBlocks.size() );
+	public Map<Integer, Set<Integer>> getAllPossibleNextVariants( List<MusicBlock> musicBlocks ) {
+		Map<Integer, Set<Integer>> map = new HashMap<>( musicBlocks.size() );
 
 		for ( int firstMusicBlockNumber = 0; firstMusicBlockNumber < musicBlocks.size(); firstMusicBlockNumber++ ) {
-			List<Integer> possibleNextMusicBlockNumbers = new ArrayList<>();
+			Set<Integer> possibleNextMusicBlockNumbers = new HashSet<>();
 			map.put( firstMusicBlockNumber, possibleNextMusicBlockNumbers );
 			MusicBlock firstMusicBlock = musicBlocks.get( firstMusicBlockNumber );
 			for ( int possibleNextMusicBlockNumber = 1; possibleNextMusicBlockNumber < musicBlocks.size(); possibleNextMusicBlockNumber++ ) {

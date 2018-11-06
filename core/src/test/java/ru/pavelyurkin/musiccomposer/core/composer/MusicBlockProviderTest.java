@@ -9,10 +9,7 @@ import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -39,7 +36,7 @@ public class MusicBlockProviderTest {
 		doReturn( true ).when( mockProvider ).isPossibleNext( musicBlocks.get( 0 ), musicBlocks.get( 3 ) );
 		doReturn( true ).when( mockProvider ).isPossibleNext( musicBlocks.get( 2 ), musicBlocks.get( 1 ) );
 
-		Map<Integer, List<Integer>> allPossibleNextVariants = mockProvider.getAllPossibleNextVariants( musicBlocks );
+		Map<Integer, Set<Integer>> allPossibleNextVariants = mockProvider.getAllPossibleNextVariants( musicBlocks );
 
 		assertEquals( musicBlocks.size(), allPossibleNextVariants.size() );
 		assertEquals( Arrays.asList( 2, 3 ), allPossibleNextVariants.get( 0 ) );
