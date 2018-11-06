@@ -2,14 +2,14 @@ package ru.pavelyurkin.musiccomposer.core.composer.next;
 
 import jm.music.data.Note;
 import jm.music.data.Rest;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
-import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
@@ -20,23 +20,18 @@ import java.util.stream.Collectors;
 import static jm.JMC.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Created by night wish on 05.03.2016.
  */
-public class NextStepProviderTest extends AbstractSpringTest {
+@RunWith( MockitoJUnitRunner.class )
+public class NextStepProviderTest {
 
 	@InjectMocks
 	private NextStepProviderImpl nextBlockProvider;
 
 	@Mock
 	private EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer;
-
-	@Before
-	public void init() {
-		initMocks( this );
-	}
 
 	@Test
 	public void testGetNextBlock() throws Exception {
@@ -54,7 +49,7 @@ public class NextStepProviderTest extends AbstractSpringTest {
 				new InstrumentPart( new Note( E3, EIGHTH_NOTE ), new Note( F3, EIGHTH_NOTE ) ),
 				new InstrumentPart( new Note( A3, EIGHTH_NOTE ), new Note( B3, EIGHTH_NOTE ) ) ),
                 null ) );
-        ComposeBlock allreadyComposedBlock = new ComposeBlock( Arrays.asList( composeBlock0, composeBlock1, composeBlock2 ) );
+        ComposeBlock alreadyComposedBlock = new ComposeBlock( Arrays.asList( composeBlock0, composeBlock1, composeBlock2 ) );
 
 		// Possible next blocks
 		ComposeBlock composeBlock20 = new ComposeBlock( new MusicBlock( 20, Arrays.asList(
@@ -76,14 +71,14 @@ public class NextStepProviderTest extends AbstractSpringTest {
                 composeBlock22
         ) );
 
-		List<InstrumentPart> melodyList20 = sumMelodies( allreadyComposedBlock.getInstrumentParts(), composeBlock20.getInstrumentParts() );
+		List<InstrumentPart> melodyList20 = sumMelodies( alreadyComposedBlock.getInstrumentParts(), composeBlock20.getInstrumentParts() );
 		when( equalityMetricAnalyzer.getEqualityMetric( any( List.class ), eq( melodyList20 ) ) ).thenReturn( 0.41 );
-		List<InstrumentPart> melodyList21 = sumMelodies( allreadyComposedBlock.getInstrumentParts(), composeBlock21.getInstrumentParts() );
+		List<InstrumentPart> melodyList21 = sumMelodies( alreadyComposedBlock.getInstrumentParts(), composeBlock21.getInstrumentParts() );
 		when( equalityMetricAnalyzer.getEqualityMetric( any( List.class ), eq( melodyList21 ) ) ).thenReturn( 0.51 );
-		List<InstrumentPart> melodyList22 = sumMelodies( allreadyComposedBlock.getInstrumentParts(), composeBlock22.getInstrumentParts() );
+		List<InstrumentPart> melodyList22 = sumMelodies( alreadyComposedBlock.getInstrumentParts(), composeBlock22.getInstrumentParts() );
 		when( equalityMetricAnalyzer.getEqualityMetric( any( List.class ), eq(melodyList22) ) ).thenReturn( 0.4 );
 
-		// Actually we don't care about similarFromSteps as long we mocked equalityMetricAnalyzer
+		// Actually we don't care about similarFormSteps as long we mocked equalityMetricAnalyzer
 		List<ComposeBlock> originComposeBlocks = Arrays.asList( new ComposeBlock(
 				new MusicBlock( 0, Arrays.asList( new InstrumentPart( new Rest( WHOLE_NOTE ) ) ), null ) ) );
 		List<FormCompositionStep> similarFormSteps = Arrays.asList(
