@@ -47,7 +47,7 @@ public class CompositionComposerTest extends AbstractSpringTest {
 	private CompositionComposer compositionComposer;
 
 	@Autowired
-	@Qualifier( "lexiconDAO_database" )
+	@Qualifier( "lexiconDAO_mapdb" )
 	private LexiconDAO lexiconDAO;
 
 	@Autowired

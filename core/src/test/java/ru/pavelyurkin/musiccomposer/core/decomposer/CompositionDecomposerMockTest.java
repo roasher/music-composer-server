@@ -50,7 +50,7 @@ public class CompositionDecomposerMockTest {
 
 		when( musicBlockProvider.getAllPossibleNextVariants( any( List.class ) ) ).thenReturn( map );
 
-		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock ).getComposeBlockList();
+		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock ).getComposeBlocks();
 
 		ComposeBlock composeBlock0 = composeBlockList.get( 0 );
 		ComposeBlock composeBlock1 = composeBlockList.get( 1 );
@@ -103,7 +103,7 @@ public class CompositionDecomposerMockTest {
 
 		when( musicBlockProvider.getAllPossibleNextVariants( any() ) ).thenReturn( map );
 
-		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock ).getComposeBlockList();
+		List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks( inputMusicBlock ).getComposeBlocks();
 		assertEquals( inputMusicBlock.size(), composeBlockList.size() );
 
 		assertEquals( 3, composeBlockList.get( 0 ).getPossibleNextComposeBlocks().size() );

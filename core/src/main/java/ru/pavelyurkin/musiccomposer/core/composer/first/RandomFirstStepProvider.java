@@ -23,7 +23,7 @@ public class RandomFirstStepProvider implements FirstStepProvider {
 	 */
 	@Override
 	public Optional<CompositionStep> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
-		List<ComposeBlock> allPossibleFirstBlocks = lexicon.getAllPossibleFirst();
+		List<ComposeBlock> allPossibleFirstBlocks = lexicon.getAllPossibleFirsts();
 		allPossibleFirstBlocks.removeAll( exclusions );
 		if ( !allPossibleFirstBlocks.isEmpty() ) {
 			int randomNumber = ( int ) ( Math.random() * ( allPossibleFirstBlocks.size() - 1 ) );

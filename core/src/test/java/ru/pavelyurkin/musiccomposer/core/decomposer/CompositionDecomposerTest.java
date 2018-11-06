@@ -29,8 +29,8 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 		Lexicon lexicon = compositionDecomposer.decompose( compositionLoader.getComposition( new File( this.getClass().getResource( "gen_1.mid" ).getFile() ) ), JMC.WHOLE_NOTE );
 		if ( ModelUtils.isTimeCorrelated( 1.1, 1.0 ) ) {
 			//	if time correlation is disabled
-			assertEquals( 6, lexicon.getComposeBlockList().size() );
-			lexicon.getComposeBlockList().forEach( composeBlock -> {
+			assertEquals( 6, lexicon.getComposeBlocks().size() );
+			lexicon.getComposeBlocks().forEach( composeBlock -> {
 				if ( composeBlock.getPreviousBlockEndPitches().isPresent() ) {
 					assertEquals( 6, composeBlock.getPossiblePreviousComposeBlocks().size() );
 					assertEquals( 5, composeBlock.getPossibleNextComposeBlocks().size() );
@@ -41,8 +41,8 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 			} );
 		} else {
 			//	if time correlation is enabled
-			assertEquals( 11, lexicon.getComposeBlockList().size() );
-			lexicon.getComposeBlockList().forEach( composeBlock -> {
+			assertEquals( 11, lexicon.getComposeBlocks().size() );
+			lexicon.getComposeBlocks().forEach( composeBlock -> {
 				if ( composeBlock.getPreviousBlockEndPitches().isPresent() ) {
 					if ( composeBlock.getPossiblePreviousComposeBlocks().contains( lexicon.get( 0 ) ) ) {
 						assertEquals( 6, composeBlock.getPossiblePreviousComposeBlocks().size() );
@@ -63,7 +63,7 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 		List<Composition> compositionList = compositionLoader
 				.getCompositionsFromFolder( new File( "src/test/resources/simpleMelodies" ), Collections.<String>emptyList() );
 		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
-		for ( ComposeBlock composeBlock : lexicon.getComposeBlockList() ) {
+		for ( ComposeBlock composeBlock : lexicon.getComposeBlocks() ) {
 			boolean isFirst = composeBlock.getPossiblePreviousComposeBlocks().isEmpty() && composeBlock.getPossibleNextComposeBlocks().size() >= 1;
 			boolean isLast = composeBlock.getPossiblePreviousComposeBlocks().size() >= 1 && composeBlock.getPossibleNextComposeBlocks().isEmpty();
 			boolean isMiddle = composeBlock.getPossiblePreviousComposeBlocks().size() >= 1 && composeBlock.getPossibleNextComposeBlocks().size() >= 1;
@@ -79,7 +79,7 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
 
 		ComposeBlock firstComposeBlock = null;
 		ComposeBlock secondPossibleComposeBlock = null;
-		for ( ComposeBlock composeBlock : lexicon.getComposeBlockList() ) {
+		for ( ComposeBlock composeBlock : lexicon.getComposeBlocks() ) {
 			if ( composeBlock.getStartTime() == 8.0 && composeBlock.getCompositionInfo().getTitle().contains( "first" ) ) {
 				firstComposeBlock = composeBlock;
 			}

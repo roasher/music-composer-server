@@ -8,6 +8,7 @@ import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +23,7 @@ import static com.google.common.collect.Iterables.getLast;
 /**
  * Notes that are performed by one instrument
  */
-public class InstrumentPart {
+public class InstrumentPart implements Serializable {
 
 	private List<NoteGroup> noteGroups = new ArrayList<>();
 	private Integer instrument;

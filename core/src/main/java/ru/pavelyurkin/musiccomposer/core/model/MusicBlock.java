@@ -22,12 +22,12 @@ public class MusicBlock implements Serializable {
 	// Origin Self Information
 	private List<InstrumentPart> instrumentParts;
 	private CompositionInfo compositionInfo;
-	private Optional<List<Integer>> previousBlockEndPitches = Optional.empty();
+	private List<Integer> previousBlockEndPitches;
 	private double startTime;
 
 	public MusicBlock( double startTime, List<InstrumentPart> instrumentParts, CompositionInfo compositionInfo, List<Integer> previousBlockEndPitches ) {
 		this( startTime, instrumentParts, compositionInfo );
-		this.previousBlockEndPitches = Optional.of( previousBlockEndPitches );
+		this.previousBlockEndPitches = previousBlockEndPitches;
 	}
 
 	public MusicBlock( double startTime, List<InstrumentPart> instrumentParts, CompositionInfo inputCompositionInfo ) {
@@ -37,7 +37,7 @@ public class MusicBlock implements Serializable {
 		this.instrumentParts = instrumentParts;
 		this.compositionInfo = inputCompositionInfo;
 		this.startTime = startTime;
-		this.previousBlockEndPitches = Optional.empty();
+		this.previousBlockEndPitches = null;
 	}
 
 	public MusicBlock( List<MusicBlock> musicBlocks ) {
@@ -63,7 +63,7 @@ public class MusicBlock implements Serializable {
 
 		this.instrumentParts = instrumentParts;
 		this.compositionInfo = null;
-		this.previousBlockEndPitches = firstMusicBlock.getPreviousBlockEndPitches();
+		this.previousBlockEndPitches = firstMusicBlock.getPreviousBlockEndPitches().orElse( null );
 		this.startTime = firstMusicBlock.getStartTime();
 
 	}
@@ -74,7 +74,7 @@ public class MusicBlock implements Serializable {
 		for ( int melodyNumber = 0; melodyNumber < this.getInstrumentParts().size(); melodyNumber++ ) {
 			stringBuilder.append( " |part " + melodyNumber + ": " );
 			InstrumentPart instrumentPart = this.getInstrumentParts().get( melodyNumber );
-			this.previousBlockEndPitches.ifPresent( integers -> stringBuilder.append( "[" ).append( integers ).append( "]" ) );
+			this.getPreviousBlockEndPitches().ifPresent( integers -> stringBuilder.append( "[" ).append( integers ).append( "]" ) );
 			stringBuilder.append( instrumentPart.toString() );
 			if ( this.compositionInfo != null ) {
 				stringBuilder.append(" from ");
@@ -117,8 +117,6 @@ public class MusicBlock implements Serializable {
 				.allMatch( InstrumentPart::startsWithRest );
 	}
 
-
-
 	public List<Integer> getEndPitches() {
 		return this.instrumentParts.stream()
 				.flatMap( instrumentPart -> instrumentPart.getLastVerticalPitches().stream() )
@@ -141,4 +139,9 @@ public class MusicBlock implements Serializable {
 		}
 		return rhythmValues.get( 0 );
 	}
+
+	public Optional<List<Integer>> getPreviousBlockEndPitches() {
+		return Optional.ofNullable( previousBlockEndPitches );
+	}
+
 }

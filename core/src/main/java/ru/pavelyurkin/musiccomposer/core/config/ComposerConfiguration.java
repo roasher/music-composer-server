@@ -42,7 +42,7 @@ public class ComposerConfiguration {
 			MusicBlockProvider musicBlockProvider,
 			Recombinator recombinator,
 			CompositionParser compositionParser,
-			@Qualifier( "lexiconDAO_stub" ) LexiconDAO lexiconDAO ) {
+			@Qualifier( "lexiconDAO_mapdb" ) LexiconDAO lexiconDAO ) {
 		return new CompositionDecomposer( recombinator, compositionParser, musicBlockProvider, lexiconDAO );
 	}
 

@@ -22,7 +22,7 @@ import static jm.constants.Durations.QUARTER_NOTE;
 import static jm.constants.Pitches.*;
 
 @RunWith( MockitoJUnitRunner.class )
-public class InstrumentPartToPartConverterTest {
+public class InstrumentPartToPartDbConverterTest {
 
 	@InjectMocks
 	private InstrumentPartToPartConverter converter;

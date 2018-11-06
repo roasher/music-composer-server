@@ -1,48 +1,75 @@
 package ru.pavelyurkin.musiccomposer.core.model;
 
+import lombok.Data;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.*;
-
-import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
+import java.util.stream.Collectors;
 
 /**
  * Class represents wrapper to Music Block collection
  * Incapsulates all methods of getting proper music block
  * Created by pyurkin on 13.02.15.
  */
-public class Lexicon {
+@Data
+public class Lexicon implements Serializable {
 
-	private Logger logger = LoggerFactory.getLogger( getClass() );
-
-	private List<ComposeBlock> composeBlockList = new ArrayList<>();
-
+	private List<ComposeBlock> composeBlocks;
 	private Map<Integer, List<Integer>> possibleNextMusicBlockNumbers;
 
-	// metadata
-	private double minRhythmValue = Double.MAX_VALUE;
-	private Set<CompositionInfo> compositionsInLexicon = new HashSet<>(  );
-
 	public Lexicon( List<ComposeBlock> composeBlocks, Map<Integer, List<Integer>> possibleNextMusicBlockNumbers ) {
-		this( composeBlocks );
+		if (possibleNextMusicBlockNumbers.size() != composeBlocks.size()) {
+			throw new IllegalArgumentException("blocks and possibleNexts has different size");
+		}
+		this.composeBlocks = composeBlocks;
 		this.possibleNextMusicBlockNumbers = possibleNextMusicBlockNumbers;
 	}
 
-	public Lexicon( List<ComposeBlock> composeBlockList ) {
-        this.composeBlockList = composeBlockList;
-		for ( ComposeBlock composeBlock : composeBlockList ) {
-			if ( minRhythmValue > composeBlock.getRhythmValue() ) {
-				minRhythmValue = composeBlock.getRhythmValue();
-			}
-			compositionsInLexicon.add( composeBlock.getCompositionInfo() );
+	public Lexicon( Map<Integer, List<Integer>> possibleNextMusicBlockNumbers, List<MusicBlock> musicBlocks ) {
+		if (possibleNextMusicBlockNumbers.size() != musicBlocks.size()) {
+			throw new IllegalArgumentException("blocks and possibleNexts have different size");
 		}
+
+		List<ComposeBlock> composeBlocks = new ArrayList<>();
+		for ( int musicBlockNumber = 0; musicBlockNumber < musicBlocks.size(); musicBlockNumber++ ) {
+			composeBlocks.add( new ComposeBlock( musicBlocks.get( musicBlockNumber ) ) );
+		}
+
+		for ( int composeBlockNumber = 0; composeBlockNumber < composeBlocks.size(); composeBlockNumber++ ) {
+			ComposeBlock composeBlock = composeBlocks.get( composeBlockNumber );
+			for ( int musicBlockNumber : possibleNextMusicBlockNumbers.get( composeBlockNumber ) ) {
+				ComposeBlock possibleNextComposeBlock = composeBlocks.get( musicBlockNumber );
+				composeBlock.getPossibleNextComposeBlocks().add( possibleNextComposeBlock );
+				// we should check if we need to add previous at first place
+				if ( composeBlockNumber + 1 != musicBlockNumber ) {
+					possibleNextComposeBlock.getPossiblePreviousComposeBlocks().add( composeBlock );
+				} else {
+					possibleNextComposeBlock.getPossiblePreviousComposeBlocks().add( 0, composeBlock );
+				}
+			}
+		}
+
+		this.composeBlocks = composeBlocks;
+		this.possibleNextMusicBlockNumbers = possibleNextMusicBlockNumbers;
 	}
 
-	public List<ComposeBlock> getAllPossibleFirst() {
+	public Set<CompositionInfo> getCompositionsInLexicon() {
+		return composeBlocks.stream()
+				.map( ComposeBlock::getCompositionInfo )
+				.collect( Collectors.toSet());
+	}
+
+	public double getMinRhythmValue() {
+		return composeBlocks.stream()
+				.mapToDouble( ComposeBlock::getRhythmValue )
+				.min()
+				.orElse( Double.MAX_VALUE );
+	}
+
+	public List<ComposeBlock> getAllPossibleFirsts() {
 		List<ComposeBlock> firstBlocks = new ArrayList<>(  );
-		for ( ComposeBlock composeBlock : this.composeBlockList ) {
+		for ( ComposeBlock composeBlock : this.composeBlocks ) {
 			if ( composeBlock.getPossiblePreviousComposeBlocks().isEmpty() && !composeBlock.isStartsWithRest() ) {
 				firstBlocks.add( composeBlock );
 			}
@@ -50,62 +77,12 @@ public class Lexicon {
 		return firstBlocks;
 	}
 
-	public Map<Integer, List<Integer>> getPossibleNextMusicBlockNumbers() {
-		return possibleNextMusicBlockNumbers;
-	}
-
 	public static Lexicon getBlankLexicon() {
-		return new Lexicon( new ArrayList<>() );
+		return new Lexicon( new ArrayList<>(), Collections.emptyMap() );
 	}
 
 	public ComposeBlock get( int number ) {
-		return this.composeBlockList.get( number );
+		return this.composeBlocks.get( number );
 	}
 
-	public List<ComposeBlock> getComposeBlockList() {
-		return composeBlockList;
-	}
-
-	public double getMinRhythmValue() {
-		return minRhythmValue;
-	}
-
-	public Set<CompositionInfo> getCompositionsInLexicon() {
-		return compositionsInLexicon;
-	}
-
-	public void setCompositionsInLexicon( Set<CompositionInfo> compositionsInLexicon ) {
-		this.compositionsInLexicon = compositionsInLexicon;
-	}
-
-	@Override public boolean equals( Object o ) {
-		if ( this == o )
-			return true;
-		if ( !( o instanceof Lexicon ) )
-			return false;
-
-		Lexicon lexicon = ( Lexicon ) o;
-
-		if ( !isEquals( lexicon.minRhythmValue, minRhythmValue ) ) {
-			return false;
-		}
-		if ( !composeBlockList.equals( lexicon.composeBlockList ) ) {
-			return false;
-		}
-		if ( !compositionsInLexicon.equals( lexicon.compositionsInLexicon ) ) {
-			return false;
-		}
-
-		return true;
-	}
-
-	@Override public int hashCode() {
-		int result;
-		long temp;
-		result = composeBlockList.hashCode();
-		temp = Double.doubleToLongBits( minRhythmValue );
-		result = 31 * result + ( int ) ( temp ^ ( temp >>> 32 ) );
-		result = 31 * result + compositionsInLexicon.hashCode();
-		return result;
-	}
 }

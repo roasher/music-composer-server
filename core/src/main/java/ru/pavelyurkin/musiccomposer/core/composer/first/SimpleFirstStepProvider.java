@@ -15,7 +15,7 @@ import java.util.Optional;
 public class SimpleFirstStepProvider implements FirstStepProvider {
 	@Override
 	public Optional<CompositionStep> getFirstBlock( Lexicon lexicon, List<ComposeBlock> exclusions ) {
-		Optional<ComposeBlock> firstBlock = lexicon.getComposeBlockList().stream().filter( composeBlock -> !exclusions.contains( composeBlock ) && !composeBlock.isStartsWithRest() )
+		Optional<ComposeBlock> firstBlock = lexicon.getComposeBlocks().stream().filter( composeBlock -> !exclusions.contains( composeBlock ) && !composeBlock.isStartsWithRest() )
 				.findFirst();
 		return firstBlock.map( composeBlock -> new CompositionStep( composeBlock, composeBlock.getMusicBlock().clone() ) );
 	}

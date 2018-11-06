@@ -2,9 +2,10 @@ package ru.pavelyurkin.musiccomposer.core.model.notegroups;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class NoteGroup {
+public abstract class NoteGroup implements Serializable {
 
 	public abstract double getRhythmValue();
 

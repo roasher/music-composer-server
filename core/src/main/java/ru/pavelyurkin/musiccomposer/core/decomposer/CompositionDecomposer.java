@@ -15,6 +15,7 @@ import ru.pavelyurkin.musiccomposer.core.utils.CompositionParser;
 import ru.pavelyurkin.musiccomposer.core.utils.Recombinator;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class analyses and decomposes the composition, creating MusicBlocks
@@ -41,7 +42,7 @@ public class CompositionDecomposer {
 		log.info( "Decomposing composition {}", composition.getTitle() );
 		// Parsing composition to our model
 		List<InstrumentPart> instrumentParts = compositionParser.parse( composition );
-		// recombining result melodies into composeBlockList
+		// recombining result melodies into composeBlocks
 		List<List<InstrumentPart>> recombineList = recombinator.recombine( instrumentParts );
 		// filling composition information
 		List<MusicBlock> lexiconMusicBlocks = new ArrayList<MusicBlock>();
@@ -54,7 +55,7 @@ public class CompositionDecomposer {
 			// binding with previous Music Block
 			if ( melodyBlockNumber != 0 ) {
 				MusicBlock previousMusicBlock = lexiconMusicBlocks.get( melodyBlockNumber - 1 );
-				musicBlock.setPreviousBlockEndPitches( Optional.of( previousMusicBlock.getEndPitches() ) );
+				musicBlock.setPreviousBlockEndPitches( previousMusicBlock.getEndPitches() );
 			}
 			lexiconMusicBlocks.add( musicBlock );
 
@@ -67,7 +68,6 @@ public class CompositionDecomposer {
 				uniqueMusicBlocks.add( musicBlock );
 		} );
 
-		log.info( "Decomposing done" );
 		return uniqueMusicBlocks;
 	}
 
@@ -80,41 +80,20 @@ public class CompositionDecomposer {
 	/**
 	 * Wraps Music Blocks into Compose Blocks
 	 *
-	 * @param musicBlockList
+	 * @param musicBlocks
 	 * @return
 	 */
-	public Lexicon getComposeBlocks( List<MusicBlock> musicBlockList ) {
+	public Lexicon getComposeBlocks( List<MusicBlock> musicBlocks ) {
 		log.info( "Calculating Lexicon" );
-
-		List<ComposeBlock> composeBlocks = new ArrayList<>();
-		Map<Integer, List<Integer>> possibleNextMusicBlockNumbers = musicBlockProvider.getAllPossibleNextVariants( musicBlockList );
-
-		for ( int musicBlockNumber = 0; musicBlockNumber < musicBlockList.size(); musicBlockNumber++ ) {
-			composeBlocks.add( new ComposeBlock( musicBlockList.get( musicBlockNumber ) ) );
-		}
-
-		for ( int composeBlockNumber = 0; composeBlockNumber < composeBlocks.size(); composeBlockNumber++ ) {
-			ComposeBlock composeBlock = composeBlocks.get( composeBlockNumber );
-			for ( int musicBlockNumber : possibleNextMusicBlockNumbers.get( composeBlockNumber ) ) {
-				ComposeBlock possibleNextComposeBlock = composeBlocks.get( musicBlockNumber );
-				composeBlock.getPossibleNextComposeBlocks().add( possibleNextComposeBlock );
-				// we should check if we need to add previous at first place
-				if ( composeBlockNumber + 1 != musicBlockNumber ) {
-					possibleNextComposeBlock.getPossiblePreviousComposeBlocks().add( composeBlock );
-				} else {
-					possibleNextComposeBlock.getPossiblePreviousComposeBlocks().add( 0, composeBlock );
-				}
-			}
-		}
-
-		Lexicon lexicon = new Lexicon( composeBlocks, possibleNextMusicBlockNumbers );
-
+		Map<Integer, List<Integer>> possibleNextMusicBlockNumbers = musicBlockProvider.getAllPossibleNextVariants( musicBlocks );
+		Lexicon lexicon = new Lexicon( possibleNextMusicBlockNumbers, musicBlocks );
 		log.info( "Lexicon calculation done." );
+
 		return lexicon;
 	}
 
 	/**
-	 * Decomposes compositions into composeBlockList
+	 * Decomposes compositions into composeBlocks
 	 *
 	 * @param compositionList
 	 * @param rhythmValue
@@ -123,10 +102,10 @@ public class CompositionDecomposer {
 	public Lexicon decompose( List<Composition> compositionList, double rhythmValue ) {
 		log.info( "Getting persisted blocks" );
 		Lexicon dataBaseLexicon = lexiconDAO.fetch();
-		log.info( dataBaseLexicon.getComposeBlockList().size() != 0 ? "Fetched Lexicon is NOT empty" : "Fetched Lexicon IS empty" );
+		log.info( dataBaseLexicon.getComposeBlocks().size() != 0 ? "Fetched Lexicon is NOT empty" : "Fetched Lexicon IS empty" );
 
 		log.info( "Deleting all blocks, build from other than input list compositions" );
-		trimToCompositions( dataBaseLexicon.getComposeBlockList(), compositionList );
+		trimToCompositions( dataBaseLexicon.getComposeBlocks(), compositionList );
 
 		log.info( "Combining blocks from new compositions" );
 		List<MusicBlock> musicBlockList = new ArrayList<>();
@@ -144,7 +123,7 @@ public class CompositionDecomposer {
 	}
 
 	/**
-	 * Deletes from composeBlockList all blocks that does not belong to compositions in composition list
+	 * Deletes from composeBlocks all blocks that does not belong to compositions in composition list
 	 *
 	 * @param composeBlockList
 	 * @param compositionList
@@ -202,14 +181,14 @@ public class CompositionDecomposer {
 	 * Unions lexicons but changes both inputs
 	 */
 	private Lexicon union( Lexicon firstLexicon, Lexicon secondLexicon ) {
-		if ( secondLexicon.getComposeBlockList().isEmpty() )
+		if ( secondLexicon.getComposeBlocks().isEmpty() )
 			return firstLexicon;
-		if ( firstLexicon.getComposeBlockList().isEmpty() )
+		if ( firstLexicon.getComposeBlocks().isEmpty() )
 			return secondLexicon;
 		Map<Integer, List<Integer>> unionMap = unionMaps( firstLexicon.getPossibleNextMusicBlockNumbers(), secondLexicon.getPossibleNextMusicBlockNumbers() );
 		// adding the possible next/previous
-		List<ComposeBlock> firstComposeBlocks = firstLexicon.getComposeBlockList();
-		List<ComposeBlock> secondComposeBlocks = secondLexicon.getComposeBlockList();
+		List<ComposeBlock> firstComposeBlocks = firstLexicon.getComposeBlocks();
+		List<ComposeBlock> secondComposeBlocks = secondLexicon.getComposeBlocks();
 		for ( int firstComposeBlockNumber = 0; firstComposeBlockNumber < firstComposeBlocks.size(); firstComposeBlockNumber++ ) {
 			ComposeBlock firstComposeBlock = firstComposeBlocks.get( firstComposeBlockNumber );
 			for ( int secondComposeBlockNumber = 0; secondComposeBlockNumber < secondComposeBlocks.size(); secondComposeBlockNumber++ ) {
@@ -234,7 +213,10 @@ public class CompositionDecomposer {
 	private Map<Integer, List<Integer>> unionMaps( Map<Integer, List<Integer>> firstMap, Map<Integer, List<Integer>> secondMap ) {
 		Map<Integer, List<Integer>> union = new HashMap<>( firstMap );
 		for ( Map.Entry<Integer, List<Integer>> mapEntry : secondMap.entrySet() ) {
-			union.put( mapEntry.getKey() + firstMap.size(), mapEntry.getValue() );
+			union.put( mapEntry.getKey() + firstMap.size(), mapEntry.getValue().stream()
+					.map( integer -> integer + firstMap.size() )
+					.collect( Collectors.toList() )
+			);
 		}
 		return union;
 	}
