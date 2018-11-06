@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.EqualNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.Equality;
@@ -23,7 +22,6 @@ import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.OrderMelodyMove
 @TestConfiguration
 @EnableAutoConfiguration
 @PropertySource( "classpath:test-application.properties" )
-@EnableJpaRepositories( basePackages = "ru.pavelyurkin.musiccomposer.core.persistance.dao" )
 @ComponentScan( basePackages = "ru.pavelyurkin.musiccomposer.core", excludeFilters = { @ComponentScan.Filter( type = FilterType.ASSIGNABLE_TYPE, value = Application.class ) } )
 // todo refactor
 public class MyTestConfiguration {

@@ -18,7 +18,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Iterables.getLast;
-import static org.springframework.test.util.AssertionErrors.assertTrue;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getRelativeFormBlocks;
 
 /**
@@ -157,7 +156,6 @@ public class FormBlockProvider {
 	 * @return
 	 */
 	private int getStepToRevert( int step, Double diffMeasure ) {
-		assertTrue( "Diff measure " + diffMeasure + " < 0", diffMeasure >= 0 );
 		int calculatedStepToReturn = ( int ) ( step * diffMeasure );
 		if ( calculatedStepToReturn == 0 )
 			return 0;

@@ -1,7 +1,3 @@
-spring:
-  datasource:
-    url: jdbc:h2:file:~/Music/test;AUTO_SERVER=TRUE
-
 persistance:
   file: /home/pyurkin/Music//bach-test.db
 

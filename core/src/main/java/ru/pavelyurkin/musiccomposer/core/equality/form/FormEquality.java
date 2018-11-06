@@ -1,14 +1,12 @@
 package ru.pavelyurkin.musiccomposer.core.equality.form;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -17,12 +15,13 @@ import java.util.List;
  * Class that decides if two Lists fo melodies are form equal
  */
 @Component
+@Slf4j
 public class FormEquality implements RelativelyComparable<List<InstrumentPart>>{
 
 	/**
 	 * Min value of equality metric to consider two blocks form equal
 	 */
-	@Value( "${FormEquality.instrumentEqualityPassThreshold}" )
+	@Value( "${FormEquality.instrumentEqualityFailThreshold}" )
 	private double instrumentEqualityPassThreshold;
 	/**
 	 * Max value of equality metric to consider two blocks form different
@@ -32,8 +31,6 @@ public class FormEquality implements RelativelyComparable<List<InstrumentPart>>{
 
 	@Autowired
 	private EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer;
-
-	Logger logger = LoggerFactory.getLogger( getClass() );
 
 	/**
 	 * Consider if music blocks are form equal.
@@ -45,7 +42,7 @@ public class FormEquality implements RelativelyComparable<List<InstrumentPart>>{
 	@Override
 	public Pair<ResultOfComparison, Double> isEqual( List<InstrumentPart> firstMusicBlockInstrumentParts, List<InstrumentPart> secondMusicBlockInstrumentParts ) {
 		if ( firstMusicBlockInstrumentParts.size() != secondMusicBlockInstrumentParts.size() ) {
-			logger.info( "Input collections of melodies has different sizes so they can't be considered equal" );
+			log.info( "Input collections of melodies has different sizes so they can't be considered equal" );
 			return Pair.of( ResultOfComparison.UNDEFINED, Double.MAX_VALUE );
 		}
 
@@ -53,16 +50,16 @@ public class FormEquality implements RelativelyComparable<List<InstrumentPart>>{
 		double diffMeasure;
 		if ( successTestPersentage >= instrumentEqualityPassThreshold ) {
 			diffMeasure = getMeasureOfDifference( successTestPersentage, instrumentEqualityPassThreshold );
-			logger.debug( "Successful tests percentage {} higher than pass threshold {}. Diff measure = {}. Music Blocks considered form equal.", successTestPersentage, instrumentEqualityPassThreshold, diffMeasure );
+			log.debug( "Successful tests percentage {} higher than pass threshold {}. Diff measure = {}. Music Blocks considered form equal.", successTestPersentage, instrumentEqualityPassThreshold, diffMeasure );
 			return Pair.of( ResultOfComparison.EQUAL, diffMeasure );
 		} else if ( successTestPersentage <= instrumentEqualityFailThreshold ) {
 			diffMeasure = getMeasureOfDifference( successTestPersentage, instrumentEqualityFailThreshold );
-			logger.debug( "Successful tests percentage {} lower than fail threshold {}. Diff measure = {}. Music Blocks considered non equal", successTestPersentage, instrumentEqualityFailThreshold, diffMeasure );
+			log.debug( "Successful tests percentage {} lower than fail threshold {}. Diff measure = {}. Music Blocks considered non equal", successTestPersentage, instrumentEqualityFailThreshold, diffMeasure );
 			return Pair.of( ResultOfComparison.DIFFERENT, diffMeasure );
 		} else {
 			diffMeasure = Math.min( getMeasureOfDifference( successTestPersentage, instrumentEqualityFailThreshold ),
 					getMeasureOfDifference( successTestPersentage, instrumentEqualityPassThreshold ) );
-			logger.debug( "Successful tests percentage {} higher than the fail threshold {} but lower that pass threshold {}. Diff measure = {}. Blocks form equality considered undefined",
+			log.debug( "Successful tests percentage {} higher than the fail threshold {} but lower that pass threshold {}. Diff measure = {}. Blocks form equality considered undefined",
 					successTestPersentage, instrumentEqualityFailThreshold, instrumentEqualityPassThreshold, diffMeasure );
 			return Pair.of( ResultOfComparison.UNDEFINED, diffMeasure );
 		}
