@@ -36,7 +36,7 @@ public class Controller {
 		ComposeStepProvider composeStepProvider = context.getBean( ComposeStepProvider.class );
 
 		CompositionComposer compositionComposer = context.getBean( CompositionComposer.class );
-		Composition composition = compositionComposer.compose( composeStepProvider, lexicon, 20 * JMC.WHOLE_NOTE );
+		Composition composition = compositionComposer.compose( composeStepProvider, lexicon, 30 * 20 * JMC.WHOLE_NOTE );
 
 		Write.midi( composition, "output/mozart-5.mid" );
 

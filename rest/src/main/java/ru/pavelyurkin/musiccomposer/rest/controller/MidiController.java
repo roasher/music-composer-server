@@ -8,6 +8,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.AbstractComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepVoiceRangeFilter;
 import ru.pavelyurkin.musiccomposer.core.exception.ComposeException;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
@@ -18,6 +19,7 @@ import ru.pavelyurkin.musiccomposer.rest.dto.CompositionDTO;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -36,20 +38,26 @@ public class MidiController {
 		this.bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter = bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter;
 	}
 
-	@ApiOperation( "Note generation" )
+	@ApiOperation( "Notes generation" )
 	@PostMapping( path = "/getBars")
 	@CrossOrigin
-	public CompositionDTO getNotes(
+	public CompositionDTO getBachNotes(
 			@ApiParam(name = "compositionId", required = true, value = "Unique Id of generation session")
 			@RequestParam String compositionId,
 			@ApiParam(name = "numberOfBars", required = true, value = "Number of bars that you wan't to be generated")
 			@RequestParam int numberOfBars,
 			@ApiParam(name = "Voice range settings", value = "Four voice ranges to compose within")
-			@Validated @RequestBody BachChoralVoiceRangeDTO bachChoralVoiceRangeDTO ) {
-		ComposeStepVoiceRangeFilter composeStepVoiceRangeFilter = bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter
-				.convert( bachChoralVoiceRangeDTO );
-		CompositionFrontDTO nextBarsFromComposition = composeService.getNextBarsFromComposition( compositionId, numberOfBars, Collections.singletonList( composeStepVoiceRangeFilter ) );
-		return compositionConverter.convert( nextBarsFromComposition );
+			@Validated @RequestBody(required = false) BachChoralVoiceRangeDTO bachChoralVoiceRangeDTO ) {
+		List<AbstractComposeStepFilter> composeStepFiltersToReplace = bachChoralVoiceRangeDTO != null ?
+				Collections.singletonList( bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter
+						.convert( bachChoralVoiceRangeDTO ) ) :
+				Collections.emptyList();
+
+		CompositionFrontDTO nextBarsFromComposition = composeService.getNextBarsFromComposition( compositionId, numberOfBars,
+				composeStepFiltersToReplace );
+		CompositionDTO compositionDTO = compositionConverter.convert( nextBarsFromComposition );
+		log.info( "Composed {}", compositionDTO );
+		return compositionDTO;
 	}
 
 	@ExceptionHandler(Throwable.class)

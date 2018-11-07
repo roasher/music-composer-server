@@ -11,7 +11,8 @@ import java.util.Arrays;
 public class BachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter implements Converter<BachChoralVoiceRangeDTO, ComposeStepVoiceRangeFilter> {
 	@Override
 	public ComposeStepVoiceRangeFilter convert( BachChoralVoiceRangeDTO bachChoralVoiceRangeDTO ) {
-		return new ComposeStepVoiceRangeFilter( Arrays.asList(
+		if ( bachChoralVoiceRangeDTO == null ) return null;
+			return new ComposeStepVoiceRangeFilter( Arrays.asList(
 				bachChoralVoiceRangeDTO.getRange1(),
 				bachChoralVoiceRangeDTO.getRange2(),
 				bachChoralVoiceRangeDTO.getRange3(),

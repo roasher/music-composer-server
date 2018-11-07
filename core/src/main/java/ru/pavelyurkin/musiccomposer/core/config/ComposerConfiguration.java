@@ -9,6 +9,7 @@ import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.first.FirstStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.MozartFilter;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
@@ -46,21 +47,23 @@ public class ComposerConfiguration {
 		return new CompositionDecomposer( recombinator, compositionParser, musicBlockProvider, lexiconDAO );
 	}
 
-	@Bean(name = "nextStepProvider")
-	@Profile( {"test", "prod"} )
+	@Bean
 	public NextStepProviderImpl nextStepProvider(
 			EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer,
-			BachChoralFilter bachChoralFilter
+			@Qualifier("defaultFilter") ComposeStepFilter filter
 	) {
-		return new NextStepProviderImpl(equalityMetricAnalyzer, bachChoralFilter);
+		return new NextStepProviderImpl(equalityMetricAnalyzer, filter);
 	}
 
-	@Bean(name = "nextStepProvider")
-	@Profile( {"test-mozart", "prod-mozart"} )
-	public NextStepProviderImpl mozartNextStepProvider(
-			EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer,
-			MozartFilter mozartFilter
-	) {
-		return new NextStepProviderImpl(equalityMetricAnalyzer, mozartFilter);
+	@Bean(name = "defaultFilter")
+	@Profile( {"bach-test", "bach-prod"} )
+	public ComposeStepFilter defaultFilter1() {
+		return new BachChoralFilter();
+	}
+
+	@Bean(name = "defaultFilter")
+	@Profile( {"mozart-test", "mozart-prod"} )
+	public ComposeStepFilter defaultFilter2() {
+		return new MozartFilter();
 	}
 }

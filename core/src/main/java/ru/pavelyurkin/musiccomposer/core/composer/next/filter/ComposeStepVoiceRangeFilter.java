@@ -3,7 +3,6 @@ package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
@@ -13,7 +12,6 @@ import java.util.List;
  * Created by wish on 03.02.2016.
  * Filter restricts going out of range for compose block's melodies
  */
-@Component
 @Data
 public class ComposeStepVoiceRangeFilter extends AbstractComposeStepFilter {
 

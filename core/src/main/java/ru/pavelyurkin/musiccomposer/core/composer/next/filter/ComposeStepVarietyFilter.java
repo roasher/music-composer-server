@@ -1,7 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 
@@ -18,7 +17,6 @@ import static com.google.common.collect.Iterables.getLast;
  * blocks from one composition, filter will decline blocks from that composition to prevent
  * x + 1 blocks from same composition in the result
  */
-@Component
 @Data
 public class ComposeStepVarietyFilter extends AbstractComposeStepFilter {
 

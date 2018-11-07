@@ -1,10 +1,10 @@
 package ru.pavelyurkin.musiccomposer.core.service;
 
 import jm.JMC;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -16,7 +16,6 @@ import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.AbstractComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
@@ -34,6 +33,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ComposeService implements ApplicationContextAware {
 
 	/**
@@ -49,18 +49,12 @@ public class ComposeService implements ApplicationContextAware {
 	private final CompositionComposer compositionComposer;
 	private final CompositionDecomposer compositionDecomposer;
 	private final CompositionLoader compositionLoader;
+	private final ComposeStepFilter defaultFilter;
 
-	@Value( "${Bach.chorale.path:}" )
-	private String bachChoralPath;
+	@Value( "${compositions.path:}" )
+	private String compositionsPath;
 
 	private ApplicationContext applicationContext;
-
-	@Autowired
-	public ComposeService( CompositionComposer compositionComposer, CompositionDecomposer compositionDecomposer, CompositionLoader compositionLoader ) {
-		this.compositionComposer = compositionComposer;
-		this.compositionDecomposer = compositionDecomposer;
-		this.compositionLoader = compositionLoader;
-	}
 
 	public CompositionFrontDTO getNextBarsFromComposition( String compositionId, int numberOfBars, List<AbstractComposeStepFilter> composeStepFiltersToReplace ) {
 		log.info( "Getting next {} bars of composition for id = {}", numberOfBars, compositionId );
@@ -120,7 +114,8 @@ public class ComposeService implements ApplicationContextAware {
 	 */
 	private Lexicon getDefaultLexicon() {
 		if ( defaultLexicon == null ) {
-			List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( bachChoralPath ) );
+			List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File(
+					compositionsPath ) );
 			defaultLexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
 		}
 		return defaultLexicon;
@@ -132,10 +127,8 @@ public class ComposeService implements ApplicationContextAware {
 	 */
 	private ComposeStepProvider getDefaultComposeStepProvider() {
 		if ( defaultComposeStepProvider == null ) {
-			ComposeStepFilter bachChoralFilter = applicationContext.getBean( BachChoralFilter.class );
-
 			NextStepProviderImpl nextFormBlockProvider = applicationContext.getBean( NextStepProviderImpl.class );
-			nextFormBlockProvider.setComposeStepFilter( bachChoralFilter );
+			nextFormBlockProvider.setComposeStepFilter( defaultFilter );
 
 			defaultComposeStepProvider = applicationContext.getBean( ComposeStepProvider.class );
 			defaultComposeStepProvider.setNextStepProvider( nextFormBlockProvider );

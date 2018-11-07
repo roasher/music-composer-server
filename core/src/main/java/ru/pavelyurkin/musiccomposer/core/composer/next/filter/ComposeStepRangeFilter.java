@@ -1,6 +1,5 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
-import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
@@ -11,7 +10,6 @@ import java.util.OptionalInt;
  * Created by wish on 02.02.2016.
  * Filter declines all compose blocks that will go out of range after transposing
  */
-@Component
 public class ComposeStepRangeFilter extends AbstractComposeStepFilter {
 
 	private int lowestNotePitch;

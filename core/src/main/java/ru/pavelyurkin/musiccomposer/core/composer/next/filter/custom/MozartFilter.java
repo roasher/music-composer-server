@@ -1,16 +1,15 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom;
 
 import lombok.experimental.Delegate;
-import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.*;
 
 import static jm.constants.Durations.QUARTER_NOTE;
-import static jm.constants.Pitches.*;
+import static jm.constants.Pitches.C2;
+import static jm.constants.Pitches.C6;
 
 /**
  * Created by wish on 18.02.2016.
  */
-@Component
 public class MozartFilter implements ComposeStepFilter {
 
 	@Delegate

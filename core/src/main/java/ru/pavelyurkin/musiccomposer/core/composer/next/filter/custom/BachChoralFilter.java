@@ -1,7 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom;
 
 import lombok.experimental.Delegate;
-import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.*;
 
 import java.util.Arrays;
@@ -12,7 +11,6 @@ import static jm.constants.Pitches.*;
 /**
  * Created by wish on 18.02.2016.
  */
-@Component
 public class BachChoralFilter implements ComposeStepFilter {
 
     @Delegate

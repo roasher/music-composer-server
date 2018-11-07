@@ -35,6 +35,7 @@ public class CompositionConverter {
 								.collect( Collectors.toList() ),
 						compositionFrontDTO.getPreviousSumRhythmValues(), pair.getLeft() )
 						.stream() )
+				.filter( noteDTO -> noteDTO.getPitch() != Note.REST )
 				.collect( Collectors.toList() );
 		CompositionDTO compositionDTO = new CompositionDTO();
 		compositionDTO.setNotes( noteDTOs );
