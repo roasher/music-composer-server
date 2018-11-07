@@ -56,7 +56,7 @@ public class ComposerConfiguration {
 	}
 
 	@Bean(name = "defaultFilter")
-	@Profile( {"bach-test", "bach-prod"} )
+	@Profile( {"bach-test", "bach-prod", "test"} )
 	public ComposeStepFilter defaultFilter1() {
 		return new BachChoralFilter();
 	}
