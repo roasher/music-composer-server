@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 public abstract class NoteGroup implements Serializable {
 
@@ -28,4 +29,6 @@ public abstract class NoteGroup implements Serializable {
 	public abstract NoteGroup cloneRange( double startTime, double endTime );
 
 	public abstract List<Double> getRhythmEdgeList();
+
+	public abstract Set<Integer> getAllPitches();
 }

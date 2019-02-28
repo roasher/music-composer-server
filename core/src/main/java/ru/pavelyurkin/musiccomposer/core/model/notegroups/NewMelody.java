@@ -139,6 +139,13 @@ public class NewMelody extends NoteGroup {
 		return out;
 	}
 
+	@Override
+	public Set<Integer> getAllPitches() {
+		return notes.stream()
+				.map( Note::getPitch )
+				.collect( Collectors.toSet());
+	}
+
 	/**
 	 * Glues note to the end. If last note has same pitch - it's rhythm value increasing
 	 * @param note
