@@ -8,6 +8,8 @@ import java.util.Set;
 
 public abstract class NoteGroup implements Serializable {
 
+	public static final long serialVersionUID = 1L;
+
 	public abstract double getRhythmValue();
 
 	public abstract NoteGroup clone();

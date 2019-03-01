@@ -1,5 +1,5 @@
 persistance:
-  file: /home/pyurkin/Music//bach-prod.db
+  file: /home/pyurkin/Music/bach-prod.db
 
 composer:
   pathToCompositions: /home/pyurkin/Music/Database/Test/Bach chorals/

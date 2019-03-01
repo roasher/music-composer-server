@@ -1,6 +1,5 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
-import lombok.RequiredArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Key;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
@@ -18,11 +17,21 @@ import static ru.pavelyurkin.musiccomposer.core.utils.KeyUtils.getPossibleKeys;
 /**
  * Filters musicblocks that are not from previous blocks key
  */
-@RequiredArgsConstructor
 public class KeyVarietyFilter extends AbstractComposeStepFilter {
 
 	private final int maxNotesNumberOutOfKey;
 	private final double rhythmValue;
+
+	public KeyVarietyFilter( int maxNotesNumberOutOfKey, double rhythmValue, AbstractComposeStepFilter composeStepFilter ) {
+		super( composeStepFilter );
+		this.maxNotesNumberOutOfKey = maxNotesNumberOutOfKey;
+		this.rhythmValue = rhythmValue;
+	}
+
+	public KeyVarietyFilter( int maxNotesNumberOutOfKey, double rhythmValue ) {
+		this.maxNotesNumberOutOfKey = maxNotesNumberOutOfKey;
+		this.rhythmValue = rhythmValue;
+	}
 
 	@Override
 	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {

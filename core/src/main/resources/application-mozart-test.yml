@@ -1,5 +1,5 @@
 persistance:
-  file: /home/pyurkin/Music//mozart-test.db
+  file: /home/pyurkin/Music/mozart-test.db
 
 composer:
   pathToCompositions: /home/pyurkin/Music/Database/Test/Classical music/mozart/

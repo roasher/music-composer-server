@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
@@ -10,6 +11,7 @@ import java.util.*;
  * Class handles routine to decide possible nexts from each of input blocks
  */
 @Component
+@Slf4j
 public class MusicBlockProvider {
 
 	/**
@@ -20,6 +22,7 @@ public class MusicBlockProvider {
 		Map<Integer, Set<Integer>> map = new HashMap<>( musicBlocks.size() );
 
 		for ( int firstMusicBlockNumber = 0; firstMusicBlockNumber < musicBlocks.size(); firstMusicBlockNumber++ ) {
+			log.info( "Calculating possible nexts for music block number {} of total {}", firstMusicBlockNumber, musicBlocks.size() );
 			Set<Integer> possibleNextMusicBlockNumbers = new HashSet<>();
 			map.put( firstMusicBlockNumber, possibleNextMusicBlockNumbers );
 			MusicBlock firstMusicBlock = musicBlocks.get( firstMusicBlockNumber );

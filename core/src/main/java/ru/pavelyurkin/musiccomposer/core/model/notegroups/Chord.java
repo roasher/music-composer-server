@@ -17,7 +17,7 @@ public class Chord extends NoteGroup {
 	public Chord( List<Integer> pitches, double rhythmValue ) {
 		this.pitches = pitches;
 		this.rhythmValue = rhythmValue;
-		if (pitches.isEmpty()) {
+		if ( pitches.isEmpty() ) {
 			throw new IllegalArgumentException( "Pitches array can't be empty" );
 		}
 	}
@@ -39,18 +39,12 @@ public class Chord extends NoteGroup {
 
 	@Override
 	public int getMaxPitch() {
-		return pitches.stream()
-				.mapToInt( Integer::intValue )
-				.max()
-				.getAsInt();
+		return pitches.stream().mapToInt( Integer::intValue ).max().getAsInt();
 	}
 
 	@Override
 	public int getMinNonRestPitch() {
-		return pitches.stream()
-				.filter( integer -> integer != Note.REST )
-				.mapToInt( Integer::intValue )
-				.min()
+		return pitches.stream().filter( integer -> integer != Note.REST ).mapToInt( Integer::intValue ).min()
 				.getAsInt();
 	}
 
@@ -67,7 +61,7 @@ public class Chord extends NoteGroup {
 	@Override
 	public NoteGroup transposeClone( int transposePitch ) {
 		List<Integer> tranposedPitches = pitches.stream()
-				.map( integer -> integer != Note.REST ? integer + transposePitch: integer )
+				.map( integer -> integer != Note.REST ? integer + transposePitch : integer )
 				.collect( Collectors.toList() );
 		return new Chord( tranposedPitches, this.rhythmValue );
 	}
@@ -88,8 +82,9 @@ public class Chord extends NoteGroup {
 	@Override
 	public NoteGroup cloneRange( double startTime, double endTime ) {
 		if ( startTime < 0 || endTime > this.getRhythmValue() || startTime >= endTime )
-			throw new IllegalArgumentException("Can't clone range");
-		return new Chord( this.getPitches(), BigDecimal.valueOf( endTime ).subtract( BigDecimal.valueOf( startTime ) ).doubleValue() );
+			throw new IllegalArgumentException( "Can't clone range" );
+		return new Chord( this.getPitches(),
+				BigDecimal.valueOf( endTime ).subtract( BigDecimal.valueOf( startTime ) ).doubleValue() );
 	}
 
 	@Override
@@ -119,8 +114,9 @@ public class Chord extends NoteGroup {
 		return Objects.hash( pitches, rhythmValue );
 	}
 
-	public boolean samePitches(List<Integer> pitches) {
-		if (this.pitches.size() != pitches.size()) return false;
+	public boolean samePitches( List<Integer> pitches ) {
+		if ( this.pitches.size() != pitches.size() )
+			return false;
 		for ( int noteNumber = 0; noteNumber < this.pitches.size(); noteNumber++ ) {
 			if ( !this.pitches.get( noteNumber ).equals( pitches.get( noteNumber ) ) )
 				return false;
