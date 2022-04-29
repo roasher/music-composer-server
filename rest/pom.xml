@@ -11,10 +11,6 @@
 
 	<artifactId>rest</artifactId>
 
-	<properties>
-		<springfox-swagger-ui.version>2.6.1</springfox-swagger-ui.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>MusicComposer</groupId>
@@ -30,14 +26,9 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>${springfox-swagger-ui.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>${springfox-swagger-ui.version}</version>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.6.8</version>
 		</dependency>
 	</dependencies>
 

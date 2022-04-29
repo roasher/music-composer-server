@@ -1,7 +1,7 @@
 package ru.pavelyurkin.musiccomposer.rest.controller;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
@@ -38,15 +38,15 @@ public class MidiController {
 		this.bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter = bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter;
 	}
 
-	@ApiOperation( "Notes generation" )
+	@Operation( description = "Notes generation" )
 	@PostMapping( path = "/getBars")
 	@CrossOrigin
 	public CompositionDTO getBachNotes(
-			@ApiParam(name = "compositionId", required = true, value = "Unique Id of generation session")
+			@Parameter(name = "compositionId", required = true, description = "Unique Id of generation session")
 			@RequestParam String compositionId,
-			@ApiParam(name = "numberOfBars", required = true, value = "Number of bars that you wan't to be generated")
+			@Parameter(name = "numberOfBars", required = true, description = "Number of bars that you wan't to be generated")
 			@RequestParam int numberOfBars,
-			@ApiParam(name = "Voice range settings", value = "Four voice ranges to compose within")
+			@Parameter(name = "Voice range settings", description = "Four voice ranges to compose within")
 			@Validated @RequestBody(required = false) BachChoralVoiceRangeDTO bachChoralVoiceRangeDTO ) {
 		List<AbstractComposeStepFilter> composeStepFiltersToReplace = bachChoralVoiceRangeDTO != null ?
 				Collections.singletonList( bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter

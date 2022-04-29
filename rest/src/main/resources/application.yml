@@ -1,10 +1,15 @@
-build.version: @project.version@
-server.port: 8888
+build.version: '@project.version@'
+
+server:
+  port: 8888
 
 spring:
   application:
     name: MusicComposer
 
-MelodyFormEqualityAnalyzer.equalityTestPassThreshold: 0.45
-FormEquality.instrumentEqualityPassThreshold: 0.7
-FormEquality.instrumentEqualityFailThreshold: 0.4
+MelodyFormEqualityAnalyzer:
+  equalityTestPassThreshold: 0.45
+
+FormEquality:
+  instrumentEqualityPassThreshold: 0.7
+  instrumentEqualityFailThreshold: 0.4

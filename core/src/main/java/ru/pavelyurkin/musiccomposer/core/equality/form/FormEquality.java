@@ -2,13 +2,13 @@ package ru.pavelyurkin.musiccomposer.core.equality.form;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Component
 @Slf4j
-public class FormEquality implements RelativelyComparable<List<InstrumentPart>>{
+public class FormEquality implements RelativelyComparable<List<InstrumentPart>>, InitializingBean {
 
 	/**
 	 * Min value of equality metric to consider two blocks form equal
@@ -24,7 +24,7 @@ public class FormEquality implements RelativelyComparable<List<InstrumentPart>>{
 	@Value( "${FormEquality.instrumentEqualityFailThreshold}" )
 	private double instrumentEqualityPassThreshold;
 	/**
-	 * Max value of equality metric to consider two blocks form different
+	 * Max1.18.24 value of equality metric to consider two blocks form different
 	 */
 	@Value( "${FormEquality.instrumentEqualityFailThreshold}" )
 	private double instrumentEqualityFailThreshold;
@@ -71,11 +71,11 @@ public class FormEquality implements RelativelyComparable<List<InstrumentPart>>{
 		return 1 - diff;
 	}
 
-	@PostConstruct
-	public void init() {
+	@Override
+	public void afterPropertiesSet() throws Exception {
 		if ( instrumentEqualityFailThreshold > instrumentEqualityPassThreshold ) {
 			throw new IllegalArgumentException( "Illegal configuration of FormEqualityBean: fail threshold " + instrumentEqualityFailThreshold + " is greater than pass threshold "
-			+ instrumentEqualityPassThreshold );
+					+ instrumentEqualityPassThreshold );
 		}
 	}
 

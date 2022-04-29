@@ -1,6 +1,8 @@
-MelodyFormEqualityAnalyzer.equalityTestPassThreshold: 0.45
-FormEquality.instrumentEqualityPassThreshold: 0.7
-FormEquality.instrumentEqualityFailThreshold: 0.4
+MelodyFormEqualityAnalyzer:
+  equalityTestPassThreshold: 0.45
+FormEquality:
+  instrumentEqualityPassThreshold: 0.7
+  instrumentEqualityFailThreshold: 0.4
 
 #logging:
 #  level:

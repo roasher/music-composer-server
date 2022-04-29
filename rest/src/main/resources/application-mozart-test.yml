@@ -1,4 +1,5 @@
-compositions.path: /home/pyurkin/Music/Database/Test/Classical music/mozart/
+compositions:
+  path: /home/pyurkin/Music/Database/Test/Classical music/mozart/
 
 persistance:
   file: /home/pyurkin/Music//mozart-test.db

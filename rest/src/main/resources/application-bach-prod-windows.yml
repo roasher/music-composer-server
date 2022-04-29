@@ -1,4 +1,5 @@
-compositions.path: D:\YandexDisk\Music\Algorithmic music\Database\Test\Bach chorals
+compositions:
+  path: D:\YandexDisk\Music\Algorithmic music\Database\Test\Bach chorals
 
 persistance:
   file: D:\Programming\music\musiccomposer\bach-prod.db
