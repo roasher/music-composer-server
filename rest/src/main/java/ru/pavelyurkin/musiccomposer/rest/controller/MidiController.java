@@ -17,6 +17,8 @@ import ru.pavelyurkin.musiccomposer.rest.dto.BachChoralVoiceRangeDTO;
 import ru.pavelyurkin.musiccomposer.rest.dto.CompositionDTO;
 
 import javax.annotation.PostConstruct;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,10 +54,12 @@ public class MidiController {
 						.convert( bachChoralVoiceRangeDTO ) ) :
 				Collections.emptyList();
 
+		Instant time = Instant.now();
 		CompositionFrontDTO nextBarsFromComposition = composeService.getNextBarsFromComposition( compositionId, numberOfBars,
 				composeStepFiltersToReplace );
 		CompositionDTO compositionDTO = compositionConverter.convert( nextBarsFromComposition );
 		log.info( "Composed {}", compositionDTO );
+		log.info( "Composed time: {} millis", Duration.between(time, Instant.now()).toMillis());
 		return compositionDTO;
 	}
 

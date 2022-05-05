@@ -12,7 +12,7 @@ import static jm.constants.Pitches.*;
 /**
  * Created by wish on 18.02.2016.
  */
-public class BachChoralFilter extends AbstractComposeStepFilter {
+public class BachChoralFilter extends FastComposeStepFilter {
 
     public BachChoralFilter() {
         super(List.of(
@@ -26,7 +26,7 @@ public class BachChoralFilter extends AbstractComposeStepFilter {
                 new KeyVarietyFilter(1, 4 * WHOLE_NOTE),
                 new VarietyFilter(-1, 6),
                 new RepetitionFilter()
-        ));
+        ), 100);
     }
 
 }

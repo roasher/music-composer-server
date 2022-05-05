@@ -1,11 +1,14 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +18,7 @@ import java.util.stream.Collectors;
  * Next Block provider that handles filters
  */
 @AllArgsConstructor
+@Slf4j
 public abstract class FilteredNextStepProvider extends NextStepProvider {
 
 	@Getter
@@ -30,7 +34,9 @@ public abstract class FilteredNextStepProvider extends NextStepProvider {
 				.stream().flatMap( formCompositionStep -> formCompositionStep.getCompositionSteps().stream() ).collect( Collectors.toList() )
 		);
 		// User filters
+		Instant start = Instant.now();
 		List<CompositionStep> filtered = composeStepFilter != null ? composeStepFilter.filter( blocksToChooseFrom, allPreviousCompositionSteps ) : blocksToChooseFrom;
+		log.debug("Filtering took {} millis", Duration.between(start, Instant.now()).toMillis());
 
 		return getNextBlockFiltered( filtered, previousCompositionSteps, previousFormCompositionSteps, form );
 	}

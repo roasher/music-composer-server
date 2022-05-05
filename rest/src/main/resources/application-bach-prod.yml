@@ -3,3 +3,7 @@ compositions:
 
 persistance:
   file: /home/pyurkin/Music//bach-prod.db
+
+logging:
+  level:
+    ru.pavelyurkin.musiccomposer.core.composer.next.FilteredNextStepProvider: debug
