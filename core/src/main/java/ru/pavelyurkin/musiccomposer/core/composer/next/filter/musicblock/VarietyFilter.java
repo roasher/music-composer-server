@@ -1,6 +1,8 @@
-package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
+package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 
@@ -18,26 +20,11 @@ import static com.google.common.collect.Iterables.getLast;
  * x + 1 blocks from same composition in the result
  */
 @Data
-public class ComposeStepVarietyFilter extends AbstractComposeStepFilter {
+@AllArgsConstructor
+public class VarietyFilter implements MusicBlockFilter {
 
 	private int maxSequentialBlocksFromSameComposition;
 	private int minSequentialBlocksFromSameComposition;
-
-	public ComposeStepVarietyFilter() {
-	}
-
-	public ComposeStepVarietyFilter( int minSequentialBlocksFromSameComposition,
-			int maxSequentialBlocksFromSameComposition,
-			AbstractComposeStepFilter composeStepFilter ) {
-		super( composeStepFilter );
-		this.maxSequentialBlocksFromSameComposition = maxSequentialBlocksFromSameComposition;
-		this.minSequentialBlocksFromSameComposition = minSequentialBlocksFromSameComposition;
-	}
-
-	public ComposeStepVarietyFilter( int minSequentialBlocksFromSameComposition, int maxSequentialBlocksFromSameComposition ) {
-		this.maxSequentialBlocksFromSameComposition = maxSequentialBlocksFromSameComposition;
-		this.minSequentialBlocksFromSameComposition = minSequentialBlocksFromSameComposition;
-	}
 
 	@Override
 	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {

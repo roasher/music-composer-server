@@ -1,7 +1,8 @@
-package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
+package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
 import jm.music.data.Note;
 import org.junit.Test;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RepetitionFilter;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
@@ -14,9 +15,9 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
-public class ComposeStepRepetitionFilterTest {
+public class RepetitionFilterTest {
 
-	private ComposeStepRepetitionFilter composeBlockRepetitionFilter = new ComposeStepRepetitionFilter();
+	private RepetitionFilter composeBlockRepetitionFilter = new RepetitionFilter();
 
 	@Test
 	public void filterOutRepetitionsLiveExample() {

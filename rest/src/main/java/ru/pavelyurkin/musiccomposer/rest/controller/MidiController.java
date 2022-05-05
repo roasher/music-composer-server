@@ -8,8 +8,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.AbstractComposeStepFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepVoiceRangeFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.exception.ComposeException;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 import ru.pavelyurkin.musiccomposer.rest.converter.CompositionConverter;
@@ -28,11 +27,11 @@ public class MidiController {
 	private final ComposeService composeService;
 
 	private final CompositionConverter compositionConverter;
-	private final Converter<BachChoralVoiceRangeDTO, ComposeStepVoiceRangeFilter> bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter;
+	private final Converter<BachChoralVoiceRangeDTO, MusicBlockFilter> bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter;
 
 	@Autowired
 	public MidiController( ComposeService composeService, CompositionConverter compositionConverter,
-			Converter<BachChoralVoiceRangeDTO, ComposeStepVoiceRangeFilter> bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter ) {
+			Converter<BachChoralVoiceRangeDTO, MusicBlockFilter> bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter ) {
 		this.composeService = composeService;
 		this.compositionConverter = compositionConverter;
 		this.bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter = bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter;
@@ -48,7 +47,7 @@ public class MidiController {
 			@RequestParam int numberOfBars,
 			@Parameter(name = "Voice range settings", description = "Four voice ranges to compose within")
 			@Validated @RequestBody(required = false) BachChoralVoiceRangeDTO bachChoralVoiceRangeDTO ) {
-		List<AbstractComposeStepFilter> composeStepFiltersToReplace = bachChoralVoiceRangeDTO != null ?
+		List<MusicBlockFilter> composeStepFiltersToReplace = bachChoralVoiceRangeDTO != null ?
 				Collections.singletonList( bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter
 						.convert( bachChoralVoiceRangeDTO ) ) :
 				Collections.emptyList();

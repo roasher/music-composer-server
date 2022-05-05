@@ -1,9 +1,10 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom;
 
-import lombok.experimental.Delegate;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.*;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static jm.constants.Durations.*;
 import static jm.constants.Pitches.*;
@@ -11,18 +12,21 @@ import static jm.constants.Pitches.*;
 /**
  * Created by wish on 18.02.2016.
  */
-public class BachChoralFilter implements ComposeStepFilter {
+public class BachChoralFilter extends AbstractComposeStepFilter {
 
-    @Delegate
-	private ComposeStepFilter composeStepFilter = new ComposeStepRepetitionFilter(
-			new ComposeStepVarietyFilter( -1, 6,
-					new KeyVarietyFilter( 1, 4 * WHOLE_NOTE,
-							new ComposeStepRestFilter( EIGHTH_NOTE,
-									new ComposeStepVoiceRangeFilter( Arrays.asList(
-										new ComposeStepVoiceRangeFilter.Range( C4, C6 ),
-										new ComposeStepVoiceRangeFilter.Range( F3, F5 ),
-										new ComposeStepVoiceRangeFilter.Range( A2, A4 ),
-										new ComposeStepVoiceRangeFilter.Range( F2, F4 )
-							) ) ) ) ) );
+    public BachChoralFilter() {
+        super(List.of(
+                new VoiceRangeFilter(Arrays.asList(
+                        new VoiceRangeFilter.Range(C4, C6),
+                        new VoiceRangeFilter.Range(F3, F5),
+                        new VoiceRangeFilter.Range(A2, A4),
+                        new VoiceRangeFilter.Range(F2, F4)
+                )),
+                new RestFilter(EIGHTH_NOTE),
+                new KeyVarietyFilter(1, 4 * WHOLE_NOTE),
+                new VarietyFilter(-1, 6),
+                new RepetitionFilter()
+        ));
+    }
 
 }

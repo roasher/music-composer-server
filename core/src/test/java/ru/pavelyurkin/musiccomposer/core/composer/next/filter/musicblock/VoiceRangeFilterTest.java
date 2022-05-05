@@ -1,7 +1,8 @@
-package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
+package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
 import jm.music.data.Note;
 import org.junit.Test;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VoiceRangeFilter;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
@@ -26,9 +27,9 @@ public class VoiceRangeFilterTest {
 				new InstrumentPart( new Note( C3, Note.DEFAULT_RHYTHM_VALUE ) ),
 				new InstrumentPart( new Note( C4, Note.DEFAULT_RHYTHM_VALUE ) ) ), null ) );
 
-		ComposeStepVoiceRangeFilter composeBlockVoiceRangeFilter = new ComposeStepVoiceRangeFilter( Arrays.asList(
-				new ComposeStepVoiceRangeFilter.Range( C3, G3 ),
-				new ComposeStepVoiceRangeFilter.Range( A2, D3 )
+		VoiceRangeFilter composeBlockVoiceRangeFilter = new VoiceRangeFilter( Arrays.asList(
+				new VoiceRangeFilter.Range( C3, G3 ),
+				new VoiceRangeFilter.Range( A2, D3 )
 		) );
 
 		assertTrue( composeBlockVoiceRangeFilter.filterIt( getTestBlock( Arrays.asList( C3, REST, E3 ), Arrays.asList( B2, CS3, REST ) ), previousBlocks ) );

@@ -1,7 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 import java.util.List;
 
@@ -14,8 +14,8 @@ public interface ComposeStepFilter {
 
 	/**
 	 * Replaces existing filter with given one
-	 * @param composeStepFilterToReplaceWith
+	 * @param musicBlockFilter
 	 */
-	void replaceFilter(AbstractComposeStepFilter composeStepFilterToReplaceWith);
+	void replaceFilter(MusicBlockFilter musicBlockFilter);
 
 }

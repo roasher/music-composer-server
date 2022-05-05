@@ -1,8 +1,7 @@
 package ru.pavelyurkin.musiccomposer.rest.dto;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepVoiceRangeFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VoiceRangeFilter;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,12 +9,12 @@ import javax.validation.constraints.NotNull;
 public class BachChoralVoiceRangeDTO {
 
     @NotNull
-    private ComposeStepVoiceRangeFilter.Range range1;
+    private VoiceRangeFilter.Range range1;
     @NotNull
-    private ComposeStepVoiceRangeFilter.Range range2;
+    private VoiceRangeFilter.Range range2;
     @NotNull
-    private ComposeStepVoiceRangeFilter.Range range3;
+    private VoiceRangeFilter.Range range3;
     @NotNull
-    private ComposeStepVoiceRangeFilter.Range range4;
+    private VoiceRangeFilter.Range range4;
 
 }

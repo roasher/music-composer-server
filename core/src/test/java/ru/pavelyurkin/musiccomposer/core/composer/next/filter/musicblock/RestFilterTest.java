@@ -1,8 +1,9 @@
-package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
+package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
 import jm.music.data.Note;
 import jm.music.data.Rest;
 import org.junit.Test;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RestFilter;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
@@ -18,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 public class RestFilterTest {
 	@Test
 	public void test() {
-		ComposeStepRestFilter composeBlockRestFilter = new ComposeStepRestFilter( QUARTER_NOTE );
+		RestFilter composeBlockRestFilter = new RestFilter( QUARTER_NOTE );
 		assertTrue( composeBlockRestFilter.filterIt( getRestBlock( QUARTER_NOTE ), null ) );
 		assertTrue( composeBlockRestFilter.filterIt( getRestBlock( QUARTER_NOTE_TRIPLET ), null ) );
 		assertFalse( composeBlockRestFilter.filterIt( getRestBlock( HALF_NOTE ), null ) );

@@ -1,8 +1,9 @@
-package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
+package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
@@ -13,7 +14,8 @@ import java.util.List;
  * Filter restricts going out of range for compose block's melodies
  */
 @Data
-public class ComposeStepVoiceRangeFilter extends AbstractComposeStepFilter {
+@AllArgsConstructor
+public class VoiceRangeFilter implements MusicBlockFilter {
 
 	private List<Range> melodyRange;
 
@@ -26,17 +28,6 @@ public class ComposeStepVoiceRangeFilter extends AbstractComposeStepFilter {
 		private int highPitch;
 
 	}
-
-	public ComposeStepVoiceRangeFilter( AbstractComposeStepFilter composeStepFilter, List<Range> melodyRange ) {
-		super( composeStepFilter );
-		this.melodyRange = melodyRange;
-	}
-
-	public ComposeStepVoiceRangeFilter( List<Range> melodyRange ) {
-		this.melodyRange = melodyRange;
-	}
-
-	public ComposeStepVoiceRangeFilter() {}
 
 	@Override
 	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {

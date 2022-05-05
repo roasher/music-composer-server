@@ -1,8 +1,9 @@
-package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
+package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
 import jm.music.data.Note;
 import jm.music.data.Rest;
 import org.junit.Test;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RangeFilter;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
@@ -19,7 +20,7 @@ public class RangeFilterTest {
 
 	@Test
 	public void test() {
-		ComposeStepRangeFilter composeBlockRangeFilter = new ComposeStepRangeFilter( C3, C4 );
+		RangeFilter composeBlockRangeFilter = new RangeFilter( C3, C4 );
 		assertTrue( composeBlockRangeFilter.filterIt( getBlock( C3, C4, 0, 0 ), null ) );
 		assertFalse( composeBlockRangeFilter.filterIt( getBlock( B2, B3, B2 - C3, B3 - C4 ), null ) );
 		assertFalse( composeBlockRangeFilter.filterIt( getBlock( D3, D4, D3 - C3, D4 - C4 ), null ) );

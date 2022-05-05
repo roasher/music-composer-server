@@ -1,7 +1,8 @@
-package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
+package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VarietyFilter;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 
@@ -14,25 +15,25 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ComposeStepVarietyFilterTest {
+public class VarietyFilterTest {
 
-	private ComposeStepVarietyFilter composeStepVarietyFilter;
+	private VarietyFilter varietyFilter;
 
 	@Test
 	public void filtersWithoutMinSequential1() {
 		List<MusicBlock> mockComposeSteps = getMockSteps();
 
-		ComposeStepVarietyFilter composeBlockVarietyFilter0 = new ComposeStepVarietyFilter( -1, 4 );
+		VarietyFilter composeBlockVarietyFilter0 = new VarietyFilter( -1, 4 );
 		assertThat( composeBlockVarietyFilter0.filterIt( getMockBlock( "0" ), mockComposeSteps ), is(false) );
 		assertThat( composeBlockVarietyFilter0.filterIt( getMockBlock( "1" ), mockComposeSteps ), is(true) );
 		assertThat( composeBlockVarietyFilter0.filterIt( getMockBlock( "2" ), mockComposeSteps ), is(true) );
 
-		ComposeStepVarietyFilter composeBlockVarietyFilter1 = new ComposeStepVarietyFilter( -1, 5 );
+		VarietyFilter composeBlockVarietyFilter1 = new VarietyFilter( -1, 5 );
 		assertThat( composeBlockVarietyFilter1.filterIt( getMockBlock( "0" ), mockComposeSteps ), is(true) );
 		assertThat( composeBlockVarietyFilter1.filterIt( getMockBlock( "1" ), mockComposeSteps ), is(true) );
 		assertThat( composeBlockVarietyFilter1.filterIt( getMockBlock( "2" ), mockComposeSteps ), is(true) );
 
-		ComposeStepVarietyFilter composeBlockVarietyFilter2 = new ComposeStepVarietyFilter( -1, 4 );
+		VarietyFilter composeBlockVarietyFilter2 = new VarietyFilter( -1, 4 );
 		List<MusicBlock> mockSteps1 = mockComposeSteps.subList( 5, mockComposeSteps.size() );
 		assertThat( composeBlockVarietyFilter2.filterIt( getMockBlock( "0" ), mockSteps1 ), is(false) );
 		assertThat( composeBlockVarietyFilter2.filterIt( getMockBlock( "1" ), mockSteps1 ), is(true) );
@@ -56,16 +57,16 @@ public class ComposeStepVarietyFilterTest {
 
 	@Test
 	public void filtersWithoutMinSequential() throws Exception {
-		composeStepVarietyFilter = new ComposeStepVarietyFilter( -1, 3 );
+		varietyFilter = new VarietyFilter( -1, 3 );
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "1" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "1" ),
 				Arrays.asList(
 						getMockBlock( "1" ),
 						getMockBlock( "1" ),
 						getMockBlock( "1" )
 				)), is(false));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "1" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "1" ),
 				Arrays.asList(
 						getMockBlock( "1" ),
 						getMockBlock( "2" ),
@@ -75,36 +76,36 @@ public class ComposeStepVarietyFilterTest {
 
 	@Test
 	public void filtersWithoutMaxSequential() throws Exception {
-		composeStepVarietyFilter = new ComposeStepVarietyFilter( 3, -1 );
+		varietyFilter = new VarietyFilter( 3, -1 );
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "1" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "1" ),
 				Collections.emptyList()), is(true));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "2" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "2" ),
 				Collections.emptyList()), is(true));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "1" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "1" ),
 				Arrays.asList(
 						getMockBlock( "1" ),
 						getMockBlock( "1" ),
 						getMockBlock( "1" )
 				)), is(true));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "2" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "2" ),
 				Arrays.asList(
 						getMockBlock( "1" ),
 						getMockBlock( "1" ),
 						getMockBlock( "1" )
 				)), is(true));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "1" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "1" ),
 				Arrays.asList(
 						getMockBlock( "1" ),
 						getMockBlock( "2" ),
 						getMockBlock( "1" )
 				)), is(true));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "2" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "2" ),
 				Arrays.asList(
 						getMockBlock( "1" ),
 						getMockBlock( "2" ),
@@ -115,40 +116,40 @@ public class ComposeStepVarietyFilterTest {
 	@Test(expected = RuntimeException.class)
 	@Ignore
 	public void minCanNotBeGreaterThanMax() throws Exception {
-		new ComposeStepVarietyFilter( 5, 4 );
+		new VarietyFilter( 5, 4 );
 	}
 
 	@Test
 	public void filtersIfBothNumbersEnabled() throws Exception {
-		composeStepVarietyFilter = new ComposeStepVarietyFilter( 2, 4 );
+		varietyFilter = new VarietyFilter( 2, 4 );
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "1" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "1" ),
 				Collections.emptyList()), is(true));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "2" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "2" ),
 				Arrays.asList(
 						getMockBlock( "1" )
 				)), is(false));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "1" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "1" ),
 				Arrays.asList(
 						getMockBlock( "1" )
 				)), is(true));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "2" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "2" ),
 				Arrays.asList(
 						getMockBlock( "1" ),
 						getMockBlock( "1" )
 				)), is(true));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "1" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "1" ),
 				Arrays.asList(
 						getMockBlock( "1" ),
 						getMockBlock( "1" ),
 						getMockBlock( "2" )
 				)), is(false));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "2" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "2" ),
 				Arrays.asList(
 						getMockBlock( "1" ),
 						getMockBlock( "1" ),
@@ -156,7 +157,7 @@ public class ComposeStepVarietyFilterTest {
 						getMockBlock( "2" )
 				)), is(true));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "2" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "2" ),
 				Arrays.asList(
 						getMockBlock( "1" ),
 						getMockBlock( "1" ),
@@ -165,7 +166,7 @@ public class ComposeStepVarietyFilterTest {
 						getMockBlock( "2" )
 				)), is(true));
 
-		assertThat( composeStepVarietyFilter.filterIt( getMockBlock( "2" ),
+		assertThat( varietyFilter.filterIt( getMockBlock( "2" ),
 				Arrays.asList(
 						getMockBlock( "1" ),
 						getMockBlock( "1" ),

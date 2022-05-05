@@ -14,8 +14,8 @@ import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.composer.next.FilteredNextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.AbstractComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
@@ -56,11 +56,11 @@ public class ComposeService implements ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
 
-	public CompositionFrontDTO getNextBarsFromComposition( String compositionId, int numberOfBars, List<AbstractComposeStepFilter> composeStepFiltersToReplace ) {
+	public CompositionFrontDTO getNextBarsFromComposition( String compositionId, int numberOfBars, List<MusicBlockFilter> filtersToReplace ) {
 		log.info( "Getting next {} bars of composition for id = {}", numberOfBars, compositionId );
 		ComposingParameters composingParameters = getComposingParameters( compositionId );
 		ComposeStepProvider composeStepProvider = composingParameters.getComposeStepProvider();
-		replaceFilters( composeStepProvider, composeStepFiltersToReplace );
+		replaceFilters( composeStepProvider, filtersToReplace );
 		double previousSumRhythmValue = getPreviousSumRhythmValue( composingParameters.getPreviousCompositionSteps() );
 		Pair<Composition, List<CompositionStep>> compose = compositionComposer
 				.compose( composeStepProvider, composingParameters.getLexicon(), numberOfBars * JMC.WHOLE_NOTE,
@@ -81,11 +81,11 @@ public class ComposeService implements ApplicationContextAware {
 	}
 
 	private void replaceFilters( ComposeStepProvider composeStepProvider,
-			List<AbstractComposeStepFilter> composeStepFiltersToReplace ) {
-		if ( composeStepFiltersToReplace == null || composeStepFiltersToReplace.isEmpty() ) return;
+			List<MusicBlockFilter> filtersToReplace ) {
+		if ( filtersToReplace == null || filtersToReplace.isEmpty() ) return;
 		NextStepProvider nextStepProvider = composeStepProvider.getNextStepProvider();
 		if ( nextStepProvider instanceof FilteredNextStepProvider ) {
-			composeStepFiltersToReplace.forEach( filter -> {
+			filtersToReplace.forEach( filter -> {
 				( ( FilteredNextStepProvider ) nextStepProvider ).getComposeStepFilter().replaceFilter( filter );
 			} );
 		} else {

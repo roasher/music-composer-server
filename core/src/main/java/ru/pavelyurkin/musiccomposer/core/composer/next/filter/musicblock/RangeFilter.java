@@ -1,5 +1,7 @@
-package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
+package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
+import lombok.AllArgsConstructor;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
@@ -10,24 +12,11 @@ import java.util.OptionalInt;
  * Created by wish on 02.02.2016.
  * Filter declines all compose blocks that will go out of range after transposing
  */
-public class ComposeStepRangeFilter extends AbstractComposeStepFilter {
+@AllArgsConstructor
+public class RangeFilter implements MusicBlockFilter {
 
 	private int lowestNotePitch;
 	private int highestNotePitch;
-
-	public ComposeStepRangeFilter() {
-	}
-
-	public ComposeStepRangeFilter( int lowestNotePitch, int highestNotePitch, AbstractComposeStepFilter composeStepFilter ) {
-		super( composeStepFilter );
-		this.lowestNotePitch = lowestNotePitch;
-		this.highestNotePitch = highestNotePitch;
-	}
-
-	public ComposeStepRangeFilter( int lowestNotePitch, int highestNotePitch ) {
-		this.lowestNotePitch = lowestNotePitch;
-		this.highestNotePitch = highestNotePitch;
-	}
 
 	@Override
 	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {

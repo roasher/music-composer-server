@@ -1,8 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter;
 
 import org.junit.Test;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.*;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,32 +11,24 @@ import java.util.List;
 
 import static jm.constants.Durations.QUARTER_NOTE;
 import static jm.constants.Pitches.*;
-import static jm.constants.Pitches.F4;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class AbstractComposeStepFilterTest {
 
 	@Test
 	public void nonePassIfFilterItFalse() throws Exception {
-		AbstractComposeStepFilter falseFilter = new AbstractComposeStepFilter() {
-			@Override
-			public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {
-				return false;
-			}
-		};
+		AbstractComposeStepFilter falseFilter = new AbstractComposeStepFilter(List.of(
+				(MusicBlockFilter) (block, previousBlocks) -> false)){};
 		assertThat( 0, is( falseFilter.filter( getListOfCompositionStepMocks( 10 ), getListOfCompositionStepMocks( 2 ) ).size() ) );
 	}
 
 	@Test
 	public void allPassIfFilterItTrue() throws Exception {
-		AbstractComposeStepFilter passFilter = new AbstractComposeStepFilter() {
-			@Override
-			public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {
-				return true;
-			}
-		};
+		AbstractComposeStepFilter passFilter = new AbstractComposeStepFilter(List.of(
+				(MusicBlockFilter) (block, previousBlocks) -> true)){};
 		List<CompositionStep> possibleNexts = getListOfCompositionStepMocks( 10 );
 		assertThat( possibleNexts.size(), is( passFilter.filter( possibleNexts, getListOfCompositionStepMocks( 2 ) ).size() ) );
 	}
@@ -51,43 +43,52 @@ public class AbstractComposeStepFilterTest {
 
 	@Test
 	public void correctFilterReplacement() {
-		ComposeStepFilter composeStepFilter = new ComposeStepRepetitionFilter(
-				new ComposeStepVarietyFilter( -1, 6,
-						new ComposeStepRestFilter( QUARTER_NOTE,
-								new ComposeStepVoiceRangeFilter( Arrays.asList(
-										new ComposeStepVoiceRangeFilter.Range( C4, C6 ),
-										new ComposeStepVoiceRangeFilter.Range( F3, F5 ),
-										new ComposeStepVoiceRangeFilter.Range( A2, A4 ),
-										new ComposeStepVoiceRangeFilter.Range( F2, F4 )
-								) ) ) ) );
+		AbstractComposeStepFilter composeStepFilter = new AbstractComposeStepFilter(List.of(
+				new VoiceRangeFilter( Arrays.asList(
+						new VoiceRangeFilter.Range( C4, C6 ),
+						new VoiceRangeFilter.Range( F3, F5 ),
+						new VoiceRangeFilter.Range( A2, A4 ),
+						new VoiceRangeFilter.Range( F2, F4 )
+				) ),
+				new RestFilter( QUARTER_NOTE),
+				new VarietyFilter( -1, 6),
+				new RepetitionFilter()
+		)){};
 
-		composeStepFilter.replaceFilter(new ComposeStepVarietyFilter(-1, 1));
-		AbstractComposeStepFilter abstractComposeStepFilter = (AbstractComposeStepFilter) composeStepFilter;
-		assertThat(((ComposeStepVarietyFilter) abstractComposeStepFilter.getComposeStepFilter())
-				.getMaxSequentialBlocksFromSameComposition(), is (1));
+		composeStepFilter.replaceFilter(new VarietyFilter(100, 1));
+		MusicBlockFilter newFilter = composeStepFilter.getComposeStepFilters().stream()
+				.filter(musicBlockFilter -> musicBlockFilter instanceof VarietyFilter)
+				.findFirst()
+				.get();
+		assertThat(((VarietyFilter) newFilter).getMaxSequentialBlocksFromSameComposition(), is (100));
+		assertThat(((VarietyFilter) newFilter).getMinSequentialBlocksFromSameComposition(), is (1));
 
-		composeStepFilter.replaceFilter(new ComposeStepVoiceRangeFilter(Collections.emptyList()));
-		assertTrue(((ComposeStepVoiceRangeFilter) abstractComposeStepFilter.getComposeStepFilter().getComposeStepFilter().getComposeStepFilter())
-				.getMelodyRange().isEmpty());
+		composeStepFilter.replaceFilter(new VoiceRangeFilter(Collections.emptyList()));
+		MusicBlockFilter newFilter1 = composeStepFilter.getComposeStepFilters().stream()
+				.filter(musicBlockFilter -> musicBlockFilter instanceof VoiceRangeFilter)
+				.findFirst()
+				.get();
+		assertTrue((((VoiceRangeFilter) newFilter1).getMelodyRange().isEmpty()));
+
+		assertThat(composeStepFilter.getComposeStepFilters().size(), is(4));
 	}
 
 	@Test
 	public void nothingChangedIfReplaceOfNonExistingClassFilter() {
-		ComposeStepVoiceRangeFilter composeStepFilter1 = new ComposeStepVoiceRangeFilter(Arrays.asList(
-				new ComposeStepVoiceRangeFilter.Range(C4, C6),
-				new ComposeStepVoiceRangeFilter.Range(F3, F5),
-				new ComposeStepVoiceRangeFilter.Range(A2, A4),
-				new ComposeStepVoiceRangeFilter.Range(F2, F4)
-		));
-		ComposeStepRestFilter composeStepFilter2 = new ComposeStepRestFilter(QUARTER_NOTE, composeStepFilter1);
-		ComposeStepVarietyFilter composeStepFilter3 = new ComposeStepVarietyFilter(-1, 6,
-				composeStepFilter2);
-		ComposeStepFilter composeStepFilter = new ComposeStepRepetitionFilter(composeStepFilter3);
+		List<MusicBlockFilter> composeStepFilters = List.of(
+				new VoiceRangeFilter(Arrays.asList(
+						new VoiceRangeFilter.Range(C4, C6),
+						new VoiceRangeFilter.Range(F3, F5),
+						new VoiceRangeFilter.Range(A2, A4),
+						new VoiceRangeFilter.Range(F2, F4)
+				)),
+				new RestFilter(QUARTER_NOTE),
+				new VarietyFilter(-1, 6),
+				new RepetitionFilter()
+		);
+		AbstractComposeStepFilter composeStepFilter = new AbstractComposeStepFilter(composeStepFilters){};
 
-		composeStepFilter.replaceFilter(new ComposeStepRangeFilter());
-		assertSame(((AbstractComposeStepFilter) composeStepFilter).getComposeStepFilter(), composeStepFilter3);
-		assertSame(((AbstractComposeStepFilter) composeStepFilter).getComposeStepFilter().getComposeStepFilter(), composeStepFilter2);
-		assertSame(((AbstractComposeStepFilter) composeStepFilter).getComposeStepFilter().getComposeStepFilter().getComposeStepFilter(), composeStepFilter1);
-		assertNull(((AbstractComposeStepFilter) composeStepFilter).getComposeStepFilter().getComposeStepFilter().getComposeStepFilter().getComposeStepFilter());
+		composeStepFilter.replaceFilter(new RangeFilter(-1, 10));
+		assertThat(composeStepFilters.size(), is(4));
 	}
 }
