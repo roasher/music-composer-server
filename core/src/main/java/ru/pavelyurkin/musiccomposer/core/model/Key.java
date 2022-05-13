@@ -8,56 +8,56 @@ import java.util.List;
  */
 public class Key {
 
-	private String name;
-	private List< Integer > notePitches;
+  private String name;
+  private List<Integer> notePitches;
 
-	public Key( String name, List< Integer > notes ) {
-		this.name = name;
-		this.notePitches = notes;
-	}
+  public Key(String name, List<Integer> notes) {
+    this.name = name;
+    this.notePitches = notes;
+  }
 
-	@Override
-	public boolean equals( Object o ) {
-		if ( this == o ) {
-			return true;
-		}
-		if ( !( o instanceof Key ) ) {
-			return false;
-		}
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Key)) {
+      return false;
+    }
 
-		Key key = ( Key ) o;
+    Key key = (Key) o;
 
-		if ( !name.equals( key.name ) ) {
-			return false;
-		}
-		if ( !notePitches.equals( key.notePitches ) ) {
-			return false;
-		}
+    if (!name.equals(key.name)) {
+      return false;
+    }
+    if (!notePitches.equals(key.notePitches)) {
+      return false;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	@Override
-	public int hashCode() {
-		int result = name.hashCode();
-		result = 31 * result + notePitches.hashCode();
-		return result;
-	}
+  @Override
+  public int hashCode() {
+    int result = name.hashCode();
+    result = 31 * result + notePitches.hashCode();
+    return result;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setName( String name ) {
-		this.name = name;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public List<Integer> getNotePitches() {
-		return notePitches;
-	}
+  public List<Integer> getNotePitches() {
+    return notePitches;
+  }
 
-	public void setNotePitches( List<Integer> notePitches ) {
-		this.notePitches = notePitches;
-	}
+  public void setNotePitches(List<Integer> notePitches) {
+    this.notePitches = notePitches;
+  }
 }
 

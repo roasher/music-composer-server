@@ -24,60 +24,68 @@ import static ru.pavelyurkin.musiccomposer.core.utils.Utils.epsilon;
 
 public class ComposeServiceTest extends AbstractSpringTest {
 
-	@Autowired
-	private ComposeService composeService;
+  @Autowired
+  private ComposeService composeService;
 
-	@Autowired
-	private CompositionComposer compositionComposer;
+  @Autowired
+  private CompositionComposer compositionComposer;
 
-	@Autowired
-	private ComposeStepProvider composeStepProvider;
+  @Autowired
+  private ComposeStepProvider composeStepProvider;
 
-	@Autowired
-	private CompositionLoader compositionLoader;
+  @Autowired
+  private CompositionLoader compositionLoader;
 
-	@Autowired
-	private CompositionDecomposer compositionDecomposer;
+  @Autowired
+  private CompositionDecomposer compositionDecomposer;
 
-	@Before
-	public void before() {
-		composeService.setDefaultComposeStepProvider( composeStepProvider );
+  @Before
+  public void before() {
+    composeService.setDefaultComposeStepProvider(composeStepProvider);
 
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resources/ru/pavelyurkin/musiccomposer/core/decomposer/" ) );
-		Lexicon lexicon = compositionDecomposer.decompose( compositionList, JMC.WHOLE_NOTE );
-		composeService.setDefaultLexicon( lexicon );
-	}
+    List<Composition> compositionList = compositionLoader
+        .getCompositionsFromFolder(new File("src/test/resources/ru/pavelyurkin/musiccomposer/core/decomposer/"));
+    Lexicon lexicon = compositionDecomposer.decompose(compositionList, JMC.WHOLE_NOTE);
+    composeService.setDefaultLexicon(lexicon);
+  }
 
-	@Test
-	public void getNextBarsFromComposition() throws Exception {
-		String id1 = "id1";
-		CompositionFrontDTO composition1 = composeService.getNextBarsFromComposition( id1, 10, null );
-		String id2 = "id2";
-		CompositionFrontDTO composition11 = composeService.getNextBarsFromComposition( id2, 5, null );
-		CompositionFrontDTO composition12 = composeService.getNextBarsFromComposition( id2, 5, null );
-		String id3 = "id3";
-		CompositionFrontDTO composition21 = composeService.getNextBarsFromComposition( id3, 3, null );
-		CompositionFrontDTO composition22 = composeService.getNextBarsFromComposition( id3, 3, null );
-		CompositionFrontDTO composition23 = composeService.getNextBarsFromComposition( id3, 4, null );
-		// Checking same lexicon
-		assertSame( composeService.getComposingParametersById( id1 ).getLexicon(), composeService.getComposingParametersById( id2 ).getLexicon() );
-		assertSame( composeService.getComposingParametersById( id1 ).getLexicon(), composeService.getComposingParametersById( id3 ).getLexicon() );
-		// Checking same compose results if sum of bars are equal regardless of number of requests
-		Composition compositionGather1 = compositionComposer.gatherComposition( composition11.getComposition(), composition12.getComposition() );
-		Composition compositionGather2 = compositionComposer.gatherComposition( composition21.getComposition(), composition22.getComposition(), composition23.getComposition() );
-		assertTrue( composition1.hasSameNoteContent( compositionGather1 ) );
-		assertTrue( composition1.hasSameNoteContent( compositionGather2 ) );
-		assertTrue( compositionGather1.hasSameNoteContent( compositionGather2 ) );
-		// checking rhythmValues
-		assertThat( composition1.getPreviousSumRhythmValues(), closeTo( 0, epsilon  ) );
+  @Test
+  public void getNextBarsFromComposition() throws Exception {
+    String id1 = "id1";
+    CompositionFrontDTO composition1 = composeService.getNextBarsFromComposition(id1, 10, null);
+    String id2 = "id2";
+    CompositionFrontDTO composition11 = composeService.getNextBarsFromComposition(id2, 5, null);
+    CompositionFrontDTO composition12 = composeService.getNextBarsFromComposition(id2, 5, null);
+    String id3 = "id3";
+    CompositionFrontDTO composition21 = composeService.getNextBarsFromComposition(id3, 3, null);
+    CompositionFrontDTO composition22 = composeService.getNextBarsFromComposition(id3, 3, null);
+    CompositionFrontDTO composition23 = composeService.getNextBarsFromComposition(id3, 4, null);
+    // Checking same lexicon
+    assertSame(composeService.getComposingParametersById(id1).getLexicon(),
+        composeService.getComposingParametersById(id2).getLexicon());
+    assertSame(composeService.getComposingParametersById(id1).getLexicon(),
+        composeService.getComposingParametersById(id3).getLexicon());
+    // Checking same compose results if sum of bars are equal regardless of number of requests
+    Composition compositionGather1 =
+        compositionComposer.gatherComposition(composition11.getComposition(), composition12.getComposition());
+    Composition compositionGather2 = compositionComposer
+        .gatherComposition(composition21.getComposition(), composition22.getComposition(),
+            composition23.getComposition());
+    assertTrue(composition1.hasSameNoteContent(compositionGather1));
+    assertTrue(composition1.hasSameNoteContent(compositionGather2));
+    assertTrue(compositionGather1.hasSameNoteContent(compositionGather2));
+    // checking rhythmValues
+    assertThat(composition1.getPreviousSumRhythmValues(), closeTo(0, epsilon));
 
-		assertThat( composition11.getPreviousSumRhythmValues(), closeTo( 0, epsilon ) );
-		assertThat( composition12.getPreviousSumRhythmValues(), closeTo( getRhythmValue( composition11.getComposition() ), epsilon ) );
+    assertThat(composition11.getPreviousSumRhythmValues(), closeTo(0, epsilon));
+    assertThat(composition12.getPreviousSumRhythmValues(),
+        closeTo(getRhythmValue(composition11.getComposition()), epsilon));
 
-		assertThat( composition21.getPreviousSumRhythmValues(), closeTo( 0, epsilon ) );
-		double rhythmValueComposition21 = getRhythmValue( composition21.getComposition() );
-		assertThat( composition22.getPreviousSumRhythmValues(), closeTo( rhythmValueComposition21, epsilon ) );
-		assertThat( composition23.getPreviousSumRhythmValues(), closeTo( getRhythmValue( composition22.getComposition() ) + rhythmValueComposition21, epsilon ) );
-	}
+    assertThat(composition21.getPreviousSumRhythmValues(), closeTo(0, epsilon));
+    double rhythmValueComposition21 = getRhythmValue(composition21.getComposition());
+    assertThat(composition22.getPreviousSumRhythmValues(), closeTo(rhythmValueComposition21, epsilon));
+    assertThat(composition23.getPreviousSumRhythmValues(),
+        closeTo(getRhythmValue(composition22.getComposition()) + rhythmValueComposition21, epsilon));
+  }
 
 }

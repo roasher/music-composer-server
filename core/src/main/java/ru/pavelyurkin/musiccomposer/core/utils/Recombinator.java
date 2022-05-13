@@ -1,14 +1,14 @@
 package ru.pavelyurkin.musiccomposer.core.utils;
 
+import static com.google.common.collect.Iterables.getLast;
+import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.trimToTime;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.google.common.collect.Iterables.getLast;
-import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.trimToTime;
 
 /**
  * Class handles all recombination between melody lists
@@ -17,46 +17,48 @@ import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.trimToTime;
 @Component
 public class Recombinator {
 
-	/**
-	 * Recombines melody lists.
-	 * In the result, all melodies has only one note within
-	 * @param instrumentParts
-	 * @return
-	 */
-	public List< List< InstrumentPart > > recombine( List<InstrumentPart> instrumentParts ) {
-		List<Double> rhythmEdges = instrumentParts.stream().map( InstrumentPart::getNoteGroups )
-				.flatMap( noteGroups -> getRhythmEdgeList( noteGroups ).stream() )
-				.distinct()
-				.sorted()
-				.collect( Collectors.toList() );
+  /**
+   * Recombines melody lists.
+   * In the result, all melodies has only one note within
+   *
+   * @param instrumentParts
+   * @return
+   */
+  public List<List<InstrumentPart>> recombine(List<InstrumentPart> instrumentParts) {
+    List<Double> rhythmEdges = instrumentParts.stream().map(InstrumentPart::getNoteGroups)
+        .flatMap(noteGroups -> getRhythmEdgeList(noteGroups).stream())
+        .distinct()
+        .sorted()
+        .collect(Collectors.toList());
 
-		List< List< InstrumentPart > > recombineList = new ArrayList<>();
-		double previousEdge = 0;
-		for ( double edge : rhythmEdges ) {
-			recombineList.add( trimToTime( instrumentParts, previousEdge, edge ) );
-			previousEdge = edge;
-		}
-		return recombineList;
-	}
+    List<List<InstrumentPart>> recombineList = new ArrayList<>();
+    double previousEdge = 0;
+    for (double edge : rhythmEdges) {
+      recombineList.add(trimToTime(instrumentParts, previousEdge, edge));
+      previousEdge = edge;
+    }
+    return recombineList;
+  }
 
-	/**
-	 * Returns the edge list of melody noteGroups
-	 * Sets first edge to rhythm value of the first note, and incrementing this value by
-	 * rhythm value of all noteGroups one by one
-	 * @param noteGroups
-	 * @return
-	 */
-	public List< Double > getRhythmEdgeList( List<NoteGroup> noteGroups ) {
-		List< Double > edgeList = new ArrayList<>();
-		double lastEdge = 0;
-		for ( int noteGroupNumber = 0; noteGroupNumber < noteGroups.size(); noteGroupNumber ++ ) {
-			NoteGroup noteGroup = noteGroups.get( noteGroupNumber );
-			List<Double> rhythmEdgeList = noteGroup.getRhythmEdgeList();
-			for ( Double aDouble : rhythmEdgeList ) {
-				edgeList.add( lastEdge + aDouble );
-			}
-			lastEdge = getLast( edgeList );
-		}
-		return edgeList;
-	}
+  /**
+   * Returns the edge list of melody noteGroups
+   * Sets first edge to rhythm value of the first note, and incrementing this value by
+   * rhythm value of all noteGroups one by one
+   *
+   * @param noteGroups
+   * @return
+   */
+  public List<Double> getRhythmEdgeList(List<NoteGroup> noteGroups) {
+    List<Double> edgeList = new ArrayList<>();
+    double lastEdge = 0;
+    for (int noteGroupNumber = 0; noteGroupNumber < noteGroups.size(); noteGroupNumber++) {
+      NoteGroup noteGroup = noteGroups.get(noteGroupNumber);
+      List<Double> rhythmEdgeList = noteGroup.getRhythmEdgeList();
+      for (Double aDouble : rhythmEdgeList) {
+        edgeList.add(lastEdge + aDouble);
+      }
+      lastEdge = getLast(edgeList);
+    }
+    return edgeList;
+  }
 }

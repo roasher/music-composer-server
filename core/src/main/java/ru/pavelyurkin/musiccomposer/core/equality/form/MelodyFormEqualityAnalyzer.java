@@ -16,27 +16,28 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 @RequiredArgsConstructor
 public class MelodyFormEqualityAnalyzer implements MelodyEqualityAnalyzer {
 
-    /**
-     * Min percentage of passed sub tests necessary to consider ru.pavelyurkin.musiccomposer.equality of two melodies
-     */
-    @Value( "${MelodyFormEqualityAnalyzer.equalityTestPassThreshold}" )
-    private double equalityTestPassThreshold;
+  /**
+   * Min percentage of passed sub tests necessary to consider ru.pavelyurkin.musiccomposer.equality of two melodies
+   */
+  @Value("${MelodyFormEqualityAnalyzer.equalityTestPassThreshold}")
+  private double equalityTestPassThreshold;
 
-	private final EqualityMetricAnalyzer<Melody> equalityMetricAnalyzer;
+  private final EqualityMetricAnalyzer<Melody> equalityMetricAnalyzer;
 
 
-    public boolean isEqual( Melody firstMelody, Melody secondMelody ) {
+  public boolean isEqual(Melody firstMelody, Melody secondMelody) {
 
-		double positivePersentage = equalityMetricAnalyzer.getEqualityMetric( firstMelody, secondMelody );
-        log.debug( "Percent of positive tests = {}, pass threshold = {}", positivePersentage, this.equalityTestPassThreshold );
+    double positivePersentage = equalityMetricAnalyzer.getEqualityMetric(firstMelody, secondMelody);
+    log.debug("Percent of positive tests = {}, pass threshold = {}", positivePersentage,
+        this.equalityTestPassThreshold);
 
-        if ( equalityTestPassThreshold <= positivePersentage ) {
-            log.debug( "Melodies considered to belong to same form element" );
-            return true;
-        } else {
-            log.debug( "Melodies considered different in term of form" );
-            return false;
-        }
+    if (equalityTestPassThreshold <= positivePersentage) {
+      log.debug("Melodies considered to belong to same form element");
+      return true;
+    } else {
+      log.debug("Melodies considered different in term of form");
+      return false;
     }
+  }
 
 }

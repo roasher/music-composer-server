@@ -5,47 +5,48 @@ package ru.pavelyurkin.musiccomposer.core.model.melody;
  */
 public class Form {
 
-	private char value = 'A';
+  private char value = 'A';
 
-	public Form( char value ) {
-		this.value = value;
-	}
+  public Form(char value) {
+    this.value = value;
+  }
 
-	public Form() {}
+  public Form() {
+  }
 
-	@Override
-	public String toString() {
-		return String.valueOf( value );
-	}
+  @Override
+  public String toString() {
+    return String.valueOf(value);
+  }
 
-	@Override
-	public boolean equals( Object o ) {
-		if ( this == o ) {
-			return true;
-		}
-		if ( !( o instanceof Form ) ) {
-			return false;
-		}
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Form)) {
+      return false;
+    }
 
-		Form that = ( Form ) o;
+    Form that = (Form) o;
 
-		if ( value != that.value ) {
-			return false;
-		}
+    if (value != that.value) {
+      return false;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	@Override
-	public int hashCode() {
-		return ( int ) value;
-	}
+  @Override
+  public int hashCode() {
+    return (int) value;
+  }
 
-	public char getValue() {
-		return value;
-	}
+  public char getValue() {
+    return value;
+  }
 
-	public void setValue( char value ) {
-		this.value = value;
-	}
+  public void setValue(char value) {
+    this.value = value;
+  }
 }

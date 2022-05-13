@@ -1,8 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.equality.melodymovement;
 
-import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
-
 import static java.lang.Math.abs;
+
+import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
 
 /**
  * @author Pavel Yurkin
@@ -10,38 +10,39 @@ import static java.lang.Math.abs;
  */
 public class FragmentationMelodyMovementEquality extends AbstractMelodyMovementEquality {
 
-    // Maximum allowable number of intervals that can be different
-    private int maxNumberOfDeletedIntervals;
+  // Maximum allowable number of intervals that can be different
+  private int maxNumberOfDeletedIntervals;
 
-    @Override
-    /**
-     * @returns true if number of deleted notes <= maxNumberOfDeletedIntervals false otherwise
-     * Fragmentation may occurs only if some of the intervals was removed from right of left side of the Melody
-     */
-    public boolean testEqualityByLogic( MelodyMovement firstMelodyMovement, MelodyMovement secondMelodyMovement ) {
-        // Fragmentation occurs only if one list is part of another
-        if ( !firstMelodyMovement.getPitchIntervals().containsAll( secondMelodyMovement.getPitchIntervals() ) &&
-                !secondMelodyMovement.getPitchIntervals().containsAll( firstMelodyMovement.getPitchIntervals() ) ) {
-            return false;
-        }
-
-        if ( abs( firstMelodyMovement.getPitchIntervals().size() - secondMelodyMovement.getPitchIntervals().size() ) <= maxNumberOfDeletedIntervals) {
-            return true;
-        } else{
-            return false;
-        }
+  @Override
+  /**
+   * @returns true if number of deleted notes <= maxNumberOfDeletedIntervals false otherwise
+   * Fragmentation may occurs only if some of the intervals was removed from right of left side of the Melody
+   */
+  public boolean testEqualityByLogic(MelodyMovement firstMelodyMovement, MelodyMovement secondMelodyMovement) {
+    // Fragmentation occurs only if one list is part of another
+    if (!firstMelodyMovement.getPitchIntervals().containsAll(secondMelodyMovement.getPitchIntervals()) &&
+        !secondMelodyMovement.getPitchIntervals().containsAll(firstMelodyMovement.getPitchIntervals())) {
+      return false;
     }
 
-    public int getMaxNumberOfDeletedIntervals() {
-        return maxNumberOfDeletedIntervals;
+    if (abs(firstMelodyMovement.getPitchIntervals().size() - secondMelodyMovement.getPitchIntervals().size())
+        <= maxNumberOfDeletedIntervals) {
+      return true;
+    } else {
+      return false;
     }
+  }
 
-    public void setMaxNumberOfDeletedIntervals(int maxNumberOfDeletedIntervals) {
-        this.maxNumberOfDeletedIntervals = maxNumberOfDeletedIntervals;
-    }
+  public int getMaxNumberOfDeletedIntervals() {
+    return maxNumberOfDeletedIntervals;
+  }
 
-    @Override
-    public int getMaxNumberOfDiversedNotes() {
-        return maxNumberOfDeletedIntervals;
-    }
+  public void setMaxNumberOfDeletedIntervals(int maxNumberOfDeletedIntervals) {
+    this.maxNumberOfDeletedIntervals = maxNumberOfDeletedIntervals;
+  }
+
+  @Override
+  public int getMaxNumberOfDiversedNotes() {
+    return maxNumberOfDeletedIntervals;
+  }
 }

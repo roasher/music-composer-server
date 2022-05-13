@@ -11,8 +11,8 @@ import lombok.experimental.Delegate;
 @AllArgsConstructor
 public class CompositionFrontDTO {
 
-	@Delegate
-	private Composition composition;
-	private double previousSumRhythmValues;
+  @Delegate
+  private Composition composition;
+  private double previousSumRhythmValues;
 
 }

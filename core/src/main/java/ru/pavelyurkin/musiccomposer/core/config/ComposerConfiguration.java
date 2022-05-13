@@ -1,5 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.config;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,50 +21,48 @@ import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionParser;
 import ru.pavelyurkin.musiccomposer.core.utils.Recombinator;
 
-import java.util.List;
-
 @Configuration
 public class ComposerConfiguration {
 
-	@Bean
-	public ComposeStepProvider composeStepProvider(
-			@Qualifier( "randomFirstStepProvider" ) FirstStepProvider firstStepProvider,
-			@Qualifier( "nextStepProvider" ) NextStepProvider nextStepProvider ) {
-		return new ComposeStepProvider( firstStepProvider, nextStepProvider );
-	}
+  @Bean
+  public ComposeStepProvider composeStepProvider(
+      @Qualifier("randomFirstStepProvider") FirstStepProvider firstStepProvider,
+      @Qualifier("nextStepProvider") NextStepProvider nextStepProvider) {
+    return new ComposeStepProvider(firstStepProvider, nextStepProvider);
+  }
 
-	@Bean
-	public FormEqualityMetricAnalyzer formEqualityMetricAnalyzer(
-			@Qualifier( "melodyMetricEqualityAnalyzer" ) EqualityMetricAnalyzer<InstrumentPart> equalityMetricAnalyzer ) {
-		return new FormEqualityMetricAnalyzer( equalityMetricAnalyzer );
-	}
+  @Bean
+  public FormEqualityMetricAnalyzer formEqualityMetricAnalyzer(
+      @Qualifier("melodyMetricEqualityAnalyzer") EqualityMetricAnalyzer<InstrumentPart> equalityMetricAnalyzer) {
+    return new FormEqualityMetricAnalyzer(equalityMetricAnalyzer);
+  }
 
-	@Bean
-	public CompositionDecomposer compositionDecomposer(
-			MusicBlockProvider musicBlockProvider,
-			Recombinator recombinator,
-			CompositionParser compositionParser,
-			@Qualifier( "lexiconDAO_mapdb" ) LexiconDAO lexiconDAO ) {
-		return new CompositionDecomposer( recombinator, compositionParser, musicBlockProvider, lexiconDAO );
-	}
+  @Bean
+  public CompositionDecomposer compositionDecomposer(
+      MusicBlockProvider musicBlockProvider,
+      Recombinator recombinator,
+      CompositionParser compositionParser,
+      @Qualifier("lexiconDAO_mapdb") LexiconDAO lexiconDAO) {
+    return new CompositionDecomposer(recombinator, compositionParser, musicBlockProvider, lexiconDAO);
+  }
 
-	@Bean
-	public NextStepProviderImpl nextStepProvider(
-			EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer,
-			@Qualifier("defaultFilter") ComposeStepFilter filter
-	) {
-		return new NextStepProviderImpl(equalityMetricAnalyzer, filter);
-	}
+  @Bean
+  public NextStepProviderImpl nextStepProvider(
+      EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer,
+      @Qualifier("defaultFilter") ComposeStepFilter filter
+  ) {
+    return new NextStepProviderImpl(equalityMetricAnalyzer, filter);
+  }
 
-	@Bean(name = "defaultFilter")
-	@Profile( {"bach-test", "bach-prod", "test"} )
-	public ComposeStepFilter defaultFilter1() {
-		return new BachChoralFilter();
-	}
+  @Bean(name = "defaultFilter")
+  @Profile( {"bach-test", "bach-prod", "test"})
+  public ComposeStepFilter defaultFilter1() {
+    return new BachChoralFilter();
+  }
 
-	@Bean(name = "defaultFilter")
-	@Profile( {"mozart-test", "mozart-prod"} )
-	public ComposeStepFilter defaultFilter2() {
-		return new MozartFilter();
-	}
+  @Bean(name = "defaultFilter")
+  @Profile( {"mozart-test", "mozart-prod"})
+  public ComposeStepFilter defaultFilter2() {
+    return new MozartFilter();
+  }
 }

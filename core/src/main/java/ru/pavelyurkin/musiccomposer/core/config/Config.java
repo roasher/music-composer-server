@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Config {
 
-    private String pathToCompositions;
+  private String pathToCompositions;
 
 }

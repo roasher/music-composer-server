@@ -1,8 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.equality.melody;
 
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 /**
  * Equality test wrapper adding conditions that both comparing melodies must have equal number of notes
@@ -11,39 +11,42 @@ import org.slf4j.LoggerFactory;
  */
 public class EqualNumberOfNotesRequired implements Equality {
 
-    private Logger logger = LoggerFactory.getLogger( getClass() );
+  private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Equality equality;
+  private Equality equality;
 
-    public EqualNumberOfNotesRequired() {}
-    public EqualNumberOfNotesRequired( Equality equality ) {
-        this.equality = equality;
+  public EqualNumberOfNotesRequired() {
+  }
+
+  public EqualNumberOfNotesRequired(Equality equality) {
+    this.equality = equality;
+  }
+
+  @Override
+  public boolean test(Melody firstMelody, Melody secondMelody) {
+    if (firstMelody.size() != secondMelody.size()) {
+      return false;
+    } else {
+      if (this.equality != null) {
+        return this.equality.test(firstMelody, secondMelody);
+      } else {
+        logger
+            .warn("EqualNumberOfNotesRequired instance has null Equality member. Test will be considered UNsuccessful");
+        return false;
+      }
     }
+  }
 
-    @Override
-    public boolean test( Melody firstMelody, Melody secondMelody ) {
-        if ( firstMelody.size() != secondMelody.size() ) {
-            return false;
-        } else {
-            if ( this.equality != null ) {
-                return this.equality.test( firstMelody, secondMelody );
-            } else {
-                logger.warn( "EqualNumberOfNotesRequired instance has null Equality member. Test will be considered UNsuccessful" );
-                return false;
-            }
-        }
-    }
+  @Override
+  public int getMaxNumberOfDiversedNotes() {
+    return equality != null ? equality.getMaxNumberOfDiversedNotes() : 0;
+  }
 
-    @Override
-    public int getMaxNumberOfDiversedNotes() {
-        return equality != null ? equality.getMaxNumberOfDiversedNotes() : 0;
-    }
+  public Equality getEquality() {
+    return equality;
+  }
 
-    public Equality getEquality() {
-        return equality;
-    }
-
-    public void setEquality( Equality equality ) {
-        this.equality = equality;
-    }
+  public void setEquality(Equality equality) {
+    this.equality = equality;
+  }
 }

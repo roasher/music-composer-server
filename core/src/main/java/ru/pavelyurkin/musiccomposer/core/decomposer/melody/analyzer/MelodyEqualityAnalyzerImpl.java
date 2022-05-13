@@ -14,27 +14,28 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 @RequiredArgsConstructor
 public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 
-    /**
-     * Min percentage of passed sub tests necessary to consider ru.pavelyurkin.musiccomposer.equality of two melodies
-     */
-	@Value( "${MelodyEqualityAnalyzerImpl.equalityTestPassThreshold:1}" )
-    private double equalityTestPassThreshold;
+  /**
+   * Min percentage of passed sub tests necessary to consider ru.pavelyurkin.musiccomposer.equality of two melodies
+   */
+  @Value("${MelodyEqualityAnalyzerImpl.equalityTestPassThreshold:1}")
+  private double equalityTestPassThreshold;
 
 //    private Equality fragmentationEqualityTest;
 //    private Equality interpolationEqualityTest;
 
-    private final Equality countourEquality;
-    private final Equality intervalsEquality;
-    private final Equality inversionEquality;
-    private final Equality orderEquality;
-    private final Equality rhythmEquality;
+  private final Equality countourEquality;
+  private final Equality intervalsEquality;
+  private final Equality inversionEquality;
+  private final Equality orderEquality;
+  private final Equality rhythmEquality;
 
-    private Logger logger = LoggerFactory.getLogger( getClass() );
+  private Logger logger = LoggerFactory.getLogger(getClass());
 
-    public boolean isEqual( Melody firstMelody, Melody secondMelody ) {
-        // If melodies size abs difference more than fragmentationEqualityTest.
+  public boolean isEqual(Melody firstMelody, Melody secondMelody) {
+    // If melodies size abs difference more than fragmentationEqualityTest.
 //        int absSizeDifference = Math.abs( firstMelody.getSize() - secondMelody.getSize() );
-//        if ( absSizeDifference > interpolationEqualityTest.getMaxNumberOfDiversedNotes() || absSizeDifference > fragmentationEqualityTest.getMaxNumberOfDiversedNotes() ) {
+//        if ( absSizeDifference > interpolationEqualityTest.getMaxNumberOfDiversedNotes() || absSizeDifference >
+//        fragmentationEqualityTest.getMaxNumberOfDiversedNotes() ) {
 //            return false;
 //        }
 //
@@ -51,49 +52,50 @@ public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 //            return true;
 //        }
 
-        boolean rhythmTest = rhythmEquality.test( firstMelody, secondMelody );
-        if ( !rhythmTest ) {
-            logger.debug( "rhythm_old test failed. No more tests required, melodies considered not equal." );
-            return false;
-        }
-
-		Equality[] testArray = new Equality[] { countourEquality, intervalsEquality, inversionEquality, orderEquality,
-		};
-		int numberOfTestsPassed = 0;
-		int numberOfTestsFailed = 0;
-
-		for ( int currentTestNumber = 0; currentTestNumber < testArray.length;  currentTestNumber ++ ) {
-			boolean testPassed = testArray[ currentTestNumber ].test( firstMelody, secondMelody );
-			if ( testPassed ) {
-				numberOfTestsPassed++;
-				logger.debug( "{} test succeed", testArray[ currentTestNumber ].getClass().getSimpleName() );
-			} else {
-				numberOfTestsFailed++;
-				logger.debug( "{} test failed", testArray[ currentTestNumber ].getClass().getSimpleName() );
-			}
-			if ( 1 - numberOfTestsFailed*1./testArray.length < equalityTestPassThreshold ) {
-				logger.debug( "Number of failed test is too high - {}. Aborting others", numberOfTestsFailed );
-				return false;
-			}
-		}
-
-        double positivePersentage = 1.0*numberOfTestsPassed/testArray.length;
-        logger.debug( "Percent of positive tests = {}, pass threshold = {}", positivePersentage, this.equalityTestPassThreshold );
-
-        if ( equalityTestPassThreshold <= positivePersentage ) {
-            logger.debug( "Melodies considered equal" );
-            return true;
-        } else {
-            logger.debug( "Melodies considered different" );
-            return false;
-        }
+    boolean rhythmTest = rhythmEquality.test(firstMelody, secondMelody);
+    if (!rhythmTest) {
+      logger.debug("rhythm_old test failed. No more tests required, melodies considered not equal.");
+      return false;
     }
 
-    public double getEqualityTestPassThreshold() {
-        return equalityTestPassThreshold;
+    Equality[] testArray = new Equality[] {countourEquality, intervalsEquality, inversionEquality, orderEquality,
+    };
+    int numberOfTestsPassed = 0;
+    int numberOfTestsFailed = 0;
+
+    for (int currentTestNumber = 0; currentTestNumber < testArray.length; currentTestNumber++) {
+      boolean testPassed = testArray[currentTestNumber].test(firstMelody, secondMelody);
+      if (testPassed) {
+        numberOfTestsPassed++;
+        logger.debug("{} test succeed", testArray[currentTestNumber].getClass().getSimpleName());
+      } else {
+        numberOfTestsFailed++;
+        logger.debug("{} test failed", testArray[currentTestNumber].getClass().getSimpleName());
+      }
+      if (1 - numberOfTestsFailed * 1. / testArray.length < equalityTestPassThreshold) {
+        logger.debug("Number of failed test is too high - {}. Aborting others", numberOfTestsFailed);
+        return false;
+      }
     }
 
-    public void setEqualityTestPassThreshold( double equalityTestPassThreshold ) {
-        this.equalityTestPassThreshold = equalityTestPassThreshold;
+    double positivePersentage = 1.0 * numberOfTestsPassed / testArray.length;
+    logger.debug("Percent of positive tests = {}, pass threshold = {}", positivePersentage,
+        this.equalityTestPassThreshold);
+
+    if (equalityTestPassThreshold <= positivePersentage) {
+      logger.debug("Melodies considered equal");
+      return true;
+    } else {
+      logger.debug("Melodies considered different");
+      return false;
     }
+  }
+
+  public double getEqualityTestPassThreshold() {
+    return equalityTestPassThreshold;
+  }
+
+  public void setEqualityTestPassThreshold(double equalityTestPassThreshold) {
+    this.equalityTestPassThreshold = equalityTestPassThreshold;
+  }
 }

@@ -9,13 +9,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PersistConfiguration {
 
-	@Bean
-	public DB Db(@Value( "${persistance.file}" ) String file) {
-		return DBMaker
-				.fileDB(file)
-				.concurrencyDisable()
-				.closeOnJvmShutdown()
-				.make();
-	}
+  @Bean
+  public DB Db(@Value("${persistance.file}") String file) {
+    return DBMaker
+        .fileDB(file)
+        .concurrencyDisable()
+        .closeOnJvmShutdown()
+        .make();
+  }
 
 }

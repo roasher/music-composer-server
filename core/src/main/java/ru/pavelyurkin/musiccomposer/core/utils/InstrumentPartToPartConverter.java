@@ -15,31 +15,31 @@ import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 @RequiredArgsConstructor
 public class InstrumentPartToPartConverter implements Converter<InstrumentPart, Part> {
 
-	private final CompositionParser compositionParser;
+  private final CompositionParser compositionParser;
 
-	@Override
-	public Part convert( InstrumentPart instrumentPart ) {
-		Part part = new Part();
-		instrumentPart.getNoteGroups().stream()
-				.forEach( noteGroup -> {
-					if ( noteGroup instanceof NewMelody ) {
-						NewMelody newMelody = ( NewMelody ) noteGroup;
-						Phrase phrase = new Phrase( newMelody.clone().getNotes().toArray( new Note[] {} ) );
-						phrase.setAppend( true );
-						part.add( phrase );
-					} else {
-						Chord chord = ( Chord ) noteGroup;
-						int[] pitches = chord.getPitches().stream().mapToInt( Integer::intValue ).toArray();
-						CPhrase cPhrase = new CPhrase();
-						cPhrase.setAppend( true );
-						cPhrase.addChord( pitches, chord.getRhythmValue() );
-						part.addCPhrase( cPhrase );
-					}
-				} );
-		return part;
-	}
+  @Override
+  public Part convert(InstrumentPart instrumentPart) {
+    Part part = new Part();
+    instrumentPart.getNoteGroups().stream()
+        .forEach(noteGroup -> {
+          if (noteGroup instanceof NewMelody) {
+            NewMelody newMelody = (NewMelody) noteGroup;
+            Phrase phrase = new Phrase(newMelody.clone().getNotes().toArray(new Note[] {}));
+            phrase.setAppend(true);
+            part.add(phrase);
+          } else {
+            Chord chord = (Chord) noteGroup;
+            int[] pitches = chord.getPitches().stream().mapToInt(Integer::intValue).toArray();
+            CPhrase cPhrase = new CPhrase();
+            cPhrase.setAppend(true);
+            cPhrase.addChord(pitches, chord.getRhythmValue());
+            part.addCPhrase(cPhrase);
+          }
+        });
+    return part;
+  }
 
-	public InstrumentPart convertTo( Part part ) {
-		return compositionParser.convert( part );
-	}
+  public InstrumentPart convertTo(Part part) {
+    return compositionParser.convert(part);
+  }
 }

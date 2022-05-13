@@ -10,9 +10,9 @@ import ru.pavelyurkin.musiccomposer.core.MyTestConfiguration;
  * Parent test class
  * Created by pyurkin on 05.12.14.
  */
-@RunWith( SpringRunner.class )
-@ContextConfiguration( classes = MyTestConfiguration.class )
-@ActiveProfiles( "test" )
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes = MyTestConfiguration.class)
+@ActiveProfiles("test")
 public abstract class AbstractSpringTest {
 
 }

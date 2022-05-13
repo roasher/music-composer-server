@@ -9,10 +9,10 @@ import ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEquali
  * Created by night_wish on 17.01.17.
  */
 @SpringBootApplication
-@ComponentScan( excludeFilters = {
-		// Not using yet
-		@ComponentScan.Filter( type = FilterType.ASSIGNABLE_TYPE, value = MelodyEqualityAnalyzerImpl.class ),
-		@ComponentScan.Filter( type = FilterType.REGEX, pattern = "ru.pavelyurkin.musiccomposer.core.equality.melody.*" ) }
+@ComponentScan(excludeFilters = {
+    // Not using yet
+    @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = MelodyEqualityAnalyzerImpl.class),
+    @ComponentScan.Filter(type = FilterType.REGEX, pattern = "ru.pavelyurkin.musiccomposer.core.equality.melody.*")}
 )
 public class Application {
 

@@ -8,7 +8,7 @@ import ru.pavelyurkin.musiccomposer.core.Application;
 /**
  * Created by Wish on 21.12.2015.
  */
-@RunWith( SpringJUnit4ClassRunner.class )
-@ContextConfiguration( classes = Application.class )
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = Application.class)
 public abstract class AbstractSpringComposerTest {
 }

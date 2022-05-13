@@ -4,35 +4,43 @@ package ru.pavelyurkin.musiccomposer.core.model.composition;
  * Created by night wish on 27.07.14.
  */
 public class Meter {
-    private int numerator;
-    private int denominator;
+  private int numerator;
+  private int denominator;
 
-    @Override
-    public boolean equals( Object o ) {
-        if ( this == o ) return true;
-        if ( o == null || getClass() != o.getClass() ) return false;
-
-        Meter meter = ( Meter ) o;
-
-        if ( denominator != meter.denominator ) return false;
-        if ( numerator != meter.numerator ) return false;
-
-        return true;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
 
-    public int getNumerator() {
-        return numerator;
+    Meter meter = (Meter) o;
+
+    if (denominator != meter.denominator) {
+      return false;
+    }
+    if (numerator != meter.numerator) {
+      return false;
     }
 
-    public void setNumerator( int numerator ) {
-        this.numerator = numerator;
-    }
+    return true;
+  }
 
-    public int getDenominator() {
-        return denominator;
-    }
+  public int getNumerator() {
+    return numerator;
+  }
 
-    public void setDenominator( int denominator ) {
-        this.denominator = denominator;
-    }
+  public void setNumerator(int numerator) {
+    this.numerator = numerator;
+  }
+
+  public int getDenominator() {
+    return denominator;
+  }
+
+  public void setDenominator(int denominator) {
+    this.denominator = denominator;
+  }
 }

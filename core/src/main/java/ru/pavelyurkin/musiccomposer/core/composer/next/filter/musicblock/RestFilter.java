@@ -1,10 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
-import lombok.AllArgsConstructor;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBlockFilter;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-
 import java.util.List;
+import lombok.AllArgsConstructor;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 /**
  * Created by wish on 02.02.2016.
@@ -13,11 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 public class RestFilter implements MusicBlockFilter {
 
-	private double maxRestRhythmValue;
+  private double maxRestRhythmValue;
 
-	@Override
-	public boolean filterIt( MusicBlock block, List<MusicBlock> previousBlocks ) {
-		return !block.isRest() || block.getRhythmValue() <= maxRestRhythmValue;
-	}
+  @Override
+  public boolean filterIt(MusicBlock block, List<MusicBlock> previousBlocks) {
+    return !block.isRest() || block.getRhythmValue() <= maxRestRhythmValue;
+  }
 
 }
