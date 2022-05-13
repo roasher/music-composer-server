@@ -6,7 +6,7 @@ var playNextTBars = function (compositionId, amountOfBarsToLoad, player) {
         var notes = eval("(" + request.responseText + ")").notes;
         console.log(notes);
         for (var instrumentNumber = 0; instrumentNumber < notes.length; instrumentNumber++) {
-            for (var noteNumber = 0; noteNumber < notes[instrumentNumber].length; noteNumber++ ) {
+            for (var noteNumber = 0; noteNumber < notes[instrumentNumber].length; noteNumber++) {
                 player.partPlayers[instrumentNumber].play(
                     notes[instrumentNumber][noteNumber].pitch,
                     notes[instrumentNumber][noteNumber].rhythmValue,

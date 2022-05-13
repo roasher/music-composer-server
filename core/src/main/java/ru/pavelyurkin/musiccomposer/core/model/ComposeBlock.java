@@ -47,18 +47,18 @@ public class ComposeBlock {
 
   @Override
   public boolean equals(Object o) {
-      if (this == o) {
-          return true;
-      }
-      if (!(o instanceof ComposeBlock)) {
-          return false;
-      }
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof ComposeBlock)) {
+      return false;
+    }
 
     ComposeBlock that = (ComposeBlock) o;
 
-      if (!this.hasEqualsMusicBlock(that)) {
-          return false;
-      }
+    if (!this.hasEqualsMusicBlock(that)) {
+      return false;
+    }
 
     if (!isEquals(this.possibleNextComposeBlocks, that.possibleNextComposeBlocks)) {
       return false;
@@ -77,9 +77,9 @@ public class ComposeBlock {
    * @return
    */
   private boolean isEquals(List<ComposeBlock> firstComposeBlockList, List<ComposeBlock> secondComposeBlockList) {
-      if (firstComposeBlockList.size() != secondComposeBlockList.size()) {
-          return false;
-      }
+    if (firstComposeBlockList.size() != secondComposeBlockList.size()) {
+      return false;
+    }
 
     for (ComposeBlock firstComposeBlock : firstComposeBlockList) {
       boolean isInList = false;

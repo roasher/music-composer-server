@@ -1,5 +1,14 @@
 package ru.pavelyurkin.musiccomposer.core.service;
 
+import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getRhythmValue;
+import static ru.pavelyurkin.musiccomposer.core.utils.Utils.epsilon;
+
+import java.io.File;
+import java.util.List;
 import jm.JMC;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,15 +21,6 @@ import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
-
-import java.io.File;
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.number.IsCloseTo.closeTo;
-import static org.junit.Assert.*;
-import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getRhythmValue;
-import static ru.pavelyurkin.musiccomposer.core.utils.Utils.epsilon;
 
 public class ComposeServiceTest extends AbstractSpringTest {
 

@@ -17,13 +17,13 @@ import lombok.Data;
 @Data
 public class NoteDTO {
 
-	@JsonProperty("midiNote")
-	private int pitch;
-	@JsonProperty("note")
-	private String stringRepresentation;
+  @JsonProperty("midiNote")
+  private int pitch;
+  @JsonProperty("note")
+  private String stringRepresentation;
 
-	private String time;
-	private int velocity;
-	private String duration;
-	private int partNumber;
+  private String time;
+  private int velocity;
+  private String duration;
+  private int partNumber;
 }

@@ -65,9 +65,9 @@ public class ComposeService implements ApplicationContextAware {
     Pair<Composition, List<CompositionStep>> compose = compositionComposer
         .compose(composeStepProvider, composingParameters.getLexicon(), numberOfBars * JMC.WHOLE_NOTE,
             composingParameters.getPreviousCompositionSteps());
-      if (compose.getValue() != null) {
-          composingParameters.setPreviousCompositionSteps(compose.getValue());
-      }
+    if (compose.getValue() != null) {
+      composingParameters.setPreviousCompositionSteps(compose.getValue());
+    }
     return new CompositionFrontDTO(compose.getKey(), previousSumRhythmValue);
   }
 
@@ -84,9 +84,9 @@ public class ComposeService implements ApplicationContextAware {
 
   private void replaceFilters(ComposeStepProvider composeStepProvider,
                               List<MusicBlockFilter> filtersToReplace) {
-      if (filtersToReplace == null || filtersToReplace.isEmpty()) {
-          return;
-      }
+    if (filtersToReplace == null || filtersToReplace.isEmpty()) {
+      return;
+    }
     NextStepProvider nextStepProvider = composeStepProvider.getNextStepProvider();
     if (nextStepProvider instanceof FilteredNextStepProvider) {
       filtersToReplace.forEach(filter -> {

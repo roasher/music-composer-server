@@ -22,17 +22,17 @@
 
     }
 
-    Promise.prototype.then = function(accept, reject) {
-        this.accept = accept; 
+    Promise.prototype.then = function (accept, reject) {
+        this.accept = accept;
         this.reject = reject;
     }
 
-    Promise.prototype.succeed = function(access) {
+    Promise.prototype.succeed = function (access) {
         if (this.accept)
             this.accept(access);
     }
 
-    Promise.prototype.fail = function(error) {
+    Promise.prototype.fail = function (error) {
         if (this.reject)
             this.reject(error);
     }
@@ -50,7 +50,7 @@
 
         var o2 = document.createElement("object");
         o2.id = "_Jazz" + Math.random();
-        o2.type="audio/x-jazz";
+        o2.type = "audio/x-jazz";
         o1.appendChild(o2);
 
         this.objRef = o2;
@@ -98,16 +98,16 @@
 
     // API Methods
 
-    MIDIAccess = function() {
+    MIDIAccess = function () {
         this._jazzInstances = new Array();
-        this._jazzInstances.push( new _JazzInstance() );
+        this._jazzInstances.push(new _JazzInstance());
         this._promise = new Promise;
 
         if (this._jazzInstances[0]._Jazz) {
             this._Jazz = this._jazzInstances[0]._Jazz;
-            window.setTimeout( _onReady.bind(this), 3 );
+            window.setTimeout(_onReady.bind(this), 3);
         } else {
-            window.setTimeout( _onNotReady.bind(this), 3 );
+            window.setTimeout(_onNotReady.bind(this), 3);
         }
     };
 
@@ -118,34 +118,34 @@
 
     function _onNotReady() {
         if (this._promise)
-            this._promise.fail( { code: 1 } );
+            this._promise.fail({code: 1});
     };
 
-    MIDIAccess.prototype.inputs = function(  ) {
+    MIDIAccess.prototype.inputs = function () {
         if (!this._Jazz)
-              return null;
-        var list=this._Jazz.MidiInList();
-        var inputs = new Array( list.length );
+            return null;
+        var list = this._Jazz.MidiInList();
+        var inputs = new Array(list.length);
 
-        for ( var i=0; i<list.length; i++ ) {
-            inputs[i] = new MIDIInput( this, list[i], i );
+        for (var i = 0; i < list.length; i++) {
+            inputs[i] = new MIDIInput(this, list[i], i);
         }
         return inputs;
     }
 
-    MIDIAccess.prototype.outputs = function(  ) {
+    MIDIAccess.prototype.outputs = function () {
         if (!this._Jazz)
             return null;
-        var list=this._Jazz.MidiOutList();
-        var outputs = new Array( list.length );
+        var list = this._Jazz.MidiOutList();
+        var outputs = new Array(list.length);
 
-        for ( var i=0; i<list.length; i++ ) {
-            outputs[i] = new MIDIOutput( this, list[i], i );
+        for (var i = 0; i < list.length; i++) {
+            outputs[i] = new MIDIOutput(this, list[i], i);
         }
         return outputs;
     };
 
-    MIDIInput = function MIDIInput( midiAccess, name, index ) {
+    MIDIInput = function MIDIInput(midiAccess, name, index) {
         this._listeners = [];
         this._midiAccess = midiAccess;
         this._index = index;
@@ -159,41 +159,41 @@
         this.onmidimessage = null;
 
         var inputInstance = null;
-        for (var i=0; (i<midiAccess._jazzInstances.length)&&(!inputInstance); i++) {
+        for (var i = 0; (i < midiAccess._jazzInstances.length) && (!inputInstance); i++) {
             if (!midiAccess._jazzInstances[i].inputInUse)
-                inputInstance=midiAccess._jazzInstances[i];
+                inputInstance = midiAccess._jazzInstances[i];
         }
         if (!inputInstance) {
             inputInstance = new _JazzInstance();
-            midiAccess._jazzInstances.push( inputInstance );
+            midiAccess._jazzInstances.push(inputInstance);
         }
         inputInstance.inputInUse = true;
 
         this._jazzInstance = inputInstance._Jazz;
-        this._input = this._jazzInstance.MidiInOpen( this._index, _midiProc.bind(this) );
+        this._input = this._jazzInstance.MidiInOpen(this._index, _midiProc.bind(this));
     };
 
     // Introduced in DOM Level 2:
-    MIDIInput.prototype.addEventListener = function (type, listener, useCapture ) {
+    MIDIInput.prototype.addEventListener = function (type, listener, useCapture) {
         if (type !== "midimessage")
             return;
-        for (var i=0; i<this._listeners.length; i++)
+        for (var i = 0; i < this._listeners.length; i++)
             if (this._listeners[i] == listener)
                 return;
-        this._listeners.push( listener );
+        this._listeners.push(listener);
     };
 
-    MIDIInput.prototype.removeEventListener = function (type, listener, useCapture ) {
+    MIDIInput.prototype.removeEventListener = function (type, listener, useCapture) {
         if (type !== "midimessage")
             return;
-        for (var i=0; i<this._listeners.length; i++)
+        for (var i = 0; i < this._listeners.length; i++)
             if (this._listeners[i] == listener) {
-                this._listeners.splice( i, 1 );  //remove it
+                this._listeners.splice(i, 1);  //remove it
                 return;
             }
     };
 
-    MIDIInput.prototype.preventDefault = function() {
+    MIDIInput.prototype.preventDefault = function () {
         this._pvtDef = true;
     };
 
@@ -201,56 +201,56 @@
         this._pvtDef = false;
 
         // dispatch to listeners
-        for (var i=0; i<this._listeners.length; i++)
+        for (var i = 0; i < this._listeners.length; i++)
             if (this._listeners[i].handleEvent)
-                this._listeners[i].handleEvent.bind(this)( evt );
+                this._listeners[i].handleEvent.bind(this)(evt);
             else
-                this._listeners[i].bind(this)( evt );
+                this._listeners[i].bind(this)(evt);
 
         if (this.onmidimessage)
-            this.onmidimessage( evt );
+            this.onmidimessage(evt);
 
         return this._pvtDef;
     };
 
-    MIDIInput.prototype.appendToSysexBuffer = function ( data ) {
+    MIDIInput.prototype.appendToSysexBuffer = function (data) {
         var oldLength = this._sysexBuffer.length;
-        var tmpBuffer = new Uint8Array( oldLength + data.length );
-        tmpBuffer.set( this._sysexBuffer );
-        tmpBuffer.set( data, oldLength );
+        var tmpBuffer = new Uint8Array(oldLength + data.length);
+        tmpBuffer.set(this._sysexBuffer);
+        tmpBuffer.set(data, oldLength);
         this._sysexBuffer = tmpBuffer;
     };
 
-    MIDIInput.prototype.bufferLongSysex = function ( data, initialOffset ) {
+    MIDIInput.prototype.bufferLongSysex = function (data, initialOffset) {
         var j = initialOffset;
-        while (j<data.length) {
+        while (j < data.length) {
             if (data[j] == 0xF7) {
                 // end of sysex!
                 j++;
-                this.appendToSysexBuffer( data.slice(initialOffset, j) );
+                this.appendToSysexBuffer(data.slice(initialOffset, j));
                 return j;
             }
             j++;
         }
         // didn't reach the end; just tack it on.
-        this.appendToSysexBuffer( data.slice(initialOffset, j) );
+        this.appendToSysexBuffer(data.slice(initialOffset, j));
         this._inLongSysexMessage = true;
         return j;
     };
 
-    _midiProc = function _midiProc( timestamp, data ) {
+    _midiProc = function _midiProc(timestamp, data) {
         // Have to use createEvent/initEvent because IE10 fails on new CustomEvent.  Thanks, IE!
         var length = 0;
-        var i,j;
+        var i, j;
         var isSysexMessage = false;
 
         // Jazz sometimes passes us multiple messages at once, so we need to parse them out
         // and pass them one at a time.
 
-        for (i=0; i<data.length; i+=length) {
+        for (i = 0; i < data.length; i += length) {
             if (this._inLongSysexMessage) {
-                i = this.bufferLongSysex(data,i);
-                if ( data[i-1] != 0xf7 ) {
+                i = this.bufferLongSysex(data, i);
+                if (data[i - 1] != 0xf7) {
                     // ran off the end without hitting the end of the sysex message
                     return;
                 }
@@ -274,8 +274,8 @@
                     case 0xF0:
                         switch (data[i]) {
                             case 0xf0:  // variable-length sysex.
-                                i = this.bufferLongSysex(data,i);
-                                if ( data[i-1] != 0xf7 ) {
+                                i = this.bufferLongSysex(data, i);
+                                if (data[i - 1] != 0xf7) {
                                     // ran off the end without hitting the end of the sysex message
                                     return;
                                 }
@@ -298,20 +298,20 @@
                         break;
                 }
             }
-            var evt = document.createEvent( "Event" );
-            evt.initEvent( "midimessage", false, false );
-            evt.receivedTime = parseFloat( timestamp.toString()) + this._jazzInstance._perfTimeZero;
+            var evt = document.createEvent("Event");
+            evt.initEvent("midimessage", false, false);
+            evt.receivedTime = parseFloat(timestamp.toString()) + this._jazzInstance._perfTimeZero;
             if (isSysexMessage || this._inLongSysexMessage) {
-                evt.data = new Uint8Array( this._sysexBuffer );
+                evt.data = new Uint8Array(this._sysexBuffer);
                 this._sysexBuffer = new Uint8Array(0);
                 this._inLongSysexMessage = false;
             } else
-                evt.data = new Uint8Array(data.slice(i, length+i));
-            this.dispatchEvent( evt );
+                evt.data = new Uint8Array(data.slice(i, length + i));
+            this.dispatchEvent(evt);
         }
     };
 
-    MIDIOutput = function MIDIOutput( midiAccess, name, index ) {
+    MIDIOutput = function MIDIOutput(midiAccess, name, index) {
         this._listeners = [];
         this._midiAccess = midiAccess;
         this._index = index;
@@ -322,13 +322,13 @@
         this.version = "";
 
         var outputInstance = null;
-        for (var i=0; (i<midiAccess._jazzInstances.length)&&(!outputInstance); i++) {
+        for (var i = 0; (i < midiAccess._jazzInstances.length) && (!outputInstance); i++) {
             if (!midiAccess._jazzInstances[i].outputInUse)
-                outputInstance=midiAccess._jazzInstances[i];
+                outputInstance = midiAccess._jazzInstances[i];
         }
         if (!outputInstance) {
             outputInstance = new _JazzInstance();
-            midiAccess._jazzInstances.push( outputInstance );
+            midiAccess._jazzInstances.push(outputInstance);
         }
         outputInstance.outputInUse = true;
 
@@ -337,25 +337,25 @@
     };
 
     function _sendLater() {
-        this.jazz.MidiOutLong( this.data );    // handle send as sysex
+        this.jazz.MidiOutLong(this.data);    // handle send as sysex
     }
 
-    MIDIOutput.prototype.send = function( data, timestamp ) {
+    MIDIOutput.prototype.send = function (data, timestamp) {
         var delayBeforeSend = 0;
         if (data.length === 0)
             return false;
 
         if (timestamp)
-            delayBeforeSend = Math.floor( timestamp - window.performance.now() );
+            delayBeforeSend = Math.floor(timestamp - window.performance.now());
 
-        if (timestamp && (delayBeforeSend>1)) {
+        if (timestamp && (delayBeforeSend > 1)) {
             var sendObj = new Object();
             sendObj.jazz = this._jazzInstance;
             sendObj.data = data;
 
-            window.setTimeout( _sendLater.bind(sendObj), delayBeforeSend );
+            window.setTimeout(_sendLater.bind(sendObj), delayBeforeSend);
         } else {
-            this._jazzInstance.MidiOutLong( data );
+            this._jazzInstance.MidiOutLong(data);
         }
         return true;
     };
@@ -372,7 +372,7 @@
 
     function findAlt() {
         var prefix = ['moz', 'webkit', 'o', 'ms'],
-        i = prefix.length,
+            i = prefix.length,
             //worst case, we use Date.now()
             props = {
                 value: (function (start) {
@@ -398,7 +398,7 @@
         if ("timing" in exports.performance && "connectStart" in exports.performance.timing) {
             //this pretty much approximates performance.now() to the millisecond
             props.value = (function (start) {
-                return function() {
+                return function () {
                     Date.now() - start;
                 };
             }(exports.performance.timing.connectStart));
@@ -413,8 +413,9 @@
         Object.defineProperty(exports, "performance", {
             get: function () {
                 return perf;
-            }});
-        //otherwise, performance is there, but not "now()"
+            }
+        });
+    //otherwise, performance is there, but not "now()"
 
     props = findAlt();
     Object.defineProperty(exports.performance, "now", props);

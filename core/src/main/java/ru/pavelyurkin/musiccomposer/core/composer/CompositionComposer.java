@@ -131,7 +131,7 @@ public class CompositionComposer {
             firstComposeBlockExclusions.add(exclusionBlock);
           }
           // subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with
-            // previous
+          // previous
           compositionSteps.remove(formElementNumber - 1);
           formElementNumber = formElementNumber - 2;
           continue;

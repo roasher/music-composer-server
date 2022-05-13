@@ -1,6 +1,8 @@
 Latest news
 ====
-New effects added: Chorus, Phaser, and Tremolo. <br /> Be sure to follow us at <a href="https://twitter.com/DinahmoeSTHLM">@DinahmoeSTHLM</a> for future updates. Feel free to create your own effects and give us a pull request!
+New effects added: Chorus, Phaser, and Tremolo. <br /> Be sure to follow us
+at <a href="https://twitter.com/DinahmoeSTHLM">@DinahmoeSTHLM</a> for future updates. Feel free to create your own
+effects and give us a pull request!
 
 tuna
 ====
@@ -56,7 +58,8 @@ or to other tuna nodes by doing:
 tunaNode.connect(chorus.input);
 chorus.connect(anotherTunaNode.input);
 </pre>
-All tuna nodes are connected TO by using the nodes input property, but connecting FROM the tuna node works as it does with ordinary native AudioNodes.
+All tuna nodes are connected TO by using the nodes input property, but connecting FROM the tuna node works as it does
+with ordinary native AudioNodes.
 
 
 The nodes
@@ -121,7 +124,8 @@ var compressor = new tuna.Compressor({
                  });
 </pre>
 
-A convolver with high- and lowcut. You can find a lot of impulse resonses <a href="http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/">here</a>
+A convolver with high- and lowcut. You can find a lot of impulse
+resonses <a href="http://chromium.googlecode.com/svn/trunk/samples/audio/impulse-responses/">here</a>
 <pre>
 var convolver = new tuna.Convolver({
                     highCut: 22050,                         //20 to 22050

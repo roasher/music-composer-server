@@ -1,8 +1,7 @@
 package ru.pavelyurkin.musiccomposer.rest.dto;
 
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 /**
  * DTO to be send to the front
@@ -10,7 +9,7 @@ import java.util.List;
 @Data
 public class CompositionDTO {
 
-	private Header header;
-	private List<NoteDTO> notes;
+  private Header header;
+  private List<NoteDTO> notes;
 
 }

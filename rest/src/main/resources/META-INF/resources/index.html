@@ -46,15 +46,16 @@
     }
 
     class Player {
-        constructor( partNumber ) {
+        constructor(partNumber) {
             this.partPlayers = [];
-            for( var currentPartNumber = 0; currentPartNumber < partNumber; currentPartNumber ++ ) {
-                this.partPlayers.push( new PartPlayer() )
+            for (var currentPartNumber = 0; currentPartNumber < partNumber; currentPartNumber++) {
+                this.partPlayers.push(new PartPlayer())
             }
         }
+
         getTimeLine() {
             var minTimeLine;
-            for( var currentPartNumber = 0; currentPartNumber < this.partPlayers.length; currentPartNumber ++ ) {
+            for (var currentPartNumber = 0; currentPartNumber < this.partPlayers.length; currentPartNumber++) {
                 if (!minTimeLine || minTimeLine < this.partPlayers[currentPartNumber].timeline) {
                     minTimeLine = this.partPlayers[currentPartNumber].timeline;
                 }

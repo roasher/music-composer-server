@@ -1,5 +1,12 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import jm.JMC;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,53 +22,50 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertTrue;
-
 /**
  * Created by pyurkin on 17.02.15.
  */
 public class FormBlockProviderTest extends AbstractSpringTest {
-	@Autowired
-	private CompositionLoader compositionLoader;
-	@Autowired
-	private CompositionDecomposer compositionDecomposer;
-	@Autowired
-	private FormBlockProvider formBlockProvider;
-	@Autowired
-	private ComposeStepProvider composeStepProvider;
+  @Autowired
+  private CompositionLoader compositionLoader;
+  @Autowired
+  private CompositionDecomposer compositionDecomposer;
+  @Autowired
+  private FormBlockProvider formBlockProvider;
+  @Autowired
+  private ComposeStepProvider composeStepProvider;
 
-	@Test
-	public void formBlockProviderTest() {
-		List<Composition> compositionList = compositionLoader.getCompositionsFromFolder( new File( "src/test/resources/simpleMelodies" ) );
-		Lexicon lexiconFromFirst = compositionDecomposer.decompose( compositionList.get( 0 ), JMC.WHOLE_NOTE );
+  @Test
+  public void formBlockProviderTest() {
+    List<Composition> compositionList =
+        compositionLoader.getCompositionsFromFolder(new File("src/test/resources/simpleMelodies"));
+    Lexicon lexiconFromFirst = compositionDecomposer.decompose(compositionList.get(0), JMC.WHOLE_NOTE);
 
-		double lenght = JMC.WHOLE_NOTE;
-		Optional<FormCompositionStep> optFormCompositionStep = formBlockProvider
-				.getFormElement( lenght, lexiconFromFirst, composeStepProvider, new Form( 'A' ), new ArrayList<>(), new ArrayList<>() );
+    double lenght = JMC.WHOLE_NOTE;
+    Optional<FormCompositionStep> optFormCompositionStep = formBlockProvider
+        .getFormElement(lenght, lexiconFromFirst, composeStepProvider, new Form('A'), new ArrayList<>(),
+            new ArrayList<>());
 
-		assertTrue( optFormCompositionStep.isPresent() );
-		optFormCompositionStep.ifPresent( formCompositionStep -> {
-			// checking length
-			Assert.assertEquals( lenght, ModelUtils.sumAllRhythmValues(
-					formCompositionStep.getCompositionSteps()
-							.stream()
-							.map( CompositionStep::getTransposedBlock )
-							.collect( Collectors.toList() ) ), 0 );
-			// checking quality of composing
-			for ( int compositionStepNumber = 1; compositionStepNumber < formCompositionStep.getCompositionSteps().size(); compositionStepNumber++ ) {
-				ComposeBlock currentOrigin = formCompositionStep.getCompositionSteps().get( compositionStepNumber ).getOriginComposeBlock();
-				ComposeBlock previousOrigin = formCompositionStep.getCompositionSteps().get( compositionStepNumber - 1 ).getOriginComposeBlock();
-				assertTrue( previousOrigin.getPossibleNextComposeBlocks().contains( currentOrigin ) );
+    assertTrue(optFormCompositionStep.isPresent());
+    optFormCompositionStep.ifPresent(formCompositionStep -> {
+      // checking length
+      Assert.assertEquals(lenght, ModelUtils.sumAllRhythmValues(
+          formCompositionStep.getCompositionSteps()
+              .stream()
+              .map(CompositionStep::getTransposedBlock)
+              .collect(Collectors.toList())), 0);
+      // checking quality of composing
+      for (int compositionStepNumber = 1; compositionStepNumber < formCompositionStep.getCompositionSteps().size();
+           compositionStepNumber++) {
+        ComposeBlock currentOrigin =
+            formCompositionStep.getCompositionSteps().get(compositionStepNumber).getOriginComposeBlock();
+        ComposeBlock previousOrigin =
+            formCompositionStep.getCompositionSteps().get(compositionStepNumber - 1).getOriginComposeBlock();
+        assertTrue(previousOrigin.getPossibleNextComposeBlocks().contains(currentOrigin));
 
-				// todo check that transposed right???
-			}
-		} );
-	}
+        // todo check that transposed right???
+      }
+    });
+  }
 
 }

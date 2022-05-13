@@ -19,54 +19,55 @@ import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.InversionMelody
 import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.OrderMelodyMovementEquality;
 
 @TestConfiguration
-@PropertySource( "classpath:test-application.properties" )
-@ComponentScan( basePackages = "ru.pavelyurkin.musiccomposer.core", excludeFilters = { @ComponentScan.Filter( type = FilterType.ASSIGNABLE_TYPE, value = Application.class ) } )
+@PropertySource("classpath:test-application.properties")
+@ComponentScan(basePackages = "ru.pavelyurkin.musiccomposer.core",
+    excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = Application.class)})
 // todo refactor
 public class MyTestConfiguration {
 
-	@Bean
-	public MelodyEqualityAnalyzerImpl melodyEqualityAnalyzer(
-			@Qualifier( "getCountourEquality" ) Equality countourEquality,
-			@Qualifier( "getIntervalsEquality" ) Equality intervalsEquality,
-			@Qualifier( "getInversionEquality" ) Equality inversionEquality,
-			@Qualifier( "getOrderEquality" ) Equality orderEquality,
-			@Qualifier( "getRhythmEquality" ) Equality rhythmEquality ) {
-		return new MelodyEqualityAnalyzerImpl( countourEquality, intervalsEquality, inversionEquality, orderEquality,
-				rhythmEquality );
-	}
+  @Bean
+  public MelodyEqualityAnalyzerImpl melodyEqualityAnalyzer(
+      @Qualifier("getCountourEquality") Equality countourEquality,
+      @Qualifier("getIntervalsEquality") Equality intervalsEquality,
+      @Qualifier("getInversionEquality") Equality inversionEquality,
+      @Qualifier("getOrderEquality") Equality orderEquality,
+      @Qualifier("getRhythmEquality") Equality rhythmEquality) {
+    return new MelodyEqualityAnalyzerImpl(countourEquality, intervalsEquality, inversionEquality, orderEquality,
+        rhythmEquality);
+  }
 
-	@Bean
-	public Equality getCountourEquality() {
-		return new EqualNumberOfNotesRequired( new ContourMelodyMovementEquality() );
-	}
+  @Bean
+  public Equality getCountourEquality() {
+    return new EqualNumberOfNotesRequired(new ContourMelodyMovementEquality());
+  }
 
-	@Bean
-	public Equality getIntervalsEquality() {
-		return new EqualNumberOfNotesRequired( new IntervalsMelodyMovementEquality() );
-	}
+  @Bean
+  public Equality getIntervalsEquality() {
+    return new EqualNumberOfNotesRequired(new IntervalsMelodyMovementEquality());
+  }
 
-	@Bean
-	public Equality getInversionEquality() {
-		return new EqualNumberOfNotesRequired( new InversionMelodyMovementEquality() );
-	}
+  @Bean
+  public Equality getInversionEquality() {
+    return new EqualNumberOfNotesRequired(new InversionMelodyMovementEquality());
+  }
 
-	@Bean
-	public Equality getOrderEquality() {
-		return new EqualNumberOfNotesRequired( new OrderMelodyMovementEquality() );
-	}
+  @Bean
+  public Equality getOrderEquality() {
+    return new EqualNumberOfNotesRequired(new OrderMelodyMovementEquality());
+  }
 
-	@Bean
-	public Equality getRhythmEquality() {
-		return new EqualNumberOfNotesRequired( new RhythmEquality() );
-	}
+  @Bean
+  public Equality getRhythmEquality() {
+    return new EqualNumberOfNotesRequired(new RhythmEquality());
+  }
 
-	@Bean
-	public DB Db(@Value( "${persistance.file}" ) String file) {
-		return DBMaker
-				.fileDB(file)
-				.concurrencyDisable()
-				.closeOnJvmShutdown()
-				.fileDeleteAfterClose()
-				.make();
-	}
+  @Bean
+  public DB Db(@Value("${persistance.file}") String file) {
+    return DBMaker
+        .fileDB(file)
+        .concurrencyDisable()
+        .closeOnJvmShutdown()
+        .fileDeleteAfterClose()
+        .make();
+  }
 }
