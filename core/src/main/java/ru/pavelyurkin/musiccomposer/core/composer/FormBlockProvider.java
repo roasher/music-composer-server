@@ -70,8 +70,14 @@ public class FormBlockProvider {
     List<FormCompositionStep> formCompositionSteps = !previousFormCompositionSteps.isEmpty() ?
         Collections.singletonList(new FormCompositionStep(previousFormCompositionSteps, null)) :
         Collections.emptyList();
-    return composeSteps(length, lexicon, composeStepProvider, formCompositionSteps, Optional.empty(),
-        new ArrayList<>());
+    try {
+      return composeSteps(length, lexicon, composeStepProvider, formCompositionSteps, Optional.empty(),
+          new ArrayList<>());
+    } catch (ComposeException composeException) {
+      log.info("{}. Composing as there were no history.", composeException.getMessage());
+      return composeSteps(length, lexicon, composeStepProvider, Collections.emptyList(), Optional.empty(),
+          new ArrayList<>());
+    }
   }
 
   /**
@@ -144,7 +150,7 @@ public class FormBlockProvider {
           CompositionStep preLastCompositionStep = step != 1 ? compositionSteps.get(step - 2) : prefirstCompositionStep;
           preLastCompositionStep.addNextExclusion(lastCompositionStep.getOriginComposeBlock());
           // subtracting 2 because on the next iteration formElementNumber will be added one and we need to work with
-            // previous
+          // previous
           if (compositionSteps.get(step - 1).getOriginComposeBlock() != null) {
             currentLength -= compositionSteps.get(step - 1).getOriginComposeBlock().getRhythmValue();
           }
@@ -172,12 +178,12 @@ public class FormBlockProvider {
    */
   private int getStepToRevert(int step, Double diffMeasure) {
     int calculatedStepToReturn = (int) (step * diffMeasure);
-      if (calculatedStepToReturn == 0) {
-          return 0;
-      }
-      if (calculatedStepToReturn > step - 2) {
-          return step - 2;
-      }
+    if (calculatedStepToReturn == 0) {
+      return 0;
+    }
+    if (calculatedStepToReturn > step - 2) {
+      return step - 2;
+    }
     return calculatedStepToReturn;
   }
 
@@ -199,9 +205,9 @@ public class FormBlockProvider {
       if (comparison.getKey() != RelativelyComparable.ResultOfComparison.DIFFERENT) {
         return Pair.of(false, comparison.getValue());
       }
-        if (maxDiffMeasure < comparison.getValue()) {
-            maxDiffMeasure = comparison.getValue();
-        }
+      if (maxDiffMeasure < comparison.getValue()) {
+        maxDiffMeasure = comparison.getValue();
+      }
     }
     // checking that new block is similar to similarFormSteps
     for (MusicBlock similarStep : similarFormSteps) {
@@ -210,9 +216,9 @@ public class FormBlockProvider {
       if (comparison.getKey() != RelativelyComparable.ResultOfComparison.EQUAL) {
         return Pair.of(false, comparison.getValue());
       }
-        if (maxDiffMeasure < comparison.getValue()) {
-            maxDiffMeasure = comparison.getValue();
-        }
+      if (maxDiffMeasure < comparison.getValue()) {
+        maxDiffMeasure = comparison.getValue();
+      }
     }
     return Pair.of(true, maxDiffMeasure);
   }
