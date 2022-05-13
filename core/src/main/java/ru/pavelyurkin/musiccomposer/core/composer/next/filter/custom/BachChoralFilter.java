@@ -37,7 +37,7 @@ public class BachChoralFilter extends FastComposeStepFilter {
         new KeyVarietyFilter(1, 4 * WHOLE_NOTE),
         new VarietyFilter(6, -1),
         new RepetitionFilter()
-    ), 100);
+    ), 5);
   }
 
 }
