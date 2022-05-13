@@ -2,11 +2,16 @@ package ru.pavelyurkin.musiccomposer.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import jm.JMC;
 import jm.util.Write;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.config.Config;
@@ -35,9 +40,14 @@ public class Controller {
     ComposeStepProvider composeStepProvider = context.getBean(ComposeStepProvider.class);
 
     CompositionComposer compositionComposer = context.getBean(CompositionComposer.class);
-    Composition composition = compositionComposer.compose(composeStepProvider, lexicon, 30 * 20 * JMC.WHOLE_NOTE);
+    Composition composition = compositionComposer.compose(composeStepProvider, lexicon, 20 * JMC.WHOLE_NOTE);
 
-    Write.midi(composition, "output/mozart-5.mid");
+    Environment environment = context.getBean(Environment.class);
+
+    String fileName = String.format("output/%s-%s.mid", String.join(",", environment.getActiveProfiles()),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss").withZone(ZoneId.systemDefault()).format(Instant.now()));
+
+    Write.midi(composition, fileName);
 
   }
 }

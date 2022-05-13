@@ -50,7 +50,7 @@ public class ComposeService implements ApplicationContextAware {
   private final CompositionLoader compositionLoader;
   private final ComposeStepFilter defaultFilter;
 
-  @Value("${compositions.path:}")
+  @Value("${composer.pathToCompositions}")
   private String compositionsPath;
 
   private ApplicationContext applicationContext;

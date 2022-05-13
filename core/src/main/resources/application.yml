@@ -1,13 +1,19 @@
+composer:
+  pathToCompositions: Path to folder, containing compositions that would be decomposed used in new piece creation, for example "../Bach chorals cut/"
+
+persistance:
+  file: Path to db file, for example bach-prod.db
+
 MelodyFormEqualityAnalyzer:
   equalityTestPassThreshold: 0.45
 FormEquality:
   instrumentEqualityPassThreshold: 0.7
   instrumentEqualityFailThreshold: 0.4
 
-#logging:
-#  level:
-#    ru.pavelyurkin.musiccomposer.core.decomposer.SignatureDecomposer: DEBUG
-#    ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl: DEBUG
-#    ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer: DEBUG
-#    ru.pavelyurkin.musiccomposer.core.composer.FormBlockProvider: DEBUG
-#    ru.pavelyurkin.musiccomposer.core.equality.form.FormEquality: DEBUG
+logging:
+  level:
+    ru.pavelyurkin.musiccomposer.core.decomposer.SignatureDecomposer: DEBUG
+    ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl: DEBUG
+    ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer: DEBUG
+    ru.pavelyurkin.musiccomposer.core.composer.FormBlockProvider: DEBUG
+    ru.pavelyurkin.musiccomposer.core.equality.form.FormEquality: DEBUG

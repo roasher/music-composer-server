@@ -1,9 +1,0 @@
-compositions:
-  path: /home/pyurkin/Music/Database/Test/Bach chorals/
-
-persistance:
-  file: /home/pyurkin/Music//bach-prod.db
-
-logging:
-  level:
-    ru.pavelyurkin.musiccomposer.core.composer.next.FilteredNextStepProvider: debug
