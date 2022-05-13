@@ -1,5 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -44,11 +47,11 @@ public class MusicBlockProviderTest {
     Map<Integer, Set<Integer>> allPossibleNextVariants = mockProvider.getAllPossibleNextVariants(musicBlocks);
 
     assertEquals(musicBlocks.size(), allPossibleNextVariants.size());
-    assertEquals(Arrays.asList(2, 3), allPossibleNextVariants.get(0));
-    assertEquals(Arrays.asList(1), allPossibleNextVariants.get(1));
-    assertEquals(Arrays.asList(1), allPossibleNextVariants.get(2));
-    assertEquals(Arrays.asList(), allPossibleNextVariants.get(3));
-    assertEquals(Arrays.asList(), allPossibleNextVariants.get(4));
+    assertThat(allPossibleNextVariants.get(0), containsInAnyOrder(2, 3));
+    assertThat(allPossibleNextVariants.get(1), containsInAnyOrder(1));
+    assertThat(allPossibleNextVariants.get(2), containsInAnyOrder(1));
+    assertThat(allPossibleNextVariants.get(3), hasSize(0));
+    assertThat(allPossibleNextVariants.get(4), hasSize(0));
   }
 
   private List<MusicBlock> getMusicBlockMocks() {

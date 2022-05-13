@@ -11,8 +11,8 @@ import ru.pavelyurkin.musiccomposer.core.composer.first.FirstStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.MozartFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilterImpl;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.MozartFilterImpl;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.FormEqualityMetricAnalyzer;
@@ -57,12 +57,12 @@ public class ComposerConfiguration {
   @Bean(name = "defaultFilter")
   @Profile( {"bach-test", "bach-prod", "test"})
   public ComposeStepFilter defaultFilter1() {
-    return new BachChoralFilter();
+    return new BachChoralFilterImpl();
   }
 
   @Bean(name = "defaultFilter")
   @Profile( {"mozart-test", "mozart-prod"})
   public ComposeStepFilter defaultFilter2() {
-    return new MozartFilter();
+    return new MozartFilterImpl();
   }
 }

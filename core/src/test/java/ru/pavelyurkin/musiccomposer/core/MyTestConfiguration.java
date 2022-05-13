@@ -1,15 +1,33 @@
 package ru.pavelyurkin.musiccomposer.core;
 
+import static jm.constants.Durations.EIGHTH_NOTE;
+import static jm.constants.Durations.WHOLE_NOTE;
+import static jm.constants.Pitches.A2;
+import static jm.constants.Pitches.A4;
+import static jm.constants.Pitches.C4;
+import static jm.constants.Pitches.C6;
+import static jm.constants.Pitches.F2;
+import static jm.constants.Pitches.F3;
+import static jm.constants.Pitches.F4;
+import static jm.constants.Pitches.F5;
+
+import java.util.Arrays;
+import java.util.List;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
-import ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilterImpl;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.KeyVarietyFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RepetitionFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RestFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VarietyFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VoiceRangeFilter;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.EqualNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.RhythmEquality;
@@ -26,18 +44,7 @@ import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.OrderMelodyMove
 public class MyTestConfiguration {
 
   @Bean
-  public MelodyEqualityAnalyzerImpl melodyEqualityAnalyzer(
-      @Qualifier("getCountourEquality") Equality countourEquality,
-      @Qualifier("getIntervalsEquality") Equality intervalsEquality,
-      @Qualifier("getInversionEquality") Equality inversionEquality,
-      @Qualifier("getOrderEquality") Equality orderEquality,
-      @Qualifier("getRhythmEquality") Equality rhythmEquality) {
-    return new MelodyEqualityAnalyzerImpl(countourEquality, intervalsEquality, inversionEquality, orderEquality,
-        rhythmEquality);
-  }
-
-  @Bean
-  public Equality getCountourEquality() {
+  public Equality getContourEquality() {
     return new EqualNumberOfNotesRequired(new ContourMelodyMovementEquality());
   }
 
@@ -59,6 +66,23 @@ public class MyTestConfiguration {
   @Bean
   public Equality getRhythmEquality() {
     return new EqualNumberOfNotesRequired(new RhythmEquality());
+  }
+
+  @Bean
+  public ComposeStepFilter filterForTests() {
+    return new ComposeStepFilterImpl(
+        List.of(
+            new VoiceRangeFilter(Arrays.asList(
+                new VoiceRangeFilter.Range(C4, C6),
+                new VoiceRangeFilter.Range(F3, F5),
+                new VoiceRangeFilter.Range(A2, A4),
+                new VoiceRangeFilter.Range(F2, F4)
+            )),
+            new RestFilter(EIGHTH_NOTE),
+            new KeyVarietyFilter(1, 4 * WHOLE_NOTE),
+            new RepetitionFilter()
+        )
+    );
   }
 
   @Bean

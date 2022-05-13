@@ -13,7 +13,7 @@ import static jm.constants.Pitches.F5;
 
 import java.util.Arrays;
 import java.util.List;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.FastComposeStepFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.FastComposeStepFilterImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.KeyVarietyFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RepetitionFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RestFilter;
@@ -23,9 +23,9 @@ import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VoiceRa
 /**
  * Created by wish on 18.02.2016.
  */
-public class BachChoralFilter extends FastComposeStepFilter {
+public class BachChoralFilterImpl extends FastComposeStepFilterImpl {
 
-  public BachChoralFilter() {
+  public BachChoralFilterImpl() {
     super(List.of(
         new VoiceRangeFilter(Arrays.asList(
             new VoiceRangeFilter.Range(C4, C6),

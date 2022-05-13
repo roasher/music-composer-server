@@ -7,7 +7,7 @@ import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBl
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
-public abstract class FastComposeStepFilter extends AbstractComposeStepFilter {
+public abstract class FastComposeStepFilterImpl extends ComposeStepFilterImpl {
 
   /**
    * After filter got this number of allowed steps it would cancel further filtering
@@ -15,7 +15,7 @@ public abstract class FastComposeStepFilter extends AbstractComposeStepFilter {
    */
   private final int maxAllowedNumber;
 
-  public FastComposeStepFilter(List<MusicBlockFilter> composeStepFilters, int maxAllowedNumber) {
+  public FastComposeStepFilterImpl(List<MusicBlockFilter> composeStepFilters, int maxAllowedNumber) {
     super(composeStepFilters);
     this.maxAllowedNumber = maxAllowedNumber;
   }

@@ -13,11 +13,11 @@ import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
  */
 @Slf4j
 @Data
-public abstract class AbstractComposeStepFilter implements ComposeStepFilter {
+public class ComposeStepFilterImpl implements ComposeStepFilter {
 
   private List<MusicBlockFilter> composeStepFilters;
 
-  public AbstractComposeStepFilter(List<MusicBlockFilter> composeStepFilters) {
+  public ComposeStepFilterImpl(List<MusicBlockFilter> composeStepFilters) {
     this.composeStepFilters = composeStepFilters;
   }
 

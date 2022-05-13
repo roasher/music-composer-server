@@ -27,11 +27,11 @@ import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.Variety
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VoiceRangeFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 
-public class AbstractComposeStepFilterTest {
+public class ComposeStepFilterImplTest {
 
   @Test
   public void nonePassIfFilterItFalse() throws Exception {
-    AbstractComposeStepFilter falseFilter = new AbstractComposeStepFilter(List.of(
+    ComposeStepFilterImpl falseFilter = new ComposeStepFilterImpl(List.of(
         (MusicBlockFilter) (block, previousBlocks) -> false)) {
     };
     assertThat(0, is(falseFilter.filter(getListOfCompositionStepMocks(10), getListOfCompositionStepMocks(2)).size()));
@@ -39,7 +39,7 @@ public class AbstractComposeStepFilterTest {
 
   @Test
   public void allPassIfFilterItTrue() throws Exception {
-    AbstractComposeStepFilter passFilter = new AbstractComposeStepFilter(List.of(
+    ComposeStepFilterImpl passFilter = new ComposeStepFilterImpl(List.of(
         (MusicBlockFilter) (block, previousBlocks) -> true)) {
     };
     List<CompositionStep> possibleNexts = getListOfCompositionStepMocks(10);
@@ -56,7 +56,7 @@ public class AbstractComposeStepFilterTest {
 
   @Test
   public void correctFilterReplacement() {
-    AbstractComposeStepFilter composeStepFilter = new AbstractComposeStepFilter(List.of(
+    ComposeStepFilterImpl composeStepFilter = new ComposeStepFilterImpl(List.of(
         new VoiceRangeFilter(Arrays.asList(
             new VoiceRangeFilter.Range(C4, C6),
             new VoiceRangeFilter.Range(F3, F5),
@@ -100,7 +100,7 @@ public class AbstractComposeStepFilterTest {
         new VarietyFilter(-1, 6),
         new RepetitionFilter()
     );
-    AbstractComposeStepFilter composeStepFilter = new AbstractComposeStepFilter(composeStepFilters) {
+    ComposeStepFilterImpl composeStepFilter = new ComposeStepFilterImpl(composeStepFilters) {
     };
 
     composeStepFilter.replaceFilter(new RangeFilter(-1, 10));

@@ -44,9 +44,7 @@ public class CompositionComposerMockTest {
   public void composeStepsTest() {
 
     List<Optional<FormCompositionStep>> formCompositionSteps = getMockFormCompositionSteps(10);
-    when(formBlockProvider
-        .getFormElement(any(Double.class), any(Lexicon.class), any(ComposeStepProvider.class), any(Form.class),
-            any(List.class), any(List.class)))
+    when(formBlockProvider.getFormElement(any(Double.class), any(), any(), any(), any(), any()))
         .thenReturn(formCompositionSteps.get(0)).thenReturn(formCompositionSteps.get(1))
         .thenReturn(formCompositionSteps.get(2))
         .thenReturn(Optional.empty()).thenReturn(Optional.empty()).thenReturn(formCompositionSteps.get(3))
@@ -69,9 +67,7 @@ public class CompositionComposerMockTest {
 
     List<Optional<FormCompositionStep>> formCompositionSteps = getMockFormCompositionSteps(10);
 
-    when(formBlockProvider
-        .getFormElement(any(Double.class), any(Lexicon.class), any(ComposeStepProvider.class), any(Form.class),
-            any(List.class), any(List.class)))
+    when(formBlockProvider.getFormElement(any(Double.class), any(), any(), any(), any(), any()))
         .thenReturn(formCompositionSteps.get(0)).thenReturn(formCompositionSteps.get(1))
         .thenReturn(formCompositionSteps.get(2))
         .thenReturn(Optional.empty()).thenReturn(formCompositionSteps.get(3)).thenReturn(Optional.empty())

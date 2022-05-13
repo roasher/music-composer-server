@@ -2,12 +2,14 @@ package ru.pavelyurkin.musiccomposer.core.equality.melodymovement;
 
 import static java.lang.Math.abs;
 
+import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
 
 /**
  * @author Pavel Yurkin
  * @date 28.06.2014.
  */
+@Component
 public class InterpolationMelodyMovementEquality extends AbstractMelodyMovementEquality {
 
   // Maximum allowable number of intervals that can be different

@@ -6,7 +6,7 @@ import static jm.constants.Pitches.C2;
 import static jm.constants.Pitches.C6;
 
 import java.util.List;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.AbstractComposeStepFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilterImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.KeyVarietyFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RangeFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RepetitionFilter;
@@ -16,9 +16,9 @@ import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.Variety
 /**
  * Created by wish on 18.02.2016.
  */
-public class MozartFilter extends AbstractComposeStepFilter {
+public class MozartFilterImpl extends ComposeStepFilterImpl {
 
-  public MozartFilter() {
+  public MozartFilterImpl() {
     super(List.of(
         new RangeFilter(C2, C6),
         new RestFilter(QUARTER_NOTE),
