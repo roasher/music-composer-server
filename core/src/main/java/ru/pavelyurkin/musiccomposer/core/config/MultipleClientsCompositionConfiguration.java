@@ -2,11 +2,13 @@ package ru.pavelyurkin.musiccomposer.core.config;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.composer.first.FirstStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
@@ -15,11 +17,17 @@ import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralF
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
+import ru.pavelyurkin.musiccomposer.core.service.ComposeService;
 import ru.pavelyurkin.musiccomposer.core.service.ComposingParameters;
 
 @Configuration
 @Profile("web")
 public class MultipleClientsCompositionConfiguration {
+
+  @Bean
+  public ComposeService composeService(ApplicationContext applicationContext, CompositionComposer compositionComposer) {
+    return new ComposeService(applicationContext, compositionComposer);
+  }
 
   /**
    * Returns default Composing Parameters

@@ -23,7 +23,6 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
  * Class provides different composing services
  */
 @Slf4j
-@Component
 @RequiredArgsConstructor
 @Data
 public class ComposeService {
