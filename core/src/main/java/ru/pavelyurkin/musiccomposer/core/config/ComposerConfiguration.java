@@ -1,7 +1,10 @@
 package ru.pavelyurkin.musiccomposer.core.config;
 
+import java.io.File;
 import java.util.List;
+import jm.JMC;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -17,7 +20,10 @@ import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.FormEqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
+import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
+import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
+import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionParser;
 import ru.pavelyurkin.musiccomposer.core.utils.Recombinator;
 
@@ -49,20 +55,32 @@ public class ComposerConfiguration {
   @Bean
   public NextStepProviderImpl nextStepProvider(
       EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer,
-      @Qualifier("defaultFilter") ComposeStepFilter filter
-  ) {
+      @Qualifier("filter") ComposeStepFilter filter) {
     return new NextStepProviderImpl(equalityMetricAnalyzer, filter);
   }
 
-  @Bean(name = "defaultFilter")
-  @Profile( {"bach-test", "bach-prod", "test"})
-  public ComposeStepFilter defaultFilter1() {
+  @Bean(name = "filter")
+  @Profile( {"bach-test", "bach-prod"})
+  public ComposeStepFilter bachFilter() {
     return new BachChoralFilterImpl();
   }
 
-  @Bean(name = "defaultFilter")
+  @Bean(name = "filter")
   @Profile( {"mozart-test", "mozart-prod"})
-  public ComposeStepFilter defaultFilter2() {
+  public ComposeStepFilter MozartFilter() {
     return new MozartFilterImpl();
   }
+
+  /**
+   * Bach chorale lexicon
+   */
+  @Bean
+  @Profile( {"bach-test", "bach-prod"})
+  public Lexicon bachLexicon(CompositionDecomposer compositionDecomposer,
+                             CompositionLoader compositionLoader,
+                             @Value("${composer.pathToCompositions}") String compositionsPath) {
+    List<Composition> compositionList = compositionLoader.getCompositionsFromFolder(new File(compositionsPath));
+    return compositionDecomposer.decompose(compositionList, JMC.WHOLE_NOTE);
+  }
+
 }

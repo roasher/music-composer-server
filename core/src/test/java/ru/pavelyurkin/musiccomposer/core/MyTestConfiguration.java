@@ -11,8 +11,10 @@ import static jm.constants.Pitches.F3;
 import static jm.constants.Pitches.F4;
 import static jm.constants.Pitches.F5;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import jm.JMC;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +28,8 @@ import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilterI
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.KeyVarietyFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RepetitionFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RestFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VarietyFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VoiceRangeFilter;
+import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.EqualNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.RhythmEquality;
@@ -35,6 +37,9 @@ import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.ContourMelodyMo
 import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.IntervalsMelodyMovementEquality;
 import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.InversionMelodyMovementEquality;
 import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.OrderMelodyMovementEquality;
+import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
+import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
+import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 
 @TestConfiguration
 @PropertySource("classpath:test-application.properties")
@@ -93,5 +98,13 @@ public class MyTestConfiguration {
         .closeOnJvmShutdown()
         .fileDeleteAfterClose()
         .make();
+  }
+
+  @Bean
+  public Lexicon testLexicon(CompositionDecomposer compositionDecomposer,
+                             CompositionLoader compositionLoader,
+                             @Value("${composer.pathToCompositions}") String compositionsPath) {
+    List<Composition> compositionList = compositionLoader.getCompositionsFromFolder(new File(compositionsPath));
+    return compositionDecomposer.decompose(compositionList, JMC.WHOLE_NOTE);
   }
 }

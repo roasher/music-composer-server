@@ -30,25 +30,6 @@ public class ComposeServiceTest extends AbstractSpringTest {
   @Autowired
   private CompositionComposer compositionComposer;
 
-  @Autowired
-  private ComposeStepProvider composeStepProvider;
-
-  @Autowired
-  private CompositionLoader compositionLoader;
-
-  @Autowired
-  private CompositionDecomposer compositionDecomposer;
-
-  @Before
-  public void before() {
-    composeService.setDefaultComposeStepProvider(composeStepProvider);
-
-    List<Composition> compositionList = compositionLoader
-        .getCompositionsFromFolder(new File("src/test/resources/ru/pavelyurkin/musiccomposer/core/decomposer/"));
-    Lexicon lexicon = compositionDecomposer.decompose(compositionList, JMC.WHOLE_NOTE);
-    composeService.setDefaultLexicon(lexicon);
-  }
-
   @Test
   public void getNextBarsFromComposition() throws Exception {
     String id1 = "id1";

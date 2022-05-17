@@ -10,6 +10,7 @@ import java.util.List;
 import jm.JMC;
 import jm.util.Write;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
@@ -26,20 +27,16 @@ import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 public class Controller {
 
   public static void main(String... args) throws IOException {
-    ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
 
-    CompositionLoader compositionLoader = context.getBean(CompositionLoader.class);
-    List<Composition> compositionList = compositionLoader
-        .getCompositionsFromFolder(new File(context.getBean(Config.class).getPathToCompositions()));
+    ConfigurableApplicationContext context = new SpringApplicationBuilder(Application.class)
+        .profiles("bach-prod")
+        .run(args);
 
-    CompositionDecomposer compositionDecomposer = context.getBean(CompositionDecomposer.class);
-
-    Lexicon lexicon = compositionDecomposer.decompose(compositionList, JMC.WHOLE_NOTE);
+    Lexicon lexicon = context.getBean(Lexicon.class);
 //		compositionDecomposer.getLexiconDAO().persist( lexicon );
-
     ComposeStepProvider composeStepProvider = context.getBean(ComposeStepProvider.class);
-
     CompositionComposer compositionComposer = context.getBean(CompositionComposer.class);
+
     Composition composition = compositionComposer.compose(composeStepProvider, lexicon, 20 * JMC.WHOLE_NOTE);
 
     Environment environment = context.getBean(Environment.class);

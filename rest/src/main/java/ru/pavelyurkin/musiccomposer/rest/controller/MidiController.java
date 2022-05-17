@@ -6,7 +6,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
@@ -82,11 +81,6 @@ public class MidiController {
   public String composeException(ComposeException exception) {
     log.warn("Exception during composing", exception);
     return exception.getMessage();
-  }
-
-  @PostConstruct
-  public void init() {
-    composeService.loadDefaultLexicon();
   }
 
 }

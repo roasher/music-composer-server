@@ -19,6 +19,7 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 public class Lexicon implements Serializable {
 
   private List<ComposeBlock> composeBlocks;
+  // todo: delete?
   private Map<Integer, Set<Integer>> possibleNextMusicBlockNumbers;
 
   public Lexicon(List<ComposeBlock> composeBlocks, Map<Integer, Set<Integer>> possibleNextMusicBlockNumbers) {
