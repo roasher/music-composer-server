@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import jm.music.data.Note;
 import jm.music.data.Rest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;

@@ -10,11 +10,11 @@ import static jm.constants.Pitches.CS4;
 import static jm.constants.Pitches.D4;
 import static jm.constants.Pitches.EF4;
 import static jm.constants.Pitches.REST;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jm.music.data.Note;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.DifferentNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.FragmentationMelodyMovementEquality;

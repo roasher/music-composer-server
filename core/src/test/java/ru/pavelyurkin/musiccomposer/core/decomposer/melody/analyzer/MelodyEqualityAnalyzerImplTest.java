@@ -5,8 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jm.music.data.Note;
-import junit.framework.Assert;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,7 +48,7 @@ public class MelodyEqualityAnalyzerImplTest extends AbstractSpringTest {
     assertFalse(melodyEqualityAnalyzer.isEqual(melody1, melody2));
   }
 
-  @Ignore
+  @Disabled
   @Test
   public void testCase2() {
     Note[] notes1 = new Note[] {

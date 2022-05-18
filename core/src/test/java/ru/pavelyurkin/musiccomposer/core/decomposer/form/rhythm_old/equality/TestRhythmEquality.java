@@ -5,12 +5,12 @@ import static jm.constants.Durations.EIGHTH_NOTE_TRIPLET;
 import static jm.constants.Durations.QUARTER_NOTE;
 import static jm.constants.Durations.SIXTEENTH_NOTE_TRIPLET;
 import static jm.constants.Durations.WHOLE_NOTE;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestRhythmEquality {
 

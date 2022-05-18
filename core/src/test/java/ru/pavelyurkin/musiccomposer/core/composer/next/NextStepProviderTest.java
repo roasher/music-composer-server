@@ -14,7 +14,7 @@ import static jm.JMC.G3;
 import static jm.JMC.QUARTER_NOTE;
 import static jm.JMC.SIXTEENTH_NOTE;
 import static jm.JMC.WHOLE_NOTE;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
@@ -27,11 +27,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import jm.music.data.Note;
 import jm.music.data.Rest;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
@@ -42,7 +42,7 @@ import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 /**
  * Created by night wish on 05.03.2016.
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class NextStepProviderTest {
 
   @InjectMocks

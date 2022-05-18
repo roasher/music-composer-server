@@ -8,9 +8,9 @@ import static jm.constants.Durations.QUARTER_NOTE_TRIPLET;
 import static jm.constants.Durations.SIXTEENTH_NOTE;
 import static jm.constants.Durations.THIRTYSECOND_NOTE_TRIPLET;
 import static jm.constants.Durations.WHOLE_NOTE;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 

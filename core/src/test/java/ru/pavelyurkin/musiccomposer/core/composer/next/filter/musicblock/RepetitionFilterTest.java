@@ -9,10 +9,10 @@ import static jm.constants.Durations.WHOLE_NOTE;
 import static jm.constants.Pitches.C1;
 import static jm.constants.Pitches.C2;
 import static jm.constants.Pitches.C3;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import jm.music.data.Note;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 

@@ -13,17 +13,17 @@ import jm.music.data.Part;
 import jm.music.data.Rest;
 import jm.music.data.Score;
 import jm.util.View;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class InstrumentPartToPartDbConverterTest {
 
   @InjectMocks
@@ -33,7 +33,7 @@ public class InstrumentPartToPartDbConverterTest {
   private CompositionParser compositionParser;
 
   @Test
-  @Ignore
+  @Disabled
   public void testConvert() throws Exception {
     InstrumentPart instrumentPart = new InstrumentPart(Arrays.asList(
         new NewMelody(new Note(C3, QUARTER_NOTE), new Rest(QUARTER_NOTE)),

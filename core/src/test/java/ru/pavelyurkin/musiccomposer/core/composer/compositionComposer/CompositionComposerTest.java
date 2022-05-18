@@ -11,8 +11,8 @@ import static jm.JMC.EIGHTH_NOTE;
 import static jm.JMC.F5;
 import static jm.JMC.QUARTER_NOTE;
 import static jm.constants.Durations.WHOLE_NOTE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Rest;
 import jm.util.View;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
@@ -147,8 +147,8 @@ public class CompositionComposerTest extends AbstractSpringTest {
     return notes;
   }
 
-  @Ignore
   @Test
+  @Disabled
   public void singleVoiceComposingTest() {
     Composition composition =
         compositionLoader.getComposition(new File(CompositionDecomposerTest.class.getResource("gen_1.mid").getFile()));

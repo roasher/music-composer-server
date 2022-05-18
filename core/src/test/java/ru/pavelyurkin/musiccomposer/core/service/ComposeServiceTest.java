@@ -1,26 +1,18 @@
 package ru.pavelyurkin.musiccomposer.core.service;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.IsCloseTo.closeTo;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getRhythmValue;
 import static ru.pavelyurkin.musiccomposer.core.utils.Utils.epsilon;
 
-import java.io.File;
-import java.util.List;
-import jm.JMC;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
-import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
-import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
-import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 
 public class ComposeServiceTest extends AbstractSpringTest {
 

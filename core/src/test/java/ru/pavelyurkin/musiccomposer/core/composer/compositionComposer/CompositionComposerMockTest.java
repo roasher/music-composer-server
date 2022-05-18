@@ -1,6 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.composer.compositionComposer;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -10,8 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import jm.JMC;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -35,7 +36,7 @@ public class CompositionComposerMockTest {
   @Mock
   private FormBlockProvider formBlockProvider;
 
-  @Before
+  @BeforeAll
   public void init() {
     MockitoAnnotations.initMocks(this);
   }
@@ -85,7 +86,7 @@ public class CompositionComposerMockTest {
 
   }
 
-  @Test(expected = ComposeException.class)
+  @Test
   public void composeStepsFailing() {
 
     List<Optional<FormCompositionStep>> formCompositionSteps = getMockFormCompositionSteps(10);
@@ -102,7 +103,7 @@ public class CompositionComposerMockTest {
         .thenReturn(formCompositionSteps.get(6))
         .thenReturn(formCompositionSteps.get(7)).thenReturn(formCompositionSteps.get(8));
 
-    List<FormCompositionStep> compositionSteps = compositionComposer.composeSteps(null, null, "ABCD", JMC.WHOLE_NOTE);
+    assertThrows(ComposeException.class, () -> compositionComposer.composeSteps(null, null, "ABCD", JMC.WHOLE_NOTE));
   }
 
   private List<Optional<FormCompositionStep>> getMockFormCompositionSteps(int number) {

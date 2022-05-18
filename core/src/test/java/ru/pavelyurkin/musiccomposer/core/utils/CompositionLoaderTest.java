@@ -1,14 +1,14 @@
 package ru.pavelyurkin.musiccomposer.core.utils;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import jm.music.data.Note;
 import jm.music.data.Phrase;
 import jm.util.Read;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class CompositionLoaderTest extends AbstractSpringTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   public void loadScarecrow() {
     File file = new File(this.getClass().getResource("2.Scarecrow's_song(midi).mid").getFile());
 

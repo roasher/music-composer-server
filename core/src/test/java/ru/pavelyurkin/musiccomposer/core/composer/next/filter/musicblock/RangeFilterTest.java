@@ -9,13 +9,13 @@ import static jm.JMC.D3;
 import static jm.JMC.D4;
 import static jm.JMC.E3;
 import static jm.JMC.REST;
-import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import jm.music.data.Note;
 import jm.music.data.Rest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 

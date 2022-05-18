@@ -11,15 +11,15 @@ import static jm.constants.Pitches.E3;
 import static jm.constants.Pitches.G3;
 import static jm.constants.Pitches.GS3;
 import static jm.constants.Pitches.REST;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import jm.music.data.Note;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;

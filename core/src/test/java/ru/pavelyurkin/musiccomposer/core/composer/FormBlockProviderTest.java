@@ -1,6 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.composer;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,9 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import jm.JMC;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
@@ -37,7 +37,7 @@ public class FormBlockProviderTest extends AbstractSpringTest {
   private ComposeStepProvider composeStepProvider;
 
   @Test
-  @Ignore
+  @Disabled
   // form related. todo: fix
   public void formBlockProviderTest() {
     List<Composition> compositionList =
@@ -52,7 +52,7 @@ public class FormBlockProviderTest extends AbstractSpringTest {
     assertTrue(optFormCompositionStep.isPresent());
     optFormCompositionStep.ifPresent(formCompositionStep -> {
       // checking length
-      Assert.assertEquals(lenght, ModelUtils.sumAllRhythmValues(
+      assertEquals(lenght, ModelUtils.sumAllRhythmValues(
           formCompositionStep.getCompositionSteps()
               .stream()
               .map(CompositionStep::getTransposedBlock)

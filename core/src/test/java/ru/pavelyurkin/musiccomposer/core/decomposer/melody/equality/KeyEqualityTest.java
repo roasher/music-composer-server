@@ -20,11 +20,11 @@ import static jm.constants.Pitches.EF4;
 import static jm.constants.Pitches.F4;
 import static jm.constants.Pitches.G5;
 import static jm.constants.Pitches.GS4;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jm.music.data.Note;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.Equality;

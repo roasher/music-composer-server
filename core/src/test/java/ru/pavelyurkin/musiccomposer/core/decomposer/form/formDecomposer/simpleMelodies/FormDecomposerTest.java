@@ -1,11 +1,12 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer.form.formDecomposer.simpleMelodies;
 
-import static junit.framework.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.List;
 import jm.JMC;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pavelyurkin.musiccomposer.core.decomposer.form.FormDecomposer;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;

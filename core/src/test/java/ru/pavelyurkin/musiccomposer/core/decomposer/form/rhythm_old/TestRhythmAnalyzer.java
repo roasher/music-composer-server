@@ -9,22 +9,22 @@ import static jm.constants.Durations.SIXTEENTH_NOTE_TRIPLET;
 import static jm.constants.Durations.WHOLE_NOTE;
 import static jm.constants.Pitches.C0;
 import static jm.constants.Pitches.C1;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import jm.music.data.Note;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.decomposer.form.rhythm_old.equality.RhythmEqualityTest;
 
 public class TestRhythmAnalyzer {
 
   private RhythmAnalyzer rhythmAnalyzer = new RhythmAnalyzer();
 
-  @Before
+  @BeforeAll
   public void setAnalyzer() {
     rhythmAnalyzer.setRhythmEqualityTest(new RhythmEqualityTest());
     rhythmAnalyzer.getRhythmEqualityTest().setMaxUniqueRhythmValuesCount(0);

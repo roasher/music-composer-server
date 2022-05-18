@@ -12,12 +12,12 @@ import static jm.constants.Pitches.EF4;
 import static jm.constants.Pitches.EF5;
 import static jm.constants.Pitches.G4;
 import static jm.constants.Pitches.GS4;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jm.music.data.Note;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.DifferentNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.equality.melodymovement.InterpolationMelodyMovementEquality;
@@ -105,7 +105,7 @@ public class TestInterpolationMelodyMovementEquality {
     assertFalse(equality.test(testMelody1, testMelody2));
   }
 
-  @Ignore
+  @Disabled
   // problem in this test
   @Test
   public void testCase4() {

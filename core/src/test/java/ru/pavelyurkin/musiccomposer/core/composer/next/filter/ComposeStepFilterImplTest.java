@@ -11,14 +11,14 @@ import static jm.constants.Pitches.F4;
 import static jm.constants.Pitches.F5;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RangeFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RepetitionFilter;

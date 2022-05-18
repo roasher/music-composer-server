@@ -24,7 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.Arrays;
 import jm.music.data.Note;
 import jm.music.data.Rest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 

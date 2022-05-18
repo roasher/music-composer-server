@@ -6,15 +6,15 @@ import static jm.JMC.HALF_NOTE;
 import static jm.JMC.QUARTER_NOTE;
 import static jm.JMC.SIXTEENTH_NOTE;
 import static jm.JMC.WHOLE_NOTE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
 
 import java.util.Arrays;
 import java.util.List;
 import jm.music.data.Note;
 import jm.music.data.Rest;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
@@ -72,7 +72,7 @@ public class MelodyMetricEqualityAnalyzerTest extends AbstractSpringTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   // todo: unignore when equality metric will be fixed
   public void getEqualityMetric() throws Exception {
     InstrumentPart etalon = new InstrumentPart(

@@ -19,7 +19,7 @@ import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Rest;
 import jm.music.data.Score;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;

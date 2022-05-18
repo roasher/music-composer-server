@@ -5,13 +5,13 @@ import static jm.constants.Durations.EIGHTH_NOTE;
 import static jm.constants.Durations.HALF_NOTE;
 import static jm.constants.Durations.QUARTER_NOTE;
 import static jm.constants.Durations.SIXTEENTH_NOTE;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jm.music.data.Note;
 import jm.music.data.Rest;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 /**
@@ -80,14 +80,14 @@ public class MelodyTest {
         new Note(80 - 5, HALF_NOTE)
     );
     // second melody first rest wrong rhythm value. fail.
-    Assert.assertFalse(etalonMelody.isParallelTo(melody2));
+    assertFalse(etalonMelody.isParallelTo(melody2));
 
     Melody melody3 = new Melody(
         new Rest(QUARTER_NOTE), new Note(60 - 5, SIXTEENTH_NOTE), new Note(70 - 5, EIGHTH_NOTE),
         new Note(80 - 4, HALF_NOTE)
     );
     // second melody last note -4 instead of -5. fail.
-    Assert.assertFalse(etalonMelody.isParallelTo(melody3));
+    assertFalse(etalonMelody.isParallelTo(melody3));
 
     Melody melody00 = new Melody(
         new Rest(QUARTER_NOTE), new Rest(QUARTER_NOTE), new Note(60, SIXTEENTH_NOTE), new Rest(QUARTER_NOTE)
@@ -118,7 +118,7 @@ public class MelodyTest {
         new Note(70 - 7, SIXTEENTH_NOTE)
     );
     // rests except non-parallel notes. fail
-    Assert.assertFalse(melody20.isParallelTo(melody21));
+    assertFalse(melody20.isParallelTo(melody21));
 
     Melody melody30 = new Melody(
         new Rest(QUARTER_NOTE), new Rest(QUARTER_NOTE), new Rest(QUARTER_NOTE), new Rest(QUARTER_NOTE),
@@ -129,6 +129,6 @@ public class MelodyTest {
         new Note(70 - 7, SIXTEENTH_NOTE)
     );
     // first melody is rests - second has one note. fail.
-    Assert.assertFalse(melody30.isParallelTo(melody31));
+    assertFalse(melody30.isParallelTo(melody31));
   }
 }

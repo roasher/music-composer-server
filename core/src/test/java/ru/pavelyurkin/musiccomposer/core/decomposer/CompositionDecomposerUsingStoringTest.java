@@ -1,15 +1,15 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import jm.JMC;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
@@ -30,7 +30,7 @@ public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
   @Qualifier("lexiconDAO_mapdb")
   private LexiconDAO lexiconDAO;
 
-  @Before
+  @BeforeAll
   public void init() throws Exception {
     lexiconDAO.clear();
   }

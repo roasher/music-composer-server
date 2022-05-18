@@ -20,10 +20,11 @@ import static jm.constants.Pitches.EF5;
 import static jm.constants.Pitches.F5;
 import static jm.constants.Pitches.FF4;
 import static jm.constants.Pitches.G5;
-import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isOneOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getTransposePitch;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.normalizeInstrumentPart;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.trimToTime;
@@ -34,8 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import jm.music.data.Note;
 import jm.music.data.Rest;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
@@ -67,7 +67,7 @@ public class ModelUtilsTest {
     intervalPattern.add(19);
     intervalPattern.add(11);
 
-    Assert.assertEquals(intervalPattern, ModelUtils.retrieveIntervalPattern(pitches));
+    assertEquals(intervalPattern, ModelUtils.retrieveIntervalPattern(pitches));
   }
 
   @Test
@@ -87,7 +87,7 @@ public class ModelUtilsTest {
     intervalPattern.add(27);
     intervalPattern.add(11);
 
-    Assert.assertEquals(intervalPattern, ModelUtils.retrieveIntervalPattern(pitches));
+    assertEquals(intervalPattern, ModelUtils.retrieveIntervalPattern(pitches));
   }
 
   @Test
@@ -114,10 +114,10 @@ public class ModelUtilsTest {
 
   @Test
   public void testGetNoteNameByPitch() {
-    Assert.assertEquals(ModelUtils.getNoteNameByPitch(60), "C4");
-    Assert.assertEquals(ModelUtils.getNoteNameByPitch(62), "D4");
-    Assert.assertEquals(ModelUtils.getNoteNameByPitch(64), "E4");
-    Assert.assertEquals(ModelUtils.getNoteNameByPitch(65), "F4");
+    assertEquals(ModelUtils.getNoteNameByPitch(60), "C4");
+    assertEquals(ModelUtils.getNoteNameByPitch(62), "D4");
+    assertEquals(ModelUtils.getNoteNameByPitch(64), "E4");
+    assertEquals(ModelUtils.getNoteNameByPitch(65), "F4");
     assertThat(ModelUtils.getNoteNameByPitch(66), isOneOf("F#4", "Gb4"));
   }
 
@@ -199,22 +199,25 @@ public class ModelUtilsTest {
         Arrays.asList(Note.REST, Note.REST)), is(0));
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test
   public void noTransposePitchIfDiferentPithLengths() throws Exception {
+    assertThrows(RuntimeException.class, () ->
     assertThat(getTransposePitch(Arrays.asList(Note.REST, Note.REST, 8),
-        Arrays.asList(Note.REST, Note.REST)), is(0));
+        Arrays.asList(Note.REST, Note.REST)), is(0)));
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test
   public void noTransposePitchIfSwappedPlaces() throws Exception {
+    assertThrows(RuntimeException.class, () ->
     assertThat(getTransposePitch(Arrays.asList(10, Note.REST),
-        Arrays.asList(Note.REST, 10)), is(0));
+        Arrays.asList(Note.REST, 10)), is(0)));
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test
   public void noTransposePitchIfNotParallel() throws Exception {
+    assertThrows(RuntimeException.class, () ->
     assertThat(getTransposePitch(Arrays.asList(10, 11),
-        Arrays.asList(10, 12)), is(0));
+        Arrays.asList(10, 12)), is(0)));
   }
 
   @Test

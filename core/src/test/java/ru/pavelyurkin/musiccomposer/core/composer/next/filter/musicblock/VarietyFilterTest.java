@@ -1,15 +1,16 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 
@@ -111,10 +112,10 @@ public class VarietyFilterTest {
         )), is(false));
   }
 
-  @Test(expected = RuntimeException.class)
-  @Ignore
+  @Test
+  @Disabled
   public void minCanNotBeGreaterThanMax() throws Exception {
-    new VarietyFilter(5, 4);
+    assertThrows(RuntimeException.class, () -> new VarietyFilter(5, 4));
   }
 
   @Test
