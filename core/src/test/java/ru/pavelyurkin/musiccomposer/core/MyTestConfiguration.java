@@ -22,9 +22,11 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilterImpl;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilterImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.KeyVarietyFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RepetitionFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RestFilter;
@@ -42,10 +44,6 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 
 @TestConfiguration
-@PropertySource("classpath:test-application.properties")
-@ComponentScan(basePackages = "ru.pavelyurkin.musiccomposer.core",
-    excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = Application.class)})
-// todo refactor
 public class MyTestConfiguration {
 
   @Bean
@@ -73,7 +71,7 @@ public class MyTestConfiguration {
     return new EqualNumberOfNotesRequired(new RhythmEquality());
   }
 
-  @Bean
+  @Bean(name = "filter")
   public ComposeStepFilter filterForTests() {
     return new ComposeStepFilterImpl(
         List.of(
@@ -90,14 +88,20 @@ public class MyTestConfiguration {
     );
   }
 
+//  @Bean
+//  @Primary
+//  public DB testDb(@Value("${persistance.file}") String file) {
+//    return DBMaker
+//        .fileDB(file)
+//        .concurrencyDisable()
+//        .closeOnJvmShutdown()
+//        .fileDeleteAfterClose()
+//        .make();
+//  }
+
   @Bean
-  public DB Db(@Value("${persistance.file}") String file) {
-    return DBMaker
-        .fileDB(file)
-        .concurrencyDisable()
-        .closeOnJvmShutdown()
-        .fileDeleteAfterClose()
-        .make();
+  public ComposeStepFilter bachFilter() {
+    return new BachChoralFilterImpl();
   }
 
   @Bean

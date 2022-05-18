@@ -13,10 +13,10 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 @Component
 public class RhythmEquality implements Equality {
 
-  @Value("${RhythmEquality.maxNumberOfRhythmicallyDifferentNotes}")
+  @Value("${rhythmEquality.maxNumberOfRhythmicallyDifferentNotes}")
   private int maxNumberOfRhythmicallyDifferentNotes;
 
-  @Value("${RhythmEquality.maxRhythmDeviationSteps}")
+  @Value("${rhythmEquality.maxRhythmDeviationSteps}")
   private double maxRhythmDeviationSteps;
 
   @Override

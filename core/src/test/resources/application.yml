@@ -1,0 +1,25 @@
+melodyFormEqualityAnalyzer:
+  equalityTestPassThreshold: 0.45
+formEquality:
+  instrumentEqualityPassThreshold: 0.7
+  instrumentEqualityFailThreshold: 0.4
+melodyEqualityAnalyzerImpl:
+  equalityTestPassThreshold: 0.75
+inversionMelodyMovementEquality:
+  maxNumberOfInvertedIntervals: 1
+contourMelodyMovementEquality:
+  maxNumberOfDiffDirectionIntervals: 3
+intervalsMelodyMovementEquality:
+  maxNumberOfShiftedIntervals: 2
+  maxShift: 2
+orderMelodyMovementEquality:
+  maxNumberOfIntervalsHavingSwappedNotes: 2
+rhythmEquality:
+  maxNumberOfRhythmicallyDifferentNotes: 1
+  maxRhythmDeviationSteps: 0.75
+
+persistance:
+  file: test.db
+
+composer:
+  pathToCompositions: src/test/resources/ru/pavelyurkin/musiccomposer/core/decomposer/

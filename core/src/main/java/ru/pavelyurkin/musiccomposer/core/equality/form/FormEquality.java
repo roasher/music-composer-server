@@ -20,12 +20,12 @@ public class FormEquality implements RelativelyComparable<List<InstrumentPart>>,
   /**
    * Min value of equality metric to consider two blocks form equal
    */
-  @Value("${FormEquality.instrumentEqualityFailThreshold}")
+  @Value("${formEquality.instrumentEqualityPassThreshold}")
   private double instrumentEqualityPassThreshold;
   /**
-   * Max1.18.24 value of equality metric to consider two blocks form different
+   * Max value of equality metric to consider two blocks form different
    */
-  @Value("${FormEquality.instrumentEqualityFailThreshold}")
+  @Value("${formEquality.instrumentEqualityFailThreshold}")
   private double instrumentEqualityFailThreshold;
 
   @Autowired

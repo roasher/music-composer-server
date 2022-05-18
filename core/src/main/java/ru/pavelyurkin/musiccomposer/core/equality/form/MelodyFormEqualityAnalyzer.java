@@ -19,7 +19,7 @@ public class MelodyFormEqualityAnalyzer implements MelodyEqualityAnalyzer {
   /**
    * Min percentage of passed sub tests necessary to consider ru.pavelyurkin.musiccomposer.equality of two melodies
    */
-  @Value("${MelodyFormEqualityAnalyzer.equalityTestPassThreshold}")
+  @Value("${melodyFormEqualityAnalyzer.equalityTestPassThreshold}")
   private double equalityTestPassThreshold;
 
   private final EqualityMetricAnalyzer<Melody> equalityMetricAnalyzer;
