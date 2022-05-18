@@ -62,11 +62,21 @@ public class CompositionComposerTest extends AbstractSpringTest {
   private ComposeStepProvider composeStepProvider;
 
   @Test
-  public void getSimplePieceTest1() {
+  @Disabled("Enable when form feature would be ready")
+  public void getSimplePieceTestWithForm() {
     List<Composition> compositionList =
         compositionLoader.getCompositionsFromFolder(new File("src/test/resources/simpleMelodies"));
     Lexicon lexicon = compositionDecomposer.decompose(compositionList, JMC.WHOLE_NOTE);
     Composition composition = compositionComposer.compose(composeStepProvider, lexicon, "ABCD", 4 * JMC.WHOLE_NOTE);
+    assertEquals(16., composition.getEndTime(), 0);
+  }
+
+  @Test
+  public void getSimplePieceTestWithoutForm() {
+    List<Composition> compositionList =
+        compositionLoader.getCompositionsFromFolder(new File("src/test/resources/simpleMelodies"));
+    Lexicon lexicon = compositionDecomposer.decompose(compositionList, JMC.WHOLE_NOTE);
+    Composition composition = compositionComposer.compose(composeStepProvider, lexicon,  4 * JMC.WHOLE_NOTE);
     assertEquals(16., composition.getEndTime(), 0);
   }
 

@@ -176,7 +176,7 @@ public class ModelUtils {
   public static int getTransposePitch(List<Integer> pitchesAsIs, List<Integer> pitchesToBe) {
     if (pitchesToBe.size() != pitchesAsIs.size()) {
       throw new RuntimeException(
-          "Can't capreviousEndPitcheslculate transpose pitch. Desired end pitches and fact previous end pitches has "
+          "Can't calculate transpose pitch. Desired end pitches and fact previous end pitches has "
           + "different amount of notes");
     }
 //		Collections.sort( pitchesToBe );
@@ -272,14 +272,14 @@ public class ModelUtils {
    * @return
    */
   public static boolean isTimeCorrelated(double firstStartTime, double secondStartTime) {
-//		return true;
+    return true;
     //TODO Disabled for testing purposes (Don't know if needed decide later)
-    int originStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces(firstStartTime);
-    int substitutorStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces(secondStartTime);
-    if (originStartTimeDecimalPlacesNumber == substitutorStartTimeDecimalPlacesNumber) {
-      return true;
-    }
-    return false;
+//    int originStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces(firstStartTime);
+//    int substitutorStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces(secondStartTime);
+//    if (originStartTimeDecimalPlacesNumber == substitutorStartTimeDecimalPlacesNumber) {
+//      return true;
+//    }
+//    return false;
   }
 
   /**

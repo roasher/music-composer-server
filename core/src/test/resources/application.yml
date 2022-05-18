@@ -23,3 +23,7 @@ persistance:
 
 composer:
   pathToCompositions: src/test/resources/ru/pavelyurkin/musiccomposer/core/decomposer/
+
+logging:
+  level:
+    ru.pavelyurkin.musiccomposer.core: DEBUG

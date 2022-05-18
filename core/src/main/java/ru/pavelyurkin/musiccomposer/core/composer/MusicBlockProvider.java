@@ -51,6 +51,7 @@ public class MusicBlockProvider {
       possibleNext.transposeClone(musicBlock);
       canBeTransposed = true;
     } catch (Exception exception) {
+      return false;
     }
     boolean correlatingTime = ModelUtils
         .isTimeCorrelated(musicBlock.getStartTime() + musicBlock.getRhythmValue(), possibleNext.getStartTime());

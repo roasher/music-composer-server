@@ -29,7 +29,7 @@ public class CompositionParser {
           InstrumentPart instrumentPart = convert((Part) part);
           // add rest to the end
           if (composition.getEndTime() > instrumentPart.getRythmValue()) {
-            instrumentPart.glueNoteToTheEnd(new Rest(composition.getEndTime() - instrumentPart.getRythmValue()));
+            instrumentPart.addNoteToTheEnd(new Rest(composition.getEndTime() - instrumentPart.getRythmValue()));
           }
           return instrumentPart;
         })
@@ -56,12 +56,12 @@ public class CompositionParser {
           .distinct()
           .collect(Collectors.toList());
       if (notePitches.size() == 1) {
-        instrumentPart.glueNoteToTheEnd(new Note(notePitches.get(0), edge - previousEdge));
+        instrumentPart.addNoteToTheEnd(new Note(notePitches.get(0), edge - previousEdge));
       } else if (notePitches.size() > 1) {
-        instrumentPart.glueChordToTheEnd(new Chord(notePitches, edge - previousEdge));
+        instrumentPart.addChordToTheEnd(new Chord(notePitches, edge - previousEdge));
       } else {
         // add rest if delay on start
-        instrumentPart.glueNoteToTheEnd(new Rest(edge - previousEdge));
+        instrumentPart.addNoteToTheEnd(new Rest(edge - previousEdge));
       }
       previousEdge = edge;
     }

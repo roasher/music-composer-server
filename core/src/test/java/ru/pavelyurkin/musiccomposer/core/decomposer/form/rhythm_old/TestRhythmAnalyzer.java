@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import jm.music.data.Note;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.decomposer.form.rhythm_old.equality.RhythmEqualityTest;
 
@@ -24,7 +24,7 @@ public class TestRhythmAnalyzer {
 
   private RhythmAnalyzer rhythmAnalyzer = new RhythmAnalyzer();
 
-  @BeforeAll
+  @BeforeEach
   public void setAnalyzer() {
     rhythmAnalyzer.setRhythmEqualityTest(new RhythmEqualityTest());
     rhythmAnalyzer.getRhythmEqualityTest().setMaxUniqueRhythmValuesCount(0);

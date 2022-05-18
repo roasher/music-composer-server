@@ -36,7 +36,13 @@ public class ComposeStepFilterImpl implements ComposeStepFilter {
         .collect(Collectors.toList());
     return possibleNextComposeSteps.stream()
         .filter(compositionStep -> this.composeStepFilters.stream()
-            .allMatch(filter -> filter.filterIt(compositionStep.getTransposedBlock(), previousMusicBlocks)))
+            .allMatch(filter -> {
+              boolean passed = filter.filterIt(compositionStep.getTransposedBlock(), previousMusicBlocks);
+              if (!passed) {
+                log.debug("Block was filtered out due to filter: {}", filter.getClass().getSimpleName());
+              }
+              return passed;
+            }))
         .collect(Collectors.toList());
   }
 

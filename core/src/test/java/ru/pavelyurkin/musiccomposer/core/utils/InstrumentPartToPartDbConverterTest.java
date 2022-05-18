@@ -33,7 +33,7 @@ public class InstrumentPartToPartDbConverterTest {
   private CompositionParser compositionParser;
 
   @Test
-  @Disabled
+  @Disabled("Test by eye")
   public void testConvert() throws Exception {
     InstrumentPart instrumentPart = new InstrumentPart(Arrays.asList(
         new NewMelody(new Note(C3, QUARTER_NOTE), new Rest(QUARTER_NOTE)),

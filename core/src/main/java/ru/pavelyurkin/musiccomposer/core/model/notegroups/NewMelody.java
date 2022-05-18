@@ -63,6 +63,10 @@ public class NewMelody extends NoteGroup {
         .getAsInt();
   }
 
+  public Note getNote(int noteNumber) {
+    return this.notes.get(noteNumber);
+  }
+
   @Override
   public List<Integer> getFirstVerticalPitches() {
     return Collections.singletonList(notes.get(0).getPitch());
@@ -181,13 +185,35 @@ public class NewMelody extends NoteGroup {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
+
     NewMelody melody = (NewMelody) o;
-    if (this.notes.size() != melody.notes.size()) {
+
+    return isParallelTo(melody);
+  }
+
+  public boolean isParallelTo(NewMelody melody) {
+    if (this.getNotes().size() != melody.getNotes().size()) {
       return false;
     }
-    for (int noteNumber = 0; noteNumber < this.notes.size(); noteNumber++) {
-      if (!this.notes.get(noteNumber).equals(melody.notes.get(noteNumber))) {
+    Integer pitchDiff = null;
+    for (int noteNumber = 0; noteNumber < this.getNotes().size(); noteNumber++) {
+      Note firstNote = this.getNote(noteNumber);
+      Note secondNote = melody.getNote(noteNumber);
+      if (firstNote.getRhythmValue() != secondNote.getRhythmValue()) {
         return false;
+      }
+      if ((firstNote.isRest() && !secondNote.isRest()) || (!firstNote.isRest() && secondNote.isRest())) {
+        return false;
+      }
+      if (firstNote.isRest() && secondNote.isRest()) {
+        continue;
+      }
+      if (pitchDiff == null) {
+        pitchDiff = secondNote.getPitch() - firstNote.getPitch();
+      } else {
+        if (pitchDiff != secondNote.getPitch() - firstNote.getPitch()) {
+          return false;
+        }
       }
     }
     return true;

@@ -11,11 +11,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import jm.JMC;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.composer.FormBlockProvider;
@@ -28,6 +28,7 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 /**
  * Created by pyurkin on 15.12.14.
  */
+@ExtendWith(MockitoExtension.class)
 public class CompositionComposerMockTest {
 
   @InjectMocks
@@ -35,11 +36,6 @@ public class CompositionComposerMockTest {
 
   @Mock
   private FormBlockProvider formBlockProvider;
-
-  @BeforeAll
-  public void init() {
-    MockitoAnnotations.initMocks(this);
-  }
 
   @Test
   public void composeStepsTest() {

@@ -72,8 +72,7 @@ public class MelodyMetricEqualityAnalyzerTest extends AbstractSpringTest {
   }
 
   @Test
-  @Disabled
-  // todo: unignore when equality metric will be fixed
+  @Disabled("enable when melody equality metric will be fixed")
   public void getEqualityMetric() throws Exception {
     InstrumentPart etalon = new InstrumentPart(
         new Note(60, HALF_NOTE),

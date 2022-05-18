@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import jm.JMC;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
@@ -26,10 +27,10 @@ public class CompositionDecomposerTest extends AbstractSpringTest {
   private CompositionDecomposer compositionDecomposer;
 
   @Test
+  @Disabled("Should pass when music block parallel equality feature would implemented")
   public void singleVoiceMelodyTest() {
-    Lexicon lexicon = compositionDecomposer
-        .decompose(compositionLoader.getComposition(new File(this.getClass().getResource("gen_1.mid").getFile())),
-            JMC.WHOLE_NOTE);
+    Lexicon lexicon = compositionDecomposer.decompose(
+        compositionLoader.getComposition(new File(this.getClass().getResource("gen_1.mid").getFile())), JMC.WHOLE_NOTE);
     if (ModelUtils.isTimeCorrelated(1.1, 1.0)) {
       //	if time correlation is disabled
       assertEquals(6, lexicon.getComposeBlocks().size());

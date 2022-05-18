@@ -4,11 +4,13 @@ import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getTransposePit
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
+import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
 @Data
 @NoArgsConstructor
@@ -150,4 +152,27 @@ public class MusicBlock implements Serializable {
     return Optional.ofNullable(previousBlockEndPitches);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    MusicBlock that = (MusicBlock) o;
+    /*
+    TODO to be able to decompose composition into Music Blocks without repetition equality when
+    parallel logic should be implemented
+     */
+    return ModelUtils.isTimeCorrelated(that.startTime, startTime)
+           && Objects.equals(instrumentParts, that.instrumentParts)
+           && Objects.equals(compositionInfo, that.compositionInfo)
+           && Objects.equals(previousBlockEndPitches, that.previousBlockEndPitches);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(instrumentParts, compositionInfo, previousBlockEndPitches);
+  }
 }
