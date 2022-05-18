@@ -16,7 +16,7 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
 public class ContourMelodyMovementEquality extends AbstractMelodyMovementEquality {
   // Maximum allowable number of intervals in different direction
 
-  @Value("${contourMelodyMovementEquality.maxNumberOfDiffDirectionIntervals}")
+  @Value("${contourMelodyMovementEquality.maxNumberOfDiffDirectionIntervals:3}")
   private int maxNumberOfDiffDirectionIntervals;
 
   @Override

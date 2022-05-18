@@ -12,7 +12,7 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
 public class OrderMelodyMovementEquality extends AbstractMelodyMovementEquality {
 
   // Maximum allowable numbers of intervals which notes has been swapped
-  @Value("${orderMelodyMovementEquality.maxNumberOfIntervalsHavingSwappedNotes}")
+  @Value("${orderMelodyMovementEquality.maxNumberOfIntervalsHavingSwappedNotes:2}")
   private int maxNumberOfIntervalsHavingSwappedNotes;
 
   @Override

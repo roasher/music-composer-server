@@ -1,11 +1,13 @@
 package ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer;
 
 import static jm.constants.Pitches.REST;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jm.music.data.Note;
 import junit.framework.Assert;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
@@ -18,7 +20,7 @@ public class MelodyEqualityAnalyzerImplTest extends AbstractSpringTest {
 
   @Autowired
   @Qualifier("melodyEqualityAnalyzerImpl")
-  MelodyEqualityAnalyzer melodyEqualityAnalyzer;
+  private MelodyEqualityAnalyzer melodyEqualityAnalyzer;
 
   @Test
   public void testCase1() {
@@ -44,7 +46,7 @@ public class MelodyEqualityAnalyzerImplTest extends AbstractSpringTest {
     };
     Melody melody2 = new Melody(notes2);
 
-    Assert.assertFalse(melodyEqualityAnalyzer.isEqual(melody1, melody2));
+    assertFalse(melodyEqualityAnalyzer.isEqual(melody1, melody2));
   }
 
   @Ignore
@@ -82,6 +84,6 @@ public class MelodyEqualityAnalyzerImplTest extends AbstractSpringTest {
 //		View.notate( melody2 );
 //		suspend();
 
-    Assert.assertTrue(melodyEqualityAnalyzer.isEqual(melody1, melody2));
+    assertTrue(melodyEqualityAnalyzer.isEqual(melody1, melody2));
   }
 }

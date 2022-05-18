@@ -14,10 +14,10 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
 public class IntervalsMelodyMovementEquality extends AbstractMelodyMovementEquality {
 
   // Maximum allowable number of intervals that can be different
-  @Value("${intervalsMelodyMovementEquality.maxNumberOfShiftedIntervals}")
+  @Value("${intervalsMelodyMovementEquality.maxNumberOfShiftedIntervals:2}")
   private int maxNumberOfShiftedIntervals;
   // Maximum allowable pitch difference
-  @Value("${intervalsMelodyMovementEquality.maxShift}")
+  @Value("${intervalsMelodyMovementEquality.maxShift:2}")
   private int maxShift;
 
   public double getEqualityMetric(MelodyMovement firstMelodyMovement, MelodyMovement secondMelodyMovement) {

@@ -4,9 +4,9 @@ composer:
 persistance:
   file: Path to db file, for example bach-prod.db
 
-MelodyFormEqualityAnalyzer:
+melodyFormEqualityAnalyzer:
   equalityTestPassThreshold: 0.45
-FormEquality:
+formEquality:
   instrumentEqualityPassThreshold: 0.7
   instrumentEqualityFailThreshold: 0.4
 

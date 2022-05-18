@@ -13,9 +13,9 @@ spring:
   application:
     name: MusicComposer
 
-MelodyFormEqualityAnalyzer:
+melodyFormEqualityAnalyzer:
   equalityTestPassThreshold: 0.45
 
-FormEquality:
+formEquality:
   instrumentEqualityPassThreshold: 0.7
   instrumentEqualityFailThreshold: 0.4

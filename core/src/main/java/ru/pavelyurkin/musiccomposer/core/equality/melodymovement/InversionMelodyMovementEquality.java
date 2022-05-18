@@ -13,7 +13,7 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
 @Component
 public class InversionMelodyMovementEquality extends AbstractMelodyMovementEquality {
   // Maximum allowable number of inverted intervals
-  @Value("${inversionMelodyMovementEquality.maxNumberOfInvertedIntervals}")
+  @Value("${inversionMelodyMovementEquality.maxNumberOfInvertedIntervals:1}")
   private int maxNumberOfInvertedIntervals;
 
   @Override
