@@ -7,15 +7,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Stack;
 import jm.music.data.Note;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -49,13 +50,13 @@ public class CompositionDecomposerMockTest {
     inputMusicBlock.add(musicBlock2);
     inputMusicBlock.add(musicBlock3);
 
-    Map<Integer, List<Integer>> map = new HashMap<>();
-    map.put(0, Arrays.asList(1, 2));
-    map.put(1, Arrays.asList(0, 2, 3));
-    map.put(2, Arrays.asList(0, 1));
-    map.put(3, Arrays.asList(1));
+    Map<Integer, Set<Integer>> map = new HashMap<>();
+    map.put(0, Set.of(1, 2));
+    map.put(1, Set.of(0, 2, 3));
+    map.put(2, Set.of(0, 1));
+    map.put(3, Set.of(1));
 
-    when(musicBlockProvider.getAllPossibleNextVariants(any(List.class))).thenReturn(map);
+    when(musicBlockProvider.getAllPossibleNextVariants(any())).thenReturn(map);
 
     List<ComposeBlock> composeBlockList = compositionDecomposer.getComposeBlocks(inputMusicBlock).getComposeBlocks();
 
@@ -88,11 +89,11 @@ public class CompositionDecomposerMockTest {
   @Test
   public void getComposeBlocksTest() {
 
-    MusicBlock musicBlock0 = new MusicBlock(0, Arrays.asList(new InstrumentPart(new Note(60, 0))), null);
-    MusicBlock musicBlock1 = new MusicBlock(0, Arrays.asList(new InstrumentPart(new Note(61, 0))), null);
-    MusicBlock musicBlock2 = new MusicBlock(0, Arrays.asList(new InstrumentPart(new Note(62, 0))), null);
-    MusicBlock musicBlock3 = new MusicBlock(0, Arrays.asList(new InstrumentPart(new Note(63, 0))), null);
-    MusicBlock musicBlock4 = new MusicBlock(0, Arrays.asList(new InstrumentPart(new Note(64, 0))), null);
+    MusicBlock musicBlock0 = getMusicTestBlock0(60);
+    MusicBlock musicBlock1 = getMusicTestBlock0(61);
+    MusicBlock musicBlock2 = getMusicTestBlock0(62);
+    MusicBlock musicBlock3 = getMusicTestBlock0(63);
+    MusicBlock musicBlock4 = getMusicTestBlock0(64);
 
     List<MusicBlock> inputMusicBlock = new ArrayList<MusicBlock>();
     inputMusicBlock.add(musicBlock0);
@@ -102,11 +103,11 @@ public class CompositionDecomposerMockTest {
     inputMusicBlock.add(musicBlock4);
 
     Map<Integer, Set<Integer>> map = new HashMap<>();
-    map.put(0, ImmutableSet.of(1, 3, 4));
-    map.put(1, ImmutableSet.of(0, 4));
-    map.put(2, ImmutableSet.of(0, 3, 4));
-    map.put(3, ImmutableSet.of(0, 2));
-    map.put(4, ImmutableSet.of(0, 1, 2));
+    map.put(0, Set.of(1, 3, 4));
+    map.put(1, Set.of(0, 4));
+    map.put(2, Set.of(0, 3, 4));
+    map.put(3, Set.of(0, 2));
+    map.put(4, Set.of(0, 1, 2));
 
     when(musicBlockProvider.getAllPossibleNextVariants(any())).thenReturn(map);
 
@@ -124,24 +125,6 @@ public class CompositionDecomposerMockTest {
     assertEquals(2, composeBlockList.get(2).getPossiblePreviousComposeBlocks().size());
     assertEquals(2, composeBlockList.get(3).getPossiblePreviousComposeBlocks().size());
     assertEquals(3, composeBlockList.get(4).getPossiblePreviousComposeBlocks().size());
-
-    assertEquals(2,
-        composeBlockList.get(0).getPossibleNextComposeBlocks().get(1).getPossibleNextComposeBlocks().size());
-    assertEquals(3,
-        composeBlockList.get(1).getPossibleNextComposeBlocks().get(1).getPossibleNextComposeBlocks().size());
-    assertEquals(2, composeBlockList.get(2).getPossibleNextComposeBlocks().get(0).getPossibleNextComposeBlocks().get(0)
-        .getPossibleNextComposeBlocks().size());
-    assertEquals(3,
-        composeBlockList.get(3).getPossibleNextComposeBlocks().get(1).getPossibleNextComposeBlocks().size());
-    assertEquals(2,
-        composeBlockList.get(4).getPossibleNextComposeBlocks().get(1).getPossibleNextComposeBlocks().size());
-
-    assertEquals(2,
-        composeBlockList.get(0).getPossiblePreviousComposeBlocks().get(1).getPossiblePreviousComposeBlocks().size());
-    assertEquals(3,
-        composeBlockList.get(1).getPossiblePreviousComposeBlocks().get(1).getPossiblePreviousComposeBlocks().size());
-    assertEquals(2,
-        composeBlockList.get(4).getPossiblePreviousComposeBlocks().get(1).getPossiblePreviousComposeBlocks().size());
 
     assertTrue(isValidForwardRoute(composeBlockList, musicBlock0, musicBlock3, musicBlock0, musicBlock3, musicBlock2,
         musicBlock4));
@@ -170,7 +153,7 @@ public class CompositionDecomposerMockTest {
     assertTrue(isValidBackwardRoute(composeBlockList, musicBlock1, musicBlock0, musicBlock1, musicBlock4, musicBlock2,
         musicBlock3));
     assertTrue(isValidBackwardRoute(composeBlockList, musicBlock2, musicBlock3, musicBlock2));
-    assertTrue(isValidBackwardRoute(composeBlockList, musicBlock2, musicBlock4, musicBlock0, musicBlock2));
+    assertFalse(isValidBackwardRoute(composeBlockList, musicBlock2, musicBlock4, musicBlock0, musicBlock2));
     assertTrue(isValidBackwardRoute(composeBlockList, musicBlock4, musicBlock1, musicBlock0, musicBlock3));
 
     assertFalse(isValidBackwardRoute(composeBlockList, musicBlock1, musicBlock2));
@@ -189,37 +172,31 @@ public class CompositionDecomposerMockTest {
         isValidBackwardRoute(composeBlockList, musicBlock4, musicBlock2, musicBlock1, musicBlock0, musicBlock1));
   }
 
+  @NotNull
+  private MusicBlock getMusicTestBlock0(int pitch) {
+    return new MusicBlock(0, List.of(new InstrumentPart(new Note(pitch, 0))), null);
+  }
+
   private boolean isValidForwardRoute(List<ComposeBlock> composeBlocks, MusicBlock... route) {
-    List<ComposeBlock> currentRoutLexicon = composeBlocks;
-    List<ComposeBlock> routeComposeBlocks =
-        Arrays.asList(route).stream().map(o -> new ComposeBlock(o)).collect(Collectors.toList());
-    nextRoute:
-    for (ComposeBlock routState : routeComposeBlocks) {
-      for (ComposeBlock lexiconBlock : currentRoutLexicon) {
-        if (lexiconBlock.hasEqualsMusicBlock(routState)) {
-          currentRoutLexicon = lexiconBlock.getPossibleNextComposeBlocks();
-          continue nextRoute;
-        }
+    List<ComposeBlock> possibleNexts = composeBlocks;
+    for (MusicBlock musicBlock : route) {
+      Optional<ComposeBlock> step = possibleNexts.stream()
+          // exact math cause music blocks equality might be overwridden
+          .filter(composeBlock -> composeBlock.getMusicBlock() == musicBlock)
+          .findFirst();
+      if (step.isEmpty()) {
+        return false;
+      } else {
+        possibleNexts = step.get().getPossibleNextComposeBlocks();
       }
-      return false;
     }
+
     return true;
   }
 
   private boolean isValidBackwardRoute(List<ComposeBlock> composeBlocks, MusicBlock... route) {
-    List<ComposeBlock> currentRoutLexicon = composeBlocks;
-    List<ComposeBlock> routeComposeBlocks =
-        Arrays.asList(route).stream().map(o -> new ComposeBlock(o)).collect(Collectors.toList());
-    nextRoute:
-    for (ComposeBlock routState : routeComposeBlocks) {
-      for (ComposeBlock lexiconBlock : currentRoutLexicon) {
-        if (lexiconBlock.hasEqualsMusicBlock(routState)) {
-          currentRoutLexicon = lexiconBlock.getPossiblePreviousComposeBlocks();
-          continue nextRoute;
-        }
-      }
-      return false;
-    }
-    return true;
+    Stack<MusicBlock> stack = new Stack<>();
+    Arrays.stream(route).forEach(stack::add);
+    return isValidForwardRoute(composeBlocks, stack.toArray(new MusicBlock[] {}));
   }
 }

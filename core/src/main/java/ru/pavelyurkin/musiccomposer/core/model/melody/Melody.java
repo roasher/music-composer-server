@@ -11,7 +11,9 @@ import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
  * Class represents Melody entity
  * Melodies considered as simple single-voice note moves
  * Created by Pavel Yurkin on 26.07.14.
+ * @Deprecated due to NewMelody
  */
+@Deprecated(forRemoval = true)
 public class Melody extends Phrase {
 
   private PlaceInTheComposition placeInTheComposition;
