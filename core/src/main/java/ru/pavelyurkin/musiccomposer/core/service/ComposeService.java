@@ -25,6 +25,7 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 @Slf4j
 @RequiredArgsConstructor
 @Data
+@Component
 public class ComposeService {
 
   /**
@@ -56,7 +57,7 @@ public class ComposeService {
     if (composingParametersMap.containsKey(compositionId)) {
       composingParameters = composingParametersMap.get(compositionId);
     } else {
-      composingParameters = applicationContext.getBean("defaultComposingParameters", ComposingParameters.class);
+      composingParameters = applicationContext.getBean("composingParameters", ComposingParameters.class);
       composingParametersMap.put(compositionId, composingParameters);
     }
     return composingParameters;

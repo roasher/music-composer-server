@@ -1,20 +1,19 @@
 package ru.pavelyurkin.musiccomposer.core;
 
-import static jm.constants.Durations.EIGHTH_NOTE;
-import static jm.constants.Durations.WHOLE_NOTE;
-
 import java.io.File;
 import java.util.List;
 import jm.JMC;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.first.FirstStepProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProvider;
+import ru.pavelyurkin.musiccomposer.core.composer.next.SimpleNextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilterImpl;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilterImpl;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.KeyVarietyFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RepetitionFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RestFilter;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.EqualNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.equality.melody.Equality;
@@ -55,20 +54,23 @@ public class MyTestConfiguration {
     return new EqualNumberOfNotesRequired(new RhythmEquality());
   }
 
-  @Bean(name = "filter")
-  public ComposeStepFilter filterForTests() {
-    return new ComposeStepFilterImpl(
-        List.of(
-            new RestFilter(EIGHTH_NOTE),
-            new KeyVarietyFilter(1, 4 * WHOLE_NOTE),
-            new RepetitionFilter()
-        )
-    );
+  @Bean
+  public ComposeStepFilter testFilter() {
+    return new ComposeStepFilterImpl(List.of());
   }
 
   @Bean
-  public ComposeStepFilter bachFilter() {
-    return new BachChoralFilterImpl();
+  @Scope("prototype")
+  public NextStepProvider testNextStepProvider(ComposeStepFilter filter) {
+    return new SimpleNextStepProvider(filter);
+  }
+
+  @Bean
+  @Scope("prototype")
+  public ComposeStepProvider testComposeStepProvider(
+      @Qualifier("simpleFirstStepProvider") FirstStepProvider firstStepProvider,
+      NextStepProvider nextStepProvider) {
+    return new ComposeStepProvider(firstStepProvider, nextStepProvider);
   }
 
   @Bean

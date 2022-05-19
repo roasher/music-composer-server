@@ -2,6 +2,7 @@ package ru.pavelyurkin.musiccomposer.core.composer.next;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
@@ -10,6 +11,7 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 /**
  * Created by wish on 18.02.2016.
  */
+@Component
 public class SimpleNextStepProvider extends FilteredNextStepProvider {
 
   public SimpleNextStepProvider(ComposeStepFilter composeStepFilter) {

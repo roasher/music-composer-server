@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.Scope;
 import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.first.FirstStepProvider;
@@ -23,19 +24,13 @@ import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
+import ru.pavelyurkin.musiccomposer.core.service.ComposingParameters;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionParser;
 import ru.pavelyurkin.musiccomposer.core.utils.Recombinator;
 
 @Configuration
 public class ComposerConfiguration {
-
-  @Bean
-  public ComposeStepProvider composeStepProvider(
-      @Qualifier("randomFirstStepProvider") FirstStepProvider firstStepProvider,
-      @Qualifier("nextStepProvider") NextStepProvider nextStepProvider) {
-    return new ComposeStepProvider(firstStepProvider, nextStepProvider);
-  }
 
   @Bean
   public FormEqualityMetricAnalyzer formEqualityMetricAnalyzer(
@@ -52,25 +47,6 @@ public class ComposerConfiguration {
     return new CompositionDecomposer(recombinator, compositionParser, musicBlockProvider, lexiconDAO);
   }
 
-  @Bean
-  public NextStepProviderImpl nextStepProvider(
-      EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer,
-      @Qualifier("filter") ComposeStepFilter filter) {
-    return new NextStepProviderImpl(equalityMetricAnalyzer, filter);
-  }
-
-  @Bean(name = "filter")
-  @Profile( {"bach-test", "bach-prod"})
-  public ComposeStepFilter bachFilter() {
-    return new BachChoralFilterImpl();
-  }
-
-  @Bean(name = "filter")
-  @Profile( {"mozart-test", "mozart-prod"})
-  public ComposeStepFilter MozartFilter() {
-    return new MozartFilterImpl();
-  }
-
   /**
    * Bach chorale lexicon
    */
@@ -81,6 +57,49 @@ public class ComposerConfiguration {
                              @Value("${composer.pathToCompositions}") String compositionsPath) {
     List<Composition> compositionList = compositionLoader.getCompositionsFromFolder(new File(compositionsPath));
     return compositionDecomposer.decompose(compositionList, JMC.WHOLE_NOTE);
+  }
+
+  /**
+   * Returns default Composing Parameters
+   */
+  @Bean
+  @Scope("prototype")
+  public ComposingParameters composingParameters(ComposeStepProvider composeStepProvider,
+                                                 Lexicon defaultLexicon) {
+    ComposingParameters composingParameters = new ComposingParameters();
+    composingParameters.setComposeStepProvider(composeStepProvider);
+    composingParameters.setLexicon(defaultLexicon);
+    return composingParameters;
+  }
+
+  @Bean
+  @Scope("prototype")
+  public ComposeStepProvider composeStepProvider(
+      @Qualifier("randomFirstStepProvider") FirstStepProvider firstStepProvider,
+      NextStepProvider nextStepProvider) {
+    return new ComposeStepProvider(firstStepProvider, nextStepProvider);
+  }
+
+  @Bean
+  @Scope("prototype")
+  public NextStepProvider nextStepProvider(
+      EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer,
+      ComposeStepFilter filter) {
+    return new NextStepProviderImpl(equalityMetricAnalyzer, filter);
+  }
+
+  @Bean
+  @Profile( {"bach-test", "bach-prod"})
+  @Scope("prototype")
+  public ComposeStepFilter bachFilter() {
+    return new BachChoralFilterImpl();
+  }
+
+  @Bean
+  @Profile( {"mozart-test", "mozart-prod"})
+  @Scope("prototype")
+  public ComposeStepFilter mozartFilter() {
+    return new MozartFilterImpl();
   }
 
 }
