@@ -1,11 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.service;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getRhythmValue;
-import static ru.pavelyurkin.musiccomposer.core.utils.Utils.epsilon;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +20,7 @@ public class ComposeServiceTest extends AbstractSpringTest {
   private CompositionComposer compositionComposer;
 
   @Test
-  public void getNextBarsFromComposition() throws Exception {
+  public void sameCompositionOnMultipleCallsToService() {
     String id1 = "id1";
     CompositionFrontDTO composition1 = composeService.getNextBarsFromComposition(id1, 10, null);
     String id2 = "id2";
@@ -33,11 +30,7 @@ public class ComposeServiceTest extends AbstractSpringTest {
     CompositionFrontDTO composition21 = composeService.getNextBarsFromComposition(id3, 3, null);
     CompositionFrontDTO composition22 = composeService.getNextBarsFromComposition(id3, 3, null);
     CompositionFrontDTO composition23 = composeService.getNextBarsFromComposition(id3, 4, null);
-    // Checking same lexicon
-    assertSame(composeService.getComposingParametersById(id1).getLexicon(),
-        composeService.getComposingParametersById(id2).getLexicon());
-    assertSame(composeService.getComposingParametersById(id1).getLexicon(),
-        composeService.getComposingParametersById(id3).getLexicon());
+
     // Checking same compose results if sum of bars are equal regardless of number of requests
     Composition compositionGather1 =
         compositionComposer.gatherComposition(composition11.getComposition(), composition12.getComposition());
@@ -47,18 +40,24 @@ public class ComposeServiceTest extends AbstractSpringTest {
     assertTrue(composition1.hasSameNoteContent(compositionGather1));
     assertTrue(composition1.hasSameNoteContent(compositionGather2));
     assertTrue(compositionGather1.hasSameNoteContent(compositionGather2));
-    // checking rhythmValues
-    assertThat(composition1.getPreviousSumRhythmValues(), closeTo(0, epsilon));
-
-    assertThat(composition11.getPreviousSumRhythmValues(), closeTo(0, epsilon));
-    assertThat(composition12.getPreviousSumRhythmValues(),
-        closeTo(getRhythmValue(composition11.getComposition()), epsilon));
-
-    assertThat(composition21.getPreviousSumRhythmValues(), closeTo(0, epsilon));
-    double rhythmValueComposition21 = getRhythmValue(composition21.getComposition());
-    assertThat(composition22.getPreviousSumRhythmValues(), closeTo(rhythmValueComposition21, epsilon));
-    assertThat(composition23.getPreviousSumRhythmValues(),
-        closeTo(getRhythmValue(composition22.getComposition()) + rhythmValueComposition21, epsilon));
   }
 
+  @Test
+  void sameLexiconBeansInsideButDifferentProviders() {
+    String id1 = "id1";
+    composeService.getNextBarsFromComposition(id1, 10, null);
+    String id2 = "id2";
+    composeService.getNextBarsFromComposition(id2, 10, null);
+
+    ComposingParameters composingParametersById1 = composeService.getComposingParametersById(id1);
+    ComposingParameters composingParametersById2 = composeService.getComposingParametersById(id2);
+
+    assertSame(composingParametersById1.getLexicon(), composingParametersById2.getLexicon());
+    assertNotSame(composingParametersById1.getComposeStepProvider(), composingParametersById2.getComposeStepProvider());
+    assertSame(composingParametersById1.getComposeStepProvider().getFirstStepProvider(),
+        composingParametersById2.getComposeStepProvider().getFirstStepProvider());
+    assertNotSame(composingParametersById1.getComposeStepProvider().getNextStepProvider(),
+        composingParametersById2.getComposeStepProvider().getNextStepProvider());
+    assertNotSame(composingParametersById1.getPreviousCompositionSteps(), composingParametersById2.getPreviousCompositionSteps());
+  }
 }

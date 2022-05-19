@@ -55,19 +55,19 @@ public class MyTestConfiguration {
   }
 
   @Bean
-  public ComposeStepFilter testFilter() {
+  public ComposeStepFilter filter() {
     return new ComposeStepFilterImpl(List.of());
   }
 
   @Bean
   @Scope("prototype")
-  public NextStepProvider testNextStepProvider(ComposeStepFilter filter) {
+  public NextStepProvider nextStepProvider(ComposeStepFilter filter) {
     return new SimpleNextStepProvider(filter);
   }
 
   @Bean
   @Scope("prototype")
-  public ComposeStepProvider testComposeStepProvider(
+  public ComposeStepProvider composeStepProvider(
       @Qualifier("simpleFirstStepProvider") FirstStepProvider firstStepProvider,
       NextStepProvider nextStepProvider) {
     return new ComposeStepProvider(firstStepProvider, nextStepProvider);

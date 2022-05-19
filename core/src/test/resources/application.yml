@@ -1,3 +1,7 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
 melodyFormEqualityAnalyzer:
   equalityTestPassThreshold: 0.45
 formEquality:
