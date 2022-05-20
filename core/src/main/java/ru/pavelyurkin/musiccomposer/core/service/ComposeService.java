@@ -86,4 +86,7 @@ public class ComposeService {
     return composingParametersMap.get(id);
   }
 
+  public void resetAllCompositions() {
+    this.composingParametersMap = new HashMap<>();
+  }
 }

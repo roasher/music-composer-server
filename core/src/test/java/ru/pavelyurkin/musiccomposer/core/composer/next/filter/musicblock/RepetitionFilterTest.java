@@ -10,7 +10,6 @@ import static jm.constants.Pitches.C1;
 import static jm.constants.Pitches.C2;
 import static jm.constants.Pitches.C3;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -106,10 +105,10 @@ public class RepetitionFilterTest {
         new MusicBlock(0,
             Collections.singletonList(new InstrumentPart(new Note(C1, EIGHTH_NOTE), new Note(C1, EIGHTH_NOTE))), null));
     Map<Double, Integer> repetitions0 = composeBlockRepetitionFilter.getRepetitions(onePitchBlock, 2 * WHOLE_NOTE);
-    assertThat(3, is(equalTo(repetitions0.size())));
-    assertThat(6, is(equalTo(repetitions0.get(QUARTER_NOTE))));
-    assertThat(3, is(equalTo(repetitions0.get(HALF_NOTE))));
-    assertThat(2, is(equalTo(repetitions0.get(DOTTED_HALF_NOTE))));
+    assertThat(repetitions0.size(), is(3));
+    assertThat(repetitions0.get(QUARTER_NOTE), is(6));
+    assertThat(repetitions0.get(HALF_NOTE), is(3));
+    assertThat(repetitions0.get(DOTTED_HALF_NOTE), is(2));
   }
 
   @Test
@@ -126,9 +125,10 @@ public class RepetitionFilterTest {
         new MusicBlock(0, Collections.singletonList(new InstrumentPart(new Note(C1, QUARTER_NOTE))), null),
         new MusicBlock(0, Collections.singletonList(new InstrumentPart(new Note(C2, QUARTER_NOTE))), null),
         new MusicBlock(0, Collections.singletonList(new InstrumentPart(new Note(C3, QUARTER_NOTE))), null));
+
     Map<Double, Integer> repetitions0 = composeBlockRepetitionFilter.getRepetitions(blocks, 2 * WHOLE_NOTE);
-    assertThat(1, is(equalTo(repetitions0.size())));
-    assertThat(3, is(equalTo(repetitions0.get(DOTTED_HALF_NOTE))));
+    assertThat(repetitions0.size(), is(1));
+    assertThat(repetitions0.get(DOTTED_HALF_NOTE), is(3));
   }
 
   @Test
@@ -143,7 +143,7 @@ public class RepetitionFilterTest {
         new MusicBlock(0, Collections.singletonList(new InstrumentPart(new Note(C1, QUARTER_NOTE))), null),
         new MusicBlock(0, Collections.singletonList(new InstrumentPart(new Note(C2, QUARTER_NOTE))), null));
     Map<Double, Integer> repetitions0 = composeBlockRepetitionFilter.getRepetitions(blocks, 2 * WHOLE_NOTE);
-    assertThat(0, is(equalTo(repetitions0.size())));
+    assertThat(repetitions0.size(), is(0));
   }
 
   @Test
@@ -169,11 +169,13 @@ public class RepetitionFilterTest {
 
         new MusicBlock(0, Collections.singletonList(new InstrumentPart(new Note(C1, QUARTER_NOTE))), null),
         new MusicBlock(0, Collections.singletonList(new InstrumentPart(new Note(C2, QUARTER_NOTE))), null));
+
     Map<Double, Integer> repetitions0 = composeBlockRepetitionFilter.getRepetitions(blocks, 2 * WHOLE_NOTE);
-    assertThat(3, is(equalTo(repetitions0.size())));
-    assertThat(7, is(equalTo(repetitions0.get(HALF_NOTE))));
-    assertThat(3, is(equalTo(repetitions0.get(WHOLE_NOTE))));
-    assertThat(2, is(equalTo(repetitions0.get(WHOLE_NOTE + HALF_NOTE))));
+
+    assertThat(repetitions0.size(), is(3));
+    assertThat(repetitions0.get(HALF_NOTE), is(7));
+    assertThat(repetitions0.get(WHOLE_NOTE), is(3));
+    assertThat(repetitions0.get(WHOLE_NOTE + HALF_NOTE), is(2));
   }
 
 }

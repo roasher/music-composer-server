@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
@@ -18,6 +19,11 @@ public class ComposeServiceTest extends AbstractSpringTest {
 
   @Autowired
   private CompositionComposer compositionComposer;
+
+  @AfterEach
+  void tearDown() {
+    composeService.resetAllCompositions();
+  }
 
   @Test
   public void sameCompositionOnMultipleCallsToService() {

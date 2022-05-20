@@ -337,13 +337,19 @@ public class ModelUtils {
       return false;
     }
     for (int melodyNumber = 0; melodyNumber < firstInstrumentParts.size(); melodyNumber++) {
-      InstrumentPart normalizedFirst = normalizeInstrumentPart(firstInstrumentParts.get(melodyNumber));
-      InstrumentPart normalizedSecond = normalizeInstrumentPart(secondIntrumentParts.get(melodyNumber));
-      if (!normalizedFirst.equals(normalizedSecond)) {
+      InstrumentPart part1 = firstInstrumentParts.get(melodyNumber);
+      InstrumentPart part2 = secondIntrumentParts.get(melodyNumber);
+      if (!isExactEquals(part1, part2)) {
         return false;
       }
     }
     return true;
+  }
+
+  public static boolean isExactEquals(InstrumentPart part1, InstrumentPart part2) {
+    InstrumentPart normalizedFirst = normalizeInstrumentPart(part1);
+    InstrumentPart normalizedSecond = normalizeInstrumentPart(part2);
+    return normalizedFirst.exactEquals(normalizedSecond);
   }
 
   @VisibleForTesting

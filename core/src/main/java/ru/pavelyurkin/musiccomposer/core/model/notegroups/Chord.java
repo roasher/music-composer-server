@@ -114,7 +114,13 @@ public class Chord extends NoteGroup {
     if (Double.compare(chord.rhythmValue, rhythmValue) != 0) {
       return false;
     }
+    // todo: think if this might be parallel as in melody???
     return samePitches(chord.pitches);
+  }
+
+  @Override
+  public boolean exactEquals(NoteGroup noteGroup) {
+    return equals(noteGroup);
   }
 
   @Override

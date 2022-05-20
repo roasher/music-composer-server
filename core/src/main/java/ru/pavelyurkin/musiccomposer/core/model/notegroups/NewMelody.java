@@ -191,6 +191,21 @@ public class NewMelody extends NoteGroup {
     return isParallelTo(melody);
   }
 
+  @Override
+  public boolean exactEquals(NoteGroup noteGroup) {
+    NewMelody thatMelody = (NewMelody) noteGroup;
+    // todo extract all Collection comparison into one method with input function
+    if (this.getNotes().size() != thatMelody.getNotes().size()) {
+      return false;
+    }
+    for (int noteNumber = 0; noteNumber < this.getNotes().size(); noteNumber++) {
+      if (!notes.get(noteNumber).equals(thatMelody.getNote(noteNumber))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public boolean isParallelTo(NewMelody melody) {
     if (this.getNotes().size() != melody.getNotes().size()) {
       return false;

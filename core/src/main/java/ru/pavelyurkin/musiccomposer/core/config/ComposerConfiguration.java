@@ -3,6 +3,8 @@ package ru.pavelyurkin.musiccomposer.core.config;
 import java.io.File;
 import java.util.List;
 import jm.JMC;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -45,6 +47,15 @@ public class ComposerConfiguration {
       CompositionParser compositionParser,
       @Qualifier("lexiconDAO_mapdb") LexiconDAO lexiconDAO) {
     return new CompositionDecomposer(recombinator, compositionParser, musicBlockProvider, lexiconDAO);
+  }
+
+  @Bean
+  public DB Db(@Value("${persistance.file}") String file) {
+    return DBMaker
+        .fileDB(file)
+        .concurrencyDisable()
+        .closeOnJvmShutdown()
+        .make();
   }
 
   /**

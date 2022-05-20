@@ -32,4 +32,8 @@ public abstract class NoteGroup implements Serializable {
   public abstract List<Double> getRhythmEdgeList();
 
   public abstract Set<Integer> getAllPitches();
+
+  public abstract boolean equals(Object o);
+
+  public abstract boolean exactEquals(NoteGroup noteGroup);
 }

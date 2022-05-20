@@ -41,16 +41,14 @@ public class NextStepProviderImpl extends FilteredNextStepProvider {
       List<MusicBlock> similarFormSteps = getRelativeFormBlocks(formCompositionSteps, form.get(), true);
       List<MusicBlock> differentFormSteps = getRelativeFormBlocks(formCompositionSteps, form.get(), false);
 
-      Optional<CompositionStep> lastOfPossibles = blocksToChooseFrom.stream()
-          .sorted(
-              getComposeBlockComparator(similarFormSteps, differentFormSteps,
-                  previousCompositionSteps
-                      .stream()
-                      .map(CompositionStep::getTransposedBlock)
-                      .collect(Collectors.toList())))
-          .reduce((composeStep1, composeStep2) -> composeStep2);
+      Optional<CompositionStep> nextStep = blocksToChooseFrom.stream()
+          .max(getComposeBlockComparator(similarFormSteps, differentFormSteps,
+              previousCompositionSteps
+                  .stream()
+                  .map(CompositionStep::getTransposedBlock)
+                  .collect(Collectors.toList())));
 
-      return lastOfPossibles;
+      return nextStep;
     } else {
       return !blocksToChooseFrom.isEmpty() ?
           Optional.of(blocksToChooseFrom.get(random.nextInt(blocksToChooseFrom.size()))) : Optional.empty();

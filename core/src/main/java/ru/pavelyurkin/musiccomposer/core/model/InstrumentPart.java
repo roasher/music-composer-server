@@ -137,4 +137,22 @@ public class InstrumentPart implements Serializable {
   public void addChordToTheEnd(Chord chordToAdd) {
     noteGroups.add(chordToAdd);
   }
+
+  public boolean exactEquals(InstrumentPart that) {
+    if (!Objects.equals(this.instrument, that.instrument)) {
+      return false;
+    }
+    if (this.noteGroups.size() != that.getNoteGroups().size()) {
+      return false;
+    }
+    for (int noteGroupNumber = 0; noteGroupNumber < this.noteGroups.size(); noteGroupNumber++) {
+      NoteGroup firstNoteGroupNumber = noteGroups.get(noteGroupNumber);
+      NoteGroup secondNoteGroupNumber = that.noteGroups.get(noteGroupNumber);
+      if (!firstNoteGroupNumber.exactEquals(secondNoteGroupNumber)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 }

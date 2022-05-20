@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import jm.music.data.Note;
 import jm.music.data.Rest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,6 +39,7 @@ import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricA
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
 /**
  * Created by night wish on 05.03.2016.
@@ -52,7 +54,8 @@ public class NextStepProviderTest {
   private EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer;
 
   @Test
-  public void testGetNextBlock() throws Exception {
+  @Disabled("Form related")
+  public void highestEqualityMetricBlockReturnedAsNextWhenComposingWithForm() {
 
     // Already composed blocks
     ComposeBlock composeBlock0 = new ComposeBlock(new MusicBlock(0, Arrays.asList(
@@ -73,15 +76,15 @@ public class NextStepProviderTest {
     ComposeBlock composeBlock20 = new ComposeBlock(new MusicBlock(20, Arrays.asList(
         new InstrumentPart(new Note(BF4, SIXTEENTH_NOTE)),
         new InstrumentPart(new Rest(SIXTEENTH_NOTE))),
-        null));
+        null, List.of(F3, B3)));
     ComposeBlock composeBlock21 = new ComposeBlock(new MusicBlock(21, Arrays.asList(
         new InstrumentPart(new Note(BF5, SIXTEENTH_NOTE)),
         new InstrumentPart(new Rest(SIXTEENTH_NOTE))),
-        null));
+        null, List.of(F3, B3)));
     ComposeBlock composeBlock22 = new ComposeBlock(new MusicBlock(22, Arrays.asList(
         new InstrumentPart(new Note(BF6, SIXTEENTH_NOTE)),
         new InstrumentPart(new Rest(SIXTEENTH_NOTE))),
-        null));
+        null, List.of(F3, B3)));
 
     composeBlock2.setPossibleNextComposeBlocks(Arrays.asList(
         composeBlock20,
@@ -91,31 +94,31 @@ public class NextStepProviderTest {
 
     List<InstrumentPart> melodyList20 =
         sumMelodies(alreadyComposedBlock.getInstrumentParts(), composeBlock20.getInstrumentParts());
-    when(equalityMetricAnalyzer.getEqualityMetric(any(List.class), eq(melodyList20))).thenReturn(0.41);
+    when(equalityMetricAnalyzer.getEqualityMetric(any(), eq(melodyList20))).thenReturn(0.41);
     List<InstrumentPart> melodyList21 =
         sumMelodies(alreadyComposedBlock.getInstrumentParts(), composeBlock21.getInstrumentParts());
-    when(equalityMetricAnalyzer.getEqualityMetric(any(List.class), eq(melodyList21))).thenReturn(0.51);
+    when(equalityMetricAnalyzer.getEqualityMetric(any(), eq(melodyList21))).thenReturn(0.51);
     List<InstrumentPart> melodyList22 =
         sumMelodies(alreadyComposedBlock.getInstrumentParts(), composeBlock22.getInstrumentParts());
-    when(equalityMetricAnalyzer.getEqualityMetric(any(List.class), eq(melodyList22))).thenReturn(0.4);
+    when(equalityMetricAnalyzer.getEqualityMetric(any(), eq(melodyList22))).thenReturn(0.4);
 
     // Actually we don't care about similarFormSteps as long we mocked equalityMetricAnalyzer
-    List<ComposeBlock> originComposeBlocks = Arrays.asList(new ComposeBlock(
-        new MusicBlock(0, Arrays.asList(new InstrumentPart(new Rest(WHOLE_NOTE))), null)));
-    List<FormCompositionStep> similarFormSteps = Arrays.asList(
+    List<ComposeBlock> originComposeBlocks = List.of(new ComposeBlock(
+        new MusicBlock(0, List.of(new InstrumentPart(new Rest(WHOLE_NOTE))), null)));
+    List<FormCompositionStep> similarFormSteps = List.of(
         new FormCompositionStep(originComposeBlocks.stream()
             .map(composeBlock -> new CompositionStep(composeBlock, composeBlock.getMusicBlock()))
             .collect(Collectors.toList()), null)
     );
 
-    List<CompositionStep> previousCompositionSteps = Arrays.asList(
+    List<CompositionStep> previousCompositionSteps = List.of(
         new CompositionStep(composeBlock0, composeBlock0.getMusicBlock()),
         new CompositionStep(composeBlock1, composeBlock1.getMusicBlock()),
         new CompositionStep(composeBlock2, composeBlock2.getMusicBlock())
     );
 
     Optional<CompositionStep> nextBlock =
-        nextBlockProvider.getNext(previousCompositionSteps, Collections.emptyList(), Optional.empty(), WHOLE_NOTE);
+        nextBlockProvider.getNext(previousCompositionSteps, Collections.emptyList(), Optional.of(new Form('A')), WHOLE_NOTE);
 
     assertEquals(composeBlock21, nextBlock.get().getOriginComposeBlock());
   }

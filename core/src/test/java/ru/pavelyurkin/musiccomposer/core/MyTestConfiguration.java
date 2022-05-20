@@ -3,6 +3,8 @@ package ru.pavelyurkin.musiccomposer.core;
 import java.io.File;
 import java.util.List;
 import jm.JMC;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -79,5 +81,15 @@ public class MyTestConfiguration {
                              @Value("${composer.pathToCompositions}") String compositionsPath) {
     List<Composition> compositionList = compositionLoader.getCompositionsFromFolder(new File(compositionsPath));
     return compositionDecomposer.decompose(compositionList, JMC.WHOLE_NOTE);
+  }
+
+  @Bean
+  public DB Db(@Value("${persistance.file}") String file) {
+    return DBMaker
+        .fileDB(file)
+        .concurrencyDisable()
+        .fileDeleteAfterClose()
+        .closeOnJvmShutdown()
+        .make();
   }
 }
