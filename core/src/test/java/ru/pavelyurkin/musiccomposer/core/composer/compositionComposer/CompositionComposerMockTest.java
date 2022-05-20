@@ -3,26 +3,25 @@ package ru.pavelyurkin.musiccomposer.core.composer.compositionComposer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import jm.JMC;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.composer.FormBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.exception.ComposeException;
-import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
+import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
 /**
@@ -38,16 +37,22 @@ public class CompositionComposerMockTest {
   private FormBlockProvider formBlockProvider;
 
   @Test
+  @DisplayName("Check that empty composition steps would trigger adding last step to exclusion and further composing")
   public void composeStepsTest() {
-
     List<Optional<FormCompositionStep>> formCompositionSteps = getMockFormCompositionSteps(10);
     when(formBlockProvider.getFormElement(any(Double.class), any(), any(), any(), any(), any()))
-        .thenReturn(formCompositionSteps.get(0)).thenReturn(formCompositionSteps.get(1))
+        .thenReturn(formCompositionSteps.get(0))
+        .thenReturn(formCompositionSteps.get(1))
         .thenReturn(formCompositionSteps.get(2))
-        .thenReturn(Optional.empty()).thenReturn(Optional.empty()).thenReturn(formCompositionSteps.get(3))
         .thenReturn(Optional.empty())
-        .thenReturn(Optional.empty()).thenReturn(formCompositionSteps.get(4)).thenReturn(formCompositionSteps.get(5))
-        .thenReturn(formCompositionSteps.get(6)).thenReturn(formCompositionSteps.get(7))
+        .thenReturn(Optional.empty())
+        .thenReturn(formCompositionSteps.get(3))
+        .thenReturn(Optional.empty())
+        .thenReturn(Optional.empty())
+        .thenReturn(formCompositionSteps.get(4))
+        .thenReturn(formCompositionSteps.get(5))
+        .thenReturn(formCompositionSteps.get(6))
+        .thenReturn(formCompositionSteps.get(7))
         .thenReturn(formCompositionSteps.get(8));
 
     List<FormCompositionStep> compositionSteps = compositionComposer.composeSteps(null, null, "ABCD", JMC.WHOLE_NOTE);
@@ -65,12 +70,17 @@ public class CompositionComposerMockTest {
     List<Optional<FormCompositionStep>> formCompositionSteps = getMockFormCompositionSteps(10);
 
     when(formBlockProvider.getFormElement(any(Double.class), any(), any(), any(), any(), any()))
-        .thenReturn(formCompositionSteps.get(0)).thenReturn(formCompositionSteps.get(1))
+        .thenReturn(formCompositionSteps.get(0))
+        .thenReturn(formCompositionSteps.get(1))
         .thenReturn(formCompositionSteps.get(2))
-        .thenReturn(Optional.empty()).thenReturn(formCompositionSteps.get(3)).thenReturn(Optional.empty())
-        .thenReturn(formCompositionSteps.get(4)).thenReturn(formCompositionSteps.get(5))
+        .thenReturn(Optional.empty())
+        .thenReturn(formCompositionSteps.get(3))
+        .thenReturn(Optional.empty())
+        .thenReturn(formCompositionSteps.get(4))
+        .thenReturn(formCompositionSteps.get(5))
         .thenReturn(formCompositionSteps.get(6))
-        .thenReturn(formCompositionSteps.get(7)).thenReturn(formCompositionSteps.get(8));
+        .thenReturn(formCompositionSteps.get(7))
+        .thenReturn(formCompositionSteps.get(8));
 
     List<FormCompositionStep> compositionSteps =
         compositionComposer.composeSteps(null, null, "ABCD", 2 * JMC.WHOLE_NOTE);
@@ -83,21 +93,27 @@ public class CompositionComposerMockTest {
   }
 
   @Test
+  @DisplayName("Check that exception is thrown if no way to compose")
   public void composeStepsFailing() {
 
     List<Optional<FormCompositionStep>> formCompositionSteps = getMockFormCompositionSteps(10);
 
-    when(formBlockProvider
-        .getFormElement(any(Double.class), any(Lexicon.class), any(ComposeStepProvider.class), any(Form.class),
-            any(List.class), any(List.class)))
-        .thenReturn(formCompositionSteps.get(0)).thenReturn(formCompositionSteps.get(1))
+    when(formBlockProvider.getFormElement(any(Double.class), any(), any(), any(), any(), any()))
+        .thenReturn(formCompositionSteps.get(0))
+        .thenReturn(formCompositionSteps.get(1))
         .thenReturn(formCompositionSteps.get(2))
-        .thenReturn(Optional.empty()).thenReturn(Optional.empty()).thenReturn(Optional.empty())
         .thenReturn(Optional.empty())
-        .thenReturn(formCompositionSteps.get(3)).thenReturn(Optional.empty()).thenReturn(Optional.empty())
-        .thenReturn(formCompositionSteps.get(4)).thenReturn(formCompositionSteps.get(5))
+        .thenReturn(Optional.empty())
+        .thenReturn(Optional.empty())
+        .thenReturn(Optional.empty())
+        .thenReturn(formCompositionSteps.get(3))
+        .thenReturn(Optional.empty())
+        .thenReturn(Optional.empty())
+        .thenReturn(formCompositionSteps.get(4))
+        .thenReturn(formCompositionSteps.get(5))
         .thenReturn(formCompositionSteps.get(6))
-        .thenReturn(formCompositionSteps.get(7)).thenReturn(formCompositionSteps.get(8));
+        .thenReturn(formCompositionSteps.get(7))
+        .thenReturn(formCompositionSteps.get(8));
 
     assertThrows(ComposeException.class, () -> compositionComposer.composeSteps(null, null, "ABCD", JMC.WHOLE_NOTE));
   }
@@ -105,16 +121,11 @@ public class CompositionComposerMockTest {
   private List<Optional<FormCompositionStep>> getMockFormCompositionSteps(int number) {
     List<Optional<FormCompositionStep>> formCompositionSteps = new ArrayList<>();
     for (char formCompositionStepNumber = 0; formCompositionStepNumber < number; formCompositionStepNumber++) {
-      formCompositionSteps.add(Optional.of(getMockFormCompositionStep(formCompositionStepNumber)));
+      formCompositionSteps.add(
+          Optional.of(new FormCompositionStep(List.of(
+              new CompositionStep(new ComposeBlock(new MusicBlock()), null)
+          ), new Form(formCompositionStepNumber))));
     }
     return formCompositionSteps;
-  }
-
-  private FormCompositionStep getMockFormCompositionStep(char id) {
-    FormCompositionStep formCompositionStep = mock(FormCompositionStep.class);
-    when(formCompositionStep.getForm()).thenReturn(new Form(id));
-    when(formCompositionStep.getCompositionSteps())
-        .thenReturn(Arrays.asList(CompositionStep.getEmptyCompositionStep()));
-    return formCompositionStep;
   }
 }

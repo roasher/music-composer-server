@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.util.List;
 import jm.JMC;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pavelyurkin.musiccomposer.core.decomposer.form.FormDecomposer;
@@ -14,6 +15,7 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
 
+@Disabled("From related. Not ready yet")
 public class FormDecomposerTest extends AbstractSpringTest {
 
   @Autowired
