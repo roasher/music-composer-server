@@ -32,7 +32,7 @@ import ru.pavelyurkin.musiccomposer.core.utils.CompositionParser;
 import ru.pavelyurkin.musiccomposer.core.utils.Recombinator;
 
 @Configuration
-public class ComposerConfiguration {
+public class CommonComposerConfiguration {
 
   @Bean
   public FormEqualityMetricAnalyzer formEqualityMetricAnalyzer(
@@ -62,7 +62,7 @@ public class ComposerConfiguration {
    * Bach chorale lexicon
    */
   @Bean
-  @Profile( {"bach-test", "bach-prod"})
+  @Profile( {"bach"})
   public Lexicon bachLexicon(CompositionDecomposer compositionDecomposer,
                              CompositionLoader compositionLoader,
                              @Value("${composer.pathToCompositions}") String compositionsPath) {
@@ -100,14 +100,14 @@ public class ComposerConfiguration {
   }
 
   @Bean
-  @Profile( {"bach-test", "bach-prod"})
+  @Profile( {"bach"})
   @Scope("prototype")
   public ComposeStepFilter bachFilter() {
     return new BachChoralFilterImpl();
   }
 
   @Bean
-  @Profile( {"mozart-test", "mozart-prod"})
+  @Profile( {"mozart"})
   @Scope("prototype")
   public ComposeStepFilter mozartFilter() {
     return new MozartFilterImpl();
