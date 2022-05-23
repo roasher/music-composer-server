@@ -228,14 +228,9 @@ public class ModelUtils {
    * @return
    */
   public static boolean isTimeCorrelated(double firstStartTime, double secondStartTime) {
-    return true;
-    //TODO Disabled for testing purposes (Don't know if needed, will decide later)
-//    int originStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces(firstStartTime);
-//    int substitutorStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces(secondStartTime);
-//    if (originStartTimeDecimalPlacesNumber == substitutorStartTimeDecimalPlacesNumber) {
-//      return true;
-//    }
-//    return false;
+    int originStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces(firstStartTime);
+    int substitutorStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces(secondStartTime);
+    return originStartTimeDecimalPlacesNumber == substitutorStartTimeDecimalPlacesNumber;
   }
 
   /**

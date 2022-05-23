@@ -43,7 +43,7 @@ public class MusicBlockProvider {
   }
 
   public boolean isPossibleNext(MusicBlock musicBlock, MusicBlock possibleNext) {
-    if (!possibleNext.getPreviousBlockEndPitches().isPresent()) {
+    if (possibleNext.getPreviousBlockEndPitches().isEmpty()) {
       return false;
     }
     boolean canBeTransposed = false;
