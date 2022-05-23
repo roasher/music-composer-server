@@ -24,8 +24,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isOneOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getTransposePitch;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.normalizeInstrumentPart;
 import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.trimToTime;
 
@@ -191,45 +189,6 @@ public class ModelUtilsTest {
             new Chord(Arrays.asList(6, 7), 0.5)
         ), 1)
     ));
-  }
-
-  @Test
-  public void returnZeroIfAllPitchesAreRests() throws Exception {
-    assertThat(getTransposePitch(Arrays.asList(Note.REST, Note.REST),
-        Arrays.asList(Note.REST, Note.REST)), is(0));
-  }
-
-  @Test
-  public void noTransposePitchIfDiferentPithLengths() throws Exception {
-    assertThrows(RuntimeException.class, () ->
-    assertThat(getTransposePitch(Arrays.asList(Note.REST, Note.REST, 8),
-        Arrays.asList(Note.REST, Note.REST)), is(0)));
-  }
-
-  @Test
-  public void noTransposePitchIfSwappedPlaces() throws Exception {
-    assertThrows(RuntimeException.class, () ->
-    assertThat(getTransposePitch(Arrays.asList(10, Note.REST),
-        Arrays.asList(Note.REST, 10)), is(0)));
-  }
-
-  @Test
-  public void noTransposePitchIfNotParallel() throws Exception {
-    assertThrows(RuntimeException.class, () ->
-    assertThat(getTransposePitch(Arrays.asList(10, 11),
-        Arrays.asList(10, 12)), is(0)));
-  }
-
-  @Test
-  public void calculateTransposePitchIfParallel() throws Exception {
-    assertThat(getTransposePitch(Arrays.asList(10, 11),
-        Arrays.asList(20, 21)), is(10));
-  }
-
-  @Test
-  public void calculateTransposePitchIfParallelWithRests() throws Exception {
-    assertThat(getTransposePitch(Arrays.asList(10, Note.REST, 11),
-        Arrays.asList(20, Note.REST, 21)), is(10));
   }
 
   @Test

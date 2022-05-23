@@ -2,6 +2,7 @@ package ru.pavelyurkin.musiccomposer.core.model.notegroups;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -36,4 +37,11 @@ public abstract class NoteGroup implements Serializable {
   public abstract boolean equals(Object o);
 
   public abstract boolean exactEquals(NoteGroup noteGroup);
+
+  /**
+   * What pitch should be added to noteGropu be equal to input one
+   * @param noteGroup
+   * @return
+   */
+  public abstract Optional<Integer> getPitchDistanceIfParallel(NoteGroup noteGroup);
 }

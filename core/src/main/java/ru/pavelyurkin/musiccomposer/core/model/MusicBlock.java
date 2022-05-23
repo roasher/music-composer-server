@@ -1,6 +1,6 @@
 package ru.pavelyurkin.musiccomposer.core.model;
 
-import static ru.pavelyurkin.musiccomposer.core.utils.ModelUtils.getTransposePitch;
+import static ru.pavelyurkin.musiccomposer.core.utils.ParallelUtils.getPitchDistanceIfParallel;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
+import ru.pavelyurkin.musiccomposer.core.utils.ParallelUtils;
 
 @Data
 @NoArgsConstructor
@@ -24,6 +25,7 @@ public class MusicBlock implements Serializable {
   // Origin Self Information
   private List<InstrumentPart> instrumentParts;
   private CompositionInfo compositionInfo;
+  // todo refactor to Optional?
   private List<Integer> previousBlockEndPitches;
   private double startTime;
 
@@ -94,17 +96,22 @@ public class MusicBlock implements Serializable {
 
   //TODO get rid of music block here - should return List<InstrumentPart> only
   public MusicBlock transposeClone(MusicBlock previousBlock) {
-    if (!this.getPreviousBlockEndPitches().isPresent()) {
+    if (this.getPreviousBlockEndPitches().isEmpty()) {
       throw new RuntimeException("Can't calculate transpose pitch. Previous block end pitches does not exist");
     }
-    int transposePitch = getTransposePitch(this.getPreviousBlockEndPitches().get(), previousBlock.getEndPitches());
-    List<InstrumentPart> transposedInstrumentParts = this.instrumentParts.stream()
-        .map(instrumentPart -> instrumentPart.transposeClone(transposePitch))
-        .collect(Collectors.toList());
-    MusicBlock transposedBlock = new MusicBlock();
-    transposedBlock.setInstrumentParts(transposedInstrumentParts);
-    transposedBlock.setCompositionInfo(this.compositionInfo);
-    return transposedBlock;
+    return ParallelUtils
+        .getSinglePitchDifferenceIfExist(this.getPreviousBlockEndPitches().get(), previousBlock.getEndPitches())
+        .map(transposePitch -> {
+          List<InstrumentPart> transposedInstrumentParts = this.instrumentParts.stream()
+              .map(instrumentPart -> instrumentPart.transposeClone(transposePitch))
+              .collect(Collectors.toList());
+          MusicBlock transposedBlock = new MusicBlock();
+          transposedBlock.setInstrumentParts(transposedInstrumentParts);
+          transposedBlock.setCompositionInfo(this.compositionInfo);
+          return transposedBlock;
+        })
+        .orElseThrow(() -> new RuntimeException("Can't calculate transpose pitch"));
+
   }
 
   public MusicBlock clone() {
@@ -161,14 +168,45 @@ public class MusicBlock implements Serializable {
       return false;
     }
     MusicBlock that = (MusicBlock) o;
-    /*
-    TODO to be able to decompose composition into Music Blocks without repetition equality when
-    parallel logic should be implemented
-     */
+
+    if (this.instrumentParts.size() != that.getInstrumentParts().size()) {
+      return false;
+    }
+
+    Integer instrumentPartTransposePitch = null;
+    for (int instrumentPartNumber = 0; instrumentPartNumber < this.instrumentParts.size(); instrumentPartNumber++) {
+      InstrumentPart instrumentPart1 = this.instrumentParts.get(instrumentPartNumber);
+      InstrumentPart instrumentPart2 = that.getInstrumentParts().get(instrumentPartNumber);
+      Optional<Integer> transposePitch =
+          getPitchDistanceIfParallel(instrumentPart1.getNoteGroups(), instrumentPart2.getNoteGroups());
+      if (transposePitch.isEmpty()
+          || (instrumentPartTransposePitch != null && !instrumentPartTransposePitch.equals(transposePitch.get()))) {
+        return false;
+      }
+      if (instrumentPartTransposePitch == null) {
+        instrumentPartTransposePitch = transposePitch.get();
+      }
+    }
+    // if false wasn't returned here, both music blocks instrument parts are parallel with
+    // instrumentPartTransposePitch metric
+
+    Optional<List<Integer>> previousBlockEndPitches1 = this.getPreviousBlockEndPitches();
+    Optional<List<Integer>> previousBlockEndPitches2 = that.getPreviousBlockEndPitches();
+    if ((previousBlockEndPitches1.isEmpty() && previousBlockEndPitches2.isPresent())
+        || previousBlockEndPitches1.isPresent() && previousBlockEndPitches2.isEmpty()) {
+      return false;
+    }
+
+    if (previousBlockEndPitches1.isPresent() && previousBlockEndPitches2.isPresent()) {
+      Optional<Integer> previousEndPitches =
+          ParallelUtils.getSinglePitchDifferenceIfExist(previousBlockEndPitches1.get(), previousBlockEndPitches2.get());
+      if (previousEndPitches.isEmpty() || !previousEndPitches.get().equals(instrumentPartTransposePitch)) {
+        return false;
+      }
+    }
+
     return ModelUtils.isTimeCorrelated(that.startTime, startTime)
-           && Objects.equals(instrumentParts, that.instrumentParts)
-           && Objects.equals(compositionInfo, that.compositionInfo)
-           && Objects.equals(previousBlockEndPitches, that.previousBlockEndPitches);
+           && Objects.equals(compositionInfo, that.compositionInfo);
   }
 
   @Override

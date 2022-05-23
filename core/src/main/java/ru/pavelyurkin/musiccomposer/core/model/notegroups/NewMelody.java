@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jm.music.data.Note;
@@ -188,11 +189,14 @@ public class NewMelody extends NoteGroup {
 
     NewMelody melody = (NewMelody) o;
 
-    return isParallelTo(melody);
+    return getPitchDistanceIfParallel(melody).isPresent();
   }
 
   @Override
   public boolean exactEquals(NoteGroup noteGroup) {
+    if (noteGroup.getClass() != getClass()) {
+      return false;
+    }
     NewMelody thatMelody = (NewMelody) noteGroup;
     // todo extract all Collection comparison into one method with input function
     if (this.getNotes().size() != thatMelody.getNotes().size()) {
@@ -206,19 +210,24 @@ public class NewMelody extends NoteGroup {
     return true;
   }
 
-  public boolean isParallelTo(NewMelody melody) {
-    if (this.getNotes().size() != melody.getNotes().size()) {
-      return false;
+  @Override
+  public Optional<Integer> getPitchDistanceIfParallel(NoteGroup noteGroup) {
+    if (noteGroup.getClass() != getClass()) {
+      return Optional.empty();
+    }
+    NewMelody thatMelody = (NewMelody) noteGroup;
+    if (this.getNotes().size() != thatMelody.getNotes().size()) {
+      return Optional.empty();
     }
     Integer pitchDiff = null;
     for (int noteNumber = 0; noteNumber < this.getNotes().size(); noteNumber++) {
       Note firstNote = this.getNote(noteNumber);
-      Note secondNote = melody.getNote(noteNumber);
+      Note secondNote = thatMelody.getNote(noteNumber);
       if (firstNote.getRhythmValue() != secondNote.getRhythmValue()) {
-        return false;
+        return Optional.empty();
       }
       if ((firstNote.isRest() && !secondNote.isRest()) || (!firstNote.isRest() && secondNote.isRest())) {
-        return false;
+        return Optional.empty();
       }
       if (firstNote.isRest() && secondNote.isRest()) {
         continue;
@@ -227,11 +236,12 @@ public class NewMelody extends NoteGroup {
         pitchDiff = secondNote.getPitch() - firstNote.getPitch();
       } else {
         if (pitchDiff != secondNote.getPitch() - firstNote.getPitch()) {
-          return false;
+          return Optional.empty();
         }
       }
     }
-    return true;
+    // if pitchDiff is still null it means that all notes are rests
+    return Optional.of(pitchDiff != null ? pitchDiff : 0);
   }
 
   @Override

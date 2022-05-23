@@ -6,11 +6,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jm.music.data.Note;
 import lombok.Data;
 import org.apache.commons.lang3.tuple.Pair;
+import ru.pavelyurkin.musiccomposer.core.utils.ParallelUtils;
 
 @Data
 public class Chord extends NoteGroup {
@@ -111,16 +113,27 @@ public class Chord extends NoteGroup {
       return false;
     }
     Chord chord = (Chord) o;
-    if (Double.compare(chord.rhythmValue, rhythmValue) != 0) {
-      return false;
-    }
-    // todo: think if this might be parallel as in melody???
-    return samePitches(chord.pitches);
+    return getPitchDistanceIfParallel(chord).isPresent();
   }
 
   @Override
   public boolean exactEquals(NoteGroup noteGroup) {
     return equals(noteGroup);
+  }
+
+  @Override
+  public Optional<Integer> getPitchDistanceIfParallel(NoteGroup noteGroup) {
+    if (this == noteGroup) {
+      return Optional.of(0);
+    }
+    if (noteGroup == null || getClass() != noteGroup.getClass()) {
+      return Optional.empty();
+    }
+    Chord thatChord = (Chord) noteGroup;
+    if (Double.compare(thatChord.rhythmValue, rhythmValue) != 0) {
+      return Optional.empty();
+    }
+    return ParallelUtils.getSinglePitchDifferenceIfExist(this.pitches, thatChord.pitches);
   }
 
   @Override

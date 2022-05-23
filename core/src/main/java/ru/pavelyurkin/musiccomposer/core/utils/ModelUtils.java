@@ -11,11 +11,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import jm.constants.Pitches;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
+import lombok.extern.slf4j.Slf4j;
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
@@ -30,6 +30,7 @@ import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
  * Class aggregates useful utilities upon Model objects
  * Created by Pavel Yurkin on 20.07.14.
  */
+@Slf4j
 public class ModelUtils {
 
   /**
@@ -166,51 +167,6 @@ public class ModelUtils {
     return note.replace("F", "b").replace("S", "#");
   }
 
-  /**
-   * Return pitch that could be added to pitches asIs to make it toBe
-   *
-   * @param pitchesAsIs
-   * @param pitchesToBe
-   * @return
-   */
-  public static int getTransposePitch(List<Integer> pitchesAsIs, List<Integer> pitchesToBe) {
-    if (pitchesToBe.size() != pitchesAsIs.size()) {
-      throw new RuntimeException(
-          "Can't calculate transpose pitch. Desired end pitches and fact previous end pitches has "
-          + "different amount of notes");
-    }
-//		Collections.sort( pitchesToBe );
-//		Collections.sort( pitchesAsIs );
-
-    List<Integer> subtractions = IntStream.range(0, pitchesToBe.size())
-        .filter(operand -> {
-          boolean isRest1 = pitchesAsIs.get(operand) == Note.REST;
-          boolean isRest2 = pitchesToBe.get(operand) == Note.REST;
-          // exclude rests
-          return !(isRest1 && isRest2);
-        })
-        .map(operand -> pitchesToBe.get(operand) - pitchesAsIs.get(operand))
-        .distinct()
-        .boxed()
-        .collect(Collectors.toList());
-
-    // all are rests
-    if (subtractions.isEmpty()) {
-      return 0;
-    }
-
-    if (subtractions.size() > 1) {
-      throw new RuntimeException(
-          "Can't calculate transpose pitch. Desired end pitches and fact previous end pitches are not compatible.");
-    }
-
-    Integer transposePitch = subtractions.get(0);
-    if (Math.abs(transposePitch) > Note.MAX_PITCH) {
-      throw new RuntimeException("Calculated pitch is out of range");
-    }
-    return transposePitch;
-  }
-
   public static List<InstrumentPart> trimToTime(List<InstrumentPart> instrumentParts, double startTime,
                                                 double endTime) {
     return instrumentParts.stream()
@@ -273,7 +229,7 @@ public class ModelUtils {
    */
   public static boolean isTimeCorrelated(double firstStartTime, double secondStartTime) {
     return true;
-    //TODO Disabled for testing purposes (Don't know if needed decide later)
+    //TODO Disabled for testing purposes (Don't know if needed, will decide later)
 //    int originStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces(firstStartTime);
 //    int substitutorStartTimeDecimalPlacesNumber = Utils.getDecimalPlaces(secondStartTime);
 //    if (originStartTimeDecimalPlacesNumber == substitutorStartTimeDecimalPlacesNumber) {

@@ -12,7 +12,7 @@ import static jm.JMC.WHOLE_NOTE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import java.util.Arrays;
+import java.util.List;
 import jm.music.data.CPhrase;
 import jm.music.data.Note;
 import jm.music.data.Part;
@@ -41,8 +41,8 @@ public class CompositionParserTest {
     score.add(part);
     Composition composition = new Composition(score);
 
-    assertThat(compositionParser.parse(composition), is(Arrays.asList(
-        new InstrumentPart(Arrays.asList(new NewMelody(
+    assertThat(compositionParser.parse(composition), is(List.of(
+        new InstrumentPart(List.of(new NewMelody(
             new Note(C5, WHOLE_NOTE),
             new Note(D5, DOTTED_HALF_NOTE),
             new Note(E5, DOTTED_HALF_NOTE)
@@ -70,12 +70,12 @@ public class CompositionParserTest {
     score.add(part);
     Composition composition = new Composition(score);
 
-    assertThat(compositionParser.parse(composition), is(Arrays.asList(
-        new InstrumentPart(Arrays.asList(
+    assertThat(compositionParser.parse(composition), is(List.of(
+        new InstrumentPart(List.of(
             new NewMelody(new Note(C5, DOTTED_HALF_NOTE)),
-            new Chord(Arrays.asList(C5, C1), QUARTER_NOTE),
-            new Chord(Arrays.asList(D5, C1), DOTTED_HALF_NOTE),
-            new Chord(Arrays.asList(E5, C1), HALF_NOTE),
+            new Chord(List.of(C5, C1), QUARTER_NOTE),
+            new Chord(List.of(D5, C1), DOTTED_HALF_NOTE),
+            new Chord(List.of(E5, C1), HALF_NOTE),
             new NewMelody(new Note(E5, QUARTER_NOTE))
         ), 0
         )
@@ -98,7 +98,7 @@ public class CompositionParserTest {
     part.add(phrase3);
 
     assertThat(compositionParser.convert(part), is(
-        new InstrumentPart(Arrays.asList(new NewMelody(new Rest(WHOLE_NOTE))), 0)
+        new InstrumentPart(List.of(new NewMelody(new Rest(WHOLE_NOTE))), 0)
     ));
   }
 
@@ -118,10 +118,10 @@ public class CompositionParserTest {
     score.add(part);
     Composition composition = new Composition(score);
 
-    assertThat(compositionParser.parse(composition), is(Arrays.asList(
-        new InstrumentPart(Arrays.asList(
+    assertThat(compositionParser.parse(composition), is(List.of(
+        new InstrumentPart(List.of(
             new NewMelody(new Note(D5, DOTTED_HALF_NOTE)),
-            new Chord(Arrays.asList(C1, C2), QUARTER_NOTE)
+            new Chord(List.of(C1, C2), QUARTER_NOTE)
         ), 0
         )
         )
@@ -147,9 +147,9 @@ public class CompositionParserTest {
     score.add(part);
     Composition composition = new Composition(score);
 
-    assertThat(compositionParser.parse(composition), is(Arrays.asList(
-        new InstrumentPart(Arrays.asList(
-            new Chord(Arrays.asList(D5, C1, C2), QUARTER_NOTE),
+    assertThat(compositionParser.parse(composition), is(List.of(
+        new InstrumentPart(List.of(
+            new Chord(List.of(D5, C1, C2), QUARTER_NOTE),
             new NewMelody(new Note(D5, HALF_NOTE))
         ), 0
         )
@@ -172,8 +172,8 @@ public class CompositionParserTest {
 
     Composition composition = new Composition(score);
 
-    assertThat(compositionParser.parse(composition), is(Arrays.asList(
-        new InstrumentPart(Arrays.asList(new NewMelody(new Rest(QUARTER_NOTE), new Note(D5, DOTTED_HALF_NOTE))), 0))
+    assertThat(compositionParser.parse(composition), is(List.of(
+        new InstrumentPart(List.of(new NewMelody(new Rest(QUARTER_NOTE), new Note(D5, DOTTED_HALF_NOTE))), 0))
         )
     );
   }
