@@ -211,6 +211,7 @@ public class MusicBlock implements Serializable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(instrumentParts, compositionInfo, previousBlockEndPitches);
+    // everything else might be not equal but parallel
+    return Objects.hash(compositionInfo);
   }
 }

@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
 
-import java.util.Arrays;
 import java.util.List;
 import jm.music.data.Note;
 import jm.music.data.Rest;
@@ -28,47 +27,47 @@ public class MelodyMetricEqualityAnalyzerTest extends AbstractSpringTest {
 
   @Test
   public void getStrongTimeMetric() throws Exception {
-    assertEquals(Arrays.asList(true), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(WHOLE_NOTE)));
-    assertEquals(Arrays.asList(true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(HALF_NOTE, HALF_NOTE)));
-    assertEquals(Arrays.asList(true, false, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE)));
-    assertEquals(Arrays.asList(true, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(HALF_NOTE, QUARTER_NOTE, QUARTER_NOTE)));
-    assertEquals(Arrays.asList(true, false, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(QUARTER_NOTE, QUARTER_NOTE, HALF_NOTE)));
-    assertEquals(Arrays.asList(true, true, false, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(HALF_NOTE, EIGHTH_NOTE, EIGHTH_NOTE, EIGHTH_NOTE, EIGHTH_NOTE)));
-    assertEquals(Arrays.asList(true, false, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(DOTTED_QUARTER_NOTE, EIGHTH_NOTE, HALF_NOTE)));
-    assertEquals(Arrays.asList(true, false, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(DOTTED_QUARTER_NOTE, EIGHTH_NOTE, EIGHTH_NOTE, EIGHTH_NOTE)));
-    assertEquals(Arrays.asList(true, false, true, false, true, false, false),
+    assertEquals(List.of(true), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(WHOLE_NOTE)));
+    assertEquals(List.of(true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(HALF_NOTE, HALF_NOTE)));
+    assertEquals(List.of(true, false, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE)));
+    assertEquals(List.of(true, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(HALF_NOTE, QUARTER_NOTE, QUARTER_NOTE)));
+    assertEquals(List.of(true, false, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(QUARTER_NOTE, QUARTER_NOTE, HALF_NOTE)));
+    assertEquals(List.of(true, true, false, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(HALF_NOTE, EIGHTH_NOTE, EIGHTH_NOTE, EIGHTH_NOTE, EIGHTH_NOTE)));
+    assertEquals(List.of(true, false, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(DOTTED_QUARTER_NOTE, EIGHTH_NOTE, HALF_NOTE)));
+    assertEquals(List.of(true, false, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(DOTTED_QUARTER_NOTE, EIGHTH_NOTE, EIGHTH_NOTE, EIGHTH_NOTE)));
+    assertEquals(List.of(true, false, true, false, true, false, false),
         melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-            Arrays.asList(EIGHTH_NOTE, EIGHTH_NOTE, SIXTEENTH_NOTE, SIXTEENTH_NOTE, SIXTEENTH_NOTE, SIXTEENTH_NOTE,
+            List.of(EIGHTH_NOTE, EIGHTH_NOTE, SIXTEENTH_NOTE, SIXTEENTH_NOTE, SIXTEENTH_NOTE, SIXTEENTH_NOTE,
                 HALF_NOTE)));
 
-    assertEquals(Arrays.asList(true, false, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE, QUARTER_NOTE)));
-    assertEquals(Arrays.asList(true, false, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE, WHOLE_NOTE)));
-    assertEquals(Arrays.asList(true, false, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE, HALF_NOTE)));
-    assertEquals(Arrays.asList(true, false, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, 2 * WHOLE_NOTE)));
-    assertEquals(Arrays.asList(true, false, true, false, true, false, true, false, true, false),
+    assertEquals(List.of(true, false, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE, QUARTER_NOTE)));
+    assertEquals(List.of(true, false, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE, WHOLE_NOTE)));
+    assertEquals(List.of(true, false, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE, HALF_NOTE)));
+    assertEquals(List.of(true, false, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, 2 * WHOLE_NOTE)));
+    assertEquals(List.of(true, false, true, false, true, false, true, false, true, false),
         melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-            Arrays.asList(QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE,
+            List.of(QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE,
                 QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE, QUARTER_NOTE,
                 QUARTER_NOTE, 2 * WHOLE_NOTE)));
 
-    assertEquals(Arrays.asList(true, false, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(EIGHTH_NOTE, DOTTED_QUARTER_NOTE, EIGHTH_NOTE, DOTTED_QUARTER_NOTE)));
-    assertEquals(Arrays.asList(true, true, false, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(WHOLE_NOTE, EIGHTH_NOTE, DOTTED_QUARTER_NOTE, EIGHTH_NOTE, DOTTED_QUARTER_NOTE)));
-    assertEquals(Arrays.asList(true, false, false, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
-        Arrays.asList(DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE)));
+    assertEquals(List.of(true, false, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(EIGHTH_NOTE, DOTTED_QUARTER_NOTE, EIGHTH_NOTE, DOTTED_QUARTER_NOTE)));
+    assertEquals(List.of(true, true, false, true, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(WHOLE_NOTE, EIGHTH_NOTE, DOTTED_QUARTER_NOTE, EIGHTH_NOTE, DOTTED_QUARTER_NOTE)));
+    assertEquals(List.of(true, false, false, false), melodyMetricEqualityAnalyzer.getStrongTimeMetric(
+        List.of(DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE, DOTTED_QUARTER_NOTE)));
   }
 
   @Test
@@ -174,7 +173,7 @@ public class MelodyMetricEqualityAnalyzerTest extends AbstractSpringTest {
 
   @Test
   public void transformMelodyToNewRhythmValues() throws Exception {
-    List<Double> newRhythmValues = Arrays.asList(
+    List<Double> newRhythmValues = List.of(
         0.25,
         0.25,
         0.5,
@@ -182,14 +181,14 @@ public class MelodyMetricEqualityAnalyzerTest extends AbstractSpringTest {
         0.16666666666666674,
         2.5
     );
-    List<Note> notes = Arrays.asList(
+    List<Note> notes = List.of(
         new Note(72, 0.25),
         new Note(71, 0.25),
         new Note(72, 0.8333333333333333),
         new Rest(2.6666666666666665)
     );
     // asserting no exception
-    melodyMetricEqualityAnalyzer.transformMelodyToNewRhythmValues(Arrays.asList(new NewMelody(notes)), newRhythmValues);
+    melodyMetricEqualityAnalyzer.transformMelodyToNewRhythmValues(List.of(new NewMelody(notes)), newRhythmValues);
   }
 
 }

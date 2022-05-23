@@ -17,6 +17,7 @@ import ru.pavelyurkin.musiccomposer.core.utils.ParallelUtils;
 @Data
 public class Chord extends NoteGroup {
 
+  // todo: change to set
   private List<Integer> pitches;
   private double rhythmValue;
 
