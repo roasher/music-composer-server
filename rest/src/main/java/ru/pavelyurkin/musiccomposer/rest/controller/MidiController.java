@@ -56,7 +56,7 @@ public class MidiController {
       @Parameter(name = "Voice range settings", description = "Four voice ranges to compose within")
       @Validated @RequestBody(required = false) BachChoralVoiceRangeDTO bachChoralVoiceRangeDTO,
       @Parameter(name = "Key setting", description = "Key to compose within")
-      @Validated @RequestBody(required = false) Key key) {
+      @RequestParam(required = false) Key key) {
     List<MusicBlockFilter> composeStepFiltersToReplace = new ArrayList<>();
     if (bachChoralVoiceRangeDTO != null) {
       composeStepFiltersToReplace.add(rangeDtoToFilterConverter.convert(bachChoralVoiceRangeDTO));
