@@ -1,14 +1,18 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
+import static ru.pavelyurkin.musiccomposer.core.model.Keys.allKeys;
 import static ru.pavelyurkin.musiccomposer.core.utils.KeyUtils.getNumberOfNotesOutOfKey;
 import static ru.pavelyurkin.musiccomposer.core.utils.KeyUtils.getPossibleKeys;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Key;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
@@ -16,16 +20,30 @@ import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
 /**
  * Filters musicblocks that are not from previous blocks key
+ * TODO: problem - can't compose with that filter. Need to fix it to be able composition to change keys
  */
-@AllArgsConstructor
+@Slf4j
 public class KeyVarietyFilter implements MusicBlockFilter {
 
   private final int maxNotesNumberOutOfKey;
   private final double rhythmValue;
 
+  // random key that would be used until composition would exceed rhythmValue
+  @Getter
+  @Setter
+  private Key currentKey;
+  private final Random random = new Random();
+
+  public KeyVarietyFilter(int maxNotesNumberOutOfKey, double rhythmValue) {
+    this.maxNotesNumberOutOfKey = maxNotesNumberOutOfKey;
+    this.rhythmValue = rhythmValue;
+    currentKey = allKeys.get(random.nextInt(allKeys.size()));
+  }
+
   @Override
   public boolean filterIt(MusicBlock block, List<MusicBlock> previousBlocks) {
     List<MusicBlock> musicBlocksToTrim = new ArrayList<>();
+
     double sumRhythmValue = 0;
     for (int blockNumber = previousBlocks.size() - 1; blockNumber >= 0; blockNumber--) {
       musicBlocksToTrim.add(previousBlocks.get(blockNumber));
@@ -34,9 +52,15 @@ public class KeyVarietyFilter implements MusicBlockFilter {
         break;
       }
     }
+
+    Set<Integer> allPossibleNextPitches = block.getInstrumentParts().stream()
+        .flatMap(instrumentPart -> instrumentPart.getNoteGroups().stream())
+        .flatMap(noteGroup -> noteGroup.getAllPitches().stream())
+        .collect(Collectors.toSet());
+
     if (sumRhythmValue < rhythmValue) {
-      // not much composed yet
-      return true;
+      log.debug("Not much composed yet.");
+      return getNumberOfNotesOutOfKey(currentKey, allPossibleNextPitches) <= maxNotesNumberOutOfKey;
     }
 
     MusicBlock musicBlockToTrim = new MusicBlock(musicBlocksToTrim);
@@ -48,16 +72,13 @@ public class KeyVarietyFilter implements MusicBlockFilter {
         .flatMap(noteGroup -> noteGroup.getAllPitches().stream())
         .collect(Collectors.toSet());
 
-    Set<Integer> allPossibleNextPitches = block.getInstrumentParts().stream()
-        .flatMap(instrumentPart -> instrumentPart.getNoteGroups().stream())
-        .flatMap(noteGroup -> noteGroup.getAllPitches().stream())
-        .collect(Collectors.toSet());
 
     List<Key> previousPossibleKeys = getPossibleKeys(0, allPreviousPitches);
     if (previousPossibleKeys.isEmpty()) {
-      // If there is hell - all we can do is continue hoping that further notes will form new key variant
-      return true;
+      log.debug("No key fits for last {}", rhythmValue);
+      return false;
     }
+
     OptionalInt minNumberOfOutNotesOutOfKey = previousPossibleKeys.stream()
         .mapToInt(value -> getNumberOfNotesOutOfKey(value, allPossibleNextPitches)).min();
     return minNumberOfOutNotesOutOfKey.getAsInt() <= maxNotesNumberOutOfKey;

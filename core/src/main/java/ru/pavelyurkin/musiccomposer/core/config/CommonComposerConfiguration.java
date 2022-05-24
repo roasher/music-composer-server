@@ -17,8 +17,6 @@ import ru.pavelyurkin.musiccomposer.core.composer.first.FirstStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.BachChoralFilterImpl;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.custom.MozartFilterImpl;
 import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.FormEqualityMetricAnalyzer;
@@ -62,7 +60,7 @@ public class CommonComposerConfiguration {
    * Bach chorale lexicon
    */
   @Bean
-  @Profile( {"bach"})
+  @Profile("bach")
   public Lexicon bachLexicon(CompositionDecomposer compositionDecomposer,
                              CompositionLoader compositionLoader,
                              @Value("${composer.pathToCompositions}") String compositionsPath) {
@@ -97,20 +95,6 @@ public class CommonComposerConfiguration {
       EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer,
       ComposeStepFilter filter) {
     return new NextStepProviderImpl(equalityMetricAnalyzer, filter);
-  }
-
-  @Bean
-  @Profile( {"bach"})
-  @Scope("prototype")
-  public ComposeStepFilter bachFilter() {
-    return new BachChoralFilterImpl();
-  }
-
-  @Bean
-  @Profile( {"mozart"})
-  @Scope("prototype")
-  public ComposeStepFilter mozartFilter() {
-    return new MozartFilterImpl();
   }
 
 }

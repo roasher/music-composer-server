@@ -7,7 +7,7 @@ import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBl
 import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
-public abstract class FastComposeStepFilterImpl extends ComposeStepFilterImpl {
+public class FastComposeStepFilterImpl extends ComposeStepFilterImpl {
 
   /**
    * After filter got this number of allowed steps it would cancel further filtering
