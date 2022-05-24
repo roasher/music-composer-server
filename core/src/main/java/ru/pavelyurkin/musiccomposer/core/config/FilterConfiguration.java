@@ -2,7 +2,6 @@ package ru.pavelyurkin.musiccomposer.core.config;
 
 import static jm.constants.Durations.EIGHTH_NOTE;
 import static jm.constants.Durations.QUARTER_NOTE;
-import static jm.constants.Durations.WHOLE_NOTE;
 import static jm.constants.Pitches.A2;
 import static jm.constants.Pitches.A4;
 import static jm.constants.Pitches.C2;
@@ -26,9 +25,10 @@ import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBl
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RangeFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RepetitionFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RestFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.SameKeyFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.key.SameKeyFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VarietyFilter;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VoiceRangeFilter;
+import ru.pavelyurkin.musiccomposer.core.model.Key;
 
 @Configuration
 public class FilterConfiguration {
@@ -52,7 +52,7 @@ public class FilterConfiguration {
         List.of(
             new RangeFilter(C2, C6),
             new RestFilter(QUARTER_NOTE),
-            new SameKeyFilter(1, 2 * WHOLE_NOTE),
+            new SameKeyFilter(Key.C_MAJOR),
             new VarietyFilter(4, 10),
             new RepetitionFilter()
         )
@@ -69,7 +69,7 @@ public class FilterConfiguration {
             new VoiceRangeFilter.Range(F2, F4)
         )),
         new RestFilter(EIGHTH_NOTE),
-        new SameKeyFilter(1, 2 * WHOLE_NOTE),
+        new SameKeyFilter(Key.C_MAJOR),
         new VarietyFilter(6, -1),
         new RepetitionFilter()
     );

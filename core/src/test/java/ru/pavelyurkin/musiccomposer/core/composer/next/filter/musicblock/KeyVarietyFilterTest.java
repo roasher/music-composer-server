@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import jm.music.data.Note;
 import org.junit.jupiter.api.Test;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.key.KeyVarietyFilter;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Key;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;

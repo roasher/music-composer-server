@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBlockFilter;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.key.SameKeyFilter;
 import ru.pavelyurkin.musiccomposer.core.exception.ComposeException;
+import ru.pavelyurkin.musiccomposer.core.model.Key;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 import ru.pavelyurkin.musiccomposer.core.service.ComposeService;
 import ru.pavelyurkin.musiccomposer.rest.converter.CompositionConverter;
-import ru.pavelyurkin.musiccomposer.rest.dto.BachChoralVoiceRangeDTO;
 import ru.pavelyurkin.musiccomposer.rest.dto.CompositionDTO;
+import ru.pavelyurkin.musiccomposer.rest.dto.filter.BachChoralVoiceRangeDTO;
 
 @RestController
 @Slf4j
@@ -33,16 +35,14 @@ public class MidiController {
   private final ComposeService composeService;
 
   private final CompositionConverter compositionConverter;
-  private final Converter<BachChoralVoiceRangeDTO, MusicBlockFilter>
-      bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter;
+  private final Converter<BachChoralVoiceRangeDTO, MusicBlockFilter> rangeDtoToFilterConverter;
 
   @Autowired
   public MidiController(ComposeService composeService, CompositionConverter compositionConverter,
-                        Converter<BachChoralVoiceRangeDTO, MusicBlockFilter> bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter) {
+                        Converter<BachChoralVoiceRangeDTO, MusicBlockFilter> rangeDtoToFilterConverter) {
     this.composeService = composeService;
     this.compositionConverter = compositionConverter;
-    this.bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter =
-        bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter;
+    this.rangeDtoToFilterConverter = rangeDtoToFilterConverter;
   }
 
   @Operation(description = "Notes generation")
@@ -54,11 +54,16 @@ public class MidiController {
       @Parameter(name = "numberOfBars", required = true, description = "Number of bars that you wan't to be generated")
       @RequestParam int numberOfBars,
       @Parameter(name = "Voice range settings", description = "Four voice ranges to compose within")
-      @Validated @RequestBody(required = false) BachChoralVoiceRangeDTO bachChoralVoiceRangeDTO) {
-    List<MusicBlockFilter> composeStepFiltersToReplace = bachChoralVoiceRangeDTO != null ?
-        Collections.singletonList(bachChoralVoiceRangeDtoToComposeStepVoiceRangeFilterConverter
-            .convert(bachChoralVoiceRangeDTO)) :
-        Collections.emptyList();
+      @Validated @RequestBody(required = false) BachChoralVoiceRangeDTO bachChoralVoiceRangeDTO,
+      @Parameter(name = "Key setting", description = "Key to compose within")
+      @Validated @RequestBody(required = false) Key key) {
+    List<MusicBlockFilter> composeStepFiltersToReplace = new ArrayList<>();
+    if (bachChoralVoiceRangeDTO != null) {
+      composeStepFiltersToReplace.add(rangeDtoToFilterConverter.convert(bachChoralVoiceRangeDTO));
+    }
+    if (key != null) {
+      composeStepFiltersToReplace.add(new SameKeyFilter(key));
+    }
 
     Instant time = Instant.now();
     CompositionFrontDTO nextBarsFromComposition = composeService.getNextBarsFromComposition(compositionId, numberOfBars,

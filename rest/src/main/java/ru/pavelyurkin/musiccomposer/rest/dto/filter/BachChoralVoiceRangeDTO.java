@@ -1,4 +1,4 @@
-package ru.pavelyurkin.musiccomposer.rest.dto;
+package ru.pavelyurkin.musiccomposer.rest.dto.filter;
 
 import javax.validation.constraints.NotNull;
 import lombok.Data;

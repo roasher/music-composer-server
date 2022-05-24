@@ -1,4 +1,4 @@
-package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
+package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.key;
 
 import static ru.pavelyurkin.musiccomposer.core.utils.KeyUtils.getNumberOfNotesOutOfKey;
 import static ru.pavelyurkin.musiccomposer.core.utils.KeyUtils.getPossibleKeys;
@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Key;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
