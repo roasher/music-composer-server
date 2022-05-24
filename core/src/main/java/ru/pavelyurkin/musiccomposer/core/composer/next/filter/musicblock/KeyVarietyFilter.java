@@ -1,6 +1,5 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
-import static ru.pavelyurkin.musiccomposer.core.model.Keys.allKeys;
 import static ru.pavelyurkin.musiccomposer.core.utils.KeyUtils.getNumberOfNotesOutOfKey;
 import static ru.pavelyurkin.musiccomposer.core.utils.KeyUtils.getPossibleKeys;
 
@@ -37,7 +36,7 @@ public class KeyVarietyFilter implements MusicBlockFilter {
   public KeyVarietyFilter(int maxNotesNumberOutOfKey, double rhythmValue) {
     this.maxNotesNumberOutOfKey = maxNotesNumberOutOfKey;
     this.rhythmValue = rhythmValue;
-    currentKey = allKeys.get(random.nextInt(allKeys.size()));
+    currentKey = Key.values()[random.nextInt(Key.values().length)];
   }
 
   @Override

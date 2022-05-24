@@ -12,8 +12,9 @@ formEquality:
 
 logging:
   level:
-    ru.pavelyurkin.musiccomposer.core.composer: DEBUG
+#    ru.pavelyurkin.musiccomposer.core.composer: DEBUG
+    ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock: DEBUG
     ru.pavelyurkin.musiccomposer.core.decomposer.SignatureDecomposer: DEBUG
     ru.pavelyurkin.musiccomposer.core.decomposer.melody.analyzer.MelodyEqualityAnalyzerImpl: DEBUG
-    ru.pavelyurkin.musiccomposer.core.composer.FormBlockProvider: DEBUG
-    ru.pavelyurkin.musiccomposer.core.equality.form.FormEquality: DEBUG
+#    ru.pavelyurkin.musiccomposer.core.composer.FormBlockProvider: DEBUG
+    ru.pavelyurkin.musiccomposer.core.equality.form.KeyFormEquality: DEBUG

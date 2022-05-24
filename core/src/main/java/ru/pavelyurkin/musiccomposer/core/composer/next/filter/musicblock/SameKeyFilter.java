@@ -1,10 +1,9 @@
 package ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock;
 
-import static ru.pavelyurkin.musiccomposer.core.model.Keys.allKeys;
+import static ru.pavelyurkin.musiccomposer.core.model.Key.C_MAJOR;
 import static ru.pavelyurkin.musiccomposer.core.utils.KeyUtils.getNumberOfNotesOutOfKey;
 
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Getter;
@@ -20,18 +19,12 @@ import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 public class SameKeyFilter implements MusicBlockFilter {
 
   private final int maxNotesNumberOutOfKey;
-  private final double rhythmValue;
-
-  // Key of the composition
-  @Getter
   @Setter
-  private Key currentKey;
-  private final Random random = new Random();
+  @Getter
+  private Key currentKey = C_MAJOR;
 
   public SameKeyFilter(int maxNotesNumberOutOfKey, double rhythmValue) {
     this.maxNotesNumberOutOfKey = maxNotesNumberOutOfKey;
-    this.rhythmValue = rhythmValue;
-    currentKey = allKeys.get(random.nextInt(allKeys.size()));
   }
 
   @Override

@@ -1,63 +1,34 @@
 package ru.pavelyurkin.musiccomposer.core.model;
 
 import java.util.List;
+import lombok.Getter;
 
 /**
- * Class represents key
- * Created by night wish on 02.11.14.
+ * Created by night wish on 01.11.14.
  */
-public class Key {
+public enum Key {
 
-  private String name;
-  private List<Integer> notePitches;
+  C_MAJOR(0, 2, 4, 5, 7, 9, 11),
+  G_MAJOR(0, 2, 4, 6, 7, 9, 11),
+  D_MAJOR(1, 2, 4, 6, 7, 9, 11),
+  A_MAJOR(1, 2, 4, 6, 8, 9, 11),
+  E_MAJOR(1, 3, 4, 6, 8, 9, 11),
+  B_MAJOR(1, 3, 4, 6, 8, 10, 11),
+  F_SHARP_MAJOR(1, 3, 5, 6, 8, 10, 11),
+  C_SHARP_MAJOR(1, 3, 5, 6, 8, 10, 0),
+  F_MAJOR(0, 2, 4, 5, 7, 9, 10),
+  B_FLAT_MAJOR(0, 2, 3, 5, 7, 9, 10),
+  E_FLAT_MAJOR(0, 2, 3, 5, 7, 8, 10),
+  A_FLAT_MAJOR(0, 1, 3, 5, 7, 8, 10),
+  D_FLAT_MAJOR(0, 1, 3, 5, 6, 8, 10),
+  G_FLAT_MAJOR(11, 1, 3, 5, 6, 8, 10),
+  C_FLAT_MAJOR(11, 1, 3, 4, 6, 8, 10);
 
-  public Key(String name, List<Integer> notes) {
-    this.name = name;
-    this.notePitches = notes;
+  @Getter
+  private List<Integer> keyPitches;
+
+  Key(Integer... keyPitches) {
+    this.keyPitches = List.of(keyPitches);
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof Key)) {
-      return false;
-    }
-
-    Key key = (Key) o;
-
-    if (!name.equals(key.name)) {
-      return false;
-    }
-    if (!notePitches.equals(key.notePitches)) {
-      return false;
-    }
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = name.hashCode();
-    result = 31 * result + notePitches.hashCode();
-    return result;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public List<Integer> getNotePitches() {
-    return notePitches;
-  }
-
-  public void setNotePitches(List<Integer> notePitches) {
-    this.notePitches = notePitches;
-  }
 }
-

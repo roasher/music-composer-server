@@ -1,7 +1,5 @@
 package ru.pavelyurkin.musiccomposer.core.utils;
 
-import static ru.pavelyurkin.musiccomposer.core.model.Keys.allKeys;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,16 +14,16 @@ public class KeyUtils {
     return pitches.stream()
         .filter(pitch -> pitch != Pitches.REST)
         .mapToInt(pitch -> pitch % 12)
-        .filter(notePitch -> !key.getNotePitches().contains(notePitch))
+        .filter(notePitch -> !key.getKeyPitches().contains(notePitch))
         .toArray().length;
   }
 
   public static List<Key> getPossibleKeys(int maxNumberOfNotesOutOfKey, Collection<Integer> pitches) {
     List<Key> possibleKeys = new ArrayList<>();
-    for (Key key : allKeys) {
+    for (Key key : Key.values()) {
       int numberOfNotesOutOfKey = 0;
       for (Integer pitch : pitches) {
-        if (pitch != Pitches.REST && !key.getNotePitches().contains(pitch % 12)) {
+        if (pitch != Pitches.REST && !key.getKeyPitches().contains(pitch % 12)) {
           numberOfNotesOutOfKey++;
         }
       }

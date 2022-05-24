@@ -103,7 +103,7 @@ public class FormBlockProvider {
     double currentLength = 0;
 
     for (int step = 0; step < length / lexicon.getMinRhythmValue(); step++) {
-      log.debug("Current state {}", step);
+      log.info("Current state {}", step);
       CompositionStep lastCompositionStep =
           !compositionSteps.isEmpty() ? getLast(compositionSteps) : prefirstCompositionStep;
 

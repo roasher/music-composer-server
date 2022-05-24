@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import jm.music.data.Note;
 import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
-import ru.pavelyurkin.musiccomposer.core.model.Keys;
+import ru.pavelyurkin.musiccomposer.core.model.Key;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 public class KeyVarietyFilterTest {
@@ -31,7 +31,7 @@ public class KeyVarietyFilterTest {
   @Test
   public void returnTrueOnFirstBlocksIfItFitsCurrentKey() {
     keyVarietyFilter = new KeyVarietyFilter(0, 8);
-    keyVarietyFilter.setCurrentKey(Keys.C_MAJOR);
+    keyVarietyFilter.setCurrentKey(Key.C_MAJOR);
     assertTrue(keyVarietyFilter.filterIt(getTestMusicBlock(List.of(C1, D1, E1)), List.of()));
     assertFalse(keyVarietyFilter.filterIt(getTestMusicBlock(List.of(C1, CS1)), List.of()));
   }
