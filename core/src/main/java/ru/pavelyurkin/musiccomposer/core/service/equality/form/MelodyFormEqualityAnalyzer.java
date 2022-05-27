@@ -9,7 +9,6 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 /**
  * Class analyzes if two melodies can belong to one form element
- * Created by night wish on 26.07.14.
  */
 //@Component
 @Slf4j

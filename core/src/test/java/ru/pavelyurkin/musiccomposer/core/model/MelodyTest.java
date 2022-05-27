@@ -14,9 +14,6 @@ import jm.music.data.Rest;
 import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
-/**
- * Created by night wish on 11.10.14.
- */
 public class MelodyTest {
 
   @Test

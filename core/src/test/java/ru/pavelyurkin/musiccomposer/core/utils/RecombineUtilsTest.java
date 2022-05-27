@@ -17,9 +17,6 @@ import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 
-/**
- * Created by pyurkin on 25.11.14.
- */
 public class RecombineUtilsTest {
 
   @Test

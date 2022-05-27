@@ -67,15 +67,15 @@ public class CommonComposerConfiguration {
   }
 
   /**
-   * Returns default Composing Parameters
+   * Returns default Composing Parameters that would be used for composing
    */
   @Bean
   @Scope("prototype")
   public ComposingParameters composingParameters(ComposeStepProvider composeStepProvider,
-                                                 Lexicon defaultLexicon) {
+                                                 Lexicon lexicon) {
     ComposingParameters composingParameters = new ComposingParameters();
     composingParameters.setComposeStepProvider(composeStepProvider);
-    composingParameters.setLexicon(defaultLexicon);
+    composingParameters.setLexicon(lexicon);
     return composingParameters;
   }
 

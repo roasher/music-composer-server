@@ -39,7 +39,7 @@ public abstract class NoteGroup implements Serializable {
   public abstract boolean exactEquals(NoteGroup noteGroup);
 
   /**
-   * What pitch should be added to noteGropu be equal to input one
+   * What pitch should be added to noteGroup be equal to input one
    * @param noteGroup
    * @return
    */

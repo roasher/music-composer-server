@@ -7,7 +7,6 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 /**
  * Equality test wrapper adding conditions that both comparing melodies must have different number of notes
  * Pattern: chain of responsibility
- * Created by Pavel Yurkin on 18.08.14.
  */
 public class DifferentNumberOfNotesRequired implements Equality {
 

@@ -13,9 +13,6 @@ import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.Key;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
-/**
- * Created by night wish on 01.11.14.
- */
 @Component
 public class KeyEquality implements Equality {
 

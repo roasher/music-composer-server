@@ -12,7 +12,6 @@ import ru.pavelyurkin.musiccomposer.core.service.composition.CompositionSlicer;
 
 /**
  * Provides form analyses
- * Created by night wish on 08.11.14.
  */
 //@Component
 @RequiredArgsConstructor

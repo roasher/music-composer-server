@@ -9,9 +9,9 @@ import jm.music.data.Score;
 
 /**
  * Class extends Score class from jMusic adding new information about the Composition
- * Created by night wish on 27.07.14.
  */
 public class Composition extends jm.music.data.Score {
+
   private CompositionInfo compositionInfo;
 
   public Composition() {
@@ -24,8 +24,6 @@ public class Composition extends jm.music.data.Score {
   public Composition(Part[] parts) {
     super(parts);
   }
-
-  ;
 
   public Composition(List<Part> parts) {
     super(parts.toArray(new Part[] {}));

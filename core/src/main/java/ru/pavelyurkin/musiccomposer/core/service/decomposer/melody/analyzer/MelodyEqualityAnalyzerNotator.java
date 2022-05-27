@@ -6,7 +6,6 @@ import ru.pavelyurkin.musiccomposer.core.utils.Utils;
 
 /**
  * Class wraps MelodyEqualityAnalyzer adding functionality to view successed melodies
- * Created by Pavel Yurkin on 08.08.14.
  */
 public class MelodyEqualityAnalyzerNotator implements MelodyEqualityAnalyzer {
 

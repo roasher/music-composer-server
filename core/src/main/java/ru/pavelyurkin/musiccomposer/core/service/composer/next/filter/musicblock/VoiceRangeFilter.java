@@ -8,7 +8,6 @@ import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 /**
- * Created by wish on 03.02.2016.
  * Filter restricts going out of range for compose block's melodies
  */
 @Data

@@ -12,9 +12,6 @@ import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
-/**
- * Created by wish on 28.01.2016.
- */
 @AllArgsConstructor
 @Data
 public class ComposeStepProvider {

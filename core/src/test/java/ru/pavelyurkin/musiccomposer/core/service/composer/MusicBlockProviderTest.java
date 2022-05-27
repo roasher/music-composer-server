@@ -24,9 +24,6 @@ import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 
-/**
- * Created by pyurkin on 16.02.15.
- */
 public class MusicBlockProviderTest {
 
   private MusicBlockProvider musicBlockProvider = new MusicBlockProvider();

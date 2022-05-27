@@ -13,7 +13,6 @@ import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
 
 /**
  * Class handles all recombination between melody lists
- * Created by pyurkin on 10.12.14.
  */
 @UtilityClass
 public class RecombineUtils {

@@ -38,9 +38,6 @@ import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 
-/**
- * Created by Pavel Yurkin on 20.07.14.
- */
 public class ModelUtilsTest {
 
   @Test

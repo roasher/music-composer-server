@@ -17,9 +17,6 @@ import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
-/**
- * Created by wish on 03.02.2016.
- */
 public class RestFilterTest {
   @Test
   public void test() {

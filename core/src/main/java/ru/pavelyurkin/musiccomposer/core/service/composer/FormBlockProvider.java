@@ -25,7 +25,6 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
 /**
  * Class provides form element
- * Created by pyurkin on 16.01.15.
  */
 @Component
 @Slf4j

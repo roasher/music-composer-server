@@ -5,7 +5,6 @@ import java.util.List;
 /**
  * Class examines the ru.pavelyurkin.musiccomposer.equality between rhythm_old patterns which represents simple list
  * of rhythm_old values
- * Created by night wish on 18.10.14.
  */
 public class RhythmEqualityPatternTest {
 

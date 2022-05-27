@@ -29,7 +29,6 @@ import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
 
 /**
  * Class aggregates useful utilities upon Model objects
- * Created by Pavel Yurkin on 20.07.14.
  */
 @UtilityClass
 @Slf4j

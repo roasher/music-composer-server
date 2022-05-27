@@ -8,9 +8,6 @@ import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 
-/**
- * Created by Wish on 22.12.2015.
- */
 @Component
 @Slf4j
 public class RandomFirstStepProvider implements FirstStepProvider {

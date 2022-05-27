@@ -8,8 +8,7 @@ import lombok.experimental.Delegate;
 
 @Data
 /**
- * Class represents blocks which can be used in composing process
- * Created by pyurkin on 05.03.2015.
+ * Class represents composition unit with information about possible next and previous blocks
  */
 public class ComposeBlock {
 

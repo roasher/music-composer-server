@@ -15,7 +15,6 @@ import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
 
 /**
  * Slices composition into pieces
- * Created by night wish on 08.11.14.
  */
 @Component
 @Slf4j

@@ -12,14 +12,12 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 
 /**
  * Class represents wrapper to Music Block collection
- * Incapsulates all methods of getting proper music block
- * Created by pyurkin on 13.02.15.
+ * Encapsulates all methods of getting proper music block
  */
 @Data
 public class Lexicon implements Serializable {
 
   private List<ComposeBlock> composeBlocks;
-  // todo: delete?
   private Map<Integer, Set<Integer>> possibleNextMusicBlockNumbers;
 
   public Lexicon(List<ComposeBlock> composeBlocks, Map<Integer, Set<Integer>> possibleNextMusicBlockNumbers) {

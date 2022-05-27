@@ -7,7 +7,6 @@ import java.util.Map;
  * Class examines the ru.pavelyurkin.musiccomposer.equality between "List of counts of Rhythm Entries"
  * List stands for number of instruments
  * Map maps rhythmical value and normalized number of notes having such value in the analyzing part of music
- * Created by night wish on 18.10.14.
  */
 public class RhythmEqualityTest {
 

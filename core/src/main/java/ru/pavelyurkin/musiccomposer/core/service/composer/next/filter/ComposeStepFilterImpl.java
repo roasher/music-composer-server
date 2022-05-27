@@ -8,9 +8,6 @@ import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
-/**
- * Created by wish on 04.02.2016.
- */
 @Slf4j
 @Data
 public class ComposeStepFilterImpl implements ComposeStepFilter {

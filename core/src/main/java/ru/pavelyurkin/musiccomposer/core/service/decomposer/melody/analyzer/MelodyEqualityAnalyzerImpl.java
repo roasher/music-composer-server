@@ -9,7 +9,6 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 /**
  * Class analyzes if two melodies can be considered equal
- * Created by night wish on 26.07.14.
  */
 @Component
 @Slf4j

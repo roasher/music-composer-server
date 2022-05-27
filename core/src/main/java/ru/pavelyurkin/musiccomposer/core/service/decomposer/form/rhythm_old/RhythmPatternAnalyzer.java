@@ -7,7 +7,6 @@ import ru.pavelyurkin.musiccomposer.core.service.decomposer.form.rhythm_old.equa
 
 /**
  * Class analyzes rhythm_old
- * Created by night wish on 18.10.14.
  */
 public class RhythmPatternAnalyzer {
 

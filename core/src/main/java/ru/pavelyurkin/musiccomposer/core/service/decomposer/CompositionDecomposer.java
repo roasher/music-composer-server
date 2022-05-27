@@ -10,20 +10,19 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.pavelyurkin.musiccomposer.core.service.composer.MusicBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.client.lexicon.LexiconDAO;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
-import ru.pavelyurkin.musiccomposer.core.client.lexicon.LexiconDAO;
+import ru.pavelyurkin.musiccomposer.core.service.composer.MusicBlockProvider;
 import ru.pavelyurkin.musiccomposer.core.service.composition.CompositionParser;
 import ru.pavelyurkin.musiccomposer.core.utils.RecombineUtils;
 
 /**
- * Class analyses and decomposes the composition, creating MusicBlocks
- * Created by Pavel Yurkin on 21.07.14.
+ * Class analyses and decomposes the composition, creating bunch of MusicBlocks on output
  */
 @RequiredArgsConstructor
 @Data

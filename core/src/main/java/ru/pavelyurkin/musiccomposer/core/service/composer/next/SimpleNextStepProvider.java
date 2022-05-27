@@ -8,9 +8,6 @@ import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
-/**
- * Created by wish on 18.02.2016.
- */
 @Component
 public class SimpleNextStepProvider extends FilteredNextStepProvider {
 

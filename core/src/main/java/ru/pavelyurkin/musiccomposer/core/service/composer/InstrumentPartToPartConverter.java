@@ -1,4 +1,4 @@
-package ru.pavelyurkin.musiccomposer.core.model.converter;
+package ru.pavelyurkin.musiccomposer.core.service.composer;
 
 import jm.music.data.CPhrase;
 import jm.music.data.Note;

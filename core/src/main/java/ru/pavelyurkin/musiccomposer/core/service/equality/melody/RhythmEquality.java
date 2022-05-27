@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
-/**
- * Created by Pavel Yurkin on 17.08.14.
- */
 @Component
 public class RhythmEquality implements Equality {
 

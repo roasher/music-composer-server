@@ -3,9 +3,6 @@ package ru.pavelyurkin.musiccomposer.core.model;
 import java.util.List;
 import lombok.Getter;
 
-/**
- * Created by night wish on 01.11.14.
- */
 public enum Key {
 
   C_MAJOR(0, 2, 4, 5, 7, 9, 11),

@@ -17,7 +17,6 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 
 /**
  * Class is responsible for loading midi tracks
- * Created by night wish on 25.11.14.
  */
 @Component
 public class CompositionLoader {

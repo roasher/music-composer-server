@@ -7,9 +7,6 @@ import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 
-/**
- * Created by wish on 18.02.2016.
- */
 @Component
 public class SimpleFirstStepProvider implements FirstStepProvider {
   @Override

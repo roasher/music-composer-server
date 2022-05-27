@@ -24,9 +24,6 @@ import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
-/**
- * Created by pyurkin on 15.12.14.
- */
 @ExtendWith(MockitoExtension.class)
 public class CompositionComposerMockTest {
 

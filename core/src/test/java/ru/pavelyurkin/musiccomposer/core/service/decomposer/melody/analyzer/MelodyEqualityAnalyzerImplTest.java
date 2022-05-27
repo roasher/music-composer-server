@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
-/**
- * Created by night wish on 26.07.14.
- */
 public class MelodyEqualityAnalyzerImplTest extends AbstractSpringTest {
 
   @Autowired

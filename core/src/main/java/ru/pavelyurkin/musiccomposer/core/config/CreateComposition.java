@@ -18,6 +18,9 @@ import ru.pavelyurkin.musiccomposer.core.service.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 
+/**
+ * Configuration for composing piece defined length
+ */
 @Configuration
 @Profile("compose")
 public class CreateComposition implements ApplicationRunner {

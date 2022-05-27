@@ -17,8 +17,7 @@ import ru.pavelyurkin.musiccomposer.core.utils.ParallelUtils;
 @NoArgsConstructor
 /**
  * Class represents music MusicBlock Music Block is the cut from the one's partition with some characteristics - the
- * blocks with which new generated composition
- * will be made from. Created by Pavel Yurkin on 18.07.14.
+ * blocks with which new generated composition will be made from.
  */
 public class MusicBlock implements Serializable {
 

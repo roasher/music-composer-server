@@ -40,9 +40,6 @@ import ru.pavelyurkin.musiccomposer.core.client.lexicon.LexiconDAO;
 import ru.pavelyurkin.musiccomposer.core.service.composition.loader.CompositionLoader;
 import ru.pavelyurkin.musiccomposer.core.utils.Utils;
 
-/**
- * Created by pyurkin on 15.12.14.
- */
 public class CompositionComposerTest extends AbstractSpringTest {
 
   @Autowired

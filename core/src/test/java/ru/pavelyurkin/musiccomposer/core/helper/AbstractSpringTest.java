@@ -6,7 +6,6 @@ import ru.pavelyurkin.musiccomposer.core.MyTestConfiguration;
 
 /**
  * Parent test class
- * Created by pyurkin on 05.12.14.
  */
 @SpringBootTest
 @ContextConfiguration(classes = MyTestConfiguration.class)

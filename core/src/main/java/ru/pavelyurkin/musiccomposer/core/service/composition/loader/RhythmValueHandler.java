@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * Class aggregates logic of rounding rhythm values after loading the composition
- * Created by pyurkin on 08.12.14.
  */
 @Component
 public class RhythmValueHandler {

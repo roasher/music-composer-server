@@ -10,6 +10,11 @@ import org.springframework.context.annotation.Profile;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.client.lexicon.LexiconDAO;
 
+/**
+ * Lexicon creation might take significant time, there is no need doing that
+ * every time on composition creation. It should be done and stored once and next compose runs
+ * should be pointing on precalculated Lexicon file.
+ */
 @Configuration
 @Profile("persist-lexicon")
 @Slf4j

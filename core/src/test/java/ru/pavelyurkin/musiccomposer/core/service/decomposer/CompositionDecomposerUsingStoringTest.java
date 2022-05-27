@@ -18,9 +18,6 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.client.lexicon.LexiconDAO;
 import ru.pavelyurkin.musiccomposer.core.service.composition.loader.CompositionLoader;
 
-/**
- * Created by pyurkin on 17.04.2015.
- */
 public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {
   @Autowired
   private CompositionDecomposer compositionDecomposer;

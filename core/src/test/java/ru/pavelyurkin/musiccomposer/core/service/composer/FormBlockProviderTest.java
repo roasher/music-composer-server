@@ -23,9 +23,6 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.service.composition.loader.CompositionLoader;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
-/**
- * Created by pyurkin on 17.02.15.
- */
 public class FormBlockProviderTest extends AbstractSpringTest {
   @Autowired
   private CompositionLoader compositionLoader;

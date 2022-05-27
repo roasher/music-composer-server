@@ -6,9 +6,6 @@ import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 
-/**
- * Created by Wish on 22.12.2015.
- */
 public interface FirstStepProvider {
 
   Optional<CompositionStep> getFirstBlock(Lexicon lexicon, List<ComposeBlock> exclusions);

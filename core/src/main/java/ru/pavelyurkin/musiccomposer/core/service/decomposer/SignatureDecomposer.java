@@ -18,7 +18,6 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 /**
  * Class searches Signatures in the composition
- * Created by Pavel Yurkin on 26.07.14.
  */
 public class SignatureDecomposer {
 

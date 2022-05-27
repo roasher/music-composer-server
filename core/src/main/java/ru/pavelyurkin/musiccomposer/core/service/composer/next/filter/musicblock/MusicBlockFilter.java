@@ -3,9 +3,6 @@ package ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicbloc
 import java.util.List;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
-/**
- * Created by wish on 02.02.2016.
- */
 public interface MusicBlockFilter {
 
   /**

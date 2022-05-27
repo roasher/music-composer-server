@@ -41,9 +41,6 @@ import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
-/**
- * Created by night wish on 05.03.2016.
- */
 @ExtendWith(MockitoExtension.class)
 public class NextStepProviderTest {
 

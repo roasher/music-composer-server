@@ -23,11 +23,9 @@ import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
-import ru.pavelyurkin.musiccomposer.core.model.converter.InstrumentPartToPartConverter;
 
 /**
  * Class handles composition of new piece using lexicon
- * Created by pyurkin on 15.12.14.
  */
 @Component
 @Slf4j

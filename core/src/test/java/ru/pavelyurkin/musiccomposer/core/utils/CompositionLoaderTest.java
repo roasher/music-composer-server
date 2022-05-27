@@ -17,9 +17,6 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.service.composition.loader.CompositionLoader;
 import ru.pavelyurkin.musiccomposer.core.service.composition.loader.RhythmValueHandler;
 
-/**
- * Created by pyurkin on 25.11.14.
- */
 public class CompositionLoaderTest extends AbstractSpringTest {
 
   Logger logger = LoggerFactory.getLogger(getClass());

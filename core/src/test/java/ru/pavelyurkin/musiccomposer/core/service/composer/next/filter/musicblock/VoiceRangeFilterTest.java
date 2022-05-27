@@ -24,9 +24,6 @@ import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 
-/**
- * Created by wish on 04.02.2016.
- */
 public class VoiceRangeFilterTest {
 
   @Test

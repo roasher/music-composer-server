@@ -20,7 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
-import ru.pavelyurkin.musiccomposer.core.model.converter.InstrumentPartToPartConverter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.InstrumentPartToPartConverter;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 import ru.pavelyurkin.musiccomposer.core.service.composition.CompositionParser;

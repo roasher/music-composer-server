@@ -7,8 +7,6 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 /**
  * Class represents step that program makes in order to create new composition
  * One step - one added form block to composition
- * <p>
- * Created by pyurkin on 15.01.15.
  */
 public class FormCompositionStep {
 
