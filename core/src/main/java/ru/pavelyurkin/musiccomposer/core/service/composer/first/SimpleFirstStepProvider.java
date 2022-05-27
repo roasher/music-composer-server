@@ -7,6 +7,9 @@ import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 
+/**
+ * Return non random first composition step.
+ */
 @Component
 public class SimpleFirstStepProvider implements FirstStepProvider {
   @Override

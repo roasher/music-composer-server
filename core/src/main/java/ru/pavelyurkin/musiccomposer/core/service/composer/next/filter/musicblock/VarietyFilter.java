@@ -11,7 +11,7 @@ import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
 
 /**
- * Filters next compose block to maintain variety of blocks used in composition.
+ * Filters blocks to maintain variety of blocks used in composition.
  * If from previous steps there are already x
  * blocks from one composition, filter will decline blocks from that composition to prevent
  * x + 1 blocks from same composition in the result

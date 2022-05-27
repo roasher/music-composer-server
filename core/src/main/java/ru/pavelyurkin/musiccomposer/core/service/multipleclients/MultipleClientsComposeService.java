@@ -20,7 +20,7 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 
 /**
- * Class provides different composing services
+ * Class handles composing multiple compositions in a same time
  */
 @Slf4j
 @RequiredArgsConstructor

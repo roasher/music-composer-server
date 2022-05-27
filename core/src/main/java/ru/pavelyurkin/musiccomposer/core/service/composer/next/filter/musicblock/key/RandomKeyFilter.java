@@ -12,7 +12,9 @@ import ru.pavelyurkin.musiccomposer.core.model.Key;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 /**
- * Filters musicblocks that are not form current key, and change current key randomly
+ * Filters blocks that are not from current key
+ * Changing current key randomly after some filtering
+ * Used for prototyping purposes.
  */
 @Slf4j
 public class RandomKeyFilter implements MusicBlockFilter {

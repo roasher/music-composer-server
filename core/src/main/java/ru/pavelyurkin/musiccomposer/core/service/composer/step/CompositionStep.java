@@ -6,11 +6,11 @@ import lombok.Data;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
-@Data
 /**
  * Class represents step that program makes in order to create new form block
  * One step - one added originComposeBlock to the form block
  */
+@Data
 public class CompositionStep {
 
   /**

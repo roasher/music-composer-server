@@ -20,11 +20,11 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
-import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.RangeFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.range.RangeFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.RepetitionFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.RestFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.VarietyFilter;
-import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.VoiceRangeFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.range.VoiceRangeFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 
 public class ComposeStepFilterImplTest {
@@ -82,7 +82,7 @@ public class ComposeStepFilterImplTest {
         .filter(musicBlockFilter -> musicBlockFilter instanceof VoiceRangeFilter)
         .findFirst()
         .get();
-    assertTrue((((VoiceRangeFilter) newFilter1).getMelodyRange().isEmpty()));
+    assertTrue((((VoiceRangeFilter) newFilter1).getRanges().isEmpty()));
 
     assertThat(composeStepFilter.getComposeStepFilters().size(), is(4));
   }

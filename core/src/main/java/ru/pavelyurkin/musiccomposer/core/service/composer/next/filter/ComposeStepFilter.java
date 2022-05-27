@@ -5,14 +5,15 @@ import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 
 public interface ComposeStepFilter {
-  // we assuming that possibleNexts are already transposed
+
+  // We assuming that possible next are already transposed
   List<CompositionStep> filter(List<CompositionStep> possibleNextComposeSteps,
                                List<CompositionStep> previousCompositionSteps);
 
   /**
    * Replaces existing filter with given one
    *
-   * @param musicBlockFilter
+   * @param musicBlockFilter - filter that would replace its predecessor
    */
   void replaceFilter(MusicBlockFilter musicBlockFilter);
 

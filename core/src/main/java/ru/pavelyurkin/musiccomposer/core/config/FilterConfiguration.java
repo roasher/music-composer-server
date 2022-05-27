@@ -22,12 +22,12 @@ import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.ComposeSte
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.ComposeStepFilterImpl;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.FastComposeStepFilterImpl;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
-import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.RangeFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.range.RangeFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.RepetitionFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.RestFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.key.SameKeyFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.VarietyFilter;
-import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.VoiceRangeFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.range.VoiceRangeFilter;
 import ru.pavelyurkin.musiccomposer.core.model.Key;
 
 @Configuration

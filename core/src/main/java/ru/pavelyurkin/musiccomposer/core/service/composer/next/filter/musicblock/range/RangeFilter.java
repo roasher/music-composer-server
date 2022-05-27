@@ -1,13 +1,14 @@
-package ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock;
+package ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.range;
 
 import java.util.List;
 import java.util.OptionalInt;
 import lombok.AllArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
 
 /**
- * Filter declines all compose blocks that will go out of range after transposing
+ * Filter declines all blocks that will go out of range after transposing
  */
 @AllArgsConstructor
 public class RangeFilter implements MusicBlockFilter {
@@ -25,7 +26,7 @@ public class RangeFilter implements MusicBlockFilter {
         .filter(instrumentPart -> !instrumentPart.isRest())
         .mapToInt(InstrumentPart::getMinNonRestPitch)
         .min();
-    if (!max.isPresent() && !min.isPresent()) {
+    if (max.isEmpty() && min.isEmpty()) {
       return true;
     }
     return max.getAsInt() <= highestNotePitch && min.getAsInt() >= lowestNotePitch;

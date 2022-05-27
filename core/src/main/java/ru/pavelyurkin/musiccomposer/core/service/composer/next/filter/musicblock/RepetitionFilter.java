@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 /**
- * Filters out blocks including whom will cause repetition
+ * Filters out blocks if they would cause repetition
  */
 @NoArgsConstructor
 public class RepetitionFilter implements MusicBlockFilter {
@@ -35,10 +35,12 @@ public class RepetitionFilter implements MusicBlockFilter {
 
   /**
    * Returns number of repetitions for different rhythm values, searching summary within range
+   * For example if Map<HALF_NOTE, 3> is returned means that in (now-range;now) time there is
+   * pattern HALF_NOTE length that repeated 3 times.
    *
-   * @param musicBlocksToCheck
-   * @param range
-   * @return
+   * @param musicBlocksToCheck - input music blocks
+   * @param range - range that repetitions would be counted within
+   * @return Map<rythm value, repetiton count>
    */
   Map<Double, Integer> getRepetitions(List<MusicBlock> musicBlocksToCheck, double range) {
     // Rhythm values and number of actual repetitions ouput map

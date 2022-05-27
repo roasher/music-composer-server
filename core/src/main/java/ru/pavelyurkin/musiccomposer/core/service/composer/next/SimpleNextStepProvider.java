@@ -21,8 +21,8 @@ public class SimpleNextStepProvider extends FilteredNextStepProvider {
                                                         List<FormCompositionStep> formCompositionSteps,
                                                         Optional<Form> form) {
 
-    Optional<CompositionStep> lastOfPossibles =
-        blocksToChooseFrom.stream().reduce((composeBlock1, composeBlock2) -> composeBlock2);
+    Optional<CompositionStep> lastOfPossibles = blocksToChooseFrom.stream()
+        .reduce((composeBlock1, composeBlock2) -> composeBlock2);
     return lastOfPossibles;
   }
 

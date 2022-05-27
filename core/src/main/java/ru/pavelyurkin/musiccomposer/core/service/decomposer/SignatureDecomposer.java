@@ -9,6 +9,7 @@ import java.util.Set;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pavelyurkin.musiccomposer.core.service.decomposer.melody.analyzer.MelodyEqualityAnalyzer;
@@ -19,9 +20,8 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 /**
  * Class searches Signatures in the composition
  */
+@Slf4j
 public class SignatureDecomposer {
-
-  private Logger logger = LoggerFactory.getLogger(getClass());
 
   private int minSignatureLength;
   private int maxSignatureLength;
@@ -52,7 +52,7 @@ public class SignatureDecomposer {
    * @return
    */
   private Set<TracedMelody> getAllPossibleSignatures(Composition composition) {
-    logger.debug("Getting all possible signatures from {}", composition.getCompositionInfo().getTitle());
+    log.debug("Getting all possible signatures from {}", composition.getCompositionInfo().getTitle());
     // We will be searching signatures only in the top voice for now.
     Part currentPart = composition.getPart(0);
 
@@ -85,10 +85,10 @@ public class SignatureDecomposer {
    * @return
    */
   public Map<Melody, Set<Melody>> analyzeSignatures(List<Composition> compositionList) {
-    logger.info("Starting analyzing composition for signatures");
+    log.info("Starting analyzing composition for signatures");
     Map<Melody, Set<Melody>> signatures = new HashMap<>();
 
-    logger.info("Step 1: creating all possible signatures");
+    log.info("Step 1: creating all possible signatures");
     // lists of signatures inside list corresponding to compositions
     List<Set<TracedMelody>> signaturesToAnalyze = new ArrayList<>();
     for (int currentCompositionNumber = 0; currentCompositionNumber < compositionList.size();
@@ -97,17 +97,17 @@ public class SignatureDecomposer {
       Set<TracedMelody> possibleSignatures = getAllPossibleSignatures(currentComposition);
       signaturesToAnalyze.add(possibleSignatures);
     }
-//        logger.info( "Number of analyzing compositions = {}, total amount of possible signatures = {}",
+//        log.info( "Number of analyzing compositions = {}, total amount of possible signatures = {}",
 //        signaturesToAnalyze.size(), getTotalSignaturesNumber( signaturesToAnalyze ) );
 
-    logger.info("Step 2: finding signatures that can be considered equal");
+    log.info("Step 2: finding signatures that can be considered equal");
     for (int currentCompositionNumberHavingEtalonSignature = 0;
          currentCompositionNumberHavingEtalonSignature < signaturesToAnalyze.size();
          currentCompositionNumberHavingEtalonSignature++) {
-      logger.info("Analyzing {} composition", currentCompositionNumberHavingEtalonSignature + 1);
+      log.info("Analyzing {} composition", currentCompositionNumberHavingEtalonSignature + 1);
       int currentEtalonSignatureNumber = 0;
       for (Melody etalonMelody : signaturesToAnalyze.get(currentCompositionNumberHavingEtalonSignature)) {
-        logger.debug(String.format("Analyzing %d out of %d signatures in %d out of %d compositions",
+        log.debug(String.format("Analyzing %d out of %d signatures in %d out of %d compositions",
             ++currentEtalonSignatureNumber,
             signaturesToAnalyze.get(currentCompositionNumberHavingEtalonSignature).size(),
             currentCompositionNumberHavingEtalonSignature + 1,
@@ -122,7 +122,7 @@ public class SignatureDecomposer {
             if (!compareSignature.hasEqual) {
               boolean equalityTestPassed = melodyEqualityAnalyzer.isEqual(etalonMelody, compareSignature);
               if (equalityTestPassed) {
-                logger.debug("{} signature has been considered equal with {}", etalonMelody, compareSignature);
+                log.debug("{} signature has been considered equal with {}", etalonMelody, compareSignature);
                 compareSignature.hasEqual = true;
                 // Organizing signatures into a block of equal signatures
                 Set<Melody> melodySet = signatures.get(etalonMelody);

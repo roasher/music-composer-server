@@ -20,7 +20,7 @@ import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
 /**
  * Filters musicblocks that are not from previous blocks key
- * TODO: problem - can't compose with that filter. Need to fix it to be able composition to change keys
+ * TODO: right now not working. Needs to be fixed able key smooth change
  */
 @Slf4j
 public class KeyVarietyFilter implements MusicBlockFilter {

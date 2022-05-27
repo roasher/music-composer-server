@@ -12,6 +12,7 @@ import ru.pavelyurkin.musiccomposer.core.service.composition.CompositionSlicer;
 
 /**
  * Provides form analyses
+ * Not working now.
  */
 //@Component
 @RequiredArgsConstructor

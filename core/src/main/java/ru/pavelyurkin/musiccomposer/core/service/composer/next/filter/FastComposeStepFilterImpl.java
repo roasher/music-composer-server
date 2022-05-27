@@ -7,6 +7,12 @@ import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
+/**
+ * That implementation would find first N next convenient blocks.
+ * On one hand that would reduce variety and might lead to composition failure
+ * On the other hand it drastically reduces composing time that matters if
+ * one want to compose on a fly.
+ */
 public class FastComposeStepFilterImpl extends ComposeStepFilterImpl {
 
   /**

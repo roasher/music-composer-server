@@ -8,6 +8,11 @@ import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
+/**
+ * That implementation would check all possible next blocks and return
+ * all that are convenient according to filters.
+ * It might be slow, so used primary for fixed length compositions
+ */
 @Slf4j
 @Data
 public class ComposeStepFilterImpl implements ComposeStepFilter {
@@ -19,7 +24,7 @@ public class ComposeStepFilterImpl implements ComposeStepFilter {
   }
 
   /**
-   * Returns valid in terms of fitering blocks
+   * Returns valid in terms of filtering blocks
    *
    * @param possibleNextComposeSteps
    * @param previousCompositionSteps
