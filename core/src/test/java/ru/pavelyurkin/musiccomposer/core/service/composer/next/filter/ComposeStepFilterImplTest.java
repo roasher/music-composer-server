@@ -64,7 +64,7 @@ public class ComposeStepFilterImplTest {
             new VoiceRangeFilter.Range(F2, F4)
         )),
         new RestFilter(QUARTER_NOTE),
-        new VarietyFilter(-1, 6),
+        new VarietyFilter(Integer.MAX_VALUE, 6),
         new RepetitionFilter()
     )) {
     };
@@ -97,7 +97,7 @@ public class ComposeStepFilterImplTest {
             new VoiceRangeFilter.Range(F2, F4)
         )),
         new RestFilter(QUARTER_NOTE),
-        new VarietyFilter(-1, 6),
+        new VarietyFilter(Integer.MAX_VALUE, 6),
         new RepetitionFilter()
     );
     ComposeStepFilterImpl composeStepFilter = new ComposeStepFilterImpl(composeStepFilters) {

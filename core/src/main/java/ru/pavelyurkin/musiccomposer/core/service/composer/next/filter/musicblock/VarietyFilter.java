@@ -17,11 +17,18 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
  * x + 1 blocks from same composition in the result
  */
 @Data
-@AllArgsConstructor
 public class VarietyFilter implements MusicBlockFilter {
 
   private int maxSequentialBlocksFromSameComposition;
   private int minSequentialBlocksFromSameComposition;
+
+  public VarietyFilter(int maxSequentialBlocksFromSameComposition, int minSequentialBlocksFromSameComposition) {
+    if (minSequentialBlocksFromSameComposition > maxSequentialBlocksFromSameComposition) {
+      throw new IllegalArgumentException("min can't be greater that max");
+    }
+    this.maxSequentialBlocksFromSameComposition = maxSequentialBlocksFromSameComposition;
+    this.minSequentialBlocksFromSameComposition = minSequentialBlocksFromSameComposition;
+  }
 
   @Override
   public boolean filterIt(MusicBlock block, List<MusicBlock> previousBlocks) {
@@ -30,9 +37,6 @@ public class VarietyFilter implements MusicBlockFilter {
   }
 
   private boolean isOkMaxSequentialBlocksFromSameComposition(MusicBlock block, List<MusicBlock> previousBlocks) {
-    if (maxSequentialBlocksFromSameComposition <= 0) {
-      return true;
-    }
     if (previousBlocks.size() >= maxSequentialBlocksFromSameComposition) {
       Set<CompositionInfo> compositionInfos = previousBlocks.stream()
           .skip(previousBlocks.size() - maxSequentialBlocksFromSameComposition)

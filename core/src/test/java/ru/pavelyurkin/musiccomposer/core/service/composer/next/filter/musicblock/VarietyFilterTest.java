@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
@@ -22,17 +21,17 @@ public class VarietyFilterTest {
   public void filtersWithoutMinSequential1() {
     List<MusicBlock> mockComposeSteps = getMockSteps();
 
-    VarietyFilter composeBlockVarietyFilter0 = new VarietyFilter( 4, -1);
+    VarietyFilter composeBlockVarietyFilter0 = new VarietyFilter(4, 0);
     assertThat(composeBlockVarietyFilter0.filterIt(getMockBlock("0"), mockComposeSteps), is(false));
     assertThat(composeBlockVarietyFilter0.filterIt(getMockBlock("1"), mockComposeSteps), is(true));
     assertThat(composeBlockVarietyFilter0.filterIt(getMockBlock("2"), mockComposeSteps), is(true));
 
-    VarietyFilter composeBlockVarietyFilter1 = new VarietyFilter(5, -1);
+    VarietyFilter composeBlockVarietyFilter1 = new VarietyFilter(5, 0);
     assertThat(composeBlockVarietyFilter1.filterIt(getMockBlock("0"), mockComposeSteps), is(true));
     assertThat(composeBlockVarietyFilter1.filterIt(getMockBlock("1"), mockComposeSteps), is(true));
     assertThat(composeBlockVarietyFilter1.filterIt(getMockBlock("2"), mockComposeSteps), is(true));
 
-    VarietyFilter composeBlockVarietyFilter2 = new VarietyFilter(4, -1);
+    VarietyFilter composeBlockVarietyFilter2 = new VarietyFilter(4, 0);
     List<MusicBlock> mockSteps1 = mockComposeSteps.subList(5, mockComposeSteps.size());
     assertThat(composeBlockVarietyFilter2.filterIt(getMockBlock("0"), mockSteps1), is(false));
     assertThat(composeBlockVarietyFilter2.filterIt(getMockBlock("1"), mockSteps1), is(true));
@@ -56,7 +55,7 @@ public class VarietyFilterTest {
 
   @Test
   public void filtersWithoutMinSequential() throws Exception {
-    varietyFilter = new VarietyFilter(3, -1);
+    varietyFilter = new VarietyFilter(3, 0);
 
     assertThat(varietyFilter.filterIt(getMockBlock("1"),
         Arrays.asList(
@@ -75,7 +74,7 @@ public class VarietyFilterTest {
 
   @Test
   public void filtersWithoutMaxSequential() throws Exception {
-    varietyFilter = new VarietyFilter(-1, 3);
+    varietyFilter = new VarietyFilter(Integer.MAX_VALUE, 3);
 
     assertThat(varietyFilter.filterIt(getMockBlock("1"),
         Collections.emptyList()), is(true));
@@ -113,9 +112,8 @@ public class VarietyFilterTest {
   }
 
   @Test
-  @Disabled
   public void minCanNotBeGreaterThanMax() throws Exception {
-    assertThrows(RuntimeException.class, () -> new VarietyFilter(4, 5));
+    assertThrows(IllegalArgumentException.class, () -> new VarietyFilter(4, 5));
   }
 
   @Test

@@ -70,7 +70,7 @@ public class FilterConfiguration {
         )),
         new RestFilter(EIGHTH_NOTE),
         new SameKeyFilter(Key.C_MAJOR),
-        new VarietyFilter(6, -1),
+        new VarietyFilter(6, 0),
         new RepetitionFilter()
     );
   }
