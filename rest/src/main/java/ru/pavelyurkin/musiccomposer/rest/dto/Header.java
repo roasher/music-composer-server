@@ -6,10 +6,7 @@ import lombok.Data;
 /**
  * "header": {
  * "tempo": 64,
- * "timeSignature": [
- * 4,
- * 4
- * ]
+ * "timeSignature": [ 4, 4 ]
  * }
  */
 @Data

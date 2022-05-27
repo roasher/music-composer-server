@@ -12,10 +12,10 @@ import ru.pavelyurkin.musiccomposer.core.service.decomposer.melody.analyzer.Melo
     @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = MelodyEqualityAnalyzerImpl.class),
     @ComponentScan.Filter(type = FilterType.REGEX, pattern = "ru.pavelyurkin.musiccomposer.core.service.equality.melody.*")}
 )
-public class RestApplication {
+public class WebApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(RestApplication.class, args);
+    SpringApplication.run(WebApplication.class, args);
   }
 
 }
