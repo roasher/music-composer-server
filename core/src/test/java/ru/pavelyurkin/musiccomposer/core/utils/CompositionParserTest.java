@@ -24,6 +24,7 @@ import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
+import ru.pavelyurkin.musiccomposer.core.service.composition.CompositionParser;
 
 public class CompositionParserTest {
 

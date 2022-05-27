@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
+import ru.pavelyurkin.musiccomposer.core.service.composition.loader.RhythmValueHandler;
 
 /**
  * Created by pyurkin on 08.12.14.

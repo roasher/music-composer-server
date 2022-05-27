@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBlockFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.key.SameKeyFilter;
-import ru.pavelyurkin.musiccomposer.core.exception.ComposeException;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.key.SameKeyFilter;
+import ru.pavelyurkin.musiccomposer.core.service.exception.ComposeException;
 import ru.pavelyurkin.musiccomposer.core.model.Key;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
-import ru.pavelyurkin.musiccomposer.core.service.ComposeService;
+import ru.pavelyurkin.musiccomposer.core.service.multipleclients.MultipleClientsComposeService;
 import ru.pavelyurkin.musiccomposer.rest.converter.CompositionConverter;
 import ru.pavelyurkin.musiccomposer.rest.dto.CompositionDTO;
 import ru.pavelyurkin.musiccomposer.rest.dto.filter.BachChoralVoiceRangeDTO;
@@ -32,15 +32,15 @@ import ru.pavelyurkin.musiccomposer.rest.dto.filter.BachChoralVoiceRangeDTO;
 @Slf4j
 public class MidiController {
 
-  private final ComposeService composeService;
+  private final MultipleClientsComposeService multipleClientsComposeService;
 
   private final CompositionConverter compositionConverter;
   private final Converter<BachChoralVoiceRangeDTO, MusicBlockFilter> rangeDtoToFilterConverter;
 
   @Autowired
-  public MidiController(ComposeService composeService, CompositionConverter compositionConverter,
+  public MidiController(MultipleClientsComposeService multipleClientsComposeService, CompositionConverter compositionConverter,
                         Converter<BachChoralVoiceRangeDTO, MusicBlockFilter> rangeDtoToFilterConverter) {
-    this.composeService = composeService;
+    this.multipleClientsComposeService = multipleClientsComposeService;
     this.compositionConverter = compositionConverter;
     this.rangeDtoToFilterConverter = rangeDtoToFilterConverter;
   }
@@ -66,7 +66,8 @@ public class MidiController {
     }
 
     Instant time = Instant.now();
-    CompositionFrontDTO nextBarsFromComposition = composeService.getNextBarsFromComposition(compositionId, numberOfBars,
+    CompositionFrontDTO nextBarsFromComposition = multipleClientsComposeService
+        .getNextBarsFromComposition(compositionId, numberOfBars,
         composeStepFiltersToReplace);
     CompositionDTO compositionDTO = compositionConverter.convert(nextBarsFromComposition);
     log.info("Composed {}", compositionDTO);

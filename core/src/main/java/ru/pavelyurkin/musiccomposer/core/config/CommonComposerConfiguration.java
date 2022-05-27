@@ -11,23 +11,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
-import ru.pavelyurkin.musiccomposer.core.composer.ComposeStepProvider;
-import ru.pavelyurkin.musiccomposer.core.composer.MusicBlockProvider;
-import ru.pavelyurkin.musiccomposer.core.composer.first.FirstStepProvider;
-import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProvider;
-import ru.pavelyurkin.musiccomposer.core.composer.next.NextStepProviderImpl;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
-import ru.pavelyurkin.musiccomposer.core.decomposer.CompositionDecomposer;
-import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.EqualityMetricAnalyzer;
-import ru.pavelyurkin.musiccomposer.core.equality.equalityMetric.FormEqualityMetricAnalyzer;
+import ru.pavelyurkin.musiccomposer.core.client.lexicon.LexiconDAO;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import ru.pavelyurkin.musiccomposer.core.persistance.dao.LexiconDAO;
-import ru.pavelyurkin.musiccomposer.core.service.ComposingParameters;
-import ru.pavelyurkin.musiccomposer.core.utils.CompositionLoader;
-import ru.pavelyurkin.musiccomposer.core.utils.CompositionParser;
-import ru.pavelyurkin.musiccomposer.core.utils.Recombinator;
+import ru.pavelyurkin.musiccomposer.core.service.composer.ComposeStepProvider;
+import ru.pavelyurkin.musiccomposer.core.service.composer.MusicBlockProvider;
+import ru.pavelyurkin.musiccomposer.core.service.composer.first.FirstStepProvider;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.NextStepProvider;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.NextStepProviderImpl;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.ComposeStepFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composition.CompositionParser;
+import ru.pavelyurkin.musiccomposer.core.service.composition.loader.CompositionLoader;
+import ru.pavelyurkin.musiccomposer.core.service.decomposer.CompositionDecomposer;
+import ru.pavelyurkin.musiccomposer.core.service.equality.equalityMetric.EqualityMetricAnalyzer;
+import ru.pavelyurkin.musiccomposer.core.service.equality.equalityMetric.FormEqualityMetricAnalyzer;
+import ru.pavelyurkin.musiccomposer.core.service.multipleclients.ComposingParameters;
 
 @Configuration
 public class CommonComposerConfiguration {
@@ -41,10 +40,9 @@ public class CommonComposerConfiguration {
   @Bean
   public CompositionDecomposer compositionDecomposer(
       MusicBlockProvider musicBlockProvider,
-      Recombinator recombinator,
       CompositionParser compositionParser,
       @Qualifier("lexiconDAO_mapdb") LexiconDAO lexiconDAO) {
-    return new CompositionDecomposer(recombinator, compositionParser, musicBlockProvider, lexiconDAO);
+    return new CompositionDecomposer(compositionParser, musicBlockProvider, lexiconDAO);
   }
 
   @Bean

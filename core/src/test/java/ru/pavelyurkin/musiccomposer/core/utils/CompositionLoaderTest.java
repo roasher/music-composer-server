@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
+import ru.pavelyurkin.musiccomposer.core.service.composition.loader.CompositionLoader;
+import ru.pavelyurkin.musiccomposer.core.service.composition.loader.RhythmValueHandler;
 
 /**
  * Created by pyurkin on 25.11.14.

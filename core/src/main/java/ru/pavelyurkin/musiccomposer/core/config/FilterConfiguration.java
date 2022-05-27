@@ -18,16 +18,16 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.ComposeStepFilterImpl;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.FastComposeStepFilterImpl;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.MusicBlockFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RangeFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RepetitionFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.RestFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.key.SameKeyFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VarietyFilter;
-import ru.pavelyurkin.musiccomposer.core.composer.next.filter.musicblock.VoiceRangeFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.ComposeStepFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.ComposeStepFilterImpl;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.FastComposeStepFilterImpl;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.RangeFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.RepetitionFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.RestFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.key.SameKeyFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.VarietyFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.VoiceRangeFilter;
 import ru.pavelyurkin.musiccomposer.core.model.Key;
 
 @Configuration

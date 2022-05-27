@@ -26,7 +26,7 @@ persistance:
   file: test.db
 
 composer:
-  pathToCompositions: src/test/resources/ru/pavelyurkin/musiccomposer/core/decomposer/
+  pathToCompositions: src/test/resources/ru/pavelyurkin/musiccomposer/core/service/decomposer/
 
 logging:
   level:

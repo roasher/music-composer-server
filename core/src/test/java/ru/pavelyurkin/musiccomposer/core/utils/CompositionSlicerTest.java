@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.Chord;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
+import ru.pavelyurkin.musiccomposer.core.service.composition.CompositionSlicer;
 
 public class CompositionSlicerTest {
 

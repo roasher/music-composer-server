@@ -15,9 +15,10 @@ import jm.constants.Pitches;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import ru.pavelyurkin.musiccomposer.core.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.composer.step.FormCompositionStep;
+import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
+import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
@@ -30,6 +31,7 @@ import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
  * Class aggregates useful utilities upon Model objects
  * Created by Pavel Yurkin on 20.07.14.
  */
+@UtilityClass
 @Slf4j
 public class ModelUtils {
 
