@@ -1,0 +1,37 @@
+name: CI/CD
+
+on: workflow_dispatch
+
+env:
+  IMAGE_NAME: ru.yurkins-workshop.music-composer-server
+
+jobs:
+  build-and-push:
+    name: Build and push docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'liberica'
+
+      - name: Build image
+        run: mvn spring-boot:build-image -Dspring-boot.build-image.imageName=${IMAGE_NAME} -DskipTests=true
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.DOCKERHUB_LOGIN }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push to Docker Hub
+        run: |
+          VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout)
+          docker tag ${IMAGE_NAME} ${{ secrets.DOCKERHUB_LOGIN }}/${IMAGE_NAME}:${VERSION}
+          docker tag ${IMAGE_NAME} ${{ secrets.DOCKERHUB_LOGIN }}/${IMAGE_NAME}:${GITHUB_REF##*/}
+          docker tag ${IMAGE_NAME} ${{ secrets.DOCKERHUB_LOGIN }}/${IMAGE_NAME}:latest
+          docker push --all-tags ${{ secrets.DOCKERHUB_LOGIN }}/${IMAGE_NAME}
