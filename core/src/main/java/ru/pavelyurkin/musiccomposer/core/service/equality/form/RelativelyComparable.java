@@ -9,12 +9,6 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public interface RelativelyComparable<T> {
 
-  enum ResultOfComparison {
-    EQUAL,
-    DIFFERENT,
-    UNDEFINED
-  }
-
   /**
    * Returning not only result of comparison but diff measure as well
    *
@@ -23,4 +17,10 @@ public interface RelativelyComparable<T> {
    * @return
    */
   Pair<ResultOfComparison, Double> isEqual(T first, T second);
+
+  enum ResultOfComparison {
+    EQUAL,
+    DIFFERENT,
+    UNDEFINED
+  }
 }

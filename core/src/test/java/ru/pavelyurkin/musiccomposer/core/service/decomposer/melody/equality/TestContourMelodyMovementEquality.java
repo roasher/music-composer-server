@@ -21,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jm.music.data.Note;
 import org.junit.jupiter.api.Test;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melody.EqualNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melodymovement.ContourMelodyMovementEquality;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 public class TestContourMelodyMovementEquality {
 
@@ -64,9 +64,9 @@ public class TestContourMelodyMovementEquality {
         }
     );
 
-//		View.notate( testMelody1 );
-//		View.notate( testMelody2 );
-//		suspend();
+    //		View.notate( testMelody1 );
+    //		View.notate( testMelody2 );
+    //		suspend();
 
     contourMelodyMovementEquality.setMaxNumberOfDiffDirectionIntervals(4);
     assertTrue(equality.test(testMelody1, testMelody2));
@@ -108,9 +108,9 @@ public class TestContourMelodyMovementEquality {
         }
     );
 
-//		View.notate( testMelody1 );
-//		View.notate( testMelody2 );
-//		suspend();
+    //		View.notate( testMelody1 );
+    //		View.notate( testMelody2 );
+    //		suspend();
 
     contourMelodyMovementEquality.setMaxNumberOfDiffDirectionIntervals(2);
     assertTrue(equality.test(testMelody1, testMelody2));
@@ -149,9 +149,9 @@ public class TestContourMelodyMovementEquality {
         }
     );
 
-//        View.notate( testMelody1 );
-//        View.notate( testMelody2 );
-//		  suspend();
+    //        View.notate( testMelody1 );
+    //        View.notate( testMelody2 );
+    //		  suspend();
 
     contourMelodyMovementEquality.setMaxNumberOfDiffDirectionIntervals(0);
     assertFalse(equality.test(testMelody1, testMelody2));

@@ -27,9 +27,9 @@ import jm.music.data.Note;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import ru.pavelyurkin.musiccomposer.core.service.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.core.service.equality.melody.Equality;
 
 public class KeyEqualityTest extends AbstractSpringTest {
 

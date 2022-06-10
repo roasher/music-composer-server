@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import jm.music.data.Note;
 import org.junit.jupiter.api.Test;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melody.EqualNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melodymovement.OrderMelodyMovementEquality;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 public class TestOrderMelodyMovementEquality {
 

@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.pavelyurkin.musiccomposer.core.service.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.core.service.equality.melody.Equality;
 
 /**
  * Class analyzes if two melodies can be considered equal
@@ -14,20 +14,19 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 @Slf4j
 public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 
+  private final Equality contourEquality;
+
+  //    private Equality fragmentationEqualityTest;
+  //    private Equality interpolationEqualityTest;
+  private final Equality intervalsEquality;
+  private final Equality inversionEquality;
+  private final Equality orderEquality;
+  private final Equality rhythmEquality;
   /**
    * Min percentage of passed sub tests necessary to consider ru.pavelyurkin.musiccomposer.equality of two melodies
    */
   @Value("${MelodyEqualityAnalyzerImpl.equalityTestPassThreshold:1}")
   private double equalityTestPassThreshold;
-
-//    private Equality fragmentationEqualityTest;
-//    private Equality interpolationEqualityTest;
-
-  private final Equality contourEquality;
-  private final Equality intervalsEquality;
-  private final Equality inversionEquality;
-  private final Equality orderEquality;
-  private final Equality rhythmEquality;
 
   public MelodyEqualityAnalyzerImpl(@Qualifier("contourMelodyMovementEquality") Equality contourEquality,
                                     @Qualifier("intervalsMelodyMovementEquality") Equality intervalsEquality,
@@ -43,24 +42,24 @@ public class MelodyEqualityAnalyzerImpl implements MelodyEqualityAnalyzer {
 
   public boolean isEqual(Melody firstMelody, Melody secondMelody) {
     // If melodies size abs difference more than fragmentationEqualityTest.
-//        int absSizeDifference = Math.abs( firstMelody.getSize() - secondMelody.getSize() );
-//        if ( absSizeDifference > interpolationEqualityTest.getMaxNumberOfDiversedNotes() || absSizeDifference >
-//        fragmentationEqualityTest.getMaxNumberOfDiversedNotes() ) {
-//            return false;
-//        }
-//
-//        logger.debug( "Starting melody comparison {} {}", firstMelody.toString(), secondMelody.toString() );
-//        boolean fragmentationTest = fragmentationEqualityTest.test( firstMelody, secondMelody );
-//        if ( fragmentationTest ) {
-//            logger.debug( "Fragmentation test succeed. No more tests required, melodies considered equal." );
-//            return true;
-//        }
-//
-//        boolean interpolationTest = interpolationEqualityTest.test( firstMelody, secondMelody );
-//        if ( interpolationTest ) {
-//            logger.debug( "Interpolation test succeed. No more tests required, melodies considered equal." );
-//            return true;
-//        }
+    //        int absSizeDifference = Math.abs( firstMelody.getSize() - secondMelody.getSize() );
+    //        if ( absSizeDifference > interpolationEqualityTest.getMaxNumberOfDiversedNotes() || absSizeDifference >
+    //        fragmentationEqualityTest.getMaxNumberOfDiversedNotes() ) {
+    //            return false;
+    //        }
+    //
+    //        logger.debug( "Starting melody comparison {} {}", firstMelody.toString(), secondMelody.toString() );
+    //        boolean fragmentationTest = fragmentationEqualityTest.test( firstMelody, secondMelody );
+    //        if ( fragmentationTest ) {
+    //            logger.debug( "Fragmentation test succeed. No more tests required, melodies considered equal." );
+    //            return true;
+    //        }
+    //
+    //        boolean interpolationTest = interpolationEqualityTest.test( firstMelody, secondMelody );
+    //        if ( interpolationTest ) {
+    //            logger.debug( "Interpolation test succeed. No more tests required, melodies considered equal." );
+    //            return true;
+    //        }
 
     boolean rhythmTest = rhythmEquality.test(firstMelody, secondMelody);
     if (!rhythmTest) {

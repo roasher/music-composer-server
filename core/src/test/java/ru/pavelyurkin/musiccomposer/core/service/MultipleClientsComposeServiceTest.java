@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.pavelyurkin.musiccomposer.core.service.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
+import ru.pavelyurkin.musiccomposer.core.service.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.service.multipleclients.ComposingParameters;
 import ru.pavelyurkin.musiccomposer.core.service.multipleclients.MultipleClientsComposeService;
 
@@ -66,6 +66,7 @@ public class MultipleClientsComposeServiceTest extends AbstractSpringTest {
         composingParametersById2.getComposeStepProvider().getFirstStepProvider());
     assertNotSame(composingParametersById1.getComposeStepProvider().getNextStepProvider(),
         composingParametersById2.getComposeStepProvider().getNextStepProvider());
-    assertNotSame(composingParametersById1.getPreviousCompositionSteps(), composingParametersById2.getPreviousCompositionSteps());
+    assertNotSame(composingParametersById1.getPreviousCompositionSteps(),
+        composingParametersById2.getPreviousCompositionSteps());
   }
 }

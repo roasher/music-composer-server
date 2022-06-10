@@ -76,9 +76,9 @@ public class MelodyEqualityAnalyzerImplTest extends AbstractSpringTest {
     };
     Melody melody2 = new Melody(notes2);
 
-//		View.notate( melody1 );
-//		View.notate( melody2 );
-//		suspend();
+    //		View.notate( melody1 );
+    //		View.notate( melody2 );
+    //		suspend();
 
     assertTrue(melodyEqualityAnalyzer.isEqual(melody1, melody2));
   }

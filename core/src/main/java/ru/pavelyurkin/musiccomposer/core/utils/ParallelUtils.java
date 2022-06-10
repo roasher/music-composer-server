@@ -20,7 +20,8 @@ public class ParallelUtils {
    * @param pitchesToBe
    * @return
    */
-  public static Optional<Integer> getSinglePitchDifferenceIfExist(List<Integer> pitchesAsIs, List<Integer> pitchesToBe) {
+  public static Optional<Integer> getSinglePitchDifferenceIfExist(List<Integer> pitchesAsIs,
+                                                                  List<Integer> pitchesToBe) {
     if (pitchesToBe.size() != pitchesAsIs.size()) {
       log.debug("Can't calculate transpose pitch. Desired end pitches and fact previous end pitches has "
                 + "different amount of notes");

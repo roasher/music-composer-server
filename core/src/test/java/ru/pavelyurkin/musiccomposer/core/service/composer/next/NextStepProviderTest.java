@@ -33,13 +33,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
-import ru.pavelyurkin.musiccomposer.core.service.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
+import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
+import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
+import ru.pavelyurkin.musiccomposer.core.service.equality.equalityMetric.EqualityMetricAnalyzer;
 
 @ExtendWith(MockitoExtension.class)
 public class NextStepProviderTest {
@@ -115,7 +115,8 @@ public class NextStepProviderTest {
     );
 
     Optional<CompositionStep> nextBlock =
-        nextBlockProvider.getNext(previousCompositionSteps, Collections.emptyList(), Optional.of(new Form('A')), WHOLE_NOTE);
+        nextBlockProvider
+            .getNext(previousCompositionSteps, Collections.emptyList(), Optional.of(new Form('A')), WHOLE_NOTE);
 
     assertEquals(composeBlock21, nextBlock.get().getOriginComposeBlock());
   }

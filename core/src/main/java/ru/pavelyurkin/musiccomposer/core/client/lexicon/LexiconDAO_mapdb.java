@@ -18,10 +18,9 @@ import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 @Slf4j
 public class LexiconDAO_mapdb implements LexiconDAO {
 
-  private final DB db;
-
   private static final GroupSerializer SERIALIZER = Serializer.JAVA;
   private static final String COMPOSE_BLOCKS_COLLECTION_NAME = "lexicon";
+  private final DB db;
 
   @Override
   public void persist(Lexicon lexicon) {

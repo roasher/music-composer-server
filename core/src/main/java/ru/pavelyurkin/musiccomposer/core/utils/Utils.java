@@ -12,6 +12,8 @@ import java.util.Map;
 
 public class Utils {
 
+  public static final double epsilon = 0.000000000001;
+
   /**
    * Waits for input, so one can see and analyze nonated smth
    */
@@ -41,8 +43,6 @@ public class Utils {
     String[] places = String.valueOf(value).split("\\.");
     return places[1].length() == 1 && places[1].charAt(0) == '0' ? 0 : places[1].length();
   }
-
-  public static final double epsilon = 0.000000000001;
 
   public static boolean isEquals(double d1, double d2) {
     return DoubleMath.fuzzyEquals(d1, d2, epsilon);

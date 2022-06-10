@@ -12,10 +12,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import ru.pavelyurkin.musiccomposer.core.client.lexicon.LexiconDAO;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import ru.pavelyurkin.musiccomposer.core.client.lexicon.LexiconDAO;
 import ru.pavelyurkin.musiccomposer.core.service.composition.loader.CompositionLoader;
 
 public class CompositionDecomposerUsingStoringTest extends AbstractSpringTest {

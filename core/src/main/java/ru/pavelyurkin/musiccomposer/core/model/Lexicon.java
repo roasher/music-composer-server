@@ -56,6 +56,10 @@ public class Lexicon implements Serializable {
     this.possibleNextMusicBlockNumbers = possibleNextMusicBlockNumbers;
   }
 
+  public static Lexicon getBlankLexicon() {
+    return new Lexicon(new ArrayList<>(), Collections.emptyMap());
+  }
+
   public Set<CompositionInfo> getCompositionsInLexicon() {
     return composeBlocks.stream()
         .map(ComposeBlock::getCompositionInfo)
@@ -77,10 +81,6 @@ public class Lexicon implements Serializable {
       }
     }
     return firstBlocks;
-  }
-
-  public static Lexicon getBlankLexicon() {
-    return new Lexicon(new ArrayList<>(), Collections.emptyMap());
   }
 
   public ComposeBlock get(int number) {

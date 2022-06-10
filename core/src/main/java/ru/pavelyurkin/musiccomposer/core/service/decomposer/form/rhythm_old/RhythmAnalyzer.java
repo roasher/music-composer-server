@@ -20,14 +20,6 @@ public class RhythmAnalyzer {
   private List<RhythmData> listOfRhythmData = new ArrayList<>();
 
   /**
-   * Class-wrapper for rhythmic data of the piece
-   */
-  private class RhythmData {
-    private int rhythmFormValue;
-    private List<Map<Double, Double>> listOfCountsOfRhythmEntries;
-  }
-
-  /**
    * Returns int value represents part of the form regarding already analyzed musicBlocks
    *
    * @param listOfNotes
@@ -101,5 +93,13 @@ public class RhythmAnalyzer {
 
   public List<RhythmData> getListOfRhythmData() {
     return listOfRhythmData;
+  }
+
+  /**
+   * Class-wrapper for rhythmic data of the piece
+   */
+  private class RhythmData {
+    private int rhythmFormValue;
+    private List<Map<Double, Double>> listOfCountsOfRhythmEntries;
   }
 }

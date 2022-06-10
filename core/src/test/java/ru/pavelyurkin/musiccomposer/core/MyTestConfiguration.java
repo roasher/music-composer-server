@@ -10,12 +10,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
+import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
+import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.service.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.service.composer.first.FirstStepProvider;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.NextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.SimpleNextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.ComposeStepFilterImpl;
+import ru.pavelyurkin.musiccomposer.core.service.composition.loader.CompositionLoader;
 import ru.pavelyurkin.musiccomposer.core.service.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melody.EqualNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melody.Equality;
@@ -24,9 +27,6 @@ import ru.pavelyurkin.musiccomposer.core.service.equality.melodymovement.Contour
 import ru.pavelyurkin.musiccomposer.core.service.equality.melodymovement.IntervalsMelodyMovementEquality;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melodymovement.InversionMelodyMovementEquality;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melodymovement.OrderMelodyMovementEquality;
-import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
-import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import ru.pavelyurkin.musiccomposer.core.service.composition.loader.CompositionLoader;
 
 @TestConfiguration
 public class MyTestConfiguration {

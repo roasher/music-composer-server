@@ -10,14 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
+import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 import ru.pavelyurkin.musiccomposer.core.service.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.service.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.FilteredNextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.NextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 
 /**
  * Class handles composing multiple compositions in a same time
@@ -28,13 +28,12 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 @Component
 public class MultipleClientsComposeService {
 
+  private final ApplicationContext applicationContext;
+  private final CompositionComposer compositionComposer;
   /**
    * Map, holding parameters to compose per id (session for example)
    */
   private Map<String, ComposingParameters> composingParametersMap = new HashMap<>();
-
-  private final ApplicationContext applicationContext;
-  private final CompositionComposer compositionComposer;
 
   public CompositionFrontDTO getNextBarsFromComposition(String compositionId, int numberOfBars,
                                                         List<MusicBlockFilter> filtersToReplace) {

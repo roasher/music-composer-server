@@ -7,8 +7,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.client.lexicon.LexiconDAO;
+import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 
 /**
  * Lexicon creation might take significant time, there is no need doing that

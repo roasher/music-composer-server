@@ -1,10 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.model.composition;
 
 import java.io.Serializable;
-import java.util.Objects;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.pavelyurkin.musiccomposer.core.utils.Utils;
 
 /**
  * Additional information about composition

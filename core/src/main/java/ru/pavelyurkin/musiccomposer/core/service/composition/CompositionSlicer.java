@@ -83,6 +83,42 @@ public class CompositionSlicer {
   }
 
   /**
+   * Checks if all slices has length equal to timePeriod
+   *
+   * @param slices
+   * @param timePeriod
+   */
+  public void checkSlicesOccupancy(List<InstrumentPart> slices, double timePeriod) {
+    for (InstrumentPart slice : slices) {
+      BigDecimal rhythmValuesSum = BigDecimal.ZERO;
+      for (NoteGroup sliceNote : slice.getNoteGroups()) {
+        rhythmValuesSum = rhythmValuesSum.add(BigDecimal.valueOf(sliceNote.getRhythmValue()));
+      }
+      if (rhythmValuesSum.round(MathContext.DECIMAL32).compareTo(BigDecimal.valueOf(timePeriod)) != 0) {
+        throw new RuntimeException("Slice occupancy check failed");
+      }
+    }
+  }
+
+  /**
+   * Makes all phrases has equal end time by adding rests if needed
+   *
+   * @param instrumentParts
+   */
+  public void adjustToUnifiedEndTime(List<InstrumentPart> instrumentParts) {
+    double compositionEndTime = instrumentParts.stream()
+        .mapToDouble(InstrumentPart::getRythmValue)
+        .max()
+        .getAsDouble();
+    for (InstrumentPart instrumentPart : instrumentParts) {
+      double rythmValue = instrumentPart.getRythmValue();
+      if (rythmValue != compositionEndTime) {
+        instrumentPart.glueNoteToTheEnd(new Rest(compositionEndTime - rythmValue));
+      }
+    }
+  }
+
+  /**
    * Class consumes notes and divide them into slices timePeriod length
    */
   private class State {
@@ -127,42 +163,6 @@ public class CompositionSlicer {
 
         // Recursive call
         add(dividedNoteGroup.getRight());
-      }
-    }
-  }
-
-  /**
-   * Checks if all slices has length equal to timePeriod
-   *
-   * @param slices
-   * @param timePeriod
-   */
-  public void checkSlicesOccupancy(List<InstrumentPart> slices, double timePeriod) {
-    for (InstrumentPart slice : slices) {
-      BigDecimal rhythmValuesSum = BigDecimal.ZERO;
-      for (NoteGroup sliceNote : slice.getNoteGroups()) {
-        rhythmValuesSum = rhythmValuesSum.add(BigDecimal.valueOf(sliceNote.getRhythmValue()));
-      }
-      if (rhythmValuesSum.round(MathContext.DECIMAL32).compareTo(BigDecimal.valueOf(timePeriod)) != 0) {
-        throw new RuntimeException("Slice occupancy check failed");
-      }
-    }
-  }
-
-  /**
-   * Makes all phrases has equal end time by adding rests if needed
-   *
-   * @param instrumentParts
-   */
-  public void adjustToUnifiedEndTime(List<InstrumentPart> instrumentParts) {
-    double compositionEndTime = instrumentParts.stream()
-        .mapToDouble(InstrumentPart::getRythmValue)
-        .max()
-        .getAsDouble();
-    for (InstrumentPart instrumentPart : instrumentParts) {
-      double rythmValue = instrumentPart.getRythmValue();
-      if (rythmValue != compositionEndTime) {
-        instrumentPart.glueNoteToTheEnd(new Rest(compositionEndTime - rythmValue));
       }
     }
   }

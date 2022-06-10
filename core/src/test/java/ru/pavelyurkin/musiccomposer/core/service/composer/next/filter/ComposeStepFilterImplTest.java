@@ -20,10 +20,10 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
-import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.range.RangeFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.RepetitionFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.RestFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.VarietyFilter;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.range.RangeFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.range.VoiceRangeFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 

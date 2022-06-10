@@ -7,9 +7,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.model.Key;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
 
 /**
  * Filters blocks that are not from current key
@@ -21,12 +21,11 @@ public class RandomKeyFilter implements MusicBlockFilter {
 
   private Key currentKey;
   private int numberOfBlocksFilteredToChangeKey = 200;
+  private int count = 0;
 
   public RandomKeyFilter(Key currentKey) {
     this.currentKey = currentKey;
   }
-
-  private int count = 0;
 
   @Override
   public boolean filterIt(MusicBlock block, List<MusicBlock> previousBlocks) {

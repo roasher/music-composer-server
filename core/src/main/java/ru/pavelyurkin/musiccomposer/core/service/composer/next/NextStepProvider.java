@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
+import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
+import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
 
 /**
  * Parent class getting Next Block

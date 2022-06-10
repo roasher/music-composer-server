@@ -74,49 +74,49 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Inst
     double minPitchDiffMetric = Integer.MAX_VALUE;
     // TODO implements this according to new data model
     return 0;
-//		for ( int numberOfNoteThatWeAreSettingEqual = 0;
-//			  numberOfNoteThatWeAreSettingEqual < transformedFirst.size(); numberOfNoteThatWeAreSettingEqual++ ) {
-//			NoteGroup note1 = transformedFirst.get( numberOfNoteThatWeAreSettingEqual );
-//			NoteGroup note2 = transformedSecond.get( numberOfNoteThatWeAreSettingEqual );
-//			if ( note1.isRest() || note2.isRest() ) {
-//				continue;
-//			}
-//			int pitchToTransposeSecond = note1.getPitch() - note2.getPitch();
-//
-//			double pitchDiffMetric = 0;
-//			for ( int currentNote = 0; currentNote < transformedFirst.size(); currentNote++ ) {
-//				// All logic of calculating pitch diff metric goes here
-//				int transposedSecondMelodyNotePitch = !transformedSecond.get( currentNote ).isRest() ?
-//						transformedSecond.get( currentNote ).getPitch() + pitchToTransposeSecond: Note.REST;
-//				int firstMelodyNotePitch = transformedFirst.get( currentNote ).getPitch();
-//				if ( firstMelodyNotePitch != transposedSecondMelodyNotePitch ) {
-//					// Different note penalty
-//					pitchDiffMetric += 0.8*unionRhythmValues.get( currentNote )/QUARTER_NOTE;
-//					// Penalty for pitch difference
-//					if (firstMelodyNotePitch != Note.REST && transposedSecondMelodyNotePitch != Note.REST) {
-//						int diff = Math.abs( firstMelodyNotePitch - transposedSecondMelodyNotePitch );
-//						pitchDiffMetric += ( 10.0 * diff ) / Note.MAX_PITCH;
-//					} else if (firstMelodyNotePitch == Note.REST && transposedSecondMelodyNotePitch != Note.REST) {
-//						// penalty for inserting note while in the origin is rest
-//						pitchDiffMetric += 0.4;
-//					} else if (firstMelodyNotePitch != Note.REST && transposedSecondMelodyNotePitch == Note.REST) {
-//						// penalty for eliminating origin note to rest
-//						pitchDiffMetric += 0.1;
-//					}
-//					// Penalty for strong time
-//					if ( isStrongTime.get( currentNote ) ) {
-//						pitchDiffMetric += 0.2;
-//					}
-//				}
-//			}
-//			if ( pitchDiffMetric < minPitchDiffMetric ) {
-//				minPitchDiffMetric = pitchDiffMetric;
-//			}
-//		}
-//		/*
-//		Now we will combine pitch diff metric with rhythmValue diff metric
-//		 */
-//		return 1 - ( rhythmDiffMetric + minPitchDiffMetric ) / secondInstrumentPart.size();
+    //		for ( int numberOfNoteThatWeAreSettingEqual = 0;
+    //			  numberOfNoteThatWeAreSettingEqual < transformedFirst.size(); numberOfNoteThatWeAreSettingEqual++ ) {
+    //			NoteGroup note1 = transformedFirst.get( numberOfNoteThatWeAreSettingEqual );
+    //			NoteGroup note2 = transformedSecond.get( numberOfNoteThatWeAreSettingEqual );
+    //			if ( note1.isRest() || note2.isRest() ) {
+    //				continue;
+    //			}
+    //			int pitchToTransposeSecond = note1.getPitch() - note2.getPitch();
+    //
+    //			double pitchDiffMetric = 0;
+    //			for ( int currentNote = 0; currentNote < transformedFirst.size(); currentNote++ ) {
+    //				// All logic of calculating pitch diff metric goes here
+    //				int transposedSecondMelodyNotePitch = !transformedSecond.get( currentNote ).isRest() ?
+    //						transformedSecond.get( currentNote ).getPitch() + pitchToTransposeSecond: Note.REST;
+    //				int firstMelodyNotePitch = transformedFirst.get( currentNote ).getPitch();
+    //				if ( firstMelodyNotePitch != transposedSecondMelodyNotePitch ) {
+    //					// Different note penalty
+    //					pitchDiffMetric += 0.8*unionRhythmValues.get( currentNote )/QUARTER_NOTE;
+    //					// Penalty for pitch difference
+    //					if (firstMelodyNotePitch != Note.REST && transposedSecondMelodyNotePitch != Note.REST) {
+    //						int diff = Math.abs( firstMelodyNotePitch - transposedSecondMelodyNotePitch );
+    //						pitchDiffMetric += ( 10.0 * diff ) / Note.MAX_PITCH;
+    //					} else if (firstMelodyNotePitch == Note.REST && transposedSecondMelodyNotePitch != Note.REST) {
+    //						// penalty for inserting note while in the origin is rest
+    //						pitchDiffMetric += 0.4;
+    //					} else if (firstMelodyNotePitch != Note.REST && transposedSecondMelodyNotePitch == Note.REST) {
+    //						// penalty for eliminating origin note to rest
+    //						pitchDiffMetric += 0.1;
+    //					}
+    //					// Penalty for strong time
+    //					if ( isStrongTime.get( currentNote ) ) {
+    //						pitchDiffMetric += 0.2;
+    //					}
+    //				}
+    //			}
+    //			if ( pitchDiffMetric < minPitchDiffMetric ) {
+    //				minPitchDiffMetric = pitchDiffMetric;
+    //			}
+    //		}
+    //		/*
+    //		Now we will combine pitch diff metric with rhythmValue diff metric
+    //		 */
+    //		return 1 - ( rhythmDiffMetric + minPitchDiffMetric ) / secondInstrumentPart.size();
   }
 
   /**
@@ -169,7 +169,7 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Inst
       double rhythmValue = newRhythmValues.get(newRhythmValuesCounter);
       sumRhythmValue += rhythmValue;
       // todo
-//			out.add( noteGroup.cloneRange( rhythmValue ) );
+      //			out.add( noteGroup.cloneRange( rhythmValue ) );
       if (isEquals(noteGroup.getRhythmValue(), sumRhythmValue)) {
         notesRhythmValueCounter++;
         sumRhythmValue = 0;

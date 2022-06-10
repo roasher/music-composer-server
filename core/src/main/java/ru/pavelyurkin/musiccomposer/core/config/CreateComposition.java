@@ -13,10 +13,10 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
-import ru.pavelyurkin.musiccomposer.core.service.composer.ComposeStepProvider;
-import ru.pavelyurkin.musiccomposer.core.service.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
+import ru.pavelyurkin.musiccomposer.core.service.composer.ComposeStepProvider;
+import ru.pavelyurkin.musiccomposer.core.service.composer.CompositionComposer;
 
 /**
  * Configuration for composing piece defined length

@@ -10,7 +10,8 @@ import ru.pavelyurkin.musiccomposer.core.service.decomposer.melody.analyzer.Melo
 @ComponentScan(basePackages = "ru.pavelyurkin.musiccomposer", excludeFilters = {
     // Not using yet
     @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = MelodyEqualityAnalyzerImpl.class),
-    @ComponentScan.Filter(type = FilterType.REGEX, pattern = "ru.pavelyurkin.musiccomposer.core.service.equality.melody.*")}
+    @ComponentScan.Filter(type = FilterType.REGEX,
+        pattern = "ru.pavelyurkin.musiccomposer.core.service.equality.melody.*")}
 )
 public class WebApplication {
 

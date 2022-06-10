@@ -30,8 +30,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RhythmValueHandler {
 
-  private final double maxRhythmValue;
   public final List<Double> rhythmValues = new ArrayList<>();
+  private final double maxRhythmValue;
 
   public RhythmValueHandler() {
     rhythmValues.add(WHOLE_NOTE);

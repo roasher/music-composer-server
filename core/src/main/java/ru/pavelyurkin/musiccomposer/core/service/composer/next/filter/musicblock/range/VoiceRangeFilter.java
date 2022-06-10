@@ -20,16 +20,6 @@ public class VoiceRangeFilter implements MusicBlockFilter {
    */
   private List<Range> ranges;
 
-  @NoArgsConstructor
-  @AllArgsConstructor
-  @Data
-  public static class Range {
-
-    private int lowPitch;
-    private int highPitch;
-
-  }
-
   @Override
   public boolean filterIt(MusicBlock block, List<MusicBlock> previousBlocks) {
     if (block.getInstrumentParts().size() > ranges.size()) {
@@ -47,6 +37,16 @@ public class VoiceRangeFilter implements MusicBlockFilter {
       }
     }
     return true;
+  }
+
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Data
+  public static class Range {
+
+    private int lowPitch;
+    private int highPitch;
+
   }
 
 }

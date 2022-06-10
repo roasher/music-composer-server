@@ -1,8 +1,8 @@
 package ru.pavelyurkin.musiccomposer.core.service.equality.melodymovement;
 
-import ru.pavelyurkin.musiccomposer.core.service.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
+import ru.pavelyurkin.musiccomposer.core.service.equality.melody.Equality;
 
 /**
  * @author Pavel Yurkin

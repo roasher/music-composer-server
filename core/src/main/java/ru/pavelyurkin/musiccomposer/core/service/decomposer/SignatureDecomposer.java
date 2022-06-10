@@ -10,12 +10,10 @@ import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.pavelyurkin.musiccomposer.core.service.decomposer.melody.analyzer.MelodyEqualityAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.PlaceInTheComposition;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.core.service.decomposer.melody.analyzer.MelodyEqualityAnalyzer;
 
 /**
  * Class searches Signatures in the composition
@@ -26,24 +24,6 @@ public class SignatureDecomposer {
   private int minSignatureLength;
   private int maxSignatureLength;
   private MelodyEqualityAnalyzer melodyEqualityAnalyzer;
-
-  /**
-   * Nested class used for holding information about ru.pavelyurkin.musiccomposer.equality pare presence
-   * If hasEqual is true it means that we have already searched such type of
-   * Signatures and found some similar, so there is no need in search again
-   */
-  private class TracedMelody extends Melody {
-    private boolean hasEqual = false;
-
-    private TracedMelody(List<Note> notes) {
-      super(notes);
-    }
-
-    @Override
-    public boolean equals(Object signature) {
-      return super.equals(signature);
-    }
-  }
 
   /**
    * Construct all possible signatures that can be made from list of notes
@@ -97,8 +77,8 @@ public class SignatureDecomposer {
       Set<TracedMelody> possibleSignatures = getAllPossibleSignatures(currentComposition);
       signaturesToAnalyze.add(possibleSignatures);
     }
-//        log.info( "Number of analyzing compositions = {}, total amount of possible signatures = {}",
-//        signaturesToAnalyze.size(), getTotalSignaturesNumber( signaturesToAnalyze ) );
+    //        log.info( "Number of analyzing compositions = {}, total amount of possible signatures = {}",
+    //        signaturesToAnalyze.size(), getTotalSignaturesNumber( signaturesToAnalyze ) );
 
     log.info("Step 2: finding signatures that can be considered equal");
     for (int currentCompositionNumberHavingEtalonSignature = 0;
@@ -178,5 +158,23 @@ public class SignatureDecomposer {
 
   public void setMelodyEqualityAnalyzer(MelodyEqualityAnalyzer melodyEqualityAnalyzer) {
     this.melodyEqualityAnalyzer = melodyEqualityAnalyzer;
+  }
+
+  /**
+   * Nested class used for holding information about ru.pavelyurkin.musiccomposer.equality pare presence
+   * If hasEqual is true it means that we have already searched such type of
+   * Signatures and found some similar, so there is no need in search again
+   */
+  private class TracedMelody extends Melody {
+    private boolean hasEqual = false;
+
+    private TracedMelody(List<Note> notes) {
+      super(notes);
+    }
+
+    @Override
+    public boolean equals(Object signature) {
+      return super.equals(signature);
+    }
   }
 }

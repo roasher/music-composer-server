@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.pavelyurkin.musiccomposer.core.model.Key;
+import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.key.SameKeyFilter;
 import ru.pavelyurkin.musiccomposer.core.service.exception.ComposeException;
-import ru.pavelyurkin.musiccomposer.core.model.Key;
-import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionFrontDTO;
 import ru.pavelyurkin.musiccomposer.core.service.multipleclients.MultipleClientsComposeService;
 import ru.pavelyurkin.musiccomposer.rest.converter.CompositionConverter;
 import ru.pavelyurkin.musiccomposer.rest.dto.CompositionDTO;
@@ -38,7 +38,8 @@ public class MidiController {
   private final Converter<BachChoralVoiceRangeDTO, MusicBlockFilter> rangeDtoToFilterConverter;
 
   @Autowired
-  public MidiController(MultipleClientsComposeService multipleClientsComposeService, CompositionConverter compositionConverter,
+  public MidiController(MultipleClientsComposeService multipleClientsComposeService,
+                        CompositionConverter compositionConverter,
                         Converter<BachChoralVoiceRangeDTO, MusicBlockFilter> rangeDtoToFilterConverter) {
     this.multipleClientsComposeService = multipleClientsComposeService;
     this.compositionConverter = compositionConverter;
@@ -68,7 +69,7 @@ public class MidiController {
     Instant time = Instant.now();
     CompositionFrontDTO nextBarsFromComposition = multipleClientsComposeService
         .getNextBarsFromComposition(compositionId, numberOfBars,
-        composeStepFiltersToReplace);
+            composeStepFiltersToReplace);
     CompositionDTO compositionDTO = compositionConverter.convert(nextBarsFromComposition);
     log.info("Composed {}", compositionDTO);
     log.info("Composed time: {} millis", Duration.between(time, Instant.now()).toMillis());

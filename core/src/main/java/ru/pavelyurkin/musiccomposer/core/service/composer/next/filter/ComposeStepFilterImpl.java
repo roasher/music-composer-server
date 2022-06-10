@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 /**
  * That implementation would check all possible next blocks and return

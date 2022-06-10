@@ -1,7 +1,5 @@
 package ru.pavelyurkin.musiccomposer.core.model;
 
-import static ru.pavelyurkin.musiccomposer.core.utils.Utils.isEquals;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;

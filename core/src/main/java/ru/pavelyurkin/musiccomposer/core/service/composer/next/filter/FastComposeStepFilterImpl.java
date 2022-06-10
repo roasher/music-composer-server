@@ -3,9 +3,9 @@ package ru.pavelyurkin.musiccomposer.core.service.composer.next.filter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 
 /**
  * That implementation would find first N next convenient blocks.

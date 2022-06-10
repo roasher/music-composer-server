@@ -10,13 +10,13 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Random;
 import java.util.stream.Collectors;
+import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
+import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.service.equality.equalityMetric.EqualityMetricAnalyzer;
-import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
-import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
 public class NextStepProviderImpl extends FilteredNextStepProvider {

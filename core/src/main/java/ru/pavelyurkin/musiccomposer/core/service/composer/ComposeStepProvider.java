@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
+import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.service.composer.first.FirstStepProvider;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.NextStepProvider;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
-import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
 @AllArgsConstructor
 @Data

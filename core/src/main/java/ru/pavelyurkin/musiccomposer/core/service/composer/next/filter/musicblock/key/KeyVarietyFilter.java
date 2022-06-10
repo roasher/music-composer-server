@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Key;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
+import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.MusicBlockFilter;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
 /**
@@ -27,12 +27,11 @@ public class KeyVarietyFilter implements MusicBlockFilter {
 
   private final int maxNotesNumberOutOfKey;
   private final double rhythmValue;
-
+  private final Random random = new Random();
   // random key that would be used until composition would exceed rhythmValue
   @Getter
   @Setter
   private Key currentKey;
-  private final Random random = new Random();
 
   public KeyVarietyFilter(int maxNotesNumberOutOfKey, double rhythmValue) {
     this.maxNotesNumberOutOfKey = maxNotesNumberOutOfKey;

@@ -31,3 +31,4 @@ composer:
 logging:
   level:
     ru.pavelyurkin.musiccomposer.core: DEBUG
+    ru.pavelyurkin.musiccomposer.core.utils: INFO

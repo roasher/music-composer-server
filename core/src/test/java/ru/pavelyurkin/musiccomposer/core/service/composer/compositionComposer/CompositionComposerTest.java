@@ -28,16 +28,16 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import ru.pavelyurkin.musiccomposer.core.service.composer.ComposeStepProvider;
-import ru.pavelyurkin.musiccomposer.core.service.composer.CompositionComposer;
-import ru.pavelyurkin.musiccomposer.core.service.decomposer.CompositionDecomposer;
-import ru.pavelyurkin.musiccomposer.core.service.decomposer.CompositionDecomposerTest;
+import ru.pavelyurkin.musiccomposer.core.client.lexicon.LexiconDAO;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
-import ru.pavelyurkin.musiccomposer.core.client.lexicon.LexiconDAO;
+import ru.pavelyurkin.musiccomposer.core.service.composer.ComposeStepProvider;
+import ru.pavelyurkin.musiccomposer.core.service.composer.CompositionComposer;
 import ru.pavelyurkin.musiccomposer.core.service.composition.loader.CompositionLoader;
+import ru.pavelyurkin.musiccomposer.core.service.decomposer.CompositionDecomposer;
+import ru.pavelyurkin.musiccomposer.core.service.decomposer.CompositionDecomposerTest;
 import ru.pavelyurkin.musiccomposer.core.utils.Utils;
 
 public class CompositionComposerTest extends AbstractSpringTest {
@@ -73,7 +73,7 @@ public class CompositionComposerTest extends AbstractSpringTest {
     List<Composition> compositionList =
         compositionLoader.getCompositionsFromFolder(new File("src/test/resources/simpleMelodies"));
     Lexicon lexicon = compositionDecomposer.decompose(compositionList, JMC.WHOLE_NOTE);
-    Composition composition = compositionComposer.compose(composeStepProvider, lexicon,  4 * JMC.WHOLE_NOTE);
+    Composition composition = compositionComposer.compose(composeStepProvider, lexicon, 4 * JMC.WHOLE_NOTE);
     assertEquals(16., composition.getEndTime(), 0);
   }
 

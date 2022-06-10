@@ -10,10 +10,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.ComposeStepFilter;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 
 /**
  * Next Block provider that handles filters

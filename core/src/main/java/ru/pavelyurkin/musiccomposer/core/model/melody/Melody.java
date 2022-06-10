@@ -10,6 +10,7 @@ import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 /**
  * Class represents Melody entity
  * Melodies considered as simple single-voice note moves
+ *
  * @Deprecated due to NewMelody
  */
 @Deprecated(forRemoval = true)

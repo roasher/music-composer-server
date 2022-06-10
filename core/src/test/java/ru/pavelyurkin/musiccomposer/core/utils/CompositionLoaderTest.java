@@ -46,14 +46,14 @@ public class CompositionLoaderTest extends AbstractSpringTest {
         compositionWithRoundedRhythm.getEndTime());
     assertEquals(compositionAsIs.getPartArray().length, compositionWithRoundedRhythm.getPartArray().length);
     for (int instrumentNumber = 0; instrumentNumber < compositionAsIs.getPartArray().length; instrumentNumber++) {
-//			assertEquals( Utils.roundRhythmValue( compositionAsIs.getPart( instrumentNumber ).getEndTime() ),
-//			compositionWithRoundedRhythm.getPart( instrumentNumber ).getEndTime() );
+      //			assertEquals( Utils.roundRhythmValue( compositionAsIs.getPart( instrumentNumber ).getEndTime() ),
+      //			compositionWithRoundedRhythm.getPart( instrumentNumber ).getEndTime() );
       Phrase firstNoteList = compositionAsIs.getPart(instrumentNumber).getPhrase(0);
       Phrase secondNoteList = compositionWithRoundedRhythm.getPart(instrumentNumber).getPhrase(0);
       noteRounding(firstNoteList, secondNoteList, compositionAsIs.getTempo());
     }
 
-//		Write.midi( compositionWithRoundedRhythm, "Scarecrow output.mid" );
+    //		Write.midi( compositionWithRoundedRhythm, "Scarecrow output.mid" );
     assertTrue(false);
     // Testing only by ear
   }
@@ -68,7 +68,7 @@ public class CompositionLoaderTest extends AbstractSpringTest {
   private void noteRounding(Phrase firstPhrase, Phrase secondPhrase, double tempo) {
     logger.info("------------------------ Logging new note lists ------------------------");
     assertEquals(firstPhrase.size(), secondPhrase.size());
-//		Calendar calendar = Calendar.getInstance();
+    //		Calendar calendar = Calendar.getInstance();
     for (int currentNoteNumber = 0; currentNoteNumber < firstPhrase.size(); currentNoteNumber++) {
       Note firstNote = firstPhrase.getNote(currentNoteNumber);
       Note secondNote = secondPhrase.getNote(currentNoteNumber);

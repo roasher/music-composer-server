@@ -12,15 +12,15 @@ import jm.JMC;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
-import ru.pavelyurkin.musiccomposer.core.service.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.ComposeBlock;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
+import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
+import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.service.composition.loader.CompositionLoader;
+import ru.pavelyurkin.musiccomposer.core.service.decomposer.CompositionDecomposer;
 import ru.pavelyurkin.musiccomposer.core.utils.ModelUtils;
 
 public class FormBlockProviderTest extends AbstractSpringTest {

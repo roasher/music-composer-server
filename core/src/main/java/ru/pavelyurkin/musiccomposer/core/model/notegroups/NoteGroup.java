@@ -40,6 +40,7 @@ public abstract class NoteGroup implements Serializable {
 
   /**
    * What pitch should be added to noteGroup be equal to input one
+   *
    * @param noteGroup
    * @return
    */

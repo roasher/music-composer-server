@@ -3,9 +3,9 @@ package ru.pavelyurkin.musiccomposer.core.service.multipleclients;
 import java.util.Collections;
 import java.util.List;
 import lombok.Data;
+import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.service.composer.ComposeStepProvider;
 import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 
 /**
  * Holds parameters of Composing

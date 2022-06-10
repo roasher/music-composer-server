@@ -15,16 +15,16 @@ public class FormCompositionStep {
   private List<CompositionStep> compositionSteps;
   private Form form;
 
+  public FormCompositionStep(List<CompositionStep> compositionSteps, Form form) {
+    this.compositionSteps = compositionSteps;
+    this.form = form;
+  }
+
   /**
    * Returns empty composition step using just for tracking new block exceptions
    */
   public static FormCompositionStep getEmptyStep() {
     return new FormCompositionStep(Arrays.asList(CompositionStep.getEmptyCompositionStep()), null);
-  }
-
-  public FormCompositionStep(List<CompositionStep> compositionSteps, Form form) {
-    this.compositionSteps = compositionSteps;
-    this.form = form;
   }
 
 }

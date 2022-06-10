@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import jm.music.data.Note;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melody.DifferentNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melodymovement.InterpolationMelodyMovementEquality;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 
 public class TestInterpolationMelodyMovementEquality {
 
@@ -137,9 +137,9 @@ public class TestInterpolationMelodyMovementEquality {
         }
     );
 
-//		View.notate( testMelody1 );
-//		View.notate( testMelody2 );
-//		suspend();
+    //		View.notate( testMelody1 );
+    //		View.notate( testMelody2 );
+    //		suspend();
 
     interpolationMelodyMovementEquality.setMaxNumberOfAddedIntervals(2);
     assertFalse(equality.test(testMelody1, testMelody2));

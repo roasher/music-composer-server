@@ -22,11 +22,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Arrays;
 import jm.music.data.Note;
 import org.junit.jupiter.api.Test;
+import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
+import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melody.EqualNumberOfNotesRequired;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melody.Equality;
 import ru.pavelyurkin.musiccomposer.core.service.equality.melodymovement.IntervalsMelodyMovementEquality;
-import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
-import ru.pavelyurkin.musiccomposer.core.model.melody.MelodyMovement;
 
 public class TestIntervalsMelodyMovementEquality {
 

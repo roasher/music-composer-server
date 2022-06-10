@@ -18,14 +18,6 @@ public class RhythmPatternAnalyzer {
   private List<RhythmData> listOfRhythmData = new ArrayList<>();
 
   /**
-   * Class-wrapper for rhythmic data of the piece
-   */
-  private class RhythmData {
-    private int rhythmFormValue;
-    private List<List<Double>> rhythmPattern;
-  }
-
-  /**
    * Returns int value represents part of the form regarding already analyzed musicBlocks
    *
    * @param listOfNotes
@@ -101,5 +93,13 @@ public class RhythmPatternAnalyzer {
 
   public List<RhythmData> getListOfRhythmData() {
     return listOfRhythmData;
+  }
+
+  /**
+   * Class-wrapper for rhythmic data of the piece
+   */
+  private class RhythmData {
+    private int rhythmFormValue;
+    private List<List<Double>> rhythmPattern;
   }
 }

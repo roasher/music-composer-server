@@ -17,8 +17,6 @@ import jm.music.data.Part;
 import jm.music.data.Phrase;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
-import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
 import ru.pavelyurkin.musiccomposer.core.model.MusicBlock;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
@@ -26,6 +24,8 @@ import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Melody;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NewMelody;
 import ru.pavelyurkin.musiccomposer.core.model.notegroups.NoteGroup;
+import ru.pavelyurkin.musiccomposer.core.service.composer.step.CompositionStep;
+import ru.pavelyurkin.musiccomposer.core.service.composer.step.FormCompositionStep;
 
 /**
  * Class aggregates useful utilities upon Model objects

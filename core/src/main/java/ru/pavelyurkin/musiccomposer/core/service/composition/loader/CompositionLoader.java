@@ -20,10 +20,9 @@ import ru.pavelyurkin.musiccomposer.core.model.composition.CompositionInfo;
  */
 @Component
 public class CompositionLoader {
+  Logger logger = LoggerFactory.getLogger(getClass());
   @Autowired
   private RhythmValueHandler rhythmValueHandler;
-
-  Logger logger = LoggerFactory.getLogger(getClass());
 
   private List<File> listFilesForFolder(final File folder) {
     List<File> nameArray = new ArrayList<>();

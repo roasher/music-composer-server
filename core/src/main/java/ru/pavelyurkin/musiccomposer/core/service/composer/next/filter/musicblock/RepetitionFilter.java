@@ -39,7 +39,7 @@ public class RepetitionFilter implements MusicBlockFilter {
    * pattern HALF_NOTE length that repeated 3 times.
    *
    * @param musicBlocksToCheck - input music blocks
-   * @param range - range that repetitions would be counted within
+   * @param range              - range that repetitions would be counted within
    * @return Map<rythm value, repetiton count>
    */
   Map<Double, Integer> getRepetitions(List<MusicBlock> musicBlocksToCheck, double range) {

@@ -9,11 +9,11 @@ import jm.JMC;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.pavelyurkin.musiccomposer.core.service.decomposer.form.FormDecomposer;
 import ru.pavelyurkin.musiccomposer.core.helper.AbstractSpringTest;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.model.melody.Form;
 import ru.pavelyurkin.musiccomposer.core.service.composition.loader.CompositionLoader;
+import ru.pavelyurkin.musiccomposer.core.service.decomposer.form.FormDecomposer;
 
 @Disabled("From related. Not ready yet")
 public class FormDecomposerTest extends AbstractSpringTest {
@@ -34,8 +34,8 @@ public class FormDecomposerTest extends AbstractSpringTest {
     assertTrue(formList.get(1).getValue() == 'A');
     assertTrue(formList.get(2).getValue() == 'B');
     assertTrue(formList.get(3).getValue() == 'C');
-//		View.notate( score );
-//		Utils.suspend();
+    //		View.notate( score );
+    //		Utils.suspend();
   }
 
   @Test

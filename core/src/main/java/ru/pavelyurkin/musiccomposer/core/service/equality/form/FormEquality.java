@@ -7,8 +7,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.pavelyurkin.musiccomposer.core.service.equality.equalityMetric.EqualityMetricAnalyzer;
 import ru.pavelyurkin.musiccomposer.core.model.InstrumentPart;
+import ru.pavelyurkin.musiccomposer.core.service.equality.equalityMetric.EqualityMetricAnalyzer;
 
 /**
  * Class that decides if two Lists fo melodies are form equal
@@ -30,6 +30,14 @@ public class FormEquality implements RelativelyComparable<List<InstrumentPart>>,
 
   @Autowired
   private EqualityMetricAnalyzer<List<InstrumentPart>> equalityMetricAnalyzer;
+
+  public static double getMeasureOfDifference(double first, double second) {
+    double diff = Math.abs(first - second);
+    if (diff > 1) {
+      return 0;
+    }
+    return 1 - diff;
+  }
 
   /**
    * Consider if music blocks are form equal.
@@ -73,14 +81,6 @@ public class FormEquality implements RelativelyComparable<List<InstrumentPart>>,
           successTestPersentage, instrumentEqualityFailThreshold, instrumentEqualityPassThreshold, diffMeasure);
       return Pair.of(ResultOfComparison.UNDEFINED, diffMeasure);
     }
-  }
-
-  public static double getMeasureOfDifference(double first, double second) {
-    double diff = Math.abs(first - second);
-    if (diff > 1) {
-      return 0;
-    }
-    return 1 - diff;
   }
 
   @Override
