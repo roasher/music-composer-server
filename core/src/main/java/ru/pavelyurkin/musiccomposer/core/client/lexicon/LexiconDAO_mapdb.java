@@ -46,10 +46,12 @@ public class LexiconDAO_mapdb implements LexiconDAO {
     List<LexiconDB> lexiconDbs =
         (List<LexiconDB>) db.indexTreeList(COMPOSE_BLOCKS_COLLECTION_NAME, SERIALIZER).createOrOpen();
     if (lexiconDbs.isEmpty()) {
+      log.info("Fetched Lexicon is empty");
       return Lexicon.getBlankLexicon();
     }
 
     LexiconDB lexiconDB = lexiconDbs.get(0);
+    log.info("Fetched lexicon contains {} blocks", lexiconDB.getMusicBlocks().size());
     return new Lexicon(lexiconDB.getPossibleNextMusicBlockNumbers(), lexiconDB.getMusicBlocks());
   }
 
