@@ -4,7 +4,7 @@ composer:
   pathToCompositions: Path to folder, containing compositions that would be decomposed used in new piece creation, for example "../Bach chorals cut/"
 
 persistance:
-  file: Path to db file, for example bach-prod.db
+  file: Path to db file, for example bach-full.db
 
 server:
   port: 8888
