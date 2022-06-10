@@ -55,11 +55,22 @@ public class CommonComposerConfiguration {
   }
 
   /**
-   * Bach chorale lexicon
+   * Bach chorale lexicon decomposed from particular composition list.
+   * Precalculated file would be used, but every block from compositions other than those is
+   * ${composer.pathToCompositions} woudl be omitted
    */
   @Bean
-  @Profile("bach")
-  public Lexicon bachLexicon(CompositionDecomposer compositionDecomposer,
+  @Profile("bach & !composition_list")
+  public Lexicon decomposedBachLexicon(@Qualifier("lexiconDAO_mapdb") LexiconDAO lexiconDAO) {
+    return lexiconDAO.fetch();
+  }
+
+  /**
+   * Bach chorale lexicon fetched straight from precalculated file.
+   */
+  @Bean
+  @Profile("bach & composition_list")
+  public Lexicon precalculatedBachLexicon(CompositionDecomposer compositionDecomposer,
                              CompositionLoader compositionLoader,
                              @Value("${composer.pathToCompositions}") String compositionsPath) {
     List<Composition> compositionList = compositionLoader.getCompositionsFromFolder(new File(compositionsPath));
