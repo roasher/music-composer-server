@@ -53,7 +53,7 @@ public class FilterConfiguration {
             new RangeFilter(C2, C6),
             new RestFilter(QUARTER_NOTE),
             new SameKeyFilter(Key.C_MAJOR),
-            new VarietyFilter(4, 10),
+            new VarietyFilter(10, 4),
             new RepetitionFilter()
         )
     );

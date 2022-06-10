@@ -60,7 +60,7 @@ public class CommonComposerConfiguration {
    * ${composer.pathToCompositions} woudl be omitted
    */
   @Bean
-  @Profile("bach & !composition_list")
+  @Profile("!composition_list && !persist-lexicon")
   public Lexicon decomposedBachLexicon(@Qualifier("lexiconDAO_mapdb") LexiconDAO lexiconDAO) {
     return lexiconDAO.fetch();
   }
@@ -69,7 +69,7 @@ public class CommonComposerConfiguration {
    * Bach chorale lexicon fetched straight from precalculated file.
    */
   @Bean
-  @Profile("bach & composition_list")
+  @Profile("composition_list || persist-lexicon")
   public Lexicon precalculatedBachLexicon(CompositionDecomposer compositionDecomposer,
                              CompositionLoader compositionLoader,
                              @Value("${composer.pathToCompositions}") String compositionsPath) {
