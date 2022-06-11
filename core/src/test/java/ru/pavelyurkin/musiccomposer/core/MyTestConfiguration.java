@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.annotation.Order;
 import ru.pavelyurkin.musiccomposer.core.model.Lexicon;
 import ru.pavelyurkin.musiccomposer.core.model.composition.Composition;
 import ru.pavelyurkin.musiccomposer.core.service.composer.ComposeStepProvider;
@@ -76,6 +78,7 @@ public class MyTestConfiguration {
   }
 
   @Bean
+  @Primary
   public Lexicon testLexicon(CompositionDecomposer compositionDecomposer,
                              CompositionLoader compositionLoader,
                              @Value("${composer.pathToCompositions}") String compositionsPath) {
