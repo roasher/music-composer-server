@@ -1,6 +1,9 @@
 name: CI/CD
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *" # every day at 00:00 on default/base branch
 
 env:
   IMAGE_NAME: ru.yurkins-workshop.music-composer-server
