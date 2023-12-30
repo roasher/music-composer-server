@@ -32,7 +32,7 @@ public class CompositionConverter {
                     .stream()
                     .flatMap(phrase -> ((Phrase) phrase).getNoteList().stream())
                     .collect(Collectors.toList()),
-            compositionFrontDTO.getPreviousSumRhythmValues(), pair.getLeft())
+            compositionFrontDTO.getStartRhythmValues(), pair.getLeft())
             .stream())
         .filter(noteDTO -> noteDTO.getPitch() != Note.REST)
         .collect(Collectors.toList());

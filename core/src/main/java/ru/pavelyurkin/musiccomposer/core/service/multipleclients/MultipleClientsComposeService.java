@@ -41,14 +41,14 @@ public class MultipleClientsComposeService {
     ComposingParameters composingParameters = getComposingParameters(compositionId);
     ComposeStepProvider composeStepProvider = composingParameters.getComposeStepProvider();
     replaceFilters(composeStepProvider, filtersToReplace);
-    double previousSumRhythmValue = getPreviousSumRhythmValue(composingParameters.getPreviousCompositionSteps());
     Pair<Composition, List<CompositionStep>> compose = compositionComposer
         .compose(composeStepProvider, composingParameters.getLexicon(), numberOfBars * JMC.WHOLE_NOTE,
             composingParameters.getPreviousCompositionSteps());
-    if (compose.getValue() != null) {
-      composingParameters.setPreviousCompositionSteps(compose.getValue());
-    }
-    return new CompositionFrontDTO(compose.getKey(), previousSumRhythmValue);
+    CompositionFrontDTO compositionFrontDTO = new CompositionFrontDTO(compose.getKey(),
+        composingParameters.getRhythmValue());
+    // add composed steps to params only before constructing compositionFrontDTO cause of rhythm value
+    composingParameters.addCompositionSteps(compose.getValue());
+    return compositionFrontDTO;
   }
 
   private ComposingParameters getComposingParameters(String compositionId) {
@@ -75,10 +75,6 @@ public class MultipleClientsComposeService {
     } else {
       throw new IllegalStateException("Can't replace filter because provider isn't filtered type");
     }
-  }
-
-  private double getPreviousSumRhythmValue(List<CompositionStep> previousCompositionSteps) {
-    return previousCompositionSteps.stream().mapToDouble(value -> value.getTransposedBlock().getRhythmValue()).sum();
   }
 
   public ComposingParameters getComposingParametersById(String id) {

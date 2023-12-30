@@ -37,7 +37,7 @@ public class CompositionComposer {
 
   /**
    * Composing piece considering given lexicon and step to start from.
-   * Returns composition and last compose step to being able to start composing process from this point
+   * Returns composition and new composed steps
    *
    * @param lexicon
    * @param compositionLength
@@ -53,10 +53,7 @@ public class CompositionComposer {
         .map(compositionStep -> compositionStep.getTransposedBlock().getInstrumentParts())
         .collect(Collectors.toList());
     Composition composition = gatherComposition(blocks);
-    List<CompositionStep> steps = new ArrayList<>();
-    steps.addAll(previousCompositionSteps);
-    steps.addAll(compositionSteps);
-    return Pair.of(composition, steps);
+    return Pair.of(composition, compositionSteps);
   }
 
   /**
@@ -67,7 +64,13 @@ public class CompositionComposer {
    * @return
    */
   public Composition compose(ComposeStepProvider composeStepProvider, Lexicon lexicon, double compositionLength) {
-    return compose(composeStepProvider, lexicon, compositionLength, Collections.emptyList()).getKey();
+    List<CompositionStep> compositionSteps =
+        formBlockProvider.composeSteps(compositionLength, lexicon, composeStepProvider, Collections.emptyList());
+    List<List<InstrumentPart>> blocks = compositionSteps
+        .stream()
+        .map(compositionStep -> compositionStep.getTransposedBlock().getInstrumentParts())
+        .collect(Collectors.toList());
+    return gatherComposition(blocks);
   }
 
   /**

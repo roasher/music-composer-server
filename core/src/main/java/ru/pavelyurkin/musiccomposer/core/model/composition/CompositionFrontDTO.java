@@ -10,6 +10,6 @@ public class CompositionFrontDTO {
 
   @Delegate
   private Composition composition;
-  private double previousSumRhythmValues;
+  private double startRhythmValues;
 
 }

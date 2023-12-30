@@ -19,3 +19,7 @@ melodyFormEqualityAnalyzer:
 formEquality:
   instrumentEqualityPassThreshold: 0.7
   instrumentEqualityFailThreshold: 0.4
+
+logging:
+  level:
+    ru.pavelyurkin.musiccomposer: info
