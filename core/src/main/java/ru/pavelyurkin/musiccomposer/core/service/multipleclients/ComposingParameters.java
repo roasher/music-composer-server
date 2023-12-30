@@ -22,7 +22,7 @@ public class ComposingParameters {
   @Getter
   @Setter
   private ComposeStepProvider composeStepProvider;
-  private Queue<CompositionStep> previousCompositionSteps = EvictingQueue.create(50);
+  private Queue<CompositionStep> previousCompositionSteps = EvictingQueue.create(1);
   @Getter
   private double rhythmValue = 0;
 

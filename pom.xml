@@ -8,6 +8,7 @@
     <modules>
         <module>core</module>
         <module>rest</module>
+        <module>load-test</module>
     </modules>
 
     <properties>
