@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   music-composer-server:
-    image: roasher/ru.yurkins-workshop.music-composer-server:1.0-SNAPSHOT
+    image: roasher/ru.yurkins-workshop.music-composer-server:2.0-SNAPSHOT
     environment:
       spring_profiles_active: bach
       persistance_file: /bach-full.db
@@ -15,6 +15,6 @@ services:
         limits:
           memory: 4G
   music-composer-web-front:
-    image: roasher/ru.yurkins-workshop.music-composer-web:0.0.2
+    image: roasher/ru.yurkins-workshop.music-composer-web:0.0.3
     ports:
       - "8080:8080"
