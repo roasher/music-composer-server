@@ -43,7 +43,7 @@ public class MelodyMetricEqualityAnalyzer implements EqualityMetricAnalyzer<Inst
         transformMelodyToNewRhythmValues(firstInstrumentPart.getNoteGroups(), unionRhythmValues);
     List<NoteGroup> transformedSecond =
         transformMelodyToNewRhythmValues(secondInstrumentPart.getNoteGroups(), unionRhythmValues);
-    Assert.isTrue(transformedFirst.size() == transformedSecond.size());
+    Assert.isTrue(transformedFirst.size() == transformedSecond.size(), "Transformed parts should have equal size");
     /**
      * Calculating rhythm difference metric
      * To transform secondInstrumentPart into first in rhythmical way two operations should be preformed - cutting

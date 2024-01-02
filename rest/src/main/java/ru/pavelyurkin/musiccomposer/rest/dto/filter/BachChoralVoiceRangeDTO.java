@@ -1,6 +1,6 @@
 package ru.pavelyurkin.musiccomposer.rest.dto.filter;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import ru.pavelyurkin.musiccomposer.core.service.composer.next.filter.musicblock.range.VoiceRangeFilter;
 
