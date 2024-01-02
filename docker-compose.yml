@@ -21,4 +21,4 @@ services:
   music-composer-web-front:
     image: roasher/ru.yurkins-workshop.music-composer-web:0.0.3
     ports:
-      - "8080:8080"
+      - "80:8080"
