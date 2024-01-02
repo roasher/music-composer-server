@@ -13,7 +13,11 @@ services:
     deploy:
       resources:
         limits:
+          cpus: '4'
           memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 1G
   music-composer-web-front:
     image: roasher/ru.yurkins-workshop.music-composer-web:0.0.3
     ports:
