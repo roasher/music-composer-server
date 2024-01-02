@@ -3,11 +3,12 @@ version: "3.8"
 services:
   music-composer-server:
     image: roasher/ru.yurkins-workshop.music-composer-server:2.0-SNAPSHOT
+    pull_policy: always
     environment:
       spring_profiles_active: bach
-      persistance_file: /bach-full.db
+      persistance_file: /db/bach-full.db
     volumes:
-      - /Users/pavelyurkin/Documents/music_composer_db/bach-full.db:/bach-full.db
+      - /Users/pavelyurkin/Documents/music_composer_db:/db
     ports:
       - "8888:8888"
     deploy:
@@ -20,5 +21,6 @@ services:
           memory: 1G
   music-composer-web-front:
     image: roasher/ru.yurkins-workshop.music-composer-web:0.0.3
+    pull_policy: always
     ports:
       - "80:8080"
