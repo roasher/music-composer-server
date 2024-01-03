@@ -20,7 +20,7 @@ services:
           cpus: '1'
           memory: 1G
   music-composer-web-front:
-    image: roasher/ru.yurkins-workshop.music-composer-web:0.0.3
+    image: roasher/ru.yurkins-workshop.music-composer-web:0.0.4
     pull_policy: always
     ports:
       - "80:8080"
