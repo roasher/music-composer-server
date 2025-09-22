@@ -1,6 +1,7 @@
 package ru.pavelyurkin.musiccomposer.core.service.multipleclients;
 
 import com.google.common.collect.EvictingQueue;
+import java.time.Instant;
 import java.util.List;
 import java.util.Queue;
 import lombok.Getter;
@@ -25,6 +26,8 @@ public class ComposingParameters {
   private Queue<CompositionStep> previousCompositionSteps = EvictingQueue.create(1);
   @Getter
   private double rhythmValue = 0;
+  @Getter
+  private Instant lastCompositionTime = Instant.now();
 
   public List<CompositionStep> getPreviousCompositionSteps() {
     return previousCompositionSteps.stream().toList();
@@ -34,7 +37,16 @@ public class ComposingParameters {
     log.debug("Adding {} new compositions steps", compositionSteps.size());
     previousCompositionSteps.addAll(compositionSteps);
     rhythmValue += compositionSteps.stream().mapToDouble(value -> value.getTransposedBlock().getRhythmValue()).sum();
+    updateLastCompositionTime();
     log.debug("Composition steps queue size: {}", previousCompositionSteps.size());
     log.debug("New rhythm value: {}", rhythmValue);
+    log.debug("Last composition time updated to: {}", lastCompositionTime);
+  }
+
+  /**
+   * Updates the last composition time to current time
+   */
+  public void updateLastCompositionTime() {
+    this.lastCompositionTime = Instant.now();
   }
 }

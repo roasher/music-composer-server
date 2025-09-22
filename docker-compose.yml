@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   music-composer-server:
-    image: roasher/ru.yurkins-workshop.music-composer-server:2.0-SNAPSHOT
+    image: roasher/ru.yurkins-workshop.music-composer-server:3.0-SNAPSHOT
     pull_policy: always
     environment:
       spring_profiles_active: bach
